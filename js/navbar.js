@@ -465,3 +465,63 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
 });
+
+// ==========================================
+// CHAT
+// ==========================================
+
+const chatButton =
+    document.querySelector("#chat-button");
+
+const mobileChat =
+    document.querySelector("#mobile-chat");
+
+
+if (chatButton) {
+
+    chatButton.addEventListener(
+        "click",
+        () => {
+
+            if (!user) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+            window.location.href =
+                "chat.html";
+
+        }
+    );
+
+}
+
+
+if (mobileChat) {
+
+    mobileChat.addEventListener(
+        "click",
+        event => {
+
+            event.preventDefault();
+
+            if (!user) {
+
+                window.location.href =
+                    "login.html";
+
+                return;
+
+            }
+
+            window.location.href =
+                "chat.html";
+
+        }
+    );
+
+}
