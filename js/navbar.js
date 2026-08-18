@@ -1,162 +1,131 @@
-/* ==========================================
-   ALUGASE — NAVBAR JS
-========================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
 
-    /* ==========================================
-       ELEMENTOS
-    ========================================== */
+    const container = document.getElementById("navbar-container");
 
-    const chatButton = document.getElementById("chat-button");
-    const notificationButton = document.getElementById("notification-button");
+    if (!container) return;
 
-    const loginButton = document.getElementById("login-button");
-    const announceButton = document.getElementById("announce-button");
+    container.innerHTML = `
 
-    const chatBadge = document.getElementById("chat-badge");
-    const notificationBadge = document.getElementById("notification-badge");
+        <header class="site-header">
 
+            <nav class="navbar">
 
-    /* ==========================================
-       CHAT
-    ========================================== */
+                <!-- LOGO -->
 
-    if (chatButton) {
+                <div class="logo">
 
-        chatButton.addEventListener("click", () => {
+                    <a href="index.html">
 
-            window.location.href = "chat.html";
+                        <img
+                            src="assets/logo.png"
+                            alt="Logo Alugase"
+                        >
 
-        });
+                        <h2>ALUGASE</h2>
 
-    }
+                    </a>
 
+                </div>
 
-    /* ==========================================
-       NOTIFICAÇÕES
-    ========================================== */
 
-    if (notificationButton) {
+                <!-- MENU -->
 
-        notificationButton.addEventListener("click", () => {
+                <ul class="nav-links">
 
-            window.location.href = "notificacoes.html";
+                    <li>
+                        <a href="index.html">
+                            Início
+                        </a>
+                    </li>
 
-        });
+                    <li>
+                        <a href="explorar.html">
+                            Explorar
+                        </a>
+                    </li>
 
-    }
+                    <li>
+                        <a href="index.html#categorias">
+                            Categorias
+                        </a>
+                    </li>
 
+                    <li>
+                        <a href="index.html#como-funciona">
+                            Como funciona
+                        </a>
+                    </li>
 
-    /* ==========================================
-       LOGIN
-    ========================================== */
+                </ul>
 
-    if (loginButton) {
 
-        loginButton.addEventListener("click", () => {
+                <!-- AÇÕES -->
 
-            window.location.href = "login.html";
+                <div class="nav-buttons">
 
-        });
+                    <button
+                        class="chat-nav"
+                        id="chat-button"
+                        type="button"
+                        aria-label="Chat"
+                        title="Chat"
+                    >
 
-    }
+                        <span class="chat-icon">
+                            💬
+                        </span>
 
+                        <span
+                            class="chat-badge"
+                            id="chat-badge"
+                        ></span>
 
-    /* ==========================================
-       ANUNCIAR
-    ========================================== */
+                    </button>
 
-    if (announceButton) {
 
-        announceButton.addEventListener("click", () => {
+                    <button
+                        class="notification-nav"
+                        id="notification-button"
+                        type="button"
+                        aria-label="Notificações"
+                        title="Notificações"
+                    >
 
-            window.location.href = "anunciar.html";
+                        <span class="notification-bell">
+                            🔔
+                        </span>
 
-        });
+                        <span
+                            class="notification-badge"
+                            id="notification-badge"
+                        ></span>
 
-    }
+                    </button>
 
 
-    /* ==========================================
-       BADGE DO CHAT
-    ========================================== */
+                    <button
+                        class="btn-secondary"
+                        id="login-button"
+                        type="button"
+                    >
+                        Entrar
+                    </button>
 
-    function atualizarChatBadge(quantidade) {
 
-        if (!chatBadge) return;
+                    <button
+                        class="btn-primary"
+                        id="announce-button"
+                        type="button"
+                    >
+                        Anunciar
+                    </button>
 
+                </div>
 
-        if (quantidade > 0) {
+            </nav>
 
-            chatBadge.textContent =
-                quantidade > 99
-                    ? "99+"
-                    : quantidade;
+        </header>
 
-            chatBadge.style.display = "flex";
-
-        } else {
-
-            chatBadge.textContent = "";
-
-            chatBadge.style.display = "none";
-
-        }
-
-    }
-
-
-    /* ==========================================
-       BADGE DAS NOTIFICAÇÕES
-    ========================================== */
-
-    function atualizarNotificationBadge(quantidade) {
-
-        if (!notificationBadge) return;
-
-
-        if (quantidade > 0) {
-
-            notificationBadge.textContent =
-                quantidade > 99
-                    ? "99+"
-                    : quantidade;
-
-            notificationBadge.style.display = "flex";
-
-        } else {
-
-            notificationBadge.textContent = "";
-
-            notificationBadge.style.display = "none";
-
-        }
-
-    }
-
-
-    /* ==========================================
-       ESTADO INICIAL
-    ========================================== */
-
-    atualizarChatBadge(0);
-
-    atualizarNotificationBadge(0);
-
-
-    /* ==========================================
-       FUNÇÕES GLOBAIS
-       
-       Podemos chamar essas funções futuramente
-       quando o backend estiver conectado.
-    ========================================== */
-
-    window.AlugaseNavbar = {
-
-        atualizarChatBadge,
-        atualizarNotificationBadge
-
-    };
+    `;
 
 });
