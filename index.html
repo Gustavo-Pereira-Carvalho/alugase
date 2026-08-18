@@ -51,46 +51,26 @@
 
 
             <!-- BOTÕES -->
-<div class="nav-buttons">
+            <div class="nav-buttons">
 
-    <!-- NOTIFICAÇÕES -->
+                <!-- NOTIFICAÇÕES -->
+                <button class="notification-nav" id="notification-button" type="button" aria-label="Notificações"
+                    title="Notificações">
+                    <span class="notification-bell">🔔</span>
+                    <span class="notification-badge" id="notification-badge" style="display:none;"></span>
+                </button>
 
-    <button
-        class="notification-nav"
-        id="notification-button"
-        type="button"
-        aria-label="Notificações"
-        title="Notificações"
-    >
-        <span class="notification-bell">🔔</span>
+                <!-- ENTRAR -->
+                <button class="btn-secondary" id="login-button" type="button">
+                    Entrar
+                </button>
 
-        <span
-            class="notification-badge"
-            id="notification-badge"
-        ></span>
-    </button>
+                <!-- ANUNCIAR -->
+                <button class="btn-primary" id="announce-button" type="button">
+                    Anunciar
+                </button>
 
-
-    <!-- ENTRAR -->
-
-    <button
-        class="btn-secondary"
-        type="button"
-    >
-        Entrar
-    </button>
-
-
-    <!-- ANUNCIAR -->
-
-    <button
-        class="btn-primary"
-        type="button"
-    >
-        Anunciar
-    </button>
-
-</div>
+            </div>
 
         </nav>
 
@@ -123,18 +103,10 @@
 
                 <div class="search-box">
 
-                    <input
-                        type="search"
-                        id="search-input"
-                        placeholder="O que você está procurando?"
-                        aria-label="Pesquisar produtos"
-                    >
+                    <input type="search" id="search-input" placeholder="O que você está procurando?"
+                        aria-label="Pesquisar produtos">
 
-                    <button
-                        class="btn-primary"
-                        id="search-button"
-                        type="button"
-                    >
+                    <button class="btn-primary" id="search-button" type="button">
                         Buscar
                     </button>
 
@@ -149,10 +121,7 @@
              CATEGORIAS
         =========================================== -->
 
-        <section
-            class="categories"
-            id="categorias"
-        >
+        <section class="categories" id="categorias">
 
             <h2>
                 Explore por categoria
@@ -164,12 +133,7 @@
 
                 <!-- ELETRÔNICOS -->
 
-                <div
-                    class="category-card"
-                    data-category="Eletrônicos"
-                    role="button"
-                    tabindex="0"
-                >
+                <div class="category-card" data-category="Eletrônicos" role="button" tabindex="0">
 
                     <div class="category-icon">
                         💻
@@ -184,12 +148,7 @@
 
                 <!-- FERRAMENTAS -->
 
-                <div
-                    class="category-card"
-                    data-category="Ferramentas"
-                    role="button"
-                    tabindex="0"
-                >
+                <div class="category-card" data-category="Ferramentas" role="button" tabindex="0">
 
                     <div class="category-icon">
                         🔧
@@ -204,12 +163,7 @@
 
                 <!-- CASA -->
 
-                <div
-                    class="category-card"
-                    data-category="Casa"
-                    role="button"
-                    tabindex="0"
-                >
+                <div class="category-card" data-category="Casa" role="button" tabindex="0">
 
                     <div class="category-icon">
                         🏠
@@ -224,12 +178,7 @@
 
                 <!-- VEÍCULOS -->
 
-                <div
-                    class="category-card"
-                    data-category="Veículos"
-                    role="button"
-                    tabindex="0"
-                >
+                <div class="category-card" data-category="Veículos" role="button" tabindex="0">
 
                     <div class="category-icon">
                         🚗
@@ -244,12 +193,7 @@
 
                 <!-- EVENTOS -->
 
-                <div
-                    class="category-card"
-                    data-category="Eventos"
-                    role="button"
-                    tabindex="0"
-                >
+                <div class="category-card" data-category="Eventos" role="button" tabindex="0">
 
                     <div class="category-icon">
                         🎉
@@ -264,12 +208,7 @@
 
                 <!-- SERVIÇOS -->
 
-                <div
-                    class="category-card"
-                    data-category="Serviços"
-                    role="button"
-                    tabindex="0"
-                >
+                <div class="category-card" data-category="Serviços" role="button" tabindex="0">
 
                     <div class="category-icon">
                         🛠️
@@ -289,15 +228,15 @@
         <!-- ==========================================
              PRODUTOS EM DESTAQUE
         =========================================== -->
-<section class="products" id="produtos">
+        <section class="products" id="produtos">
 
-    <h2>Produtos em destaque</h2>
+            <h2>Produtos em destaque</h2>
 
-    <div class="products-grid" id="products-grid">
-        <!-- Os produtos serão criados pelo home.js -->
-    </div>
+            <div class="products-grid" id="products-grid">
+                <!-- Os produtos serão criados pelo home.js -->
+            </div>
 
-</section>
+        </section>
 
 
         <!-- ==========================================
@@ -315,10 +254,7 @@
                 anunciando no Alugase.
             </p>
 
-            <button
-                class="btn-primary"
-                type="button"
-            >
+            <button class="btn-primary" type="button">
                 Anunciar agora
             </button>
 
@@ -329,10 +265,7 @@
              COMO FUNCIONA
         =========================================== -->
 
-        <section
-            class="steps"
-            id="como-funciona"
-        >
+        <section class="steps" id="como-funciona">
 
             <h2>
                 Como funciona
@@ -432,44 +365,46 @@
          FOOTER
     =========================================== -->
 
-<footer>
+    <footer>
 
-  <div class="footer-content">
+        <div class="footer-content">
 
-    <h2>ALUGASE</h2>
+            <h2>ALUGASE</h2>
 
-    <p>
-      Alugue o que precisa. Monetize o que já possui.
-    </p>
+            <p>
+                Alugue o que precisa. Monetize o que já possui.
+            </p>
 
-    <div class="footer-links">
+            <div class="footer-links">
 
-      <a href="sobre.html">Sobre</a>
+                <a href="sobre.html">Sobre</a>
 
-      <a href="explorar.html">Explorar</a>
+                <a href="explorar.html">Explorar</a>
 
-      <a href="ajuda.html">Ajuda</a>
+                <a href="ajuda.html">Ajuda</a>
 
-      <a href="termos.html">Termos</a>
+                <a href="termos.html">Termos</a>
 
-      <a href="privacidade.html">Privacidade</a>
+                <a href="privacidade.html">Privacidade</a>
 
-    </div>
+            </div>
 
-    <p class="copyright">
-      © 2026 ALUGASE. Todos os direitos reservados.
-    </p>
+            <p class="copyright">
+                © 2026 ALUGASE. Todos os direitos reservados.
+            </p>
 
-  </div>
+        </div>
 
-</footer>
+    </footer>
 
 
     <!-- ==========================================
          JAVASCRIPT
     =========================================== -->
-<script src="./js/home.js"></script>
+    <script src="./js/home.js"></script>
+    <script src="./js/notificacoes-navbar.js"></script>
 
 
 </body>
+
 </html>
