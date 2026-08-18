@@ -5,22 +5,13 @@
 
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Chat | Alugase</title>
 
-    <link
-        rel="stylesheet"
-        href="./css/global.css"
-    >
+    <link rel="stylesheet" href="./css/global.css">
 
-    <link
-        rel="stylesheet"
-        href="./css/chat.css"
-    >
+    <link rel="stylesheet" href="./css/chat.css">
 
 </head>
 
@@ -28,326 +19,242 @@
 <body>
 
 
-<header>
+    <header>
 
-    <nav class="navbar">
+        <nav class="navbar">
 
-        <div class="logo">
+            <div class="logo">
 
-            <a href="index.html">
+                <a href="index.html">
 
-                <h2>ALUGASE</h2>
+                    <h2>ALUGASE</h2>
 
-            </a>
+                </a>
 
-        </div>
+            </div>
 
 
-        <div class="nav-buttons">
+            <div class="nav-buttons">
 
-            <a
-                href="perfil.html"
-                class="btn-secondary"
-            >
-                Meu Perfil
-            </a>
+                <a href="perfil.html" class="btn-secondary">
+                    Meu Perfil
+                </a>
 
-        </div>
+            </div>
 
-    </nav>
+        </nav>
 
-</header>
+    </header>
 
 
 
-<main class="chat-page">
+    <main class="chat-page">
 
 
-    <!-- ======================================
+        <!-- ======================================
          SIDEBAR
     ======================================= -->
 
-    <aside class="chat-sidebar">
+        <aside class="chat-sidebar">
 
-        <div class="sidebar-header">
+            <div class="sidebar-header">
 
-            <h2>Conversas</h2>
+                <h2>Conversas</h2>
 
-        </div>
+            </div>
 
 
-        <div id="conversation-list">
+            <div id="conversation-list">
 
-            <p
-                style="
+                <p style="
                     padding:20px;
                     color:#6b7280;
-                "
-            >
-                Carregando...
-            </p>
+                ">
+                    Carregando...
+                </p>
 
-        </div>
+            </div>
 
-    </aside>
-
+        </aside>
 
 
-    <!-- ======================================
+
+        <!-- ======================================
          CHAT
     ======================================= -->
 
-    <section class="chat-area">
+        <section class="chat-area">
 
 
-        <!-- HEADER -->
+            <!-- HEADER -->
 
-        <div class="chat-header">
+            <div class="chat-header">
 
-            <div class="chat-user">
+                <div class="chat-user">
 
-                <div
-                    class="avatar"
-                    id="chat-avatar"
-                >
-                    C
-                </div>
-
-
-                <div>
-
-                    <h3 id="chat-name">
-                        Carlos Almeida
-                    </h3>
-
-                    <span id="chat-status">
-                        Online
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <a
-                id="view-product"
-                class="btn-secondary"
-            >
-                Ver produto
-            </a>
-
-        </div>
-
-
-
-        <!-- ==================================
-             CARD DO ALUGUEL
-        =================================== -->
-
-        <div class="reservation-card">
-
-
-            <!-- BOTÃO -->
-
-            <button
-                id="toggle-reservation"
-                class="reservation-toggle"
-                type="button"
-            >
-
-                <div
-                    class="reservation-toggle-content"
-                >
-
-                    <div class="reservation-icon">
-                        📦
+                    <div class="avatar" id="chat-avatar">
+                        C
                     </div>
-
-
-                    <div
-                        class="reservation-toggle-text"
-                    >
-
-                        <span
-                            class="reservation-label"
-                        >
-                            Aluguel
-                        </span>
-
-
-                        <strong
-                            id="reservation-product-short"
-                            class="reservation-toggle-title"
-                        >
-                            Câmera Canon EOS
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <span
-                    id="reservation-arrow"
-                    class="reservation-arrow"
-                >
-                    ▼
-                </span>
-
-            </button>
-
-
-
-            <!-- DETALHES -->
-
-            <div
-                id="reservation-details"
-                class="reservation-details"
-            >
-
-
-                <div class="reservation-top">
 
 
                     <div>
 
-                        <span
-                            class="status"
-                            id="reservation-status"
-                        >
-                            Solicitado
-                        </span>
-
-
-                        <h3
-                            id="reservation-product"
-                        >
-                            Câmera Canon EOS
+                        <h3 id="chat-name">
+                            Carlos Almeida
                         </h3>
 
-
-                        <p
-                            id="reservation-period"
-                        >
-                            18/08/2026 até 20/08/2026
-                        </p>
+                        <span id="chat-status">
+                            Online
+                        </span>
 
                     </div>
-
-
-                    <div
-                        class="reservation-price"
-                        id="reservation-total"
-                    >
-                        R$ 460
-                    </div>
-
 
                 </div>
 
 
-
-                <div class="reservation-info">
-
-
-                    <div>
-
-                        <span>
-                            Diárias
-                        </span>
-
-                        <strong
-                            id="reservation-days"
-                        >
-                            3 dias
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Entrega
-                        </span>
-
-                        <strong
-                            id="reservation-delivery"
-                        >
-                            Retirada
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Caução
-                        </span>
-
-                        <strong
-                            id="reservation-deposit"
-                        >
-                            R$ 300
-                        </strong>
-
-                    </div>
-
-
-                </div>
-
+                <a id="view-product" class="btn-secondary">
+                    Ver produto
+                </a>
 
             </div>
 
-        </div>
+
+
+            <!-- ==================================
+             CARD DO ALUGUEL
+        =================================== -->
+            <div class="reservation-card">
+
+                <button id="toggle-reservation" class="reservation-toggle" type="button">
+
+                    <div class="reservation-toggle-content">
+
+                        <div class="reservation-icon">
+                            📦
+                        </div>
+
+                        <div class="reservation-toggle-text">
+
+                            <span class="reservation-label">
+                                Aluguel
+                            </span>
+
+                            <strong id="reservation-product-short" class="reservation-toggle-title">
+                                Câmera Canon EOS
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                    <span id="reservation-arrow" class="reservation-arrow">
+                        ▼
+                    </span>
+
+                </button>
+
+
+                <div id="reservation-details" class="reservation-details">
+
+                    <div class="reservation-top">
+
+                        <div>
+
+                            <span class="status" id="reservation-status">
+                                Solicitado
+                            </span>
+
+                            <h3 id="reservation-product">
+                                Câmera Canon EOS
+                            </h3>
+
+                            <p id="reservation-period">
+                                --
+                            </p>
+
+                        </div>
+
+                        <div class="reservation-price" id="reservation-total">
+                            R$ 0,00
+                        </div>
+
+                    </div>
+
+
+                    <div class="reservation-info">
+
+                        <div>
+
+                            <span>Diárias</span>
+
+                            <strong id="reservation-days">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Entrega</span>
+
+                            <strong id="reservation-delivery">
+                                --
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>Caução</span>
+
+                            <strong id="reservation-deposit">
+                                --
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
 
 
 
-        <!-- ==================================
+            <!-- ==================================
              MENSAGENS
         =================================== -->
 
-        <div
-            class="messages"
-            id="messages"
-        ></div>
+            <div class="messages" id="messages"></div>
 
 
 
-        <!-- ==================================
+            <!-- ==================================
              INPUT
         =================================== -->
 
-        <div class="message-box">
+            <div class="message-box">
 
-            <input
-                id="message-input"
-                type="text"
-                placeholder="Digite uma mensagem..."
-                autocomplete="off"
-            >
+                <input id="message-input" type="text" placeholder="Digite uma mensagem..." autocomplete="off">
 
 
-            <button
-                id="send-btn"
-                class="btn-primary"
-                type="button"
-            >
-                Enviar
-            </button>
+                <button id="send-btn" class="btn-primary" type="button">
+                    Enviar
+                </button>
 
-        </div>
+            </div>
 
 
-    </section>
+        </section>
 
 
-</main>
+    </main>
 
 
 
-<script src="./js/chat.js"></script>
+    <script src="./js/chat.js"></script>
 
 </body>
 
