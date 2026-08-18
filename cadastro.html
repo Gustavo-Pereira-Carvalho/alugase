@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta | Alugase</title>
+
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/auth.css">
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar">
+
+        <div class="logo">
+            <a href="index.html">
+                <h2>ALUGASE</h2>
+            </a>
+        </div>
+
+        <div class="nav-buttons">
+            <span class="auth-question">Já possui conta?</span>
+
+            <a href="login.html" class="btn-secondary">
+                Entrar
+            </a>
+        </div>
+
+    </nav>
+</header>
+
+<main class="auth-page">
+
+    <section class="auth-container">
+
+        <!-- Lado esquerdo -->
+        <div class="auth-info">
+
+            <div class="auth-brand">ALUGASE</div>
+
+            <h1>
+                Crie sua conta e comece a gerar renda.
+            </h1>
+
+            <p>
+                Em poucos minutos você poderá anunciar produtos,
+                alugar equipamentos e utilizar a plataforma com segurança.
+            </p>
+
+            <div class="auth-benefits">
+
+                <div class="auth-benefit">
+                    <span>✓</span>
+                    <p>Anuncie gratuitamente</p>
+                </div>
+
+                <div class="auth-benefit">
+                    <span>✓</span>
+                    <p>Alugue com proteção e caução</p>
+                </div>
+
+                <div class="auth-benefit">
+                    <span>✓</span>
+                    <p>Avaliações entre usuários</p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Formulário -->
+        <div class="auth-card">
+
+            <div class="auth-header">
+                <h2>Criar conta</h2>
+                <p>Preencha seus dados para começar.</p>
+            </div>
+
+            <form id="register-form" autocomplete="off"> 
+
+                <div class="form-group">
+                    <label for="name">Nome completo</label>
+                    <input
+                        type="text"
+                        id="name"
+                        placeholder="Gustavo Pereira"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="gustavo@email.com"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Telefone</label>
+                    <input
+                        type="tel"
+                        id="phone"
+                        placeholder="(11) 99999-9999"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="city">Cidade</label>
+                    <input
+                        type="text"
+                        id="city"
+                        placeholder="São Paulo"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Senha</label>
+
+                    <div class="password-input">
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Mínimo 8 caracteres"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="toggle-password"
+                        >
+                            👁️
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">
+                        Confirmar senha
+                    </label>
+
+                    <div class="password-input">
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Repita sua senha"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            id="toggle-confirm"
+                        >
+                            👁️
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <label class="remember-me">
+
+                    <input
+                        type="checkbox"
+                        id="terms"
+                        required
+                    >
+
+                    <span>
+                        Aceito os <a href="termos.html">Termos de Uso e Política de Privacidade</a>
+                    </span>
+
+                </label>
+
+                <button
+                    class="btn-primary auth-submit"
+                    type="submit"
+                >
+                    Criar conta
+                </button>
+
+            </form>
+
+            <div class="auth-footer">
+
+                <span>Já possui uma conta?</span>
+
+                <a href="login.html">
+                    Entrar
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="auth-footer-page">
+    <p>© 2026 Alugase. Todos os direitos reservados.</p>
+</footer>
+
+<script src="./js/cadastro.js"></script>
+
+</body>
+</html>
