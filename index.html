@@ -17,116 +17,120 @@
 <body>
 <header>
 
-    <!-- LOGO -->
+    <nav class="navbar">
 
-    <div class="logo">
+        <!-- LOGO -->
 
-        <a href="index.html">
+        <div class="logo">
 
-            <img
-                src="assets/logo.png"
-                alt="Logo Alugase"
+            <a href="index.html">
+
+                <img
+                    src="assets/logo.png"
+                    alt="Logo Alugase"
+                >
+
+                <h2>ALUGASE</h2>
+
+            </a>
+
+        </div>
+
+
+        <!-- MENU -->
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">
+                    Início
+                </a>
+            </li>
+
+            <li>
+                <a href="explorar.html">
+                    Explorar
+                </a>
+            </li>
+
+            <li>
+                <a href="index.html#categorias">
+                    Categorias
+                </a>
+            </li>
+
+            <li>
+                <a href="index.html#como-funciona">
+                    Como funciona
+                </a>
+            </li>
+
+        </ul>
+
+
+        <!-- AÇÕES -->
+
+        <div class="nav-buttons">
+
+            <!-- NOTIFICAÇÕES -->
+
+            <button
+                class="notification-nav"
+                id="notification-button"
+                type="button"
+                aria-label="Notificações"
+                title="Notificações"
             >
 
-            <h2>ALUGASE</h2>
+                <span class="notification-bell">
+                    🔔
+                </span>
 
-        </a>
+                <span
+                    class="notification-badge"
+                    id="notification-badge"
+                    style="display:none;"
+                ></span>
 
-    </div>
-
-
-    <!-- MENU -->
-
-    <ul class="nav-links">
-
-        <li>
-            <a href="index.html">
-                Início
-            </a>
-        </li>
-
-        <li>
-            <a href="explorar.html">
-                Explorar
-            </a>
-        </li>
-
-        <li>
-            <a href="index.html#categorias">
-                Categorias
-            </a>
-        </li>
-
-        <li>
-            <a href="index.html#como-funciona">
-                Como funciona
-            </a>
-        </li>
-
-    </ul>
+            </button>
 
 
-    <!-- AÇÕES -->
+            <!-- ENTRAR -->
 
-    <div class="nav-buttons">
+            <button
+                class="btn-secondary"
+                id="login-button"
+                type="button"
+            >
+                Entrar
+            </button>
 
-        <!-- NOTIFICAÇÕES -->
 
-        <button
-            class="notification-nav"
-            id="notification-button"
-            type="button"
-            aria-label="Notificações"
-            title="Notificações"
-        >
+            <!-- PERFIL -->
 
-            <span class="notification-bell">
-                🔔
-            </span>
-
-            <span
-                class="notification-badge"
-                id="notification-badge"
+            <button
+                class="btn-secondary"
+                id="profile-button"
+                type="button"
                 style="display:none;"
-            ></span>
-
-        </button>
-
-
-        <!-- ENTRAR -->
-
-        <button
-            class="btn-secondary"
-            id="login-button"
-            type="button"
-        >
-            Entrar
-        </button>
+            >
+                Meu Perfil
+            </button>
 
 
-        <!-- PERFIL -->
+            <!-- ANUNCIAR -->
 
-        <button
-            class="btn-secondary"
-            id="profile-button"
-            type="button"
-            style="display:none;"
-        >
-            Meu Perfil
-        </button>
+            <button
+                class="btn-primary"
+                id="announce-button"
+                type="button"
+            >
+                Anunciar
+            </button>
 
+        </div>
 
-        <!-- ANUNCIAR -->
-
-        <button
-            class="btn-primary"
-            id="announce-button"
-            type="button"
-        >
-            Anunciar
-        </button>
-
-    </div>
+    </nav>
 
 </header>
 
