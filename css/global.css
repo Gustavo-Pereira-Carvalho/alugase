@@ -1,6 +1,6 @@
 /* =========================================================
    ALUGASE — GLOBAL CSS
-   Versão limpa e consolidada
+   Header padronizado
 ========================================================= */
 
 
@@ -121,45 +121,6 @@ header {
 
 
 /* =========================================================
-   MENU MOBILE
-========================================================= */
-
-.mobile-menu-button {
-
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    width: 42px;
-    height: 42px;
-
-    flex-shrink: 0;
-
-    border: none;
-
-    border-radius: 10px;
-
-    background: #f0fdf4;
-
-    color: #166534;
-
-    font-size: 22px;
-
-    line-height: 1;
-
-    transition: 0.2s ease;
-}
-
-.mobile-menu-button:hover {
-
-    background: var(--primary-light);
-
-    transform: translateY(-1px);
-}
-
-
-/* =========================================================
    LOGO
 ========================================================= */
 
@@ -272,7 +233,9 @@ header {
 }
 
 
-/* BOTÃO PRIMÁRIO */
+/* =========================================================
+   BOTÃO PRIMÁRIO
+========================================================= */
 
 .btn-primary {
 
@@ -294,7 +257,9 @@ header {
 }
 
 
-/* BOTÃO SECUNDÁRIO */
+/* =========================================================
+   BOTÃO SECUNDÁRIO
+========================================================= */
 
 .btn-secondary {
 
@@ -357,7 +322,9 @@ header {
 }
 
 
-/* BADGE DO CHAT */
+/* =========================================================
+   BADGE DO CHAT
+========================================================= */
 
 .chat-badge {
 
@@ -439,7 +406,9 @@ header {
 }
 
 
-/* BADGE DAS NOTIFICAÇÕES */
+/* =========================================================
+   BADGE DAS NOTIFICAÇÕES
+========================================================= */
 
 .notification-badge {
 
@@ -474,71 +443,6 @@ header {
 .notification-badge.show {
 
     display: flex;
-}
-
-
-/* =========================================================
-   MENU MOBILE
-========================================================= */
-
-.mobile-menu {
-
-    display: none;
-
-    position: absolute;
-
-    top: calc(100% + 8px);
-
-    left: 3%;
-
-    right: 3%;
-
-    background: #ffffff;
-
-    border: 1px solid var(--border);
-
-    border-radius: 14px;
-
-    box-shadow: var(--shadow);
-
-    padding: 8px;
-
-    z-index: 1100;
-}
-
-.mobile-menu.active {
-
-    display: flex;
-
-    flex-direction: column;
-}
-
-.mobile-menu a {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 12px;
-
-    padding: 13px 14px;
-
-    border-radius: 10px;
-
-    color: var(--text);
-
-    font-size: 15px;
-
-    font-weight: 600;
-
-    transition: 0.2s ease;
-}
-
-.mobile-menu a:hover {
-
-    background: var(--background-secondary);
-
-    color: var(--primary);
 }
 
 
@@ -1051,22 +955,12 @@ footer {
 
         min-height: 66px;
 
-        gap: 10px;
+        gap: 8px;
     }
 
 
     /* -----------------------------------------
-       MENU HAMBURGER
-    ----------------------------------------- */
-
-    .mobile-menu-button {
-
-        display: flex;
-    }
-
-
-    /* -----------------------------------------
-       LINKS DESKTOP
+       MENU DESKTOP
     ----------------------------------------- */
 
     .nav-links {
@@ -1088,9 +982,7 @@ footer {
 
     .logo a {
 
-        justify-content: center;
-
-        gap: 6px;
+        gap: 5px;
     }
 
     .logo img {
@@ -1112,27 +1004,49 @@ footer {
 
     .nav-buttons {
 
-        gap: 7px;
+        gap: 6px;
     }
 
 
     /*
-       Entrar e Anunciar ficam dentro
-       do menu mobile.
+       IMPORTANTE:
+       Entrar e Anunciar continuam visíveis.
     */
 
     .nav-buttons .btn-primary,
     .nav-buttons .btn-secondary {
 
-        display: none;
+        display: block;
+
+        padding: 9px 12px;
+
+        font-size: 13px;
     }
 
 
     /* -----------------------------------------
-       CHAT / NOTIFICAÇÕES
+       CHAT
     ----------------------------------------- */
 
-    .chat-nav,
+    .chat-nav {
+
+        width: 38px;
+
+        height: 38px;
+
+        border-radius: 10px;
+    }
+
+    .chat-icon {
+
+        font-size: 19px;
+    }
+
+
+    /* -----------------------------------------
+       NOTIFICAÇÕES
+    ----------------------------------------- */
+
     .notification-nav {
 
         width: 38px;
@@ -1142,75 +1056,9 @@ footer {
         border-radius: 10px;
     }
 
-    .chat-icon,
     .notification-bell {
 
         font-size: 19px;
-    }
-
-
-    /* -----------------------------------------
-       MENU MOBILE
-    ----------------------------------------- */
-
-    .mobile-menu {
-
-        display: none;
-
-        position: absolute;
-
-        top: 100%;
-
-        left: 3%;
-
-        right: 3%;
-
-        background: #ffffff;
-
-        border: 1px solid var(--border);
-
-        border-radius: 14px;
-
-        box-shadow: var(--shadow);
-
-        padding: 8px;
-
-        z-index: 1100;
-    }
-
-    .mobile-menu.active {
-
-        display: flex;
-
-        flex-direction: column;
-    }
-
-    .mobile-menu a {
-
-        display: flex;
-
-        align-items: center;
-
-        gap: 12px;
-
-        padding: 13px 14px;
-
-        border-radius: 10px;
-
-        color: var(--text);
-
-        font-size: 15px;
-
-        font-weight: 600;
-
-        transition: 0.2s ease;
-    }
-
-    .mobile-menu a:hover {
-
-        background: var(--background-secondary);
-
-        color: var(--primary);
     }
 
 
@@ -1369,52 +1217,89 @@ footer {
    CELULARES PEQUENOS
 ========================================================= */
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
 
     .navbar {
 
         width: 96%;
-    }
-
-    .mobile-menu-button {
-
-        width: 36px;
-
-        height: 36px;
-
-        font-size: 20px;
-    }
-
-    .logo a {
 
         gap: 5px;
     }
 
+
+    /* -----------------------------------------
+       LOGO
+    ----------------------------------------- */
+
+    .logo {
+
+        min-width: 0;
+    }
+
+    .logo a {
+
+        gap: 4px;
+    }
+
     .logo img {
 
-        width: 32px;
+        width: 31px;
 
-        height: 32px;
+        height: 31px;
     }
 
     .logo h2 {
 
-        font-size: 18px;
+        font-size: 17px;
+
+        letter-spacing: 0.5px;
+    }
+
+
+    /* -----------------------------------------
+       AÇÕES
+    ----------------------------------------- */
+
+    .nav-buttons {
+
+        gap: 4px;
     }
 
     .chat-nav,
     .notification-nav {
 
-        width: 36px;
+        width: 34px;
 
-        height: 36px;
+        height: 34px;
+
+        border-radius: 9px;
     }
 
     .chat-icon,
     .notification-bell {
 
-        font-size: 18px;
+        font-size: 17px;
     }
+
+
+    /* -----------------------------------------
+       ENTRAR / ANUNCIAR
+    ----------------------------------------- */
+
+    .nav-buttons .btn-primary,
+    .nav-buttons .btn-secondary {
+
+        padding: 8px 9px;
+
+        font-size: 12px;
+
+        border-radius: 8px;
+    }
+
+
+    /* -----------------------------------------
+       BADGES
+    ----------------------------------------- */
 
     .chat-badge,
     .notification-badge {
@@ -1426,10 +1311,20 @@ footer {
         font-size: 9px;
     }
 
+
+    /* -----------------------------------------
+       HERO
+    ----------------------------------------- */
+
     .hero h1 {
 
         font-size: 34px;
     }
+
+
+    /* -----------------------------------------
+       CATEGORIAS
+    ----------------------------------------- */
 
     .category-card {
 
