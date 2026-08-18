@@ -622,3 +622,80 @@ footer{
         font-size: 28px;
     }
 }
+
+/* ==========================================
+   NOTIFICAÇÕES — NAVBAR
+========================================== */
+
+.notification-nav{
+    position:relative;
+    width:42px;
+    height:42px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+
+    border-radius:12px;
+
+    color:#166534;
+
+    background:#f0fdf4;
+
+    transition:.2s;
+}
+
+.notification-nav:hover{
+    background:#dcfce7;
+    transform:translateY(-1px);
+}
+
+.notification-bell{
+    font-size:21px;
+    line-height:1;
+}
+
+.notification-badge{
+    position:absolute;
+
+    top:-4px;
+    right:-4px;
+
+    min-width:19px;
+    height:19px;
+
+    padding:0 5px;
+
+    border-radius:999px;
+
+    background:#dc2626;
+    color:#fff;
+
+    font-size:10px;
+    font-weight:800;
+
+    align-items:center;
+    justify-content:center;
+
+    border:2px solid #fff;
+}
+
+
+/* ==========================================
+   NAVBAR MOBILE
+========================================== */
+
+@media(max-width:768px){
+
+    .notification-nav{
+        width:38px;
+        height:38px;
+    }
+
+    .notification-bell{
+        font-size:19px;
+    }
+
+}

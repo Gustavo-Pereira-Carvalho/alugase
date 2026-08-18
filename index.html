@@ -2,15 +2,27 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Alugase | Alugue o que precisa</title>
 
-    <link rel="stylesheet" href="./css/global.css">
+    <link
+        rel="stylesheet"
+        href="./css/global.css"
+    >
+
 </head>
 
+
 <body>
+
+
     <!-- ==========================================
          HEADER
     =========================================== -->
@@ -19,53 +31,137 @@
 
         <nav class="navbar">
 
-            <!-- LOGO -->
+
+            <!-- ======================================
+                 LOGO
+            ======================================= -->
+
             <div class="logo">
+
                 <a href="index.html">
-                    <img src="assets/logo.png" alt="Logo Alugase">
-                    <h2>ALUGASE</h2>
+
+                    <img
+                        src="assets/logo.png"
+                        alt="Logo Alugase"
+                    >
+
+                    <h2>
+                        ALUGASE
+                    </h2>
+
                 </a>
+
             </div>
 
 
-            <!-- MENU -->
+            <!-- ======================================
+                 MENU
+            ======================================= -->
+
             <ul class="nav-links">
 
                 <li>
-                    <a href="index.html">Início</a>
+                    <a href="index.html">
+                        Início
+                    </a>
                 </li>
 
                 <li>
-                    <a href="explorar.html">Explorar</a>
+                    <a href="explorar.html">
+                        Explorar
+                    </a>
                 </li>
 
                 <li>
-                    <a href="#categorias">Categorias</a>
+                    <a href="#categorias">
+                        Categorias
+                    </a>
                 </li>
 
                 <li>
-                    <a href="#como-funciona">Como funciona</a>
+                    <a href="#como-funciona">
+                        Como funciona
+                    </a>
                 </li>
 
             </ul>
 
 
-            <!-- BOTÕES -->
+            <!-- ======================================
+                 BOTÕES
+            ======================================= -->
+
             <div class="nav-buttons">
 
-                <button
+
+                <!-- NOTIFICAÇÕES -->
+
+                <a
+                    href="notificacoes.html"
+                    class="notification-nav"
+                    id="notification-nav"
+                    aria-label="Notificações"
+                    title="Notificações"
+                >
+
+                    <span class="notification-bell">
+                        🔔
+                    </span>
+
+                    <span
+                        class="notification-badge"
+                        id="notification-badge"
+                        style="display:none;"
+                    >
+                        0
+                    </span>
+
+                </a>
+
+
+                <!-- CHAT -->
+
+                <a
+                    href="chat.html"
                     class="btn-secondary"
-                    type="button"
+                    id="chat-nav"
+                >
+                    Conversas
+                </a>
+
+
+                <!-- ENTRAR -->
+
+                <a
+                    href="login.html"
+                    class="btn-secondary"
+                    id="login-button"
                 >
                     Entrar
-                </button>
+                </a>
 
-                <button
+
+                <!-- ANUNCIAR -->
+
+                <a
+                    href="anunciar.html"
                     class="btn-primary"
-                    type="button"
+                    id="announce-button"
                 >
                     Anunciar
-                </button>
+                </a>
+
+
+                <!-- PERFIL -->
+
+                <a
+                    href="perfil.html"
+                    class="btn-primary"
+                    id="profile-button"
+                    style="display:none;"
+                >
+                    Meu Perfil
+                </a>
 
             </div>
 
@@ -74,31 +170,53 @@
     </header>
 
 
+
     <!-- ==========================================
-         HERO
+         MAIN
     =========================================== -->
 
     <main>
+
+
+        <!-- ======================================
+             HERO
+        ======================================= -->
 
         <section class="hero">
 
             <div class="hero-content">
 
+
                 <h1>
+
                     Encontre o que precisa.
+
                     <br>
+
                     Alugue pelo tempo que precisar.
+
                 </h1>
 
+
                 <p>
-                    Produtos, equipamentos e serviços perto de você.
-                    Economize dinheiro e gere renda compartilhando recursos.
+
+                    Produtos, equipamentos e serviços
+                    perto de você.
+
+                    <br>
+
+                    Economize dinheiro e gere renda
+                    compartilhando recursos.
+
                 </p>
 
 
-                <!-- BUSCA -->
+                <!-- ==================================
+                     BUSCA
+                =================================== -->
 
                 <div class="search-box">
+
 
                     <input
                         type="search"
@@ -107,19 +225,24 @@
                         aria-label="Pesquisar produtos"
                     >
 
+
                     <button
                         class="btn-primary"
                         id="search-button"
                         type="button"
                     >
+
                         Buscar
+
                     </button>
+
 
                 </div>
 
             </div>
 
         </section>
+
 
 
         <!-- ==========================================
@@ -130,6 +253,7 @@
             class="categories"
             id="categorias"
         >
+
 
             <h2>
                 Explore por categoria
@@ -258,23 +382,43 @@
 
                 </div>
 
+
             </div>
 
         </section>
 
 
+
         <!-- ==========================================
              PRODUTOS EM DESTAQUE
         =========================================== -->
-<section class="products" id="produtos">
 
-    <h2>Produtos em destaque</h2>
+        <section
+            class="products"
+            id="produtos"
+        >
 
-    <div class="products-grid" id="products-grid">
-        <!-- Os produtos serão criados pelo home.js -->
-    </div>
 
-</section>
+            <h2>
+                Produtos em destaque
+            </h2>
+
+
+            <div
+                class="products-grid"
+                id="products-grid"
+            >
+
+                <!--
+                    Os produtos são carregados
+                    pelo home.js
+                -->
+
+            </div>
+
+
+        </section>
+
 
 
         <!-- ==========================================
@@ -283,23 +427,32 @@
 
         <section class="banner">
 
+
             <h2>
                 Tem algo parado?
             </h2>
 
+
             <p>
+
                 Transforme seus produtos em renda extra
                 anunciando no Alugase.
+
             </p>
 
-            <button
+
+            <a
+                href="anunciar.html"
                 class="btn-primary"
-                type="button"
             >
+
                 Anunciar agora
-            </button>
+
+            </a>
+
 
         </section>
+
 
 
         <!-- ==========================================
@@ -310,6 +463,7 @@
             class="steps"
             id="como-funciona"
         >
+
 
             <h2>
                 Como funciona
@@ -327,16 +481,21 @@
                         🔍
                     </div>
 
+
                     <h3>
                         Encontre
                     </h3>
 
+
                     <p>
+
                         Pesquise o produto ou serviço
                         que você precisa.
+
                     </p>
 
                 </div>
+
 
 
                 <!-- PASSO 2 -->
@@ -347,16 +506,21 @@
                         📅
                     </div>
 
+
                     <h3>
                         Escolha
                     </h3>
 
+
                     <p>
+
                         Escolha o período em que
                         deseja utilizar.
+
                     </p>
 
                 </div>
+
 
 
                 <!-- PASSO 3 -->
@@ -367,16 +531,21 @@
                         🤝
                     </div>
 
+
                     <h3>
                         Alugue
                     </h3>
 
+
                     <p>
+
                         Faça sua solicitação e combine
                         a entrega ou retirada.
+
                     </p>
 
                 </div>
+
 
 
                 <!-- PASSO 4 -->
@@ -387,66 +556,321 @@
                         ⭐
                     </div>
 
+
                     <h3>
                         Avalie
                     </h3>
 
+
                     <p>
+
                         Após a devolução, avalie sua
                         experiência no Alugase.
+
                     </p>
 
                 </div>
+
 
             </div>
 
         </section>
 
+
     </main>
+
 
 
     <!-- ==========================================
          FOOTER
     =========================================== -->
 
-<footer>
+    <footer>
 
-  <div class="footer-content">
+        <div class="footer-content">
 
-    <h2>ALUGASE</h2>
 
-    <p>
-      Alugue o que precisa. Monetize o que já possui.
-    </p>
+            <h2>
+                ALUGASE
+            </h2>
 
-    <div class="footer-links">
 
-      <a href="sobre.html">Sobre</a>
+            <p>
 
-      <a href="explorar.html">Explorar</a>
+                Alugue o que precisa.
+                Monetize o que já possui.
 
-      <a href="ajuda.html">Ajuda</a>
+            </p>
 
-      <a href="termos.html">Termos</a>
 
-      <a href="privacidade.html">Privacidade</a>
+            <div class="footer-links">
 
-    </div>
+                <a href="sobre.html">
+                    Sobre
+                </a>
 
-    <p class="copyright">
-      © 2026 ALUGASE. Todos os direitos reservados.
-    </p>
+                <a href="explorar.html">
+                    Explorar
+                </a>
 
-  </div>
+                <a href="ajuda.html">
+                    Ajuda
+                </a>
 
-</footer>
+                <a href="termos.html">
+                    Termos
+                </a>
+
+                <a href="privacidade.html">
+                    Privacidade
+                </a>
+
+            </div>
+
+
+            <p class="copyright">
+
+                © 2026 ALUGASE.
+                Todos os direitos reservados.
+
+            </p>
+
+
+        </div>
+
+    </footer>
+
 
 
     <!-- ==========================================
          JAVASCRIPT
     =========================================== -->
-<script src="./js/home.js"></script>
+
+    <script src="./js/home.js"></script>
+
+
+    <!-- ==========================================
+         NOTIFICAÇÕES DO NAVBAR
+    =========================================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            async () => {
+
+                const user =
+                    JSON.parse(
+                        localStorage.getItem(
+                            "alugase_user"
+                        )
+                    );
+
+
+                const loginButton =
+                    document.querySelector(
+                        "#login-button"
+                    );
+
+
+                const announceButton =
+                    document.querySelector(
+                        "#announce-button"
+                    );
+
+
+                const profileButton =
+                    document.querySelector(
+                        "#profile-button"
+                    );
+
+
+                const chatNav =
+                    document.querySelector(
+                        "#chat-nav"
+                    );
+
+
+                const notificationNav =
+                    document.querySelector(
+                        "#notification-nav"
+                    );
+
+
+                const badge =
+                    document.querySelector(
+                        "#notification-badge"
+                    );
+
+
+                // ==================================
+                // USUÁRIO NÃO LOGADO
+                // ==================================
+
+                if (!user) {
+
+                    if (profileButton) {
+
+                        profileButton.style.display =
+                            "none";
+
+                    }
+
+                    if (chatNav) {
+
+                        chatNav.style.display =
+                            "none";
+
+                    }
+
+                    if (notificationNav) {
+
+                        notificationNav.style.display =
+                            "none";
+
+                    }
+
+                    if (loginButton) {
+
+                        loginButton.style.display =
+                            "inline-flex";
+
+                    }
+
+                    if (announceButton) {
+
+                        announceButton.style.display =
+                            "inline-flex";
+
+                    }
+
+                    return;
+
+                }
+
+
+                // ==================================
+                // USUÁRIO LOGADO
+                // ==================================
+
+                if (loginButton) {
+
+                    loginButton.style.display =
+                        "none";
+
+                }
+
+
+                if (profileButton) {
+
+                    profileButton.style.display =
+                        "inline-flex";
+
+                }
+
+
+                if (chatNav) {
+
+                    chatNav.style.display =
+                        "inline-flex";
+
+                }
+
+
+                if (notificationNav) {
+
+                    notificationNav.style.display =
+                        "flex";
+
+                }
+
+
+                // ==================================
+                // BUSCAR NÃO LIDAS
+                // ==================================
+
+                async function loadNotificationCount() {
+
+                    try {
+
+                        const response =
+                            await fetch(
+
+                                `https://alugase-api.onrender.com/api/notifications/user/${user._id}/unread-count`
+
+                            );
+
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                "Erro ao buscar notificações."
+                            );
+
+                        }
+
+
+                        const data =
+                            await response.json();
+
+
+                        const count =
+                            Number(data.count || 0);
+
+
+                        if (count > 0) {
+
+                            badge.style.display =
+                                "flex";
+
+
+                            badge.textContent =
+                                count > 99
+                                    ? "99+"
+                                    : count;
+
+                        }
+
+                        else {
+
+                            badge.style.display =
+                                "none";
+
+                        }
+
+
+                    }
+
+                    catch (error) {
+
+                        console.error(
+                            "ERRO AO BUSCAR NOTIFICAÇÕES:",
+                            error
+                        );
+
+                    }
+
+                }
+
+
+                await loadNotificationCount();
+
+
+                // Atualiza periodicamente
+
+                setInterval(
+                    loadNotificationCount,
+                    5000
+                );
+
+
+            }
+
+        );
+
+    </script>
 
 
 </body>
+
 </html>
