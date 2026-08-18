@@ -1,18 +1,15 @@
-/* =========================================================
+/* ================================
    ALUGASE — GLOBAL CSS
-   Header padronizado
-========================================================= */
+   ================================ */
 
-
-/* =========================================================
-   RESET
-========================================================= */
+/* ---------- RESET ---------- */
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
+
 
 html {
     scroll-behavior: smooth;
@@ -26,9 +23,7 @@ body {
 }
 
 button,
-input,
-select,
-textarea {
+input {
     font: inherit;
 }
 
@@ -41,18 +36,9 @@ a {
     text-decoration: none;
 }
 
-img {
-    max-width: 100%;
-    display: block;
-}
-
-
-/* =========================================================
-   VARIÁVEIS
-========================================================= */
+/* ---------- CORES ---------- */
 
 :root {
-
     --primary: #16a34a;
     --primary-dark: #15803d;
     --primary-light: #dcfce7;
@@ -66,13 +52,9 @@ img {
     --border: #e5e9e6;
 
     --shadow: 0 10px 30px rgba(20, 40, 25, 0.08);
-
 }
 
-
-/* =========================================================
-   CONTAINERS
-========================================================= */
+/* ---------- CONTAINER ---------- */
 
 .navbar,
 .hero-content,
@@ -84,140 +66,81 @@ img {
     margin: 0 auto;
 }
 
-
-/* =========================================================
-   HEADER
-========================================================= */
+/* ---------- NAVBAR ---------- */
 
 header {
     width: 100%;
-
     background: #ffffff;
-
     border-bottom: 1px solid var(--border);
-
-    position: relative;
-
-    z-index: 1000;
 }
 
-
-/* =========================================================
-   NAVBAR
-========================================================= */
-
 .navbar {
-
     min-height: 76px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 
-    gap: 24px;
+    gap: 30px;
 }
 
-
-/* =========================================================
+/* ==========================
    LOGO
-========================================================= */
+========================== */
 
-.logo {
-    flex-shrink: 0;
+.logo a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-decoration:none;
 }
 
-.logo a {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
+.logo img{
+    width:46px;
+    height:46px;
+    object-fit:contain;
 }
 
-.logo img {
-
-    width: 46px;
-    height: 46px;
-
-    object-fit: contain;
+.logo h2{
+    color:#16A34A;
+    font-size:28px;
+    font-weight:800;
+    letter-spacing:1px;
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
 }
-
-.logo h2 {
-
-    margin: 0;
-
-    color: var(--primary);
-
-    font-size: 28px;
-
-    font-weight: 800;
-
-    letter-spacing: 1px;
-}
-
-
-/* =========================================================
-   MENU PRINCIPAL
-========================================================= */
 
 .nav-links {
-
-    flex: 1;
-
     display: flex;
-
     align-items: center;
-
-    justify-content: center;
-
-    gap: 26px;
+    gap: 30px;
 
     list-style: none;
 }
 
 .nav-links a {
-
     color: var(--text-secondary);
-
     font-size: 15px;
+    font-weight: 500;
 
-    font-weight: 600;
-
-    transition: color 0.2s ease;
+    transition: 0.2s ease;
 }
 
 .nav-links a:hover {
-
     color: var(--primary);
 }
 
-
-/* =========================================================
-   AÇÕES DA NAVBAR
-========================================================= */
-
 .nav-buttons {
-
     display: flex;
-
     align-items: center;
-
-    gap: 10px;
-
-    flex-shrink: 0;
+    gap: 12px;
 }
 
-
-/* =========================================================
-   BOTÕES
-========================================================= */
+/* ---------- BOTÕES ---------- */
 
 .btn-primary,
 .btn-secondary {
-
+    border: none;
     border-radius: 10px;
 
     padding: 11px 20px;
@@ -227,245 +150,45 @@ header {
     transition:
         transform 0.2s ease,
         background 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease,
         box-shadow 0.2s ease;
 }
 
-
-/* =========================================================
-   BOTÃO PRIMÁRIO
-========================================================= */
-
 .btn-primary {
-
-    border: none;
-
     background: var(--primary);
-
     color: #ffffff;
 }
 
 .btn-primary:hover {
-
     background: var(--primary-dark);
-
     transform: translateY(-2px);
-
-    box-shadow:
-        0 8px 20px rgba(22, 163, 74, 0.2);
+    box-shadow: 0 8px 20px rgba(22, 163, 74, 0.2);
 }
 
-
-/* =========================================================
-   BOTÃO SECUNDÁRIO
-========================================================= */
-
 .btn-secondary {
-
     background: transparent;
-
     color: var(--text);
-
     border: 1px solid var(--border);
 }
 
 .btn-secondary:hover {
-
     border-color: var(--primary);
-
     color: var(--primary);
 }
 
-
-/* =========================================================
-   CHAT
-========================================================= */
-
-.chat-nav {
-
-    position: relative;
-
-    width: 42px;
-    height: 42px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    flex-shrink: 0;
-
-    border: none;
-
-    border-radius: 12px;
-
-    background: #f0fdf4;
-
-    color: #166534;
-
-    transition: 0.2s ease;
-}
-
-.chat-nav:hover {
-
-    background: var(--primary-light);
-
-    transform: translateY(-1px);
-}
-
-.chat-icon {
-
-    font-size: 21px;
-
-    line-height: 1;
-}
-
-
-/* =========================================================
-   BADGE DO CHAT
-========================================================= */
-
-.chat-badge {
-
-    position: absolute;
-
-    top: -4px;
-    right: -4px;
-
-    min-width: 19px;
-    height: 19px;
-
-    padding: 0 5px;
-
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 999px;
-
-    background: #dc2626;
-
-    color: #ffffff;
-
-    font-size: 10px;
-
-    font-weight: 800;
-
-    border: 2px solid #ffffff;
-}
-
-.chat-badge.show {
-
-    display: flex;
-}
-
-
-/* =========================================================
-   NOTIFICAÇÕES
-========================================================= */
-
-.notification-nav {
-
-    position: relative;
-
-    width: 42px;
-    height: 42px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    flex-shrink: 0;
-
-    border: none;
-
-    border-radius: 12px;
-
-    background: #f0fdf4;
-
-    color: #166534;
-
-    transition: 0.2s ease;
-}
-
-.notification-nav:hover {
-
-    background: var(--primary-light);
-
-    transform: translateY(-1px);
-}
-
-.notification-bell {
-
-    font-size: 21px;
-
-    line-height: 1;
-}
-
-
-/* =========================================================
-   BADGE DAS NOTIFICAÇÕES
-========================================================= */
-
-.notification-badge {
-
-    position: absolute;
-
-    top: -4px;
-    right: -4px;
-
-    min-width: 19px;
-    height: 19px;
-
-    padding: 0 5px;
-
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 999px;
-
-    background: #dc2626;
-
-    color: #ffffff;
-
-    font-size: 10px;
-
-    font-weight: 800;
-
-    border: 2px solid #ffffff;
-}
-
-.notification-badge.show {
-
-    display: flex;
-}
-
-
-/* =========================================================
-   HERO
-========================================================= */
+/* ---------- HERO ---------- */
 
 .hero {
-
     min-height: 560px;
 
     display: flex;
-
     align-items: center;
 
     background:
-
         radial-gradient(
             circle at 80% 30%,
             rgba(22, 163, 74, 0.13),
             transparent 35%
         ),
-
         linear-gradient(
             135deg,
             #f7fcf8 0%,
@@ -474,16 +197,13 @@ header {
 }
 
 .hero-content {
-
     padding: 80px 0;
 }
 
 .hero h1 {
-
     max-width: 760px;
 
     font-size: clamp(40px, 5vw, 64px);
-
     line-height: 1.08;
 
     letter-spacing: -2px;
@@ -492,7 +212,6 @@ header {
 }
 
 .hero p {
-
     max-width: 650px;
 
     color: var(--text-secondary);
@@ -502,17 +221,12 @@ header {
     margin-bottom: 35px;
 }
 
-
-/* =========================================================
-   BUSCA
-========================================================= */
+/* ---------- BUSCA ---------- */
 
 .search-box {
-
     width: min(720px, 100%);
 
     display: flex;
-
     align-items: center;
 
     background: #ffffff;
@@ -527,48 +241,36 @@ header {
 }
 
 .search-box input {
-
     flex: 1;
 
-    min-width: 0;
-
     border: none;
-
     outline: none;
 
     padding: 14px 16px;
 
     color: var(--text);
-
     background: transparent;
 }
 
 .search-box input::placeholder {
-
     color: #9aa39d;
 }
 
 .search-box .btn-primary {
-
     padding: 13px 25px;
 }
 
-
-/* =========================================================
-   SEÇÕES
-========================================================= */
+/* ---------- SEÇÕES ---------- */
 
 .categories,
 .products,
 .steps {
-
     padding: 90px 0;
 }
 
 .categories h2,
 .products h2,
 .steps h2 {
-
     font-size: 32px;
 
     letter-spacing: -1px;
@@ -576,13 +278,9 @@ header {
     margin-bottom: 35px;
 }
 
-
-/* =========================================================
-   CATEGORIAS
-========================================================= */
+/* ---------- CATEGORIAS ---------- */
 
 .category-grid {
-
     display: grid;
 
     grid-template-columns: repeat(6, 1fr);
@@ -591,15 +289,11 @@ header {
 }
 
 .category-card {
-
     min-height: 130px;
 
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
-
     justify-content: center;
 
     gap: 10px;
@@ -616,16 +310,13 @@ header {
 }
 
 .category-card span {
-
     color: var(--text);
 
     font-size: 14px;
-
     font-weight: 600;
 }
 
 .category-card:hover {
-
     transform: translateY(-5px);
 
     border-color: #bbebc9;
@@ -635,18 +326,13 @@ header {
     background: #ffffff;
 }
 
-
-/* =========================================================
-   PRODUTOS
-========================================================= */
+/* ---------- PRODUTOS ---------- */
 
 .products {
-
     background: #ffffff;
 }
 
 .products-grid {
-
     display: grid;
 
     grid-template-columns: repeat(3, 1fr);
@@ -655,7 +341,6 @@ header {
 }
 
 .product-card {
-
     overflow: hidden;
 
     background: #ffffff;
@@ -670,18 +355,15 @@ header {
 }
 
 .product-card:hover {
-
     transform: translateY(-5px);
 
     box-shadow: var(--shadow);
 }
 
 .product-image {
-
     height: 220px;
 
     background:
-
         linear-gradient(
             135deg,
             #dff7e6,
@@ -690,14 +372,12 @@ header {
 }
 
 .product-card h3 {
-
     font-size: 19px;
 
     margin: 18px 20px 5px;
 }
 
 .product-card p {
-
     color: var(--text-secondary);
 
     font-size: 14px;
@@ -706,7 +386,6 @@ header {
 }
 
 .product-card strong {
-
     color: var(--primary-dark);
 
     font-size: 19px;
@@ -714,15 +393,10 @@ header {
     margin-left: 20px;
 }
 
-
-/* =========================================================
-   BANNER
-========================================================= */
+/* ---------- BANNER ---------- */
 
 .banner {
-
     margin-top: 30px;
-
     margin-bottom: 30px;
 
     padding: 70px;
@@ -730,7 +404,6 @@ header {
     border-radius: 24px;
 
     background:
-
         linear-gradient(
             135deg,
             #15803d,
@@ -743,14 +416,12 @@ header {
 }
 
 .banner h2 {
-
     font-size: 36px;
 
     margin-bottom: 10px;
 }
 
 .banner p {
-
     max-width: 550px;
 
     margin: 0 auto 25px;
@@ -759,29 +430,21 @@ header {
 }
 
 .banner .btn-primary {
-
     background: #ffffff;
-
     color: var(--primary-dark);
 }
 
 .banner .btn-primary:hover {
-
     background: #f0fdf4;
 }
 
-
-/* =========================================================
-   COMO FUNCIONA
-========================================================= */
+/* ---------- COMO FUNCIONA ---------- */
 
 .steps {
-
     text-align: center;
 }
 
 .steps-grid {
-
     display: grid;
 
     grid-template-columns: repeat(4, 1fr);
@@ -790,7 +453,6 @@ header {
 }
 
 .step-card {
-
     padding: 30px 20px;
 
     border: 1px solid var(--border);
@@ -801,541 +463,162 @@ header {
 }
 
 .step-card:first-child {
-
     border-color: #bce8c8;
 }
 
 .step-card h3 {
-
     margin: 15px 0 8px;
 
     font-size: 19px;
 }
 
 .step-card p {
-
     color: var(--text-secondary);
 
     font-size: 14px;
 }
 
-
-/* =========================================================
+/* ==========================================
    FOOTER
-========================================================= */
+========================================== */
 
-footer {
-
-    margin-top: 70px;
-
-    background: #14532d;
-
-    color: #ffffff;
+footer{
+    margin-top:70px;
+    background:#14532d;
+    color:#fff;
 }
 
-.footer-content {
-
-    width: min(1200px, 92%);
-
-    margin: auto;
-
-    padding: 45px 0;
-
-    text-align: center;
+.footer-content{
+    width:min(1200px,92%);
+    margin:auto;
+    padding:45px 0;
+    text-align:center;
 }
 
-.footer-content h2 {
-
-    margin-bottom: 12px;
-
-    letter-spacing: 1px;
+.footer-content h2{
+    margin-bottom:12px;
+    letter-spacing:1px;
 }
 
-.footer-content p {
-
-    color: #d1fae5;
+.footer-content p{
+    color:#d1fae5;
 }
 
-.footer-links {
-
-    display: flex;
-
-    justify-content: center;
-
-    gap: 22px;
-
-    flex-wrap: wrap;
-
-    margin: 24px 0;
+.footer-links{
+    display:flex;
+    justify-content:center;
+    gap:22px;
+    flex-wrap:wrap;
+    margin:24px 0;
 }
 
-.footer-links a {
-
-    color: #ffffff;
-
-    transition: 0.2s ease;
+.footer-links a{
+    color:#fff;
+    text-decoration:none;
+    transition:.2s;
 }
 
-.footer-links a:hover {
-
-    color: #86efac;
+.footer-links a:hover{
+    color:#86efac;
 }
 
-.copyright {
-
-    font-size: 14px;
-
-    opacity: 0.8;
+.copyright{
+    font-size:14px;
+    opacity:.8;
 }
 
+/* ---------- RESPONSIVIDADE ---------- */
 
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (max-width: 1000px) {
-
-    .navbar {
-
-        gap: 15px;
-    }
+@media (max-width: 900px) {
 
     .nav-links {
-
-        gap: 16px;
-    }
-
-    .nav-links a {
-
-        font-size: 14px;
-    }
-
-    .nav-buttons {
-
-        gap: 7px;
-    }
-
-    .nav-buttons .btn-primary,
-    .nav-buttons .btn-secondary {
-
-        padding: 10px 14px;
+        display: none;
     }
 
     .category-grid {
-
         grid-template-columns: repeat(3, 1fr);
     }
 
     .products-grid {
-
         grid-template-columns: repeat(2, 1fr);
     }
 
     .steps-grid {
-
         grid-template-columns: repeat(2, 1fr);
     }
-
 }
 
+@media (max-width: 600px) {
 
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 768px) {
-
-    /* -----------------------------------------
-       NAVBAR
-    ----------------------------------------- */
-
-    .navbar {
-
-        width: 94%;
-
-        min-height: 66px;
-
-        gap: 8px;
+    .navbar{
+        min-height: 68px;
+        gap: 10px;
     }
 
-
-    /* -----------------------------------------
-       MENU DESKTOP
-    ----------------------------------------- */
-
-    .nav-links {
-
-        display: none;
+    .logo h2{
+        font-size: 22px;
     }
 
-
-    /* -----------------------------------------
-       LOGO
-    ----------------------------------------- */
-
-    .logo {
-
-        flex: 1;
-
-        min-width: 0;
-    }
-
-    .logo a {
-
-        gap: 5px;
-    }
-
-    .logo img {
-
+    .logo img{
         width: 36px;
-
         height: 36px;
     }
 
-    .logo h2 {
-
-        font-size: 21px;
+    /* Mantém os dois botões visíveis */
+    .nav-buttons{
+        display: flex;
+        gap: 8px;
     }
-
-
-    /* -----------------------------------------
-       AÇÕES
-    ----------------------------------------- */
-
-    .nav-buttons {
-
-        gap: 6px;
-    }
-
-
-    /*
-       IMPORTANTE:
-       Entrar e Anunciar continuam visíveis.
-    */
 
     .nav-buttons .btn-primary,
-    .nav-buttons .btn-secondary {
-
-        display: block;
-
-        padding: 9px 12px;
-
+    .nav-buttons .btn-secondary{
+        padding: 8px 12px;
         font-size: 13px;
     }
 
-
-    /* -----------------------------------------
-       CHAT
-    ----------------------------------------- */
-
-    .chat-nav {
-
-        width: 38px;
-
-        height: 38px;
-
-        border-radius: 10px;
-    }
-
-    .chat-icon {
-
-        font-size: 19px;
-    }
-
-
-    /* -----------------------------------------
-       NOTIFICAÇÕES
-    ----------------------------------------- */
-
-    .notification-nav {
-
-        width: 38px;
-
-        height: 38px;
-
-        border-radius: 10px;
-    }
-
-    .notification-bell {
-
-        font-size: 19px;
-    }
-
-
-    /* -----------------------------------------
-       HERO
-    ----------------------------------------- */
-
-    .hero {
-
+    .hero{
         min-height: auto;
     }
 
-    .hero-content {
-
-        width: 94%;
-
-        padding: 65px 0;
+    .hero-content{
+        padding: 70px 0;
     }
 
-    .hero h1 {
-
-        font-size: clamp(34px, 10vw, 42px);
-
-        letter-spacing: -1.5px;
+    .hero h1{
+        font-size: 40px;
     }
 
-    .hero p {
-
+    .hero p{
         font-size: 16px;
     }
 
-
-    /* -----------------------------------------
-       BUSCA
-    ----------------------------------------- */
-
-    .search-box {
-
+    .search-box{
         flex-direction: column;
-
         align-items: stretch;
-
         padding: 8px;
     }
 
-    .search-box input {
-
+    .search-box .btn-primary{
         width: 100%;
     }
 
-    .search-box .btn-primary {
-
-        width: 100%;
+    .category-grid{
+        grid-template-columns: repeat(2,1fr);
     }
 
-
-    /* -----------------------------------------
-       SEÇÕES
-    ----------------------------------------- */
-
-    .categories,
-    .products,
-    .steps {
-
-        width: 94%;
-
-        padding: 65px 0;
-    }
-
-    .categories h2,
-    .products h2,
-    .steps h2 {
-
-        font-size: 28px;
-    }
-
-
-    /* -----------------------------------------
-       CATEGORIAS
-    ----------------------------------------- */
-
-    .category-grid {
-
-        grid-template-columns: repeat(2, 1fr);
-
-        gap: 12px;
-    }
-
-    .category-card {
-
-        min-height: 115px;
-    }
-
-
-    /* -----------------------------------------
-       PRODUTOS
-    ----------------------------------------- */
-
-    .products-grid {
-
+    .products-grid{
         grid-template-columns: 1fr;
-
-        gap: 16px;
     }
 
-
-    /* -----------------------------------------
-       PASSOS
-    ----------------------------------------- */
-
-    .steps-grid {
-
+    .steps-grid{
         grid-template-columns: 1fr;
-
-        gap: 15px;
     }
 
-
-    /* -----------------------------------------
-       BANNER
-    ----------------------------------------- */
-
-    .banner {
-
-        width: 94%;
-
+    .banner{
         padding: 45px 25px;
-
-        border-radius: 20px;
     }
 
-    .banner h2 {
-
+    .banner h2{
         font-size: 28px;
     }
-
-
-    /* -----------------------------------------
-       FOOTER
-    ----------------------------------------- */
-
-    .footer-content {
-
-        width: 94%;
-    }
-
-    .footer-links {
-
-        gap: 14px;
-    }
-
-}
-
-
-/* =========================================================
-   CELULARES PEQUENOS
-========================================================= */
-
-@media (max-width: 480px) {
-
-    .navbar {
-
-        width: 96%;
-
-        gap: 5px;
-    }
-
-
-    /* -----------------------------------------
-       LOGO
-    ----------------------------------------- */
-
-    .logo {
-
-        min-width: 0;
-    }
-
-    .logo a {
-
-        gap: 4px;
-    }
-
-    .logo img {
-
-        width: 31px;
-
-        height: 31px;
-    }
-
-    .logo h2 {
-
-        font-size: 17px;
-
-        letter-spacing: 0.5px;
-    }
-
-
-    /* -----------------------------------------
-       AÇÕES
-    ----------------------------------------- */
-
-    .nav-buttons {
-
-        gap: 4px;
-    }
-
-    .chat-nav,
-    .notification-nav {
-
-        width: 34px;
-
-        height: 34px;
-
-        border-radius: 9px;
-    }
-
-    .chat-icon,
-    .notification-bell {
-
-        font-size: 17px;
-    }
-
-
-    /* -----------------------------------------
-       ENTRAR / ANUNCIAR
-    ----------------------------------------- */
-
-    .nav-buttons .btn-primary,
-    .nav-buttons .btn-secondary {
-
-        padding: 8px 9px;
-
-        font-size: 12px;
-
-        border-radius: 8px;
-    }
-
-
-    /* -----------------------------------------
-       BADGES
-    ----------------------------------------- */
-
-    .chat-badge,
-    .notification-badge {
-
-        min-width: 17px;
-
-        height: 17px;
-
-        font-size: 9px;
-    }
-
-
-    /* -----------------------------------------
-       HERO
-    ----------------------------------------- */
-
-    .hero h1 {
-
-        font-size: 34px;
-    }
-
-
-    /* -----------------------------------------
-       CATEGORIAS
-    ----------------------------------------- */
-
-    .category-card {
-
-        min-height: 105px;
-
-        font-size: 27px;
-    }
-
-    .category-card span {
-
-        font-size: 13px;
-    }
-
 }
