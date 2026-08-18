@@ -178,42 +178,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ENVIAR
     // ==========================
 
-    async function sendMessage() {
+async function sendMessage() {
 
-        const text = input.value.trim();
+    const text = input.value.trim();
 
-        if (!text) return;
+    if (!text) return;
 
-        const response = await fetch(
-            `${API}/${currentChat._id}/messages`,
-            {
+    const response = await fetch(
+        `${API}/${currentChat._id}/messages`,
+        {
 
-                method: "POST",
+            method: "POST",
 
-                headers: {
-                    "Content-Type": "application/json"
-                },
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-                body: JSON.stringify({
+            body: JSON.stringify({
 
-                    senderId: user._id,
-                    text
+                senderId: user._id,
+                text
 
-                })
+            })
 
-            }
-        );
-
-        if (!response.ok) {
-            alert("Erro ao enviar mensagem.");
-            return;
         }
+    );
 
-        input.value = "";
+    const data = await response.json();
 
-        await loadChats();
+    if (!response.ok) {
+
+        alert(data.error || "Erro ao enviar mensagem.");
+        return;
 
     }
+
+    input.value = "";
+
+    await loadChats();
+
+}
 
     document.querySelector("#send-btn")
         .onclick = sendMessage;
