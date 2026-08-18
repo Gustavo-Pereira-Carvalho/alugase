@@ -16,124 +16,82 @@
 
 <body>
 
-<!-- ==========================================
+    <!-- ==========================================
      ALUGASE — HEADER
 ========================================== -->
 
-<header>
+    <header>
 
-    <nav class="navbar">
+        <nav class="navbar">
 
-        <!-- LOGO -->
-        <div class="logo">
+            <!-- LOGO -->
+            <div class="logo">
 
-            <a href="index.html">
-
-                <img
-                    src="assets/logo.png"
-                    alt="Logo Alugase"
-                >
-
-                <h2>ALUGASE</h2>
-
-            </a>
-
-        </div>
-
-
-        <!-- MENU PRINCIPAL -->
-        <ul class="nav-links">
-
-            <li>
                 <a href="index.html">
-                    Início
+
+                    <img src="assets/logo.png" alt="Logo Alugase">
+
+                    <h2>ALUGASE</h2>
+
                 </a>
-            </li>
 
-            <li>
-                <a href="explorar.html">
-                    Explorar
-                </a>
-            </li>
-
-            <li>
-                <a href="index.html#categorias">
-                    Categorias
-                </a>
-            </li>
-
-            <li>
-                <a href="index.html#como-funciona">
-                    Como funciona
-                </a>
-            </li>
-
-        </ul>
+            </div>
 
 
-        <!-- AÇÕES -->
-        <div class="nav-buttons">
+            <!-- MENU -->
+            <ul class="nav-links">
 
-            <!-- CHAT -->
-            <button
-                class="chat-nav"
-                id="chat-button"
-                type="button"
-                aria-label="Chat"
-                title="Chat"
-            >
-                <span class="chat-icon">💬</span>
+                <li>
+                    <a href="index.html">Início</a>
+                </li>
 
-                <span
-                    class="chat-badge"
-                    id="chat-badge"
-                    style="display:none;"
-                ></span>
-            </button>
+                <li>
+                    <a href="explorar.html">Explorar</a>
+                </li>
 
+                <li>
+                    <a href="#categorias">Categorias</a>
+                </li>
 
-            <!-- NOTIFICAÇÕES -->
-            <button
-                class="notification-nav"
-                id="notification-button"
-                type="button"
-                aria-label="Notificações"
-                title="Notificações"
-            >
-                <span class="notification-bell">🔔</span>
+                <li>
+                    <a href="#como-funciona">Como funciona</a>
+                </li>
 
-                <span
-                    class="notification-badge"
-                    id="notification-badge"
-                    style="display:none;"
-                ></span>
-            </button>
+            </ul>
 
 
-            <!-- LOGIN -->
-            <button
-                class="btn-secondary"
-                id="login-button"
-                type="button"
-            >
-                Entrar
-            </button>
+            <!-- AÇÕES -->
+            <div class="nav-buttons">
+
+                <!-- NOTIFICAÇÕES -->
+                <button class="notification-nav" id="notification-button" type="button" aria-label="Notificações"
+                    title="Notificações">
+
+                    <span class="notification-bell">
+                        🔔
+                    </span>
+
+                    <span class="notification-badge" id="notification-badge"></span>
+
+                </button>
 
 
-            <!-- ANUNCIAR -->
-            <button
-                class="btn-primary"
-                id="announce-button"
-                type="button"
-            >
-                Anunciar
-            </button>
+                <!-- ENTRAR -->
+                <button class="btn-secondary" id="login-button" type="button">
+                    Entrar
+                </button>
 
-        </div>
 
-    </nav>
+                <!-- ANUNCIAR -->
+                <button class="btn-primary" id="announce-button" type="button">
+                    Anunciar
+                </button>
 
-</header>
+            </div>
+
+        </nav>
+
+    </header>
 
 
 
@@ -360,10 +318,8 @@
             </p>
 
 
-            <a href="anunciar.html" class="btn-primary">
-
+            <a href="novo-anuncio.html" class="btn-primary">
                 Anunciar agora
-
             </a>
 
 
@@ -558,7 +514,6 @@
     <!-- ==========================================
          JAVASCRIPT
     =========================================== -->
-    <script src="js/navbar.js"></script>
     <script src="./js/home.js"></script>
 
 
