@@ -1,0 +1,185 @@
+/* ==========================================
+   RESERVA
+========================================== */
+
+.reservation-page{
+    width:min(1180px,92%);
+    margin:auto;
+    padding:40px 0 70px;
+}
+
+.page-title{
+    margin-bottom:30px;
+}
+
+.page-title h1{
+    font-size:38px;
+    margin-bottom:8px;
+}
+
+.page-title p{
+    color:#647067;
+}
+
+.reservation-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:28px;
+}
+
+.card,
+.summary-card,
+.product-card{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 8px 20px rgba(0,0,0,.05);
+}
+
+.product-card{
+    display:flex;
+    gap:18px;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.product-image{
+    width:100px;
+    height:100px;
+    border-radius:16px;
+    background:#dcfce7;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:46px;
+}
+
+.category{
+    background:#dcfce7;
+    color:#15803d;
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.card{
+    margin-bottom:20px;
+}
+
+.card h3{
+    margin-bottom:18px;
+}
+
+.grid-2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.field input,
+textarea{
+    width:100%;
+    padding:12px;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    font:inherit;
+}
+
+.option{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:14px;
+    margin-bottom:12px;
+    cursor:pointer;
+}
+
+.option input{
+    margin-top:4px;
+}
+
+.option p{
+    color:#647067;
+    font-size:14px;
+    margin-top:4px;
+}
+
+.summary-card{
+    position:sticky;
+    top:20px;
+    height:fit-content;
+}
+
+.summary-card h3{
+    margin-bottom:20px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:16px;
+}
+
+.summary-row span{
+    color:#647067;
+}
+
+.summary-card hr{
+    border:none;
+    border-top:1px solid #e5e7eb;
+    margin:18px 0;
+}
+
+.total strong{
+    font-size:26px;
+    color:#166534;
+}
+
+.confirm-btn{
+    width:100%;
+    margin-top:18px;
+    padding:15px;
+    font-size:16px;
+}
+
+.info{
+    margin-top:14px;
+    font-size:13px;
+    color:#647067;
+    line-height:1.5;
+}
+
+@media(max-width:900px){
+
+    .reservation-grid{
+        grid-template-columns:1fr;
+    }
+
+    .summary-card{
+        position:static;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .grid-2{
+        grid-template-columns:1fr;
+    }
+
+    .page-title h1{
+        font-size:30px;
+    }
+
+}

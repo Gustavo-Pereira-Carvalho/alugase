@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notificações | Alugase</title>
+
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/notificacoes.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/logo.png" alt="Logo Alugase">
+        <h2>ALUGASE</h2>
+      </a>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="explorar.html">Explorar</a></li>
+      <li><a href="perfil.html">Perfil</a></li>
+    </ul>
+
+    <div class="nav-buttons">
+      <a href="chat.html" class="btn-secondary">Conversas</a>
+      <a href="perfil.html" class="btn-primary">Meu Perfil</a>
+    </div>
+
+  </nav>
+</header>
+
+<main class="notifications-page">
+
+  <section class="page-header">
+
+    <div>
+      <h1>Notificações</h1>
+      <p>Acompanhe tudo o que acontece na sua conta.</p>
+    </div>
+
+    <button class="btn-secondary" id="read-all">
+      Marcar todas como lidas
+    </button>
+
+  </section>
+
+  <section id="notifications-list" class="notifications-list"></section>
+
+  <section id="empty-state" class="empty-state" style="display:none;">
+
+    <div class="empty-icon">🔔</div>
+
+    <h2>Nenhuma notificação</h2>
+
+    <p>Quando houver novidades elas aparecerão aqui.</p>
+
+  </section>
+
+</main>
+
+<footer>
+
+  <div class="footer-content">
+
+    <h2>ALUGASE</h2>
+
+    <p>
+      Alugue o que precisa. Monetize o que já possui.
+    </p>
+
+    <div class="footer-links">
+
+      <a href="sobre.html">Sobre</a>
+
+      <a href="explorar.html">Explorar</a>
+
+      <a href="ajuda.html">Ajuda</a>
+
+      <a href="termos.html">Termos</a>
+
+      <a href="privacidade.html">Privacidade</a>
+
+    </div>
+
+    <p class="copyright">
+      © 2026 ALUGASE. Todos os direitos reservados.
+    </p>
+
+  </div>
+
+</footer>
+
+<script src="./js/notificacoes.js"></script>
+
+</body>
+</html>

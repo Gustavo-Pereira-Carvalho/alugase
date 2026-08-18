@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Entre na sua conta Alugase."
+    >
+
+    <title>Entrar | Alugase</title>
+
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/auth.css">
+</head>
+
+<body>
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <header>
+
+        <nav class="navbar">
+
+            <div class="logo">
+
+                <a href="index.html">
+                    <h2>ALUGASE</h2>
+                </a>
+
+            </div>
+
+            <div class="nav-buttons">
+
+                <span class="auth-question">
+                    Ainda não tem uma conta?
+                </span>
+
+                <a
+                    href="cadastro.html"
+                    class="btn-primary"
+                >
+                    Criar conta
+                </a>
+
+            </div>
+
+        </nav>
+
+    </header>
+
+
+    <!-- ==========================================
+         LOGIN
+    =========================================== -->
+
+    <main class="auth-page">
+
+        <section class="auth-container">
+
+            <!-- LADO ESQUERDO -->
+
+            <div class="auth-info">
+
+                <div class="auth-brand">
+                    ALUGASE
+                </div>
+
+                <h1>
+                    Alugue o que precisa.
+                    <br>
+                    Compartilhe o que possui.
+                </h1>
+
+                <p>
+                    Encontre produtos, equipamentos e serviços
+                    para alugar perto de você.
+                </p>
+
+
+                <div class="auth-benefits">
+
+                    <div class="auth-benefit">
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            Encontre produtos perto de você
+                        </p>
+
+                    </div>
+
+
+                    <div class="auth-benefit">
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            Alugue de forma simples e segura
+                        </p>
+
+                    </div>
+
+
+                    <div class="auth-benefit">
+
+                        <span>
+                            ✓
+                        </span>
+
+                        <p>
+                            Transforme seus produtos em renda
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- LADO DIREITO -->
+
+            <div class="auth-card">
+
+                <div class="auth-header">
+
+                    <h2>
+                        Bem-vindo de volta
+                    </h2>
+
+                    <p>
+                        Entre na sua conta para continuar.
+                    </p>
+
+                </div>
+
+
+                <!-- FORMULÁRIO -->
+
+                <form id="login-form">
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="email">
+                            E-mail
+                        </label>
+
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="seuemail@email.com"
+                            autocomplete="email"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- SENHA -->
+
+                    <div class="form-group">
+
+                        <div class="label-row">
+
+                            <label for="password">
+                                Senha
+                            </label>
+
+                            <a href="#">
+                                Esqueceu a senha?
+                            </a>
+
+                        </div>
+
+                        <div class="password-input">
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                placeholder="Digite sua senha"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                id="toggle-password"
+                                aria-label="Mostrar senha"
+                            >
+                                👁️
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LEMBRAR -->
+
+                    <label class="remember-me">
+
+                        <input
+                            type="checkbox"
+                            id="remember"
+                        >
+
+                        <span>
+                            Lembrar de mim
+                        </span>
+
+                    </label>
+
+
+                    <!-- BOTÃO -->
+
+                    <button
+                        type="submit"
+                        class="btn-primary auth-submit"
+                    >
+                        Entrar
+                    </button>
+
+
+                    <!-- DIVISOR -->
+
+                    <div class="auth-divider">
+
+                        <span>
+                            ou
+                        </span>
+
+                    </div>
+
+
+                    <!-- LOGIN SOCIAL -->
+
+                    <button
+                        type="button"
+                        class="social-button"
+                        id="google-login"
+                    >
+                        <span>
+                            G
+                        </span>
+
+                        Continuar com Google
+                    </button>
+
+                </form>
+
+
+                <!-- CADASTRO -->
+
+                <div class="auth-footer">
+
+                    <span>
+                        Ainda não possui uma conta?
+                    </span>
+
+                    <a href="cadastro.html">
+                        Criar conta
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ==========================================
+         FOOTER
+    =========================================== -->
+
+    <footer class="auth-footer-page">
+
+        <p>
+            © 2026 Alugase. Todos os direitos reservados.
+        </p>
+
+    </footer>
+
+
+    <script src="./js/login.js"></script>
+
+</body>
+
+</html>

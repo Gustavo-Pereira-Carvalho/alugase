@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Anúncio | Alugase</title>
+
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/anuncio.css">
+  <link rel="stylesheet" href="./css/editar-anuncio.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+
+    <div class="logo">
+      <a href="index.html">
+        <h2>ALUGASE</h2>
+      </a>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="perfil.html" class="btn-secondary">
+        Voltar ao Perfil
+      </a>
+    </div>
+
+  </nav>
+</header>
+
+<main class="ad-page">
+
+  <div class="page-title">
+    <h1>Editar anúncio</h1>
+    <p>Atualize as informações do seu produto.</p>
+  </div>
+
+  <form id="edit-form" class="ad-form">
+
+    <section class="form-section">
+
+      <h2>Informações básicas</h2>
+
+      <div class="form-group">
+        <label>Nome do produto</label>
+        <input type="text" id="title" required>
+      </div>
+
+      <div class="grid-2">
+
+        <div class="form-group">
+          <label>Categoria</label>
+
+          <select id="category" required>
+            <option>Eletrônicos</option>
+            <option>Ferramentas</option>
+            <option>Casa</option>
+            <option>Veículos</option>
+            <option>Eventos</option>
+            <option>Serviços</option>
+          </select>
+
+        </div>
+
+        <div class="form-group">
+          <label>Ícone</label>
+
+          <select id="icon">
+            <option value="📦">📦 Padrão</option>
+            <option value="📷">📷 Câmera</option>
+            <option value="💻">💻 Notebook</option>
+            <option value="🔊">🔊 Caixa de Som</option>
+            <option value="🚲">🚲 Bicicleta</option>
+            <option value="🚗">🚗 Veículo</option>
+            <option value="🔧">🔧 Ferramenta</option>
+            <option value="🎉">🎉 Evento</option>
+            <option value="🏠">🏠 Casa</option>
+          </select>
+
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label>Descrição</label>
+        <textarea id="description" rows="5" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Cidade</label>
+        <input type="text" id="city" required>
+      </div>
+
+    </section>
+
+    <section class="form-section">
+
+      <h2>Preço</h2>
+
+      <div class="grid-2">
+
+        <div class="form-group">
+          <label>Preço por dia</label>
+          <input type="number" id="price" min="1" required>
+        </div>
+
+        <div class="form-group">
+          <label>Caução</label>
+          <input type="number" id="deposit" min="0" required>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label>Taxa de entrega</label>
+        <input type="number" id="deliveryPrice" min="0">
+      </div>
+
+    </section>
+
+    <section class="form-section">
+
+      <h2>Status do anúncio</h2>
+
+      <label class="switch">
+
+        <input type="checkbox" id="active">
+
+        <span class="slider"></span>
+
+        <strong>Disponível para aluguel</strong>
+
+      </label>
+
+    </section>
+
+    <section class="form-section">
+
+      <h2>Resumo</h2>
+
+      <div class="summary">
+
+        <div>
+          <span>Preço</span>
+          <strong id="sum-price">R$ 0</strong>
+        </div>
+
+        <div>
+          <span>Caução</span>
+          <strong id="sum-deposit">R$ 0</strong>
+        </div>
+
+        <div>
+          <span>Status</span>
+          <strong id="sum-status">Disponível</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <div class="actions">
+
+      <button
+        type="button"
+        class="btn-danger"
+        id="delete-btn"
+      >
+        Excluir anúncio
+      </button>
+
+      <button
+        class="btn-primary"
+        type="submit"
+      >
+        Salvar alterações
+      </button>
+
+    </div>
+
+  </form>
+
+</main>
+
+<script src="./js/editar-anuncio.js"></script>
+
+</body>
+</html>

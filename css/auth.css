@@ -1,0 +1,533 @@
+/* ==========================================
+   ALUGASE — AUTENTICAÇÃO
+========================================== */
+
+.auth-question {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   PÁGINA
+========================================== */
+
+.auth-page {
+    min-height: calc(100vh - 76px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 60px 20px;
+
+    background:
+        radial-gradient(
+            circle at 15% 30%,
+            rgba(22, 163, 74, 0.08),
+            transparent 35%
+        ),
+        #f7faf8;
+}
+
+
+/* ==========================================
+   CONTAINER
+========================================== */
+
+.auth-container {
+    width: min(1050px, 100%);
+
+    display: grid;
+
+    grid-template-columns: 1fr 440px;
+
+    gap: 70px;
+
+    align-items: center;
+}
+
+
+/* ==========================================
+   INFORMAÇÕES
+========================================== */
+
+.auth-info {
+    padding: 20px 0;
+}
+
+.auth-brand {
+    display: inline-block;
+
+    margin-bottom: 25px;
+
+    color: var(--primary);
+
+    font-size: 22px;
+    font-weight: 800;
+
+    letter-spacing: -1px;
+}
+
+.auth-info h1 {
+    max-width: 550px;
+
+    font-size: clamp(38px, 4vw, 52px);
+
+    line-height: 1.08;
+
+    letter-spacing: -1.8px;
+
+    margin-bottom: 22px;
+}
+
+.auth-info > p {
+    max-width: 500px;
+
+    color: var(--text-secondary);
+
+    font-size: 17px;
+
+    margin-bottom: 35px;
+}
+
+
+/* ==========================================
+   BENEFÍCIOS
+========================================== */
+
+.auth-benefits {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 17px;
+}
+
+.auth-benefit {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.auth-benefit span {
+    width: 25px;
+    height: 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: var(--primary-light);
+
+    color: var(--primary-dark);
+
+    font-weight: 700;
+
+    font-size: 13px;
+}
+
+.auth-benefit p {
+    color: var(--text);
+
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   CARD
+========================================== */
+
+.auth-card {
+    padding: 35px;
+
+    background: #ffffff;
+
+    border: 1px solid var(--border);
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 20px 50px rgba(20, 40, 25, 0.08);
+}
+
+
+/* ==========================================
+   CABEÇALHO
+========================================== */
+
+.auth-header {
+    margin-bottom: 28px;
+}
+
+.auth-header h2 {
+    font-size: 27px;
+
+    letter-spacing: -0.6px;
+
+    margin-bottom: 6px;
+}
+
+.auth-header p {
+    color: var(--text-secondary);
+
+    font-size: 14px;
+}
+
+
+/* ==========================================
+   FORMULÁRIO
+========================================== */
+
+#login-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.form-group label {
+    color: var(--text);
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.form-group input {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    outline: none;
+
+    color: var(--text);
+
+    background: #ffffff;
+
+    transition: 0.2s ease;
+}
+
+.form-group input::placeholder {
+    color: #a0aaa3;
+}
+
+.form-group input:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(22, 163, 74, 0.08);
+}
+
+
+/* ==========================================
+   LABEL + ESQUECEU SENHA
+========================================== */
+
+.label-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.label-row a {
+    color: var(--primary-dark);
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.label-row a:hover {
+    text-decoration: underline;
+}
+
+
+/* ==========================================
+   SENHA
+========================================== */
+
+.password-input {
+    position: relative;
+}
+
+.password-input input {
+    padding-right: 48px;
+}
+
+.password-input button {
+    position: absolute;
+
+    right: 10px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    border: none;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    font-size: 16px;
+}
+
+
+/* ==========================================
+   LEMBRAR
+========================================== */
+
+.remember-me {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+.remember-me input {
+    accent-color: var(--primary);
+}
+
+
+/* ==========================================
+   BOTÃO LOGIN
+========================================== */
+
+.auth-submit {
+    width: 100%;
+
+    padding: 14px;
+
+    margin-top: 2px;
+
+    font-size: 15px;
+}
+
+
+/* ==========================================
+   DIVISOR
+========================================== */
+
+.auth-divider {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    height: 20px;
+
+    color: #9aa39d;
+
+    font-size: 12px;
+}
+
+.auth-divider::before {
+    content: "";
+
+    position: absolute;
+
+    width: 100%;
+
+    height: 1px;
+
+    background: var(--border);
+}
+
+.auth-divider span {
+    position: relative;
+
+    padding: 0 12px;
+
+    background: #ffffff;
+}
+
+
+/* ==========================================
+   GOOGLE
+========================================== */
+
+.social-button {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+
+    padding: 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: var(--text);
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.social-button:hover {
+    background: #f7faf8;
+
+    border-color: #cdd6d0;
+}
+
+.social-button span {
+    font-weight: 800;
+
+    font-size: 18px;
+}
+
+
+/* ==========================================
+   RODAPÉ DO CARD
+========================================== */
+
+.auth-footer {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    margin-top: 25px;
+
+    color: var(--text-secondary);
+
+    font-size: 13px;
+}
+
+.auth-footer a {
+    color: var(--primary-dark);
+
+    font-weight: 700;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* ==========================================
+   FOOTER DA PÁGINA
+========================================== */
+
+.auth-footer-page {
+    padding: 25px 20px;
+
+    background: #102018;
+
+    color: #aab5ae;
+
+    text-align: center;
+
+    font-size: 12px;
+}
+
+
+/* ==========================================
+   RESPONSIVIDADE
+========================================== */
+
+@media (max-width: 850px) {
+
+    .auth-container {
+        grid-template-columns: 1fr;
+
+        max-width: 500px;
+    }
+
+    .auth-info {
+        text-align: center;
+    }
+
+    .auth-info h1 {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .auth-info > p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .auth-benefits {
+        align-items: flex-start;
+
+        width: fit-content;
+
+        margin: 0 auto;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .auth-page {
+        padding: 35px 15px;
+    }
+
+    .auth-container {
+        gap: 35px;
+    }
+
+    .auth-card {
+        padding: 25px 20px;
+
+        border-radius: 18px;
+    }
+
+    .auth-info h1 {
+        font-size: 34px;
+    }
+
+    .auth-info > p {
+        font-size: 15px;
+    }
+
+    .auth-question {
+        display: none;
+    }
+
+}

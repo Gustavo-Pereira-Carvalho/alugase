@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo | ALUGASE</title>
+
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/admin.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html"><h2>ALUGASE</h2></a>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-secondary" id="logout">Sair</button>
+    </div>
+  </nav>
+</header>
+
+<main class="admin-page">
+
+  <section class="admin-header">
+    <span class="badge">FUNCIONÁRIO</span>
+    <h1>Painel Administrativo</h1>
+    <p>Central de atendimento e gerenciamento da plataforma.</p>
+  </section>
+
+  <section class="stats-grid">
+
+    <div class="stat-card">
+      <h2 id="users-count">0</h2>
+      <span>Usuários</span>
+    </div>
+
+    <div class="stat-card">
+      <h2 id="ads-count">0</h2>
+      <span>Anúncios</span>
+    </div>
+
+    <div class="stat-card">
+      <h2 id="tickets-count">0</h2>
+      <span>Atendimentos</span>
+    </div>
+
+    <div class="stat-card">
+      <h2 id="verify-count">0</h2>
+      <span>Verificações</span>
+    </div>
+
+  </section>
+
+  <section class="tabs">
+
+    <button class="tab active" data-tab="support">Atendimentos</button>
+    <button class="tab" data-tab="verify">Verificações</button>
+    <button class="tab" data-tab="disputes">Disputas</button>
+    <button class="tab" data-tab="dashboard">Dashboard</button>
+
+  </section>
+
+  <section class="tab-wrapper">
+
+    <!-- ATENDIMENTOS -->
+
+    <div class="content active" id="support">
+
+      <div class="support-layout">
+
+        <aside class="chat-list" id="chat-list"></aside>
+
+        <section class="chat-panel">
+
+          <div class="chat-header">
+            <h3 id="chat-user">Selecione um atendimento</h3>
+            <span id="chat-status">—</span>
+          </div>
+
+          <div class="messages" id="messages"></div>
+
+          <div class="chat-input">
+            <input type="text" id="message-input" placeholder="Responder usuário...">
+            <button class="btn-primary" id="send-message">Enviar</button>
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+
+    <!-- VERIFICAÇÕES -->
+
+    <div class="content" id="verify">
+      <div id="verify-list"></div>
+    </div>
+
+    <!-- DISPUTAS -->
+
+    <div class="content" id="disputes">
+      <div id="dispute-list"></div>
+    </div>
+
+    <!-- DASHBOARD -->
+
+    <div class="content" id="dashboard">
+
+      <div class="dashboard-grid">
+
+        <div class="panel">
+          <h3>Resumo da plataforma</h3>
+          <ul>
+            <li>Usuários cadastrados</li>
+            <li>Anúncios publicados</li>
+            <li>Aluguéis ativos</li>
+            <li>Disputas em andamento</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3>Últimas atividades</h3>
+          <div id="activity-list"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+<script src="./js/admin.js"></script>
+
+</body>
+</html>

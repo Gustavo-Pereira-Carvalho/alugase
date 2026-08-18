@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novo Anúncio | Alugase</title>
+
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/anuncio.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <h2>ALUGASE</h2>
+      </a>
+    </div>
+
+    <div class="nav-buttons">
+      <a href="perfil.html" class="btn-secondary">Meu Perfil</a>
+    </div>
+  </nav>
+</header>
+
+<main class="ad-page">
+
+  <div class="page-title">
+    <h1>Criar novo anúncio</h1>
+    <p>Preencha as informações do produto que deseja disponibilizar para aluguel.</p>
+  </div>
+
+  <form id="new-product-form" class="ad-form">
+
+    <!-- INFORMAÇÕES -->
+    <section class="form-section">
+
+      <h2>Informações básicas</h2>
+
+      <div class="form-group">
+        <label>Nome do produto</label>
+        <input type="text" id="title" required>
+      </div>
+
+      <div class="grid-2">
+
+        <div class="form-group">
+          <label>Categoria</label>
+
+          <select id="category" required>
+            <option value="">Selecione</option>
+            <option>Eletrônicos</option>
+            <option>Ferramentas</option>
+            <option>Casa</option>
+            <option>Veículos</option>
+            <option>Eventos</option>
+            <option>Serviços</option>
+          </select>
+
+        </div>
+
+        <div class="form-group">
+          <label>Ícone</label>
+
+          <select id="icon">
+            <option value="📦">📦 Padrão</option>
+            <option value="📷">📷 Câmera</option>
+            <option value="💻">💻 Notebook</option>
+            <option value="🔊">🔊 Caixa</option>
+            <option value="🚲">🚲 Bicicleta</option>
+            <option value="🚗">🚗 Carro</option>
+            <option value="🔧">🔧 Ferramenta</option>
+            <option value="🏠">🏠 Casa</option>
+          </select>
+
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label>Descrição</label>
+        <textarea id="description" rows="5" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Cidade</label>
+        <input type="text" id="city" required>
+      </div>
+
+    </section>
+
+    <!-- VEÍCULOS -->
+    <section class="form-section vehicle-section" id="vehicle-section">
+
+      <h2>Documentação do veículo</h2>
+
+      <p class="vehicle-info">
+        Esta etapa é obrigatória apenas para anúncios de veículos.
+      </p>
+
+      <div class="grid-2">
+
+        <div class="form-group">
+          <label>Marca</label>
+          <input type="text" id="brand" placeholder="Toyota">
+        </div>
+
+        <div class="form-group">
+          <label>Modelo</label>
+          <input type="text" id="model" placeholder="Corolla">
+        </div>
+
+        <div class="form-group">
+          <label>Ano</label>
+          <input type="number" id="year" placeholder="2022">
+        </div>
+
+        <div class="form-group">
+          <label>Cor</label>
+          <input type="text" id="color" placeholder="Prata">
+        </div>
+
+        <div class="form-group">
+          <label>Placa</label>
+          <input type="text" id="plate" placeholder="ABC1D23">
+        </div>
+
+        <div class="form-group">
+          <label>Renavam</label>
+          <input type="text" id="renavam" maxlength="11">
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label>Quilometragem</label>
+        <input type="number" id="mileage" placeholder="45000">
+      </div>
+
+      <div class="form-group">
+
+        <label>CRLV-e</label>
+
+        <div class="document-upload">
+
+          <input
+            type="file"
+            id="crlv"
+            accept=".pdf,image/*"
+            hidden
+          >
+
+          <button
+            type="button"
+            class="btn-secondary"
+            id="select-crlv"
+          >
+            Selecionar CRLV
+          </button>
+
+          <span id="crlv-name">
+            Nenhum arquivo selecionado
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- PREÇO -->
+    <section class="form-section">
+
+      <h2>Preço e caução</h2>
+
+      <div class="grid-2">
+
+        <div class="form-group">
+          <label>Preço por dia</label>
+          <input type="number" id="price" min="1" required>
+        </div>
+
+        <div class="form-group">
+          <label>Caução</label>
+          <input type="number" id="deposit" min="0" required>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ENTREGA -->
+    <section class="form-section">
+
+      <h2>Entrega</h2>
+
+      <label class="option">
+        <input type="checkbox" id="pickup" checked>
+        Retirada no local
+      </label>
+
+      <label class="option">
+        <input type="checkbox" id="delivery">
+        Entrega disponível
+      </label>
+
+      <div class="form-group">
+        <label>Taxa de entrega</label>
+        <input type="number" id="deliveryPrice" value="20">
+      </div>
+
+    </section>
+
+    <!-- FOTOS -->
+    <section class="form-section">
+
+      <h2>Fotos</h2>
+
+      <div class="upload-area" id="upload-area">
+
+        <div>📷</div>
+
+        <p>Selecione imagens do produto</p>
+
+        <input
+          type="file"
+          id="images"
+          multiple
+          accept="image/*"
+          hidden
+        >
+
+        <button
+          type="button"
+          class="btn-secondary"
+          id="select-images"
+        >
+          Selecionar imagens
+        </button>
+
+      </div>
+
+      <div class="preview-grid" id="preview-grid"></div>
+
+    </section>
+
+    <!-- RESUMO -->
+    <section class="form-section">
+
+      <h2>Resumo</h2>
+
+      <div class="summary">
+
+        <div>
+          <span>Preço</span>
+          <strong id="sum-price">R$ 0</strong>
+        </div>
+
+        <div>
+          <span>Caução</span>
+          <strong id="sum-deposit">R$ 0</strong>
+        </div>
+
+        <div>
+          <span>Entrega</span>
+          <strong id="sum-delivery">Não disponível</strong>
+        </div>
+
+      </div>
+
+    </section>
+
+    <button class="btn-primary submit-btn" type="submit">
+      Publicar anúncio
+    </button>
+
+  </form>
+
+</main>
+
+<script src="./js/anuncio.js"></script>
+</body>
+</html>

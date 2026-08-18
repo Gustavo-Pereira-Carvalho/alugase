@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Solicitações | Alugase</title>
+
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/solicitacoes.css">
+</head>
+<body>
+
+<header>
+
+  <nav class="navbar">
+
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/logo.png" alt="Logo Alugase">
+        <h2>ALUGASE</h2>
+      </a>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="explorar.html">Explorar</a></li>
+      <li><a href="perfil.html">Perfil</a></li>
+    </ul>
+
+    <div class="nav-buttons">
+      <a href="chat.html" class="btn-secondary">Conversas</a>
+      <a href="perfil.html" class="btn-primary">Meu Perfil</a>
+    </div>
+
+  </nav>
+
+</header>
+
+<main class="requests-page">
+
+  <section class="page-header">
+
+    <div>
+      <h1>Solicitações recebidas</h1>
+      <p>Gerencie os pedidos de aluguel dos seus anúncios.</p>
+    </div>
+
+    <a href="novo-anuncio.html" class="btn-primary">
+      + Novo anúncio
+    </a>
+
+  </section>
+
+  <!-- FILTROS -->
+
+  <section class="filters">
+
+    <button class="filter-btn active" data-status="all">
+      Todas
+    </button>
+
+    <button class="filter-btn" data-status="pending">
+      Pendentes
+    </button>
+
+    <button class="filter-btn" data-status="approved">
+      Aprovadas
+    </button>
+
+    <button class="filter-btn" data-status="rejected">
+      Recusadas
+    </button>
+
+    <button class="filter-btn" data-status="finished">
+      Finalizadas
+    </button>
+
+  </section>
+
+  <!-- LISTA -->
+
+  <section id="requests-list" class="requests-list">
+
+    <!-- JS cria os cards -->
+
+  </section>
+
+  <!-- VAZIO -->
+
+  <section id="empty-state" class="empty-state" style="display:none;">
+
+    <div class="empty-icon">📭</div>
+
+    <h2>Nenhuma solicitação encontrada</h2>
+
+    <p>
+      Quando alguém solicitar o aluguel de um dos seus produtos,
+      ela aparecerá aqui.
+    </p>
+
+    <a href="novo-anuncio.html" class="btn-primary">
+      Criar anúncio
+    </a>
+
+  </section>
+
+</main>
+
+<footer>
+
+  <div class="footer-content">
+
+    <h2>ALUGASE</h2>
+
+    <p>
+      Alugue o que precisa. Monetize o que já possui.
+    </p>
+
+    <p class="copyright">
+      © 2026 Alugase
+    </p>
+
+  </div>
+
+</footer>
+
+<script src="./js/solicitacoes.js"></script>
+
+</body>
+</html>

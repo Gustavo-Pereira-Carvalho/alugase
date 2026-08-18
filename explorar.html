@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explorar | Alugase</title>
+
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/explorar.css">
+</head>
+<body>
+
+<header>
+  <nav class="navbar">
+
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/logo.png" alt="Logo Alugase">
+        <h2>ALUGASE</h2>
+      </a>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="explorar.html">Explorar</a></li>
+      <li><a href="index.html#categorias">Categorias</a></li>
+    </ul>
+
+    <div class="nav-buttons">
+      <button class="btn-secondary" id="login-btn">Entrar</button>
+      <button class="btn-primary" id="announce-btn">Anunciar</button>
+    </div>
+
+  </nav>
+</header>
+
+<main class="explore-page">
+
+  <!-- CABEÇALHO -->
+  <section class="explore-header">
+
+    <h1>Explorar anúncios</h1>
+
+    <p>
+      Encontre produtos, veículos e serviços perto de você.
+    </p>
+
+    <div class="search-bar">
+
+      <input
+        type="text"
+        id="search"
+        placeholder="Pesquisar produto..."
+      >
+
+      <button
+        class="btn-primary"
+        id="search-button"
+      >
+        Buscar
+      </button>
+
+    </div>
+
+  </section>
+
+  <section class="explore-content">
+
+    <!-- =======================
+         FILTROS
+    ======================== -->
+
+    <aside class="filters">
+
+      <h3>Filtros</h3>
+
+      <div class="filter-group">
+
+        <label>Categoria</label>
+
+        <select id="filter-category">
+          <option value="">Todas</option>
+          <option>Eletrônicos</option>
+          <option>Ferramentas</option>
+          <option>Casa</option>
+          <option>Veículos</option>
+          <option>Eventos</option>
+          <option>Serviços</option>
+        </select>
+
+      </div>
+
+      <div class="filter-group">
+
+        <label>Cidade</label>
+
+        <input
+          type="text"
+          id="filter-city"
+          placeholder="São Paulo"
+        >
+
+      </div>
+
+      <div class="filter-group">
+
+        <label>Preço máximo</label>
+
+        <input
+          type="range"
+          id="max-price"
+          min="0"
+          max="500"
+          value="500"
+        >
+
+        <span id="price-value">
+          Até R$ 500
+        </span>
+
+      </div>
+
+      <div class="filter-group">
+
+        <label>Ordenar</label>
+
+        <select id="sort">
+          <option value="recent">Mais recentes</option>
+          <option value="low">Menor preço</option>
+          <option value="high">Maior preço</option>
+        </select>
+
+      </div>
+
+      <!-- NOVOS FILTROS -->
+
+      <div class="filter-group">
+
+        <label class="checkbox-filter">
+
+          <input
+            type="checkbox"
+            id="verified-only"
+          >
+
+          Apenas usuários verificados
+
+        </label>
+
+      </div>
+
+      <div class="filter-group">
+
+        <label class="checkbox-filter">
+
+          <input
+            type="checkbox"
+            id="delivery-only"
+          >
+
+          Entrega disponível
+
+        </label>
+
+      </div>
+
+      <button
+        class="btn-primary"
+        id="apply-filters"
+      >
+        Aplicar filtros
+      </button>
+
+    </aside>
+
+    <!-- =======================
+         RESULTADOS
+    ======================== -->
+
+    <section class="results">
+
+      <div class="results-top">
+
+        <span id="results-count">
+          0 anúncios
+        </span>
+
+      </div>
+
+      <div
+        class="products-grid"
+        id="products-grid"
+      >
+        <!-- Cards criados pelo explorar.js -->
+      </div>
+
+    </section>
+
+  </section>
+
+</main>
+
+<footer>
+
+  <div class="footer-content">
+
+    <h2>ALUGASE</h2>
+
+    <p>
+      Alugue o que precisa. Monetize o que já possui.
+    </p>
+
+    <div class="footer-links">
+
+      <a href="sobre.html">Sobre</a>
+
+      <a href="explorar.html">Explorar</a>
+
+      <a href="ajuda.html">Ajuda</a>
+
+      <a href="termos.html">Termos</a>
+
+      <a href="privacidade.html">Privacidade</a>
+
+    </div>
+
+    <p class="copyright">
+      © 2026 ALUGASE. Todos os direitos reservados.
+    </p>
+
+  </div>
+
+</footer>
+
+<script src="./js/explorar.js"></script>
+
+</body>
+</html>

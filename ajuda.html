@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Central de Ajuda | Alugase</title>
+
+  <link rel="stylesheet" href="./css/global.css">
+  <link rel="stylesheet" href="./css/ajuda.css">
+</head>
+<body>
+
+<header>
+
+  <nav class="navbar">
+
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/logo.png" alt="Logo Alugase">
+        <h2>ALUGASE</h2>
+      </a>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="explorar.html">Explorar</a></li>
+      <li><a href="index.html#categorias">Categorias</a></li>
+    </ul>
+
+    <div class="nav-buttons">
+      <a href="perfil.html" class="btn-secondary">Meu Perfil</a>
+    </div>
+
+  </nav>
+
+</header>
+
+<main class="help-page">
+
+  <!-- HERO -->
+
+  <section class="help-hero">
+
+    <h1>Central de Ajuda</h1>
+
+    <p>
+      Tire dúvidas sobre aluguéis, anúncios, pagamentos e segurança.
+    </p>
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        id="faq-search"
+        placeholder="Pesquisar uma dúvida..."
+      >
+
+      <button class="btn-primary" id="search-btn">
+        Buscar
+      </button>
+
+    </div>
+
+  </section>
+
+  <!-- CATEGORIAS -->
+
+  <section class="categories">
+
+    <button class="category active" data-category="all">
+      Todas
+    </button>
+
+    <button class="category" data-category="rent">
+      Aluguéis
+    </button>
+
+    <button class="category" data-category="owner">
+      Proprietários
+    </button>
+
+    <button class="category" data-category="vehicle">
+      Veículos
+    </button>
+
+    <button class="category" data-category="security">
+      Segurança
+    </button>
+
+    <button class="category" data-category="payment">
+      Pagamentos
+    </button>
+
+  </section>
+
+  <!-- FAQ -->
+
+  <section class="faq-list" id="faq-list"></section>
+
+  <!-- CONTATO -->
+
+  <section class="support-card">
+
+    <div class="support-content">
+
+      <h2>Não encontrou sua resposta?</h2>
+
+      <p>
+        Entre em contato com nossa equipe de suporte e responderemos o mais rápido possível.
+      </p>
+
+    </div>
+
+    <a href="chat.html" class="btn-primary">
+      Falar com o suporte
+    </a>
+
+  </section>
+
+</main>
+
+<footer>
+
+  <div class="footer-content">
+
+    <h2>ALUGASE</h2>
+
+    <p>
+      Alugue o que precisa. Monetize o que já possui.
+    </p>
+
+    <div class="footer-links">
+
+      <a href="sobre.html">Sobre</a>
+
+      <a href="explorar.html">Explorar</a>
+
+      <a href="ajuda.html">Ajuda</a>
+
+      <a href="termos.html">Termos</a>
+
+      <a href="privacidade.html">Privacidade</a>
+
+    </div>
+
+    <p class="copyright">
+      © 2026 ALUGASE. Todos os direitos reservados.
+    </p>
+
+  </div>
+
+</footer>
+
+<script src="./js/ajuda.js"></script>
+
+</body>
+</html>

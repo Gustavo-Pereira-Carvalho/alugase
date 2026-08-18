@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Detalhes do produto no Alugase.">
+
+    <title>Produto | Alugase</title>
+
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/produto.css">
+</head>
+
+<body>
+
+<header>
+    <nav class="navbar">
+
+        <div class="logo">
+            <a href="index.html">
+                <h2>ALUGASE</h2>
+            </a>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Início</a></li>
+            <li><a href="index.html#produtos">Explorar</a></li>
+            <li><a href="index.html#categorias">Categorias</a></li>
+            <li><a href="index.html#como-funciona">Como funciona</a></li>
+        </ul>
+
+        <div class="nav-buttons">
+            <button class="btn-secondary" id="login-button" type="button">
+                Entrar
+            </button>
+
+            <button class="btn-primary" id="announce-button" type="button">
+                Anunciar
+            </button>
+        </div>
+
+    </nav>
+</header>
+
+<main class="product-page">
+
+    <!-- BREADCRUMB -->
+    <div class="breadcrumb">
+
+        <a href="index.html">Início</a>
+
+        <span>›</span>
+
+        <a href="index.html#categorias" class="product-category-link">
+            Categoria
+        </a>
+
+        <span>›</span>
+
+        <span id="breadcrumb-title">
+            Carregando...
+        </span>
+
+    </div>
+
+    <!-- PRODUTO -->
+    <section class="product-details">
+
+        <!-- GALERIA -->
+        <div class="product-gallery">
+
+            <div class="main-product-image">
+                <span id="main-image">📦</span>
+            </div>
+
+            <div class="product-thumbnails">
+                <button class="thumbnail active">📦</button>
+                <button class="thumbnail">📦</button>
+                <button class="thumbnail">📦</button>
+            </div>
+
+        </div>
+
+        <!-- INFORMAÇÕES -->
+        <div class="product-info">
+
+            <span class="product-category">
+                CATEGORIA
+            </span>
+
+            <h1 id="product-title">
+                Carregando...
+            </h1>
+
+            <div class="product-rating">
+                <strong>⭐ 5.0</strong>
+                <span>0 avaliações</span>
+            </div>
+
+            <p class="product-location">
+                📍 Cidade
+            </p>
+
+            <!-- DESCRIÇÃO -->
+            <div class="product-description">
+
+                <h2>Sobre este produto</h2>
+
+                <p>
+                    Carregando descrição...
+                </p>
+
+            </div>
+
+            <!-- PREÇO -->
+            <div class="pricing">
+
+                <span>A partir de</span>
+
+                <strong>R$ 0</strong>
+
+                <small>/dia</small>
+
+            </div>
+
+            <!-- ALUGUEL -->
+            <div class="rental-box">
+
+                <h2>Escolha o período</h2>
+
+                <div class="date-fields">
+
+                    <div class="date-field">
+                        <label for="start-date">Retirada</label>
+                        <input type="date" id="start-date">
+                    </div>
+
+                    <div class="date-field">
+                        <label for="end-date">Devolução</label>
+                        <input type="date" id="end-date">
+                    </div>
+
+                </div>
+
+                <!-- ENTREGA -->
+                <div class="delivery-options">
+
+                    <h3>Como deseja receber?</h3>
+
+                    <label class="delivery-option">
+
+                        <input
+                            type="radio"
+                            name="delivery"
+                            value="pickup"
+                            checked
+                        >
+
+                        <span>📍 Retirar com o proprietário</span>
+
+                        <strong>Grátis</strong>
+
+                    </label>
+
+                    <label class="delivery-option">
+
+                        <input
+                            type="radio"
+                            name="delivery"
+                            value="delivery"
+                        >
+
+                        <span>🚚 Entrega pelo proprietário</span>
+
+                        <strong id="delivery-label">
+                            + R$ 0
+                        </strong>
+
+                    </label>
+
+                </div>
+
+                <!-- RESUMO -->
+                <div class="rental-summary">
+
+                    <div>
+                        <span>Diárias</span>
+                        <strong id="daily-total">R$ 0</strong>
+                    </div>
+
+                    <div>
+                        <span>Entrega</span>
+                        <strong id="delivery-total">R$ 0</strong>
+                    </div>
+
+                    <div>
+                        <span>Caução</span>
+                        <strong id="deposit-total">R$ 0</strong>
+                    </div>
+
+                    <div class="summary-total">
+                        <span>Total</span>
+                        <strong id="rental-total">R$ 0</strong>
+                    </div>
+
+                </div>
+
+                <button
+                    class="btn-primary rental-button"
+                    id="rental-button"
+                    type="button"
+                >
+                    Solicitar aluguel
+                </button>
+
+                <p class="security-message">
+                    🛡️ Seu aluguel possui proteção contra problemas e disputas.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- PROPRIETÁRIO -->
+    <section class="owner-section">
+
+        <h2>Sobre o proprietário</h2>
+
+        <div class="owner-card">
+
+            <div class="owner-avatar">
+                👤
+            </div>
+
+            <div class="owner-info">
+
+                <h3 id="owner-name">
+                    Proprietário
+                </h3>
+
+                <p>
+                    ⭐ <span id="owner-rating">5.0</span> ·
+                    <span id="owner-reviews">0</span> avaliações
+                </p>
+
+                <span id="owner-verified">
+                    ✓ Usuário verificado
+                </span>
+
+            </div>
+
+            <div class="owner-stats">
+
+                <div>
+                    <strong id="owner-rentals">0</strong>
+                    <span>anúncios</span>
+                </div>
+
+                <div>
+                    <strong id="owner-years">2026</strong>
+                    <span>desde</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- AVALIAÇÕES -->
+    <section class="reviews-section">
+
+        <div class="reviews-header">
+
+            <h2>Avaliações</h2>
+
+            <strong class="product-rating">
+                ⭐ 5.0
+            </strong>
+
+        </div>
+
+        <div class="reviews-grid">
+
+            <article class="review-card">
+
+                <div>⭐⭐⭐⭐⭐</div>
+
+                <p>
+                    As avaliações aparecerão após os primeiros aluguéis concluídos.
+                </p>
+
+                <strong>Em breve</strong>
+
+            </article>
+
+        </div>
+
+    </section>
+
+    <!-- SEGURANÇA -->
+    <section class="protection-section">
+
+        <div class="protection-icon">
+            🛡️
+        </div>
+
+        <div>
+
+            <h2>Alugue com mais segurança</h2>
+
+            <p>
+                O Alugase registra as informações do aluguel, condições do produto,
+                entrega e devolução para ajudar na resolução de possíveis disputas.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+
+  <div class="footer-content">
+
+    <h2>ALUGASE</h2>
+
+    <p>
+      Alugue o que precisa. Monetize o que já possui.
+    </p>
+
+    <div class="footer-links">
+
+      <a href="sobre.html">Sobre</a>
+
+      <a href="explorar.html">Explorar</a>
+
+      <a href="ajuda.html">Ajuda</a>
+
+      <a href="termos.html">Termos</a>
+
+      <a href="privacidade.html">Privacidade</a>
+
+    </div>
+
+    <p class="copyright">
+      © 2026 ALUGASE. Todos os direitos reservados.
+    </p>
+
+  </div>
+
+</footer>
+
+<script src="./js/produto.js"></script>
+
+</body>
+</html>
