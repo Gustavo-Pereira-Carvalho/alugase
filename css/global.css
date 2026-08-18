@@ -1065,3 +1065,359 @@ footer {
     }
 
 }
+
+
+/* ==========================================
+   ALUGASE — NAVBAR NOVA
+========================================== */
+
+.site-header {
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    z-index: 1000;
+}
+
+
+/* ==========================================
+   DESKTOP
+========================================== */
+
+.navbar {
+    width: min(1200px, 92%);
+    min-height: 76px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+
+    gap: 25px;
+}
+
+
+/* LOGO */
+
+.logo {
+    flex-shrink: 0;
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+}
+
+.logo h2 {
+    margin: 0;
+
+    color: var(--primary);
+
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+
+/* LINKS */
+
+.nav-links {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 28px;
+
+    list-style: none;
+}
+
+.nav-links a {
+    color: var(--text-secondary);
+
+    font-size: 15px;
+    font-weight: 600;
+
+    transition: .2s;
+}
+
+.nav-links a:hover {
+    color: var(--primary);
+}
+
+
+/* AÇÕES */
+
+.nav-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+
+/* BOTÃO MOBILE */
+
+.mobile-menu-button {
+    display: none;
+
+    width: 42px;
+    height: 42px;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: var(--text);
+
+    font-size: 22px;
+
+    flex-shrink: 0;
+}
+
+
+/* ==========================================
+   MENU MOBILE
+========================================== */
+
+.mobile-menu {
+    display: none;
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .navbar {
+
+        width: 100%;
+
+        min-height: 64px;
+
+        padding: 8px 12px;
+
+        gap: 10px;
+
+    }
+
+
+    /* HAMBURGER */
+
+    .mobile-menu-button {
+
+        display: flex;
+
+        order: 1;
+
+    }
+
+
+    /* LOGO */
+
+    .logo {
+
+        flex: 1;
+
+        order: 2;
+
+    }
+
+    .logo a {
+
+        justify-content: center;
+
+        gap: 6px;
+
+    }
+
+    .logo img {
+
+        width: 34px;
+        height: 34px;
+
+    }
+
+    .logo h2 {
+
+        font-size: 20px;
+
+    }
+
+
+    /* LINKS DESKTOP */
+
+    .nav-links {
+
+        display: none;
+
+    }
+
+
+    /* AÇÕES */
+
+    .nav-buttons {
+
+        order: 3;
+
+        gap: 6px;
+
+    }
+
+
+    /* ESCONDER LOGIN E ANUNCIAR */
+
+    .nav-buttons .btn-secondary,
+    .nav-buttons .btn-primary {
+
+        display: none;
+
+    }
+
+
+    /* SINO */
+
+    .notification-nav {
+
+        width: 38px;
+        height: 38px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border: none;
+        border-radius: 10px;
+
+        background: #f0fdf4;
+
+    }
+
+    .notification-bell {
+
+        font-size: 19px;
+
+    }
+
+
+    /* ==========================================
+       MENU ABERTO
+    ========================================== */
+
+    .mobile-menu {
+
+        width: 100%;
+
+        padding: 8px 12px 14px;
+
+        background: #ffffff;
+
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+
+        box-shadow: 0 8px 20px rgba(0,0,0,.08);
+
+    }
+
+
+    .mobile-menu.active {
+
+        display: block;
+
+    }
+
+
+    .mobile-menu a {
+
+        display: flex;
+
+        align-items: center;
+
+        width: 100%;
+
+        min-height: 48px;
+
+        padding: 12px 14px;
+
+        margin-top: 4px;
+
+        border-radius: 10px;
+
+        color: var(--text);
+
+        font-size: 15px;
+
+        font-weight: 600;
+
+    }
+
+
+    .mobile-menu a:active {
+
+        background: var(--primary-light);
+
+        color: var(--primary-dark);
+
+    }
+
+}
+
+
+/* ==========================================
+   CELULARES PEQUENOS
+========================================== */
+
+@media (max-width: 400px) {
+
+    .navbar {
+
+        padding-left: 8px;
+        padding-right: 8px;
+
+    }
+
+    .mobile-menu-button {
+
+        width: 38px;
+        height: 38px;
+
+        font-size: 20px;
+
+    }
+
+    .notification-nav {
+
+        width: 36px;
+        height: 36px;
+
+    }
+
+    .logo h2 {
+
+        font-size: 18px;
+
+    }
+
+    .logo img {
+
+        width: 30px;
+        height: 30px;
+
+    }
+
+}

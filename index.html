@@ -24,16 +24,15 @@
     <!-- ==========================================
      HEADER
 ========================================== -->
-
-<header>
+<header class="site-header">
 
     <nav class="navbar">
 
         <!-- MENU MOBILE -->
         <button
+            type="button"
             class="mobile-menu-button"
             id="mobile-menu-button"
-            type="button"
             aria-label="Abrir menu"
             aria-expanded="false"
         >
@@ -62,77 +61,71 @@
         <ul class="nav-links">
 
             <li>
-                <a href="index.html">
-                    Início
-                </a>
+                <a href="index.html">Início</a>
             </li>
 
             <li>
-                <a href="explorar.html">
-                    Explorar
-                </a>
+                <a href="explorar.html">Explorar</a>
             </li>
 
             <li>
-                <a href="#categorias">
-                    Categorias
-                </a>
+                <a href="#categorias">Categorias</a>
             </li>
 
             <li>
-                <a href="#como-funciona">
-                    Como funciona
-                </a>
+                <a href="#como-funciona">Como funciona</a>
             </li>
 
         </ul>
 
 
         <!-- AÇÕES -->
-<div class="nav-buttons">
+        <div class="nav-buttons">
 
-    <button
-        class="notification-nav"
-        id="notification-button"
-        type="button"
-        aria-label="Notificações"
-    >
+            <button
+                class="notification-nav"
+                id="notification-button"
+                type="button"
+                aria-label="Notificações"
+            >
 
-        <span class="notification-bell">
-            🔔
-        </span>
+                <span class="notification-bell">
+                    🔔
+                </span>
 
-        <span
-            class="notification-badge"
-            id="notification-badge"
-            style="display:none;"
-        ></span>
+                <span
+                    class="notification-badge"
+                    id="notification-badge"
+                ></span>
 
-    </button>
-
-
-    <button
-        class="btn-secondary"
-        id="login-button"
-        type="button"
-    >
-        Entrar
-    </button>
+            </button>
 
 
-    <button
-        class="btn-primary"
-        id="announce-button"
-        type="button"
-    >
-        Anunciar
-    </button>
+            <button
+                class="btn-secondary"
+                id="login-button"
+                type="button"
+            >
+                Entrar
+            </button>
 
-</div>
+
+            <button
+                class="btn-primary"
+                id="announce-button"
+                type="button"
+            >
+                Anunciar
+            </button>
+
+        </div>
+
     </nav>
 
 
-    <!-- MENU MOBILE -->
+    <!-- ==========================================
+         MENU MOBILE
+    =========================================== -->
 
     <div
         class="mobile-menu"
@@ -169,12 +162,11 @@
         <a
             href="perfil.html"
             id="mobile-profile"
-            style="display:none;"
         >
             👤 Meu Perfil
         </a>
 
-        <a href="anunciar.html">
+        <a href="novo-anuncio.html">
             ➕ Anunciar
         </a>
 
