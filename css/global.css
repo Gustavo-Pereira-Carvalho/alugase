@@ -2,6 +2,7 @@
    ALUGASE — GLOBAL CSS
 ================================ */
 
+
 /* ---------- RESET ---------- */
 
 * {
@@ -60,7 +61,7 @@ img {
 }
 
 
-/* ---------- CONTAINER ---------- */
+/* ---------- CONTAINERS ---------- */
 
 .navbar,
 .hero-content,
@@ -74,12 +75,14 @@ img {
 
 
 /* ==========================================
-   NAVBAR
+   HEADER / NAVBAR
 ========================================== */
 
 header {
     width: 100%;
+
     background: #ffffff;
+
     border-bottom: 1px solid var(--border);
 
     position: relative;
@@ -91,9 +94,8 @@ header {
 
     display: flex;
     align-items: center;
-    justify-content: space-between;
 
-    gap: 24px;
+    gap: 25px;
 }
 
 
@@ -108,37 +110,43 @@ header {
 .logo a {
     display: flex;
     align-items: center;
+
     gap: 10px;
 }
 
 .logo img {
     width: 46px;
     height: 46px;
+
     object-fit: contain;
 }
 
 .logo h2 {
+    margin: 0;
+
     color: var(--primary);
+
     font-size: 28px;
     font-weight: 800;
+
     letter-spacing: 1px;
 }
 
 
 /* ==========================================
-   MENU
+   LINKS
 ========================================== */
 
 .nav-links {
+    flex: 1;
+
     display: flex;
     align-items: center;
     justify-content: center;
 
-    gap: 26px;
+    gap: 28px;
 
     list-style: none;
-
-    flex: 1;
 }
 
 .nav-links a {
@@ -156,12 +164,13 @@ header {
 
 
 /* ==========================================
-   BOTÕES NAVBAR
+   AÇÕES DA NAVBAR
 ========================================== */
 
 .nav-buttons {
     display: flex;
     align-items: center;
+
     gap: 10px;
 
     flex-shrink: 0;
@@ -174,7 +183,6 @@ header {
 
 .btn-primary,
 .btn-secondary {
-    border: none;
     border-radius: 10px;
 
     padding: 11px 20px;
@@ -187,8 +195,14 @@ header {
         box-shadow 0.2s ease;
 }
 
+
+/* PRIMÁRIO */
+
 .btn-primary {
+    border: none;
+
     background: var(--primary);
+
     color: #ffffff;
 }
 
@@ -201,6 +215,9 @@ header {
         0 8px 20px rgba(22, 163, 74, 0.2);
 }
 
+
+/* SECUNDÁRIO */
+
 .btn-secondary {
     background: transparent;
 
@@ -211,31 +228,75 @@ header {
 
 .btn-secondary:hover {
     border-color: var(--primary);
+
     color: var(--primary);
 }
 
 
 /* ==========================================
-   BOTÃO MENU MOBILE
+   CHAT
 ========================================== */
 
-.mobile-menu-button {
-    display: none;
+.chat-nav {
+    position: relative;
 
     width: 42px;
     height: 42px;
 
+    display: flex;
     align-items: center;
     justify-content: center;
 
-    border: 1px solid var(--border);
-    border-radius: 10px;
+    border: none;
+    border-radius: 12px;
 
-    background: #ffffff;
+    background: #f0fdf4;
 
-    color: var(--text);
+    color: #166534;
 
-    font-size: 22px;
+    transition: 0.2s ease;
+}
+
+.chat-nav:hover {
+    background: #dcfce7;
+
+    transform: translateY(-1px);
+}
+
+.chat-icon {
+    font-size: 21px;
+
+    line-height: 1;
+}
+
+
+/* BADGE DO CHAT */
+
+.chat-badge {
+    position: absolute;
+
+    top: -4px;
+    right: -4px;
+
+    min-width: 19px;
+    height: 19px;
+
+    padding: 0 5px;
+
+    border-radius: 999px;
+
+    background: #dc2626;
+
+    color: #ffffff;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid #ffffff;
 }
 
 
@@ -253,26 +314,30 @@ header {
     align-items: center;
     justify-content: center;
 
-    flex-shrink: 0;
-
+    border: none;
     border-radius: 12px;
 
-    color: #166534;
-
     background: #f0fdf4;
+
+    color: #166534;
 
     transition: 0.2s ease;
 }
 
 .notification-nav:hover {
     background: #dcfce7;
+
     transform: translateY(-1px);
 }
 
 .notification-bell {
     font-size: 21px;
+
     line-height: 1;
 }
+
+
+/* BADGE */
 
 .notification-badge {
     position: absolute;
@@ -288,13 +353,13 @@ header {
     border-radius: 999px;
 
     background: #dc2626;
+
     color: #ffffff;
 
     font-size: 10px;
     font-weight: 800;
 
     display: none;
-
     align-items: center;
     justify-content: center;
 
@@ -303,56 +368,6 @@ header {
 
 .notification-badge.show {
     display: flex;
-}
-
-
-/* ==========================================
-   MENU MOBILE ABERTO
-========================================== */
-
-.mobile-menu {
-    display: none;
-
-    width: 100%;
-
-    background: #ffffff;
-
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-
-    padding: 12px 20px;
-}
-
-.mobile-menu.active {
-    display: block;
-}
-
-.mobile-menu a,
-.mobile-menu button {
-    width: 100%;
-
-    display: flex;
-    align-items: center;
-
-    padding: 13px 10px;
-
-    border: none;
-    border-radius: 10px;
-
-    background: transparent;
-
-    color: var(--text);
-
-    font-size: 15px;
-    font-weight: 600;
-
-    text-align: left;
-}
-
-.mobile-menu a:hover,
-.mobile-menu button:hover {
-    background: var(--background-secondary);
-    color: var(--primary);
 }
 
 
@@ -488,7 +503,6 @@ header {
     min-height: 130px;
 
     display: flex;
-
     flex-direction: column;
 
     align-items: center;
@@ -621,6 +635,7 @@ header {
 
 .banner h2 {
     font-size: 36px;
+
     margin-bottom: 10px;
 }
 
@@ -634,6 +649,7 @@ header {
 
 .banner .btn-primary {
     background: #ffffff;
+
     color: var(--primary-dark);
 }
 
@@ -764,6 +780,10 @@ footer {
         font-size: 14px;
     }
 
+    .nav-buttons {
+        gap: 7px;
+    }
+
     .nav-buttons .btn-primary,
     .nav-buttons .btn-secondary {
         padding: 10px 14px;
@@ -789,32 +809,30 @@ footer {
 
 @media (max-width: 768px) {
 
+    /*
+       IMPORTANTE:
+       Não existe hamburger.
+       Não existe menu mobile.
+       Mantemos a navbar em uma única linha.
+    */
+
     .navbar {
-        width: 94%;
+        width: 96%;
 
         min-height: 66px;
 
         gap: 10px;
     }
 
-    /* Menu desktop desaparece */
-    .nav-links {
-        display: none;
-    }
 
-    /* Botão hamburger aparece */
-    .mobile-menu-button {
-        display: flex;
-        order: -1;
-    }
+    /* LOGO */
 
-    /* Logo ocupa o espaço central */
     .logo {
-        flex: 1;
+        flex-shrink: 1;
     }
 
     .logo a {
-        justify-content: center;
+        gap: 6px;
     }
 
     .logo img {
@@ -826,17 +844,48 @@ footer {
         font-size: 21px;
     }
 
-    /* Botões desktop */
-    .nav-buttons {
-        gap: 7px;
+
+    /* LINKS */
+
+    .nav-links {
+        display: none;
     }
+
+
+    /* AÇÕES */
+
+    .nav-buttons {
+        gap: 6px;
+    }
+
+
+    /*
+       No celular escondemos os textos
+       "Entrar" e "Anunciar".
+    */
 
     .nav-buttons .btn-primary,
     .nav-buttons .btn-secondary {
         display: none;
     }
 
-    /* Sininho continua aparecendo */
+
+    /* CHAT */
+
+    .chat-nav {
+        width: 38px;
+        height: 38px;
+
+        border-radius: 10px;
+    }
+
+    .chat-icon {
+        font-size: 19px;
+    }
+
+
+    /* NOTIFICAÇÕES */
+
     .notification-nav {
         width: 38px;
         height: 38px;
@@ -847,6 +896,7 @@ footer {
     .notification-bell {
         font-size: 19px;
     }
+
 
     /* HERO */
 
@@ -870,6 +920,7 @@ footer {
         font-size: 16px;
     }
 
+
     /* BUSCA */
 
     .search-box {
@@ -887,6 +938,7 @@ footer {
     .search-box .btn-primary {
         width: 100%;
     }
+
 
     /* CATEGORIAS */
 
@@ -914,6 +966,7 @@ footer {
         min-height: 115px;
     }
 
+
     /* PRODUTOS */
 
     .products-grid {
@@ -922,6 +975,7 @@ footer {
         gap: 16px;
     }
 
+
     /* PASSOS */
 
     .steps-grid {
@@ -929,6 +983,7 @@ footer {
 
         gap: 15px;
     }
+
 
     /* BANNER */
 
@@ -944,6 +999,7 @@ footer {
         font-size: 28px;
     }
 
+
     /* FOOTER */
 
     .footer-content {
@@ -957,7 +1013,7 @@ footer {
 
 
 /* ==========================================
-   MOBILE PEQUENO
+   CELULARES PEQUENOS
 ========================================== */
 
 @media (max-width: 420px) {
@@ -966,8 +1022,8 @@ footer {
         width: 96%;
     }
 
-    .logo a {
-        gap: 6px;
+    .logo h2 {
+        font-size: 18px;
     }
 
     .logo img {
@@ -975,23 +1031,19 @@ footer {
         height: 32px;
     }
 
-    .logo h2 {
-        font-size: 18px;
-    }
-
-    .mobile-menu-button {
-        width: 38px;
-        height: 38px;
-
-        font-size: 20px;
-    }
-
+    .chat-nav,
     .notification-nav {
         width: 36px;
         height: 36px;
     }
 
-    .notification-badge {
+    .chat-icon,
+    .notification-bell {
+        font-size: 18px;
+    }
+
+    .notification-badge,
+    .chat-badge {
         min-width: 17px;
         height: 17px;
 
@@ -1011,413 +1063,4 @@ footer {
     .category-card span {
         font-size: 13px;
     }
-}
-
-/* ==========================================
-   MENU MOBILE — AJUSTES
-========================================== */
-
-@media (max-width: 768px) {
-
-    .mobile-menu {
-        position: absolute;
-        top: 100%;
-        left: 0;
-
-        width: 100%;
-
-        padding: 10px 16px 16px;
-
-        background: #ffffff;
-
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-
-        box-shadow: 0 12px 30px rgba(20, 40, 25, 0.10);
-
-        z-index: 999;
-    }
-
-    .mobile-menu.active {
-        display: block;
-    }
-
-    .mobile-menu a {
-        min-height: 48px;
-
-        padding: 12px 14px;
-
-        border-radius: 12px;
-
-        font-size: 15px;
-
-        transition:
-            background 0.2s ease,
-            color 0.2s ease,
-            transform 0.2s ease;
-    }
-
-    .mobile-menu a:active {
-        background: var(--primary-light);
-        color: var(--primary-dark);
-
-        transform: scale(0.98);
-    }
-
-}
-
-
-/* ==========================================
-   ALUGASE — NAVBAR NOVA
-========================================== */
-
-.site-header {
-    width: 100%;
-    background: #ffffff;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-    z-index: 1000;
-}
-
-
-/* ==========================================
-   DESKTOP
-========================================== */
-
-.navbar {
-    width: min(1200px, 92%);
-    min-height: 76px;
-    margin: 0 auto;
-
-    display: flex;
-    align-items: center;
-
-    gap: 25px;
-}
-
-
-/* LOGO */
-
-.logo {
-    flex-shrink: 0;
-}
-
-.logo a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.logo img {
-    width: 46px;
-    height: 46px;
-    object-fit: contain;
-}
-
-.logo h2 {
-    margin: 0;
-
-    color: var(--primary);
-
-    font-size: 28px;
-    font-weight: 800;
-    letter-spacing: 1px;
-}
-
-
-/* LINKS */
-
-.nav-links {
-    flex: 1;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    gap: 28px;
-
-    list-style: none;
-}
-
-.nav-links a {
-    color: var(--text-secondary);
-
-    font-size: 15px;
-    font-weight: 600;
-
-    transition: .2s;
-}
-
-.nav-links a:hover {
-    color: var(--primary);
-}
-
-
-/* AÇÕES */
-
-.nav-buttons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    flex-shrink: 0;
-}
-
-
-/* BOTÃO MOBILE */
-
-.mobile-menu-button {
-    display: none;
-
-    width: 42px;
-    height: 42px;
-
-    align-items: center;
-    justify-content: center;
-
-    border: 1px solid var(--border);
-    border-radius: 10px;
-
-    background: #ffffff;
-
-    color: var(--text);
-
-    font-size: 22px;
-
-    flex-shrink: 0;
-}
-
-
-/* ==========================================
-   MENU MOBILE
-========================================== */
-
-.mobile-menu {
-    display: none;
-}
-
-
-/* ==========================================
-   MOBILE
-========================================== */
-
-@media (max-width: 768px) {
-
-    .navbar {
-
-        width: 100%;
-
-        min-height: 64px;
-
-        padding: 8px 12px;
-
-        gap: 10px;
-
-    }
-
-
-    /* HAMBURGER */
-
-    .mobile-menu-button {
-
-        display: flex;
-
-        order: 1;
-
-    }
-
-
-    /* LOGO */
-
-    .logo {
-
-        flex: 1;
-
-        order: 2;
-
-    }
-
-    .logo a {
-
-        justify-content: center;
-
-        gap: 6px;
-
-    }
-
-    .logo img {
-
-        width: 34px;
-        height: 34px;
-
-    }
-
-    .logo h2 {
-
-        font-size: 20px;
-
-    }
-
-
-    /* LINKS DESKTOP */
-
-    .nav-links {
-
-        display: none;
-
-    }
-
-
-    /* AÇÕES */
-
-    .nav-buttons {
-
-        order: 3;
-
-        gap: 6px;
-
-    }
-
-
-    /* ESCONDER LOGIN E ANUNCIAR */
-
-    .nav-buttons .btn-secondary,
-    .nav-buttons .btn-primary {
-
-        display: none;
-
-    }
-
-
-    /* SINO */
-
-    .notification-nav {
-
-        width: 38px;
-        height: 38px;
-
-        display: flex;
-
-        align-items: center;
-        justify-content: center;
-
-        border: none;
-        border-radius: 10px;
-
-        background: #f0fdf4;
-
-    }
-
-    .notification-bell {
-
-        font-size: 19px;
-
-    }
-
-
-    /* ==========================================
-       MENU ABERTO
-    ========================================== */
-
-    .mobile-menu {
-
-        width: 100%;
-
-        padding: 8px 12px 14px;
-
-        background: #ffffff;
-
-        border-top: 1px solid var(--border);
-        border-bottom: 1px solid var(--border);
-
-        box-shadow: 0 8px 20px rgba(0,0,0,.08);
-
-    }
-
-
-    .mobile-menu.active {
-
-        display: block;
-
-    }
-
-
-    .mobile-menu a {
-
-        display: flex;
-
-        align-items: center;
-
-        width: 100%;
-
-        min-height: 48px;
-
-        padding: 12px 14px;
-
-        margin-top: 4px;
-
-        border-radius: 10px;
-
-        color: var(--text);
-
-        font-size: 15px;
-
-        font-weight: 600;
-
-    }
-
-
-    .mobile-menu a:active {
-
-        background: var(--primary-light);
-
-        color: var(--primary-dark);
-
-    }
-
-}
-
-
-/* ==========================================
-   CELULARES PEQUENOS
-========================================== */
-
-@media (max-width: 400px) {
-
-    .navbar {
-
-        padding-left: 8px;
-        padding-right: 8px;
-
-    }
-
-    .mobile-menu-button {
-
-        width: 38px;
-        height: 38px;
-
-        font-size: 20px;
-
-    }
-
-    .notification-nav {
-
-        width: 36px;
-        height: 36px;
-
-    }
-
-    .logo h2 {
-
-        font-size: 18px;
-
-    }
-
-    .logo img {
-
-        width: 30px;
-        height: 30px;
-
-    }
-
 }
