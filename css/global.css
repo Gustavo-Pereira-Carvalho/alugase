@@ -1,6 +1,6 @@
 /* ================================
    ALUGASE — GLOBAL CSS
-   ================================ */
+================================ */
 
 /* ---------- RESET ---------- */
 
@@ -9,7 +9,6 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 
 html {
     scroll-behavior: smooth;
@@ -36,6 +35,12 @@ a {
     text-decoration: none;
 }
 
+img {
+    max-width: 100%;
+    display: block;
+}
+
+
 /* ---------- CORES ---------- */
 
 :root {
@@ -54,6 +59,7 @@ a {
     --shadow: 0 10px 30px rgba(20, 40, 25, 0.08);
 }
 
+
 /* ---------- CONTAINER ---------- */
 
 .navbar,
@@ -66,12 +72,18 @@ a {
     margin: 0 auto;
 }
 
-/* ---------- NAVBAR ---------- */
+
+/* ==========================================
+   NAVBAR
+========================================== */
 
 header {
     width: 100%;
     background: #ffffff;
     border-bottom: 1px solid var(--border);
+
+    position: relative;
+    z-index: 1000;
 }
 
 .navbar {
@@ -81,47 +93,59 @@ header {
     align-items: center;
     justify-content: space-between;
 
-    gap: 30px;
+    gap: 24px;
 }
 
-/* ==========================
+
+/* ==========================================
    LOGO
-========================== */
+========================================== */
 
-.logo a{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    text-decoration:none;
+.logo {
+    flex-shrink: 0;
 }
 
-.logo img{
-    width:46px;
-    height:46px;
-    object-fit:contain;
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-.logo h2{
-    color:#16A34A;
-    font-size:28px;
-    font-weight:800;
-    letter-spacing:1px;
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
+.logo img {
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
 }
+
+.logo h2 {
+    color: var(--primary);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+
+/* ==========================================
+   MENU
+========================================== */
 
 .nav-links {
     display: flex;
     align-items: center;
-    gap: 30px;
+    justify-content: center;
+
+    gap: 26px;
 
     list-style: none;
+
+    flex: 1;
 }
 
 .nav-links a {
     color: var(--text-secondary);
+
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 600;
 
     transition: 0.2s ease;
 }
@@ -130,13 +154,23 @@ header {
     color: var(--primary);
 }
 
+
+/* ==========================================
+   BOTÕES NAVBAR
+========================================== */
+
 .nav-buttons {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+
+    flex-shrink: 0;
 }
 
-/* ---------- BOTÕES ---------- */
+
+/* ==========================================
+   BOTÕES
+========================================== */
 
 .btn-primary,
 .btn-secondary {
@@ -160,13 +194,18 @@ header {
 
 .btn-primary:hover {
     background: var(--primary-dark);
+
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(22, 163, 74, 0.2);
+
+    box-shadow:
+        0 8px 20px rgba(22, 163, 74, 0.2);
 }
 
 .btn-secondary {
     background: transparent;
+
     color: var(--text);
+
     border: 1px solid var(--border);
 }
 
@@ -175,7 +214,151 @@ header {
     color: var(--primary);
 }
 
-/* ---------- HERO ---------- */
+
+/* ==========================================
+   BOTÃO MENU MOBILE
+========================================== */
+
+.mobile-menu-button {
+    display: none;
+
+    width: 42px;
+    height: 42px;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: #ffffff;
+
+    color: var(--text);
+
+    font-size: 22px;
+}
+
+
+/* ==========================================
+   NOTIFICAÇÕES
+========================================== */
+
+.notification-nav {
+    position: relative;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    color: #166534;
+
+    background: #f0fdf4;
+
+    transition: 0.2s ease;
+}
+
+.notification-nav:hover {
+    background: #dcfce7;
+    transform: translateY(-1px);
+}
+
+.notification-bell {
+    font-size: 21px;
+    line-height: 1;
+}
+
+.notification-badge {
+    position: absolute;
+
+    top: -4px;
+    right: -4px;
+
+    min-width: 19px;
+    height: 19px;
+
+    padding: 0 5px;
+
+    border-radius: 999px;
+
+    background: #dc2626;
+    color: #ffffff;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid #ffffff;
+}
+
+.notification-badge.show {
+    display: flex;
+}
+
+
+/* ==========================================
+   MENU MOBILE ABERTO
+========================================== */
+
+.mobile-menu {
+    display: none;
+
+    width: 100%;
+
+    background: #ffffff;
+
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+
+    padding: 12px 20px;
+}
+
+.mobile-menu.active {
+    display: block;
+}
+
+.mobile-menu a,
+.mobile-menu button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    padding: 13px 10px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: var(--text);
+
+    font-size: 15px;
+    font-weight: 600;
+
+    text-align: left;
+}
+
+.mobile-menu a:hover,
+.mobile-menu button:hover {
+    background: var(--background-secondary);
+    color: var(--primary);
+}
+
+
+/* ==========================================
+   HERO
+========================================== */
 
 .hero {
     min-height: 560px;
@@ -204,6 +387,7 @@ header {
     max-width: 760px;
 
     font-size: clamp(40px, 5vw, 64px);
+
     line-height: 1.08;
 
     letter-spacing: -2px;
@@ -221,7 +405,10 @@ header {
     margin-bottom: 35px;
 }
 
-/* ---------- BUSCA ---------- */
+
+/* ==========================================
+   BUSCA
+========================================== */
 
 .search-box {
     width: min(720px, 100%);
@@ -243,12 +430,15 @@ header {
 .search-box input {
     flex: 1;
 
+    min-width: 0;
+
     border: none;
     outline: none;
 
     padding: 14px 16px;
 
     color: var(--text);
+
     background: transparent;
 }
 
@@ -260,7 +450,10 @@ header {
     padding: 13px 25px;
 }
 
-/* ---------- SEÇÕES ---------- */
+
+/* ==========================================
+   SEÇÕES
+========================================== */
 
 .categories,
 .products,
@@ -278,7 +471,10 @@ header {
     margin-bottom: 35px;
 }
 
-/* ---------- CATEGORIAS ---------- */
+
+/* ==========================================
+   CATEGORIAS
+========================================== */
 
 .category-grid {
     display: grid;
@@ -292,7 +488,9 @@ header {
     min-height: 130px;
 
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
     justify-content: center;
 
@@ -326,7 +524,10 @@ header {
     background: #ffffff;
 }
 
-/* ---------- PRODUTOS ---------- */
+
+/* ==========================================
+   PRODUTOS
+========================================== */
 
 .products {
     background: #ffffff;
@@ -393,7 +594,10 @@ header {
     margin-left: 20px;
 }
 
-/* ---------- BANNER ---------- */
+
+/* ==========================================
+   BANNER
+========================================== */
 
 .banner {
     margin-top: 30px;
@@ -417,7 +621,6 @@ header {
 
 .banner h2 {
     font-size: 36px;
-
     margin-bottom: 10px;
 }
 
@@ -438,7 +641,10 @@ header {
     background: #f0fdf4;
 }
 
-/* ---------- COMO FUNCIONA ---------- */
+
+/* ==========================================
+   COMO FUNCIONA
+========================================== */
 
 .steps {
     text-align: center;
@@ -478,61 +684,89 @@ header {
     font-size: 14px;
 }
 
+
 /* ==========================================
    FOOTER
 ========================================== */
 
-footer{
-    margin-top:70px;
-    background:#14532d;
-    color:#fff;
+footer {
+    margin-top: 70px;
+
+    background: #14532d;
+
+    color: #ffffff;
 }
 
-.footer-content{
-    width:min(1200px,92%);
-    margin:auto;
-    padding:45px 0;
-    text-align:center;
+.footer-content {
+    width: min(1200px, 92%);
+
+    margin: auto;
+
+    padding: 45px 0;
+
+    text-align: center;
 }
 
-.footer-content h2{
-    margin-bottom:12px;
-    letter-spacing:1px;
+.footer-content h2 {
+    margin-bottom: 12px;
+
+    letter-spacing: 1px;
 }
 
-.footer-content p{
-    color:#d1fae5;
+.footer-content p {
+    color: #d1fae5;
 }
 
-.footer-links{
-    display:flex;
-    justify-content:center;
-    gap:22px;
-    flex-wrap:wrap;
-    margin:24px 0;
+.footer-links {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 22px;
+
+    flex-wrap: wrap;
+
+    margin: 24px 0;
 }
 
-.footer-links a{
-    color:#fff;
-    text-decoration:none;
-    transition:.2s;
+.footer-links a {
+    color: #ffffff;
+
+    transition: 0.2s;
 }
 
-.footer-links a:hover{
-    color:#86efac;
+.footer-links a:hover {
+    color: #86efac;
 }
 
-.copyright{
-    font-size:14px;
-    opacity:.8;
+.copyright {
+    font-size: 14px;
+
+    opacity: 0.8;
 }
 
-/* ---------- RESPONSIVIDADE ---------- */
 
-@media (max-width: 900px) {
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 1000px) {
+
+    .navbar {
+        gap: 15px;
+    }
 
     .nav-links {
-        display: none;
+        gap: 16px;
+    }
+
+    .nav-links a {
+        font-size: 14px;
+    }
+
+    .nav-buttons .btn-primary,
+    .nav-buttons .btn-secondary {
+        padding: 10px 14px;
     }
 
     .category-grid {
@@ -548,154 +782,233 @@ footer{
     }
 }
 
-@media (max-width: 600px) {
 
-    .navbar{
-        min-height: 68px;
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 768px) {
+
+    .navbar {
+        width: 94%;
+
+        min-height: 66px;
+
         gap: 10px;
     }
 
-    .logo h2{
-        font-size: 22px;
+    /* Menu desktop desaparece */
+    .nav-links {
+        display: none;
     }
 
-    .logo img{
+    /* Botão hamburger aparece */
+    .mobile-menu-button {
+        display: flex;
+        order: -1;
+    }
+
+    /* Logo ocupa o espaço central */
+    .logo {
+        flex: 1;
+    }
+
+    .logo a {
+        justify-content: center;
+    }
+
+    .logo img {
         width: 36px;
         height: 36px;
     }
 
-    /* Mantém os dois botões visíveis */
-    .nav-buttons{
-        display: flex;
-        gap: 8px;
+    .logo h2 {
+        font-size: 21px;
+    }
+
+    /* Botões desktop */
+    .nav-buttons {
+        gap: 7px;
     }
 
     .nav-buttons .btn-primary,
-    .nav-buttons .btn-secondary{
-        padding: 8px 12px;
-        font-size: 13px;
+    .nav-buttons .btn-secondary {
+        display: none;
     }
 
-    .hero{
+    /* Sininho continua aparecendo */
+    .notification-nav {
+        width: 38px;
+        height: 38px;
+
+        border-radius: 10px;
+    }
+
+    .notification-bell {
+        font-size: 19px;
+    }
+
+    /* HERO */
+
+    .hero {
         min-height: auto;
     }
 
-    .hero-content{
-        padding: 70px 0;
+    .hero-content {
+        width: 94%;
+
+        padding: 65px 0;
     }
 
-    .hero h1{
-        font-size: 40px;
+    .hero h1 {
+        font-size: clamp(34px, 10vw, 42px);
+
+        letter-spacing: -1.5px;
     }
 
-    .hero p{
+    .hero p {
         font-size: 16px;
     }
 
-    .search-box{
+    /* BUSCA */
+
+    .search-box {
         flex-direction: column;
+
         align-items: stretch;
+
         padding: 8px;
     }
 
-    .search-box .btn-primary{
+    .search-box input {
         width: 100%;
     }
 
-    .category-grid{
-        grid-template-columns: repeat(2,1fr);
+    .search-box .btn-primary {
+        width: 100%;
     }
 
-    .products-grid{
-        grid-template-columns: 1fr;
+    /* CATEGORIAS */
+
+    .categories,
+    .products,
+    .steps {
+        width: 94%;
+
+        padding: 65px 0;
     }
 
-    .steps-grid{
-        grid-template-columns: 1fr;
-    }
-
-    .banner{
-        padding: 45px 25px;
-    }
-
-    .banner h2{
+    .categories h2,
+    .products h2,
+    .steps h2 {
         font-size: 28px;
     }
-}
 
-/* ==========================================
-   NOTIFICAÇÕES — NAVBAR
-========================================== */
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
 
-.notification-nav{
-    position:relative;
-    width:42px;
-    height:42px;
+        gap: 12px;
+    }
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+    .category-card {
+        min-height: 115px;
+    }
 
-    text-decoration:none;
+    /* PRODUTOS */
 
-    border-radius:12px;
+    .products-grid {
+        grid-template-columns: 1fr;
 
-    color:#166534;
+        gap: 16px;
+    }
 
-    background:#f0fdf4;
+    /* PASSOS */
 
-    transition:.2s;
-}
+    .steps-grid {
+        grid-template-columns: 1fr;
 
-.notification-nav:hover{
-    background:#dcfce7;
-    transform:translateY(-1px);
-}
+        gap: 15px;
+    }
 
-.notification-bell{
-    font-size:21px;
-    line-height:1;
-}
+    /* BANNER */
 
-.notification-badge{
-    position:absolute;
+    .banner {
+        width: 94%;
 
-    top:-4px;
-    right:-4px;
+        padding: 45px 25px;
 
-    min-width:19px;
-    height:19px;
+        border-radius: 20px;
+    }
 
-    padding:0 5px;
+    .banner h2 {
+        font-size: 28px;
+    }
 
-    border-radius:999px;
+    /* FOOTER */
 
-    background:#dc2626;
-    color:#fff;
+    .footer-content {
+        width: 94%;
+    }
 
-    font-size:10px;
-    font-weight:800;
-
-    align-items:center;
-    justify-content:center;
-
-    border:2px solid #fff;
+    .footer-links {
+        gap: 14px;
+    }
 }
 
 
 /* ==========================================
-   NAVBAR MOBILE
+   MOBILE PEQUENO
 ========================================== */
 
-@media(max-width:768px){
+@media (max-width: 420px) {
 
-    .notification-nav{
-        width:38px;
-        height:38px;
+    .navbar {
+        width: 96%;
     }
 
-    .notification-bell{
-        font-size:19px;
+    .logo a {
+        gap: 6px;
     }
 
+    .logo img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .logo h2 {
+        font-size: 18px;
+    }
+
+    .mobile-menu-button {
+        width: 38px;
+        height: 38px;
+
+        font-size: 20px;
+    }
+
+    .notification-nav {
+        width: 36px;
+        height: 36px;
+    }
+
+    .notification-badge {
+        min-width: 17px;
+        height: 17px;
+
+        font-size: 9px;
+    }
+
+    .hero h1 {
+        font-size: 34px;
+    }
+
+    .category-card {
+        min-height: 105px;
+
+        font-size: 27px;
+    }
+
+    .category-card span {
+        font-size: 13px;
+    }
 }

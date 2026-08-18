@@ -5,51 +5,133 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const API = "https://alugase-api.onrender.com/api/products";
+    const API =
+        "https://alugase-api.onrender.com/api/products";
 
-    const searchInput = document.querySelector("#search-input");
-    const searchButton = document.querySelector("#search-button");
+    const NOTIFICATION_API =
+        "https://alugase-api.onrender.com/api/notifications";
 
-    const loginButton = document.querySelector(".btn-secondary");
-    const announceButtons = document.querySelectorAll(".btn-primary");
-    const categoryCards = document.querySelectorAll(".category-card");
-
-    const productsGrid = document.querySelector("#products-grid");
-
-    const user = JSON.parse(localStorage.getItem("alugase_user"));
 
     // ==========================================
-    // CARREGAR PRODUTOS
+    // ELEMENTOS
+    // ==========================================
+
+    const searchInput =
+        document.querySelector("#search-input");
+
+    const searchButton =
+        document.querySelector("#search-button");
+
+    const productsGrid =
+        document.querySelector("#products-grid");
+
+    const categoryCards =
+        document.querySelectorAll(".category-card");
+
+    // Navbar
+    const loginButton =
+        document.querySelector("#login-button");
+
+    const profileButton =
+        document.querySelector("#profile-button");
+
+    const announceButton =
+        document.querySelector("#announce-button");
+
+    const notificationButton =
+        document.querySelector("#notification-button");
+
+    const notificationBadge =
+        document.querySelector("#notification-badge");
+
+
+    // ==========================================
+    // USUÁRIO
+    // ==========================================
+
+    let user = null;
+
+    try {
+
+        user =
+            JSON.parse(
+                localStorage.getItem(
+                    "alugase_user"
+                )
+            );
+
+    } catch (error) {
+
+        console.error(
+            "Erro ao ler usuário:",
+            error
+        );
+
+    }
+
+
+    // ==========================================
+    // PRODUTOS
     // ==========================================
 
     async function loadProducts() {
 
-        if (!productsGrid) return;
+        if (!productsGrid) {
+            return;
+        }
+
 
         productsGrid.innerHTML = `
-            <p class="empty-message">Carregando anúncios...</p>
+
+            <p class="empty-message">
+                Carregando anúncios...
+            </p>
+
         `;
+
 
         try {
 
-            const response = await fetch(API);
-            const products = await response.json();
+            const response =
+                await fetch(API);
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Erro ao carregar produtos."
+                );
+
+            }
+
+
+            const products =
+                await response.json();
+
 
             renderProducts(products);
 
+
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                "ERRO AO CARREGAR PRODUTOS:",
+                error
+            );
+
 
             productsGrid.innerHTML = `
+
                 <p class="empty-message">
                     Não foi possível carregar os anúncios.
                 </p>
+
             `;
 
         }
 
     }
+
 
     // ==========================================
     // RENDERIZAR PRODUTOS
@@ -57,48 +139,98 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function renderProducts(products) {
 
+        if (!productsGrid) {
+            return;
+        }
+
+
         productsGrid.innerHTML = "";
 
-        if (products.length === 0) {
+
+        if (
+            !Array.isArray(products) ||
+            products.length === 0
+        ) {
 
             productsGrid.innerHTML = `
+
                 <p class="empty-message">
                     Nenhum anúncio disponível.
                 </p>
+
             `;
 
             return;
 
         }
 
+
         products.forEach(product => {
 
-            const card = document.createElement("article");
+            const card =
+                document.createElement("article");
 
-            card.className = "product-card";
+
+            card.className =
+                "product-card";
+
+
+            const price =
+                Number(product.pricePerDay || 0);
+
 
             card.innerHTML = `
+
                 <div class="product-image">
-                    ${product.image || "📦"}
+
+                    ${
+                        product.image
+                            ? `<img
+                                src="${product.image}"
+                                alt="${product.title || "Produto"}"
+                              >`
+                            : "📦"
+                    }
+
                 </div>
+
 
                 <div class="product-content">
-                    <h3>${product.title}</h3>
 
-                    <p>📍 ${product.city}</p>
+                    <h3>
+                        ${product.title || "Produto"}
+                    </h3>
+
+
+                    <p>
+                        📍 ${product.city || "Localização não informada"}
+                    </p>
+
 
                     <strong>
-                        R$ ${product.pricePerDay}/dia
+                        R$ ${price.toFixed(2).replace(".", ",")}/dia
                     </strong>
+
                 </div>
+
             `;
 
-            card.onclick = () => {
 
-                window.location.href =
-                    `produto.html?id=${product._id}`;
+            card.addEventListener(
+                "click",
+                () => {
 
-            };
+                    if (!product._id) {
+                        return;
+                    }
+
+
+                    window.location.href =
+                        `produto.html?id=${product._id}`;
+
+                }
+            );
+
 
             productsGrid.appendChild(card);
 
@@ -106,13 +238,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
+
     // ==========================================
-    // BUSCA → EXPLORAR
+    // BUSCA
     // ==========================================
 
     function goToExplore() {
 
-        const term = searchInput.value.trim();
+        const term =
+            searchInput?.value.trim() || "";
+
 
         if (term) {
 
@@ -121,24 +256,43 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } else {
 
-            window.location.href = "explorar.html";
+            window.location.href =
+                "explorar.html";
 
         }
 
     }
 
-    searchButton?.addEventListener("click", goToExplore);
 
-    searchInput?.addEventListener("keydown", e => {
+    if (searchButton) {
 
-        if (e.key === "Enter") {
+        searchButton.addEventListener(
+            "click",
+            goToExplore
+        );
 
-            e.preventDefault();
-            goToExplore();
+    }
 
-        }
 
-    });
+    if (searchInput) {
+
+        searchInput.addEventListener(
+            "keydown",
+            event => {
+
+                if (event.key === "Enter") {
+
+                    event.preventDefault();
+
+                    goToExplore();
+
+                }
+
+            }
+        );
+
+    }
+
 
     // ==========================================
     // CATEGORIAS
@@ -146,75 +300,249 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     categoryCards.forEach(card => {
 
-        card.addEventListener("click", () => {
+        card.addEventListener(
+            "click",
+            () => {
 
-            const category = card.dataset.category;
+                const category =
+                    card.dataset.category;
 
-            window.location.href =
-                `explorar.html?category=${encodeURIComponent(category)}`;
 
-        });
+                if (!category) {
+                    return;
+                }
+
+
+                window.location.href =
+                    `explorar.html?category=${encodeURIComponent(category)}`;
+
+            }
+        );
+
+
+        // Acessibilidade: Enter / Espaço
+
+        card.addEventListener(
+            "keydown",
+            event => {
+
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+
+                    event.preventDefault();
+
+                    card.click();
+
+                }
+
+            }
+        );
 
     });
 
+
     // ==========================================
-    // LOGIN / PERFIL
+    // LOGIN
     // ==========================================
 
     if (loginButton) {
 
+        loginButton.addEventListener(
+            "click",
+            () => {
+
+                window.location.href =
+                    user
+                        ? "perfil.html"
+                        : "login.html";
+
+            }
+        );
+
+
         if (user) {
 
-            loginButton.textContent = "Meu Perfil";
-
-            loginButton.onclick = () => {
-
-                window.location.href = "perfil.html";
-
-            };
+            loginButton.textContent =
+                "Meu Perfil";
 
         } else {
 
-            loginButton.onclick = () => {
-
-                window.location.href = "login.html";
-
-            };
+            loginButton.textContent =
+                "Entrar";
 
         }
 
     }
 
+
+    // ==========================================
+    // PERFIL
+    // ==========================================
+
+    if (profileButton) {
+
+        profileButton.addEventListener(
+            "click",
+            () => {
+
+                if (user) {
+
+                    window.location.href =
+                        "perfil.html";
+
+                } else {
+
+                    window.location.href =
+                        "login.html";
+
+                }
+
+            }
+        );
+
+    }
+
+
     // ==========================================
     // ANUNCIAR
     // ==========================================
 
-    announceButtons.forEach(button => {
+    if (announceButton) {
 
-        if (button.textContent.includes("Anunciar")) {
-
-            button.onclick = () => {
+        announceButton.addEventListener(
+            "click",
+            () => {
 
                 if (user) {
 
-                    window.location.href = "novo-anuncio.html";
+                    window.location.href =
+                        "novo-anuncio.html";
 
                 } else {
 
-                    window.location.href = "login.html";
+                    window.location.href =
+                        "login.html";
 
                 }
 
-            };
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // NOTIFICAÇÕES
+    // ==========================================
+
+    if (notificationButton) {
+
+        notificationButton.addEventListener(
+            "click",
+            () => {
+
+                if (!user) {
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+
+                window.location.href =
+                    "notificacoes.html";
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // CONTADOR DE NOTIFICAÇÕES
+    // ==========================================
+
+    async function loadNotificationCount() {
+
+        if (!user || !notificationBadge) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${NOTIFICATION_API}/user/${user._id}/unread-count`
+                );
+
+
+            if (!response.ok) {
+                return;
+            }
+
+
+            const data =
+                await response.json();
+
+
+            const count =
+                Number(data.count || 0);
+
+
+            if (count > 0) {
+
+                notificationBadge.textContent =
+                    count > 99
+                        ? "99+"
+                        : count;
+
+
+                notificationBadge.style.display =
+                    "flex";
+
+            } else {
+
+                notificationBadge.textContent =
+                    "";
+
+
+                notificationBadge.style.display =
+                    "none";
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "ERRO AO CARREGAR NOTIFICAÇÕES:",
+                error
+            );
 
         }
 
-    });
+    }
+
 
     // ==========================================
     // INICIAR
     // ==========================================
 
     await loadProducts();
+
+    await loadNotificationCount();
+
+
+    // Atualiza o contador periodicamente
+
+    setInterval(
+        loadNotificationCount,
+        5000
+    );
 
 });
