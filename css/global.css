@@ -622,3 +622,32 @@ footer{
         font-size: 28px;
     }
 }
+.notification-nav{
+    position: relative;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-badge{
+    position: absolute;
+    top: -4px;
+    right: -4px;
+
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background: #dc2626;
+    color: #fff;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    border: 2px solid #fff;
+}
