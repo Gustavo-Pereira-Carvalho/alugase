@@ -28,12 +28,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const categoryCards =
         document.querySelectorAll(".category-card");
 
+
     // Navbar
     const loginButton =
         document.querySelector("#login-button");
-
-    const profileButton =
-        document.querySelector("#profile-button");
 
     const announceButton =
         document.querySelector("#announce-button");
@@ -43,6 +41,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const notificationBadge =
         document.querySelector("#notification-badge");
+
+
+    // Menu mobile
+    const mobileMenuButton =
+        document.querySelector("#mobile-menu-button");
+
+    const mobileMenu =
+        document.querySelector("#mobile-menu");
+
+    const mobileLogin =
+        document.querySelector("#mobile-login");
+
+    const mobileProfile =
+        document.querySelector("#mobile-profile");
 
 
     // ==========================================
@@ -55,9 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         user =
             JSON.parse(
-                localStorage.getItem(
-                    "alugase_user"
-                )
+                localStorage.getItem("alugase_user")
             );
 
     } catch (error) {
@@ -66,6 +76,172 @@ document.addEventListener("DOMContentLoaded", async () => {
             "Erro ao ler usuário:",
             error
         );
+
+    }
+
+
+    // ==========================================
+    // MENU MOBILE
+    // ==========================================
+
+    function openMobileMenu() {
+
+        if (!mobileMenu || !mobileMenuButton) {
+            return;
+        }
+
+        mobileMenu.classList.add("active");
+
+        mobileMenuButton.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        mobileMenuButton.setAttribute(
+            "aria-label",
+            "Fechar menu"
+        );
+
+        mobileMenuButton.textContent = "✕";
+
+    }
+
+
+    function closeMobileMenu() {
+
+        if (!mobileMenu || !mobileMenuButton) {
+            return;
+        }
+
+        mobileMenu.classList.remove("active");
+
+        mobileMenuButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        mobileMenuButton.setAttribute(
+            "aria-label",
+            "Abrir menu"
+        );
+
+        mobileMenuButton.textContent = "☰";
+
+    }
+
+
+    function toggleMobileMenu() {
+
+        if (!mobileMenu) {
+            return;
+        }
+
+        if (mobileMenu.classList.contains("active")) {
+
+            closeMobileMenu();
+
+        } else {
+
+            openMobileMenu();
+
+        }
+
+    }
+
+
+    if (mobileMenuButton) {
+
+        mobileMenuButton.addEventListener(
+            "click",
+            toggleMobileMenu
+        );
+
+    }
+
+
+    // ==========================================
+    // FECHAR MENU AO CLICAR EM UM LINK
+    // ==========================================
+
+    if (mobileMenu) {
+
+        const mobileLinks =
+            mobileMenu.querySelectorAll("a");
+
+        mobileLinks.forEach(link => {
+
+            link.addEventListener(
+                "click",
+                () => {
+
+                    closeMobileMenu();
+
+                }
+            );
+
+        });
+
+    }
+
+
+    // ==========================================
+    // FECHAR MENU AO CLICAR FORA
+    // ==========================================
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            if (!mobileMenu || !mobileMenuButton) {
+                return;
+            }
+
+            if (!mobileMenu.classList.contains("active")) {
+                return;
+            }
+
+            const clickedInsideMenu =
+                mobileMenu.contains(event.target);
+
+            const clickedButton =
+                mobileMenuButton.contains(event.target);
+
+            if (
+                !clickedInsideMenu &&
+                !clickedButton
+            ) {
+
+                closeMobileMenu();
+
+            }
+
+        }
+    );
+
+
+    // ==========================================
+    // LOGIN / PERFIL MOBILE
+    // ==========================================
+
+    if (user) {
+
+        if (mobileLogin) {
+            mobileLogin.style.display = "none";
+        }
+
+        if (mobileProfile) {
+            mobileProfile.style.display = "flex";
+        }
+
+    } else {
+
+        if (mobileLogin) {
+            mobileLogin.style.display = "flex";
+        }
+
+        if (mobileProfile) {
+            mobileProfile.style.display = "none";
+        }
 
     }
 
@@ -80,21 +256,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-
         productsGrid.innerHTML = `
-
             <p class="empty-message">
                 Carregando anúncios...
             </p>
-
         `;
-
 
         try {
 
             const response =
                 await fetch(API);
-
 
             if (!response.ok) {
 
@@ -104,13 +275,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             }
 
-
             const products =
                 await response.json();
 
-
             renderProducts(products);
-
 
         } catch (error) {
 
@@ -119,13 +287,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 error
             );
 
-
             productsGrid.innerHTML = `
-
                 <p class="empty-message">
                     Não foi possível carregar os anúncios.
                 </p>
-
             `;
 
         }
@@ -143,9 +308,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-
         productsGrid.innerHTML = "";
-
 
         if (
             !Array.isArray(products) ||
@@ -153,11 +316,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
 
             productsGrid.innerHTML = `
-
                 <p class="empty-message">
                     Nenhum anúncio disponível.
                 </p>
-
             `;
 
             return;
@@ -169,7 +330,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const card =
                 document.createElement("article");
-
 
             card.className =
                 "product-card";
@@ -185,15 +345,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     ${
                         product.image
-                            ? `<img
-                                src="${product.image}"
-                                alt="${product.title || "Produto"}"
-                              >`
+                            ? `
+                                <img
+                                    src="${product.image}"
+                                    alt="${product.title || "Produto"}"
+                                >
+                              `
                             : "📦"
                     }
 
                 </div>
-
 
                 <div class="product-content">
 
@@ -201,11 +362,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         ${product.title || "Produto"}
                     </h3>
 
-
                     <p>
                         📍 ${product.city || "Localização não informada"}
                     </p>
-
 
                     <strong>
                         R$ ${price.toFixed(2).replace(".", ",")}/dia
@@ -223,7 +382,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     if (!product._id) {
                         return;
                     }
-
 
                     window.location.href =
                         `produto.html?id=${product._id}`;
@@ -320,8 +478,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
 
-        // Acessibilidade: Enter / Espaço
-
         card.addEventListener(
             "keydown",
             event => {
@@ -344,10 +500,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // LOGIN
+    // LOGIN DESKTOP
     // ==========================================
 
     if (loginButton) {
+
+        loginButton.textContent =
+            user
+                ? "Meu Perfil"
+                : "Entrar";
+
 
         loginButton.addEventListener(
             "click",
@@ -361,52 +523,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         );
 
-
-        if (user) {
-
-            loginButton.textContent =
-                "Meu Perfil";
-
-        } else {
-
-            loginButton.textContent =
-                "Entrar";
-
-        }
-
     }
 
 
     // ==========================================
-    // PERFIL
-    // ==========================================
-
-    if (profileButton) {
-
-        profileButton.addEventListener(
-            "click",
-            () => {
-
-                if (user) {
-
-                    window.location.href =
-                        "perfil.html";
-
-                } else {
-
-                    window.location.href =
-                        "login.html";
-
-                }
-
-            }
-        );
-
-    }
-
-
-    // ==========================================
-    // ANUNCIAR
+    // ANUNCIAR DESKTOP
     // ==========================================
 
     if (announceButton) {
@@ -468,7 +589,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function loadNotificationCount() {
 
-        if (!user || !notificationBadge) {
+        if (
+            !user ||
+            !notificationBadge
+        ) {
             return;
         }
 
@@ -510,7 +634,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 notificationBadge.textContent =
                     "";
 
-
                 notificationBadge.style.display =
                     "none";
 
@@ -538,7 +661,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadNotificationCount();
 
 
-    // Atualiza o contador periodicamente
+    // Atualiza notificações a cada 5 segundos
 
     setInterval(
         loadNotificationCount,
