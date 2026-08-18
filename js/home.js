@@ -1,34 +1,22 @@
 // ==========================================
 // ALUGASE — HOME
-// Produtos, busca e categorias
+// API ONLINE
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    // ==========================================
-    // API
-    // ==========================================
+    const API = "https://alugase-api.onrender.com/api/products";
 
-    const API =
-        "https://alugase-api.onrender.com/api/products";
+    const searchInput = document.querySelector("#search-input");
+    const searchButton = document.querySelector("#search-button");
 
+    const loginButton = document.querySelector(".btn-secondary");
+    const announceButtons = document.querySelectorAll(".btn-primary");
+    const categoryCards = document.querySelectorAll(".category-card");
 
-    // ==========================================
-    // ELEMENTOS
-    // ==========================================
+    const productsGrid = document.querySelector("#products-grid");
 
-    const searchInput =
-        document.querySelector("#search-input");
-
-    const searchButton =
-        document.querySelector("#search-button");
-
-    const productsGrid =
-        document.querySelector("#products-grid");
-
-    const categoryCards =
-        document.querySelectorAll(".category-card");
-
+    const user = JSON.parse(localStorage.getItem("alugase_user"));
 
     // ==========================================
     // CARREGAR PRODUTOS
@@ -36,63 +24,32 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function loadProducts() {
 
-        if (!productsGrid) {
-
-            return;
-
-        }
-
+        if (!productsGrid) return;
 
         productsGrid.innerHTML = `
-
-            <p class="empty-message">
-                Carregando anúncios...
-            </p>
-
+            <p class="empty-message">Carregando anúncios...</p>
         `;
-
 
         try {
 
-            const response =
-                await fetch(API);
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Erro ao carregar produtos."
-                );
-
-            }
-
-
-            const products =
-                await response.json();
-
+            const response = await fetch(API);
+            const products = await response.json();
 
             renderProducts(products);
 
         } catch (error) {
 
-            console.error(
-                "ERRO AO CARREGAR PRODUTOS:",
-                error
-            );
-
+            console.error(error);
 
             productsGrid.innerHTML = `
-
                 <p class="empty-message">
                     Não foi possível carregar os anúncios.
                 </p>
-
             `;
 
         }
 
     }
-
 
     // ==========================================
     // RENDERIZAR PRODUTOS
@@ -100,142 +57,48 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function renderProducts(products) {
 
-        if (!productsGrid) {
-
-            return;
-
-        }
-
-
         productsGrid.innerHTML = "";
 
-
-        // Nenhum produto
-
-        if (
-            !Array.isArray(products) ||
-            products.length === 0
-        ) {
+        if (products.length === 0) {
 
             productsGrid.innerHTML = `
-
                 <p class="empty-message">
                     Nenhum anúncio disponível.
                 </p>
-
             `;
 
             return;
 
         }
 
-
-        // Criar cards
-
         products.forEach(product => {
 
-            const card =
-                document.createElement("article");
+            const card = document.createElement("article");
 
-
-            card.className =
-                "product-card";
-
-
-            // ==========================================
-            // PREÇO
-            // ==========================================
-
-            const price =
-                Number(
-                    product.pricePerDay || 0
-                );
-
-
-            // ==========================================
-            // IMAGEM
-            // ==========================================
-
-            let imageHTML =
-                "📦";
-
-
-            if (product.image) {
-
-                imageHTML = `
-
-                    <img
-                        src="${product.image}"
-                        alt="${product.title || "Produto"}"
-                        loading="lazy"
-                    >
-
-                `;
-
-            }
-
-
-            // ==========================================
-            // HTML DO CARD
-            // ==========================================
+            card.className = "product-card";
 
             card.innerHTML = `
-
                 <div class="product-image">
-
-                    ${imageHTML}
-
+                    ${product.image || "📦"}
                 </div>
-
 
                 <div class="product-content">
+                    <h3>${product.title}</h3>
 
-                    <h3>
-                        ${product.title || "Produto"}
-                    </h3>
-
-
-                    <p>
-                        📍
-                        ${product.city || "Localização não informada"}
-                    </p>
-
+                    <p>📍 ${product.city}</p>
 
                     <strong>
-                        R$
-                        ${price
-                            .toFixed(2)
-                            .replace(".", ",")
-                        }
-                        /dia
+                        R$ ${product.pricePerDay}/dia
                     </strong>
-
                 </div>
-
             `;
 
+            card.onclick = () => {
 
-            // ==========================================
-            // ABRIR PRODUTO
-            // ==========================================
+                window.location.href =
+                    `produto.html?id=${product._id}`;
 
-            card.addEventListener(
-                "click",
-                () => {
-
-                    if (!product._id) {
-
-                        return;
-
-                    }
-
-
-                    window.location.href =
-                        `produto.html?id=${product._id}`;
-
-                }
-            );
-
+            };
 
             productsGrid.appendChild(card);
 
@@ -243,16 +106,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-
     // ==========================================
-    // BUSCA
+    // BUSCA → EXPLORAR
     // ==========================================
 
     function goToExplore() {
 
-        const term =
-            searchInput?.value.trim() || "";
-
+        const term = searchInput.value.trim();
 
         if (term) {
 
@@ -261,51 +121,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } else {
 
-            window.location.href =
-                "explorar.html";
+            window.location.href = "explorar.html";
 
         }
 
     }
 
+    searchButton?.addEventListener("click", goToExplore);
 
-    // ==========================================
-    // BOTÃO BUSCAR
-    // ==========================================
+    searchInput?.addEventListener("keydown", e => {
 
-    if (searchButton) {
+        if (e.key === "Enter") {
 
-        searchButton.addEventListener(
-            "click",
-            goToExplore
-        );
+            e.preventDefault();
+            goToExplore();
 
-    }
+        }
 
-
-    // ==========================================
-    // ENTER NA BUSCA
-    // ==========================================
-
-    if (searchInput) {
-
-        searchInput.addEventListener(
-            "keydown",
-            event => {
-
-                if (event.key === "Enter") {
-
-                    event.preventDefault();
-
-                    goToExplore();
-
-                }
-
-            }
-        );
-
-    }
-
+    });
 
     // ==========================================
     // CATEGORIAS
@@ -313,53 +146,70 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     categoryCards.forEach(card => {
 
+        card.addEventListener("click", () => {
 
-        // Clique
+            const category = card.dataset.category;
 
-        card.addEventListener(
-            "click",
-            () => {
+            window.location.href =
+                `explorar.html?category=${encodeURIComponent(category)}`;
 
-                const category =
-                    card.dataset.category;
-
-
-                if (!category) {
-
-                    return;
-
-                }
-
-
-                window.location.href =
-                    `explorar.html?category=${encodeURIComponent(category)}`;
-
-            }
-        );
-
-
-        // Teclado
-
-        card.addEventListener(
-            "keydown",
-            event => {
-
-                if (
-                    event.key === "Enter" ||
-                    event.key === " "
-                ) {
-
-                    event.preventDefault();
-
-                    card.click();
-
-                }
-
-            }
-        );
+        });
 
     });
 
+    // ==========================================
+    // LOGIN / PERFIL
+    // ==========================================
+
+    if (loginButton) {
+
+        if (user) {
+
+            loginButton.textContent = "Meu Perfil";
+
+            loginButton.onclick = () => {
+
+                window.location.href = "perfil.html";
+
+            };
+
+        } else {
+
+            loginButton.onclick = () => {
+
+                window.location.href = "login.html";
+
+            };
+
+        }
+
+    }
+
+    // ==========================================
+    // ANUNCIAR
+    // ==========================================
+
+    announceButtons.forEach(button => {
+
+        if (button.textContent.includes("Anunciar")) {
+
+            button.onclick = () => {
+
+                if (user) {
+
+                    window.location.href = "novo-anuncio.html";
+
+                } else {
+
+                    window.location.href = "login.html";
+
+                }
+
+            };
+
+        }
+
+    });
 
     // ==========================================
     // INICIAR
