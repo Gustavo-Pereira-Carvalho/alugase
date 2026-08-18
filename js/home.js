@@ -10,10 +10,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const searchInput = document.querySelector("#search-input");
     const searchButton = document.querySelector("#search-button");
 
-    const loginButton = document.querySelector(".btn-secondary");
-    const announceButtons = document.querySelectorAll(".btn-primary");
-    const categoryCards = document.querySelectorAll(".category-card");
+    const loginButton = document.querySelector("#login-button");
+    const announceButton = document.querySelector("#announce-button");
+    const notificationButton = document.querySelector("#notification-button");
 
+    const categoryCards = document.querySelectorAll(".category-card");
     const productsGrid = document.querySelector("#products-grid");
 
     const user = JSON.parse(localStorage.getItem("alugase_user"));
@@ -87,17 +88,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     <p>📍 ${product.city}</p>
 
-                    <strong>
-                        R$ ${product.pricePerDay}/dia
-                    </strong>
+                    <strong>R$ ${product.pricePerDay}/dia</strong>
                 </div>
             `;
 
             card.onclick = () => {
-
-                window.location.href =
-                    `produto.html?id=${product._id}`;
-
+                window.location.href = `produto.html?id=${product._id}`;
             };
 
             productsGrid.appendChild(card);
@@ -107,7 +103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ==========================================
-    // BUSCA → EXPLORAR
+    // BUSCA
     // ==========================================
 
     function goToExplore() {
@@ -158,9 +154,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // ==========================================
-    // LOGIN / PERFIL
+    // HEADER
     // ==========================================
 
+    // Entrar / Meu Perfil
     if (loginButton) {
 
         if (user) {
@@ -168,47 +165,35 @@ document.addEventListener("DOMContentLoaded", async () => {
             loginButton.textContent = "Meu Perfil";
 
             loginButton.onclick = () => {
-
                 window.location.href = "perfil.html";
-
             };
 
         } else {
 
+            loginButton.textContent = "Entrar";
+
             loginButton.onclick = () => {
-
                 window.location.href = "login.html";
-
             };
 
         }
 
     }
 
-    // ==========================================
-    // ANUNCIAR
-    // ==========================================
+    // Anunciar
+    announceButton?.addEventListener("click", () => {
 
-    announceButtons.forEach(button => {
-
-        if (button.textContent.includes("Anunciar")) {
-
-            button.onclick = () => {
-
-                if (user) {
-
-                    window.location.href = "novo-anuncio.html";
-
-                } else {
-
-                    window.location.href = "login.html";
-
-                }
-
-            };
-
+        if (user) {
+            window.location.href = "novo-anuncio.html";
+        } else {
+            window.location.href = "login.html";
         }
 
+    });
+
+    // Notificações
+    notificationButton?.addEventListener("click", () => {
+        window.location.href = "notificacoes.html";
     });
 
     // ==========================================
