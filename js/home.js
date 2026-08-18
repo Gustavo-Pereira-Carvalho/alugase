@@ -5,6 +5,10 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+    // ==========================================
+    // APIs
+    // ==========================================
+
     const API =
         "https://alugase-api.onrender.com/api/products";
 
@@ -13,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // ELEMENTOS
+    // ELEMENTOS DA PÁGINA
     // ==========================================
 
     const searchInput =
@@ -29,7 +33,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelectorAll(".category-card");
 
 
-    // Navbar
+    // ==========================================
+    // NAVBAR DESKTOP
+    // ==========================================
+
     const loginButton =
         document.querySelector("#login-button");
 
@@ -43,7 +50,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector("#notification-badge");
 
 
-    // Menu mobile
+    // ==========================================
+    // NAVBAR MOBILE
+    // ==========================================
+
     const mobileMenuButton =
         document.querySelector("#mobile-menu-button");
 
@@ -65,10 +75,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
-        user =
-            JSON.parse(
-                localStorage.getItem("alugase_user")
-            );
+        const savedUser =
+            localStorage.getItem("alugase_user");
+
+        if (savedUser) {
+
+            user = JSON.parse(savedUser);
+
+        }
 
     } catch (error) {
 
@@ -77,6 +91,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             error
         );
 
+        user = null;
+
     }
 
 
@@ -84,30 +100,68 @@ document.addEventListener("DOMContentLoaded", async () => {
     // MENU MOBILE
     // ==========================================
 
-    const mobileMenuButton = document.getElementById("mobile-menu-button");
-    const mobileMenu = document.getElementById("mobile-menu");
-
-    console.log("MENU:", mobileMenu);
-    console.log("BOTÃO:", mobileMenuButton);
-
     if (mobileMenuButton && mobileMenu) {
 
-        mobileMenuButton.addEventListener("click", function () {
+        mobileMenuButton.addEventListener(
+            "click",
+            () => {
 
-            console.log("CLIQUE NO MENU");
+                mobileMenu.classList.toggle("active");
 
-            mobileMenu.classList.toggle("active");
+                const aberto =
+                    mobileMenu.classList.contains("active");
 
-            const aberto =
-                mobileMenu.classList.contains("active");
 
-            mobileMenuButton.setAttribute(
-                "aria-expanded",
-                aberto ? "true" : "false"
+                // Atualiza acessibilidade
+
+                mobileMenuButton.setAttribute(
+                    "aria-expanded",
+                    aberto ? "true" : "false"
+                );
+
+
+                // Troca o ícone
+
+                mobileMenuButton.textContent =
+                    aberto ? "✕" : "☰";
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // FECHAR MENU AO CLICAR EM UM LINK
+    // ==========================================
+
+    if (mobileMenu) {
+
+        const mobileLinks =
+            mobileMenu.querySelectorAll("a");
+
+        mobileLinks.forEach(link => {
+
+            link.addEventListener(
+                "click",
+                () => {
+
+                    mobileMenu.classList.remove("active");
+
+                    if (mobileMenuButton) {
+
+                        mobileMenuButton.setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
+
+                        mobileMenuButton.textContent =
+                            "☰";
+
+                    }
+
+                }
             );
-
-            mobileMenuButton.textContent =
-                aberto ? "✕" : "☰";
 
         });
 
@@ -120,22 +174,40 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (user) {
 
+        // Usuário logado
+
         if (mobileLogin) {
-            mobileLogin.style.display = "none";
+
+            mobileLogin.style.display =
+                "none";
+
         }
 
+
         if (mobileProfile) {
-            mobileProfile.style.display = "flex";
+
+            mobileProfile.style.display =
+                "flex";
+
         }
 
     } else {
 
+        // Usuário não logado
+
         if (mobileLogin) {
-            mobileLogin.style.display = "flex";
+
+            mobileLogin.style.display =
+                "flex";
+
         }
 
+
         if (mobileProfile) {
-            mobileProfile.style.display = "none";
+
+            mobileProfile.style.display =
+                "none";
+
         }
 
     }
@@ -148,19 +220,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     async function loadProducts() {
 
         if (!productsGrid) {
+
             return;
+
         }
 
+
         productsGrid.innerHTML = `
+
             <p class="empty-message">
                 Carregando anúncios...
             </p>
+
         `;
+
 
         try {
 
             const response =
                 await fetch(API);
+
 
             if (!response.ok) {
 
@@ -170,10 +249,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             }
 
+
             const products =
                 await response.json();
 
+
             renderProducts(products);
+
 
         } catch (error) {
 
@@ -182,10 +264,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 error
             );
 
+
             productsGrid.innerHTML = `
+
                 <p class="empty-message">
                     Não foi possível carregar os anúncios.
                 </p>
+
             `;
 
         }
@@ -200,10 +285,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     function renderProducts(products) {
 
         if (!productsGrid) {
+
             return;
+
         }
 
+
         productsGrid.innerHTML = "";
+
 
         if (
             !Array.isArray(products) ||
@@ -211,9 +300,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
 
             productsGrid.innerHTML = `
+
                 <p class="empty-message">
                     Nenhum anúncio disponível.
                 </p>
+
             `;
 
             return;
@@ -226,29 +317,51 @@ document.addEventListener("DOMContentLoaded", async () => {
             const card =
                 document.createElement("article");
 
+
             card.className =
                 "product-card";
 
 
             const price =
-                Number(product.pricePerDay || 0);
+                Number(
+                    product.pricePerDay || 0
+                );
 
+
+            // ==========================================
+            // IMAGEM
+            // ==========================================
+
+            let imageHTML = "📦";
+
+
+            if (product.image) {
+
+                imageHTML = `
+
+                    <img
+                        src="${product.image}"
+                        alt="${product.title || "Produto"}"
+                        loading="lazy"
+                    >
+
+                `;
+
+            }
+
+
+            // ==========================================
+            // CARD
+            // ==========================================
 
             card.innerHTML = `
 
                 <div class="product-image">
 
-                    ${product.image
-                    ? `
-                                <img
-                                    src="${product.image}"
-                                    alt="${product.title || "Produto"}"
-                                >
-                              `
-                    : "📦"
-                }
+                    ${imageHTML}
 
                 </div>
+
 
                 <div class="product-content">
 
@@ -256,12 +369,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                         ${product.title || "Produto"}
                     </h3>
 
+
                     <p>
                         📍 ${product.city || "Localização não informada"}
                     </p>
 
+
                     <strong>
-                        R$ ${price.toFixed(2).replace(".", ",")}/dia
+                        R$ ${price
+                            .toFixed(2)
+                            .replace(".", ",")
+                        }/dia
                     </strong>
 
                 </div>
@@ -269,13 +387,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             `;
 
 
+            // ==========================================
+            // ABRIR PRODUTO
+            // ==========================================
+
             card.addEventListener(
                 "click",
                 () => {
 
                     if (!product._id) {
+
                         return;
+
                     }
+
 
                     window.location.href =
                         `produto.html?id=${product._id}`;
@@ -292,7 +417,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // BUSCA
+    // BUSCA → EXPLORAR
     // ==========================================
 
     function goToExplore() {
@@ -316,6 +441,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
+    // ==========================================
+    // BOTÃO BUSCAR
+    // ==========================================
+
     if (searchButton) {
 
         searchButton.addEventListener(
@@ -325,6 +454,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
+
+    // ==========================================
+    // ENTER NA BUSCA
+    // ==========================================
 
     if (searchInput) {
 
@@ -352,6 +485,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     categoryCards.forEach(card => {
 
+        // Clique
+
         card.addEventListener(
             "click",
             () => {
@@ -361,7 +496,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                 if (!category) {
+
                     return;
+
                 }
 
 
@@ -371,6 +508,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         );
 
+
+        // Teclado
 
         card.addEventListener(
             "keydown",
@@ -409,10 +548,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             "click",
             () => {
 
-                window.location.href =
-                    user
-                        ? "perfil.html"
-                        : "login.html";
+                if (user) {
+
+                    window.location.href =
+                        "perfil.html";
+
+                } else {
+
+                    window.location.href =
+                        "login.html";
+
+                }
 
             }
         );
@@ -487,7 +633,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             !user ||
             !notificationBadge
         ) {
+
             return;
+
+        }
+
+
+        // Verifica se existe ID
+
+        if (!user._id) {
+
+            return;
+
         }
 
 
@@ -500,7 +657,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             if (!response.ok) {
+
                 return;
+
             }
 
 
@@ -511,6 +670,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const count =
                 Number(data.count || 0);
 
+
+            // Existem notificações
 
             if (count > 0) {
 
@@ -523,7 +684,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 notificationBadge.style.display =
                     "flex";
 
-            } else {
+            }
+
+            // Nenhuma notificação
+
+            else {
 
                 notificationBadge.textContent =
                     "";
@@ -547,15 +712,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // INICIAR
+    // INICIAR PRODUTOS
     // ==========================================
 
     await loadProducts();
 
+
+    // ==========================================
+    // INICIAR NOTIFICAÇÕES
+    // ==========================================
+
     await loadNotificationCount();
 
 
-    // Atualiza notificações a cada 5 segundos
+    // ==========================================
+    // ATUALIZAR NOTIFICAÇÕES
+    // ==========================================
 
     setInterval(
         loadNotificationCount,
