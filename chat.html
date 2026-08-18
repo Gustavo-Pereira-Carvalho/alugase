@@ -17,205 +17,116 @@
 
 
 <body>
-
-
-    <!-- ==========================================
+<!-- ==========================================
      ALUGASE — HEADER
 ========================================== -->
 
-    <header>
+<header>
 
-        <nav class="navbar">
+    <nav class="navbar">
 
-            <!-- ======================================
-             MENU MOBILE
-        ======================================= -->
+        <!-- LOGO -->
 
-            <button class="mobile-menu-button" id="mobile-menu-button" type="button" aria-label="Abrir menu"
-                aria-expanded="false">
-                ☰
-            </button>
-
-
-            <!-- ======================================
-             LOGO
-        ======================================= -->
-
-            <div class="logo">
-
-                <a href="index.html">
-
-                    <img src="assets/logo.png" alt="Logo Alugase">
-
-                    <h2>ALUGASE</h2>
-
-                </a>
-
-            </div>
-
-
-            <!-- ======================================
-             MENU DESKTOP
-        ======================================= -->
-
-            <ul class="nav-links">
-
-                <li>
-                    <a href="index.html">
-                        Início
-                    </a>
-                </li>
-
-                <li>
-                    <a href="explorar.html">
-                        Explorar
-                    </a>
-                </li>
-
-                <li>
-                    <a href="index.html#categorias">
-                        Categorias
-                    </a>
-                </li>
-
-                <li>
-                    <a href="index.html#como-funciona">
-                        Como funciona
-                    </a>
-                </li>
-
-            </ul>
-
-
-            <!-- ======================================
-             AÇÕES DESKTOP
-        ======================================= -->
-
-            <div class="nav-buttons">
-
-
-                <!-- NOTIFICAÇÕES -->
-
-                <button class="notification-nav" id="notification-button" type="button" aria-label="Notificações">
-
-                    <span class="notification-bell">
-                        🔔
-                    </span>
-
-                    <span class="notification-badge" id="notification-badge" style="display:none;"></span>
-
-                </button>
-
-
-                <!-- LOGIN / PERFIL -->
-
-                <button class="btn-secondary" id="login-button" type="button">
-                    Entrar
-                </button>
-
-
-                <!-- ANUNCIAR -->
-
-                <button class="btn-primary" id="announce-button" type="button">
-                    Anunciar
-                </button>
-
-
-            </div>
-
-        </nav>
-
-
-        <!-- ==========================================
-         MENU MOBILE
-    =========================================== -->
-
-        <div class="mobile-menu" id="mobile-menu">
-
-
-            <!-- INÍCIO -->
+        <div class="logo">
 
             <a href="index.html">
 
-                🏠
-                <span>Início</span>
+                <img
+                    src="assets/logo.png"
+                    alt="Logo Alugase"
+                >
+
+                <h2>ALUGASE</h2>
 
             </a>
 
-
-            <!-- EXPLORAR -->
-
-            <a href="explorar.html">
-
-                🔎
-                <span>Explorar</span>
-
-            </a>
+        </div>
 
 
-            <!-- CATEGORIAS -->
+        <!-- MENU PRINCIPAL -->
 
-            <a href="index.html#categorias">
+        <ul class="nav-links">
 
-                📦
-                <span>Categorias</span>
+            <li>
+                <a href="index.html">
+                    Início
+                </a>
+            </li>
 
-            </a>
+            <li>
+                <a href="explorar.html">
+                    Explorar
+                </a>
+            </li>
+
+            <li>
+                <a href="index.html#categorias">
+                    Categorias
+                </a>
+            </li>
+
+            <li>
+                <a href="index.html#como-funciona">
+                    Como funciona
+                </a>
+            </li>
+
+        </ul>
 
 
-            <!-- COMO FUNCIONA -->
+        <!-- AÇÕES -->
 
-            <a href="index.html#como-funciona">
-
-                ⚙️
-                <span>Como funciona</span>
-
-            </a>
-
+        <div class="nav-buttons">
 
             <!-- NOTIFICAÇÕES -->
 
-            <a href="notificacoes.html" id="mobile-notifications">
+            <button
+                class="notification-nav"
+                id="notification-button"
+                type="button"
+                aria-label="Notificações"
+                title="Notificações"
+            >
 
-                🔔
-                <span>Notificações</span>
+                <span class="notification-bell">
+                    🔔
+                </span>
 
-            </a>
+                <span
+                    class="notification-badge"
+                    id="notification-badge"
+                    style="display:none;"
+                ></span>
 
-
-            <!-- ENTRAR -->
-
-            <a href="login.html" id="mobile-login">
-
-                👤
-                <span>Entrar</span>
-
-            </a>
+            </button>
 
 
-            <!-- MEU PERFIL -->
+            <!-- LOGIN / PERFIL -->
 
-            <a href="perfil.html" id="mobile-profile" style="display:none;">
-
-                👤
-                <span>Meu Perfil</span>
-
-            </a>
+            <button
+                class="btn-secondary"
+                id="login-button"
+                type="button"
+            >
+                Entrar
+            </button>
 
 
             <!-- ANUNCIAR -->
 
-            <a href="novo-anuncio.html" id="mobile-announce">
-
-                ➕
-                <span>Anunciar</span>
-
-            </a>
-
+            <button
+                class="btn-primary"
+                id="announce-button"
+                type="button"
+            >
+                Anunciar
+            </button>
 
         </div>
 
-    </header>
+    </nav>
+
+</header>
 
 
 
@@ -423,8 +334,6 @@
 
     </main>
 
-
-    <script src="js/navbar.js"></script>
     <script src="./js/chat.js"></script>
 
 
