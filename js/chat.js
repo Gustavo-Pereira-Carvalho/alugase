@@ -11,56 +11,157 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const chatId = new URLSearchParams(location.search).get("chat");
 
+    const conversationList = document.querySelector("#conversation-list");
     const messages = document.querySelector("#messages");
     const input = document.querySelector("#message-input");
 
-    let chat;
+    let chats = [];
+    let currentChat = null;
 
-    async function loadChat() {
+    // ==========================
+    // CARREGAR CONVERSAS
+    // ==========================
 
-        const response = await fetch(`${API}/${chatId}`);
+    async function loadChats() {
 
-        chat = await response.json();
+        const response = await fetch(
+            `${API}/user/${user._id}`
+        );
 
-        render();
+        chats = await response.json();
+
+        if (!chats.length) {
+
+            conversationList.innerHTML =
+                "<p>Nenhuma conversa.</p>";
+
+            return;
+
+        }
+
+        currentChat =
+            chats.find(c => c._id === chatId) ||
+            chats[0];
+
+        renderSidebar();
+        renderChat();
 
     }
 
-    function render() {
+    // ==========================
+    // SIDEBAR
+    // ==========================
+
+    function renderSidebar() {
+
+        conversationList.innerHTML = "";
+
+        chats.forEach(chat => {
+
+            const isOwner =
+                String(chat.ownerId) === String(user._id);
+
+            const otherName = isOwner
+                ? chat.renterName
+                : chat.ownerName;
+
+            const last =
+                chat.messages.at(-1)?.text ||
+                "Nova conversa";
+
+            const card = document.createElement("div");
+
+            card.className =
+                `conversation ${
+                    currentChat._id === chat._id
+                        ? "active"
+                        : ""
+                }`;
+
+            card.innerHTML = `
+                <div class="avatar">
+                    ${otherName.charAt(0).toUpperCase()}
+                </div>
+
+                <div class="conv-info">
+                    <h4>${otherName}</h4>
+                    <p>${last}</p>
+                </div>
+            `;
+
+            card.onclick = () => {
+
+                currentChat = chat;
+
+                renderSidebar();
+                renderChat();
+
+                history.replaceState(
+                    {},
+                    "",
+                    `chat.html?chat=${chat._id}`
+                );
+
+            };
+
+            conversationList.appendChild(card);
+
+        });
+
+    }
+
+    // ==========================
+    // CHAT
+    // ==========================
+
+    function renderChat() {
+
+        const isOwner =
+            String(currentChat.ownerId) === String(user._id);
+
+        const otherName = isOwner
+            ? currentChat.renterName
+            : currentChat.ownerName;
 
         document.querySelector("#chat-name").textContent =
-            chat.ownerName;
+            otherName;
 
         document.querySelector("#chat-avatar").textContent =
-            chat.ownerName.charAt(0);
+            otherName.charAt(0).toUpperCase();
 
         document.querySelector("#chat-status").textContent =
-            chat.status;
+            currentChat.status || "Ativo";
 
         document.querySelector("#reservation-product").textContent =
-            chat.productTitle;
+            currentChat.productTitle;
+
+        document.querySelector("#view-product").href =
+            `produto.html?id=${currentChat.productId}`;
 
         messages.innerHTML = "";
 
-        chat.messages.forEach(msg => {
+        currentChat.messages.forEach(msg => {
+
+            const sent =
+                String(msg.senderId) === String(user._id);
 
             const bubble = document.createElement("div");
 
             bubble.className =
-                `message ${
-                    msg.sender === "user"
-                    ? "sent"
-                    : "received"
-                }`;
+                `message ${sent ? "sent" : "received"}`;
 
             bubble.innerHTML = `
                 ${msg.text}
+
                 <span class="time">
                     ${new Date(msg.createdAt)
-                        .toLocaleTimeString("pt-BR",{
-                            hour:"2-digit",
-                            minute:"2-digit"
-                        })}
+                        .toLocaleTimeString(
+                            "pt-BR",
+                            {
+                                hour: "2-digit",
+                                minute: "2-digit"
+                            }
+                        )}
                 </span>
             `;
 
@@ -68,9 +169,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         });
 
-        messages.scrollTop = messages.scrollHeight;
+        messages.scrollTop =
+            messages.scrollHeight;
 
     }
+
+    // ==========================
+    // ENVIAR
+    // ==========================
 
     async function sendMessage() {
 
@@ -78,43 +184,52 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (!text) return;
 
-        await fetch(`${API}/${chatId}/messages`, {
+        const response = await fetch(
+            `${API}/${currentChat._id}/messages`,
+            {
 
-            method: "POST",
+                method: "POST",
 
-            headers: {
-                "Content-Type": "application/json"
-            },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-            body: JSON.stringify({
+                body: JSON.stringify({
 
-                sender: "user",
-                text
+                    senderId: user._id,
+                    text
 
-            })
+                })
 
-        });
+            }
+        );
+
+        if (!response.ok) {
+            alert("Erro ao enviar mensagem.");
+            return;
+        }
 
         input.value = "";
 
-        await loadChat();
+        await loadChats();
 
     }
 
-    document.querySelector("#send-btn").onclick =
-        sendMessage;
+    document.querySelector("#send-btn")
+        .onclick = sendMessage;
 
     input.addEventListener("keydown", e => {
 
         if (e.key === "Enter") {
 
             e.preventDefault();
+
             sendMessage();
 
         }
 
     });
 
-    await loadChat();
+    await loadChats();
 
 });
