@@ -1,21 +1,19 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const API_PRODUCTS = "https://alugase-api.onrender.com/api/products";
-    const API_RENTALS = "https://alugase-api.onrender.com/api/rentals";
-    const API_CHATS = "https://alugase-api.onrender.com/api/chats";
+    const API = "https://alugase-api.onrender.com/api";
 
     const user = JSON.parse(localStorage.getItem("alugase_user"));
 
     if (!user) {
         alert("Faça login para continuar.");
-        window.location.href = "login.html";
+        location.href = "login.html";
         return;
     }
 
     const productId = new URLSearchParams(location.search).get("id");
 
     if (!productId) {
-        window.location.href = "index.html";
+        location.href = "index.html";
         return;
     }
 
@@ -33,9 +31,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let product;
 
+    // ==========================================
+    // CARREGAR PRODUTO
+    // ==========================================
+
     async function loadProduct() {
 
-        const response = await fetch(`${API_PRODUCTS}/${productId}`);
+        const response = await fetch(
+            `${API}/products/${productId}`
+        );
 
         product = await response.json();
 
@@ -59,6 +63,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
+    // ==========================================
+    // CALCULAR
+    // ==========================================
+
     function calculate() {
 
         const start = new Date(startDate.value);
@@ -70,78 +78,148 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (days <= 0) days = 1;
 
+        const useDelivery =
+            document.querySelector(
+                'input[name="delivery"]:checked'
+            )?.value === "delivery";
+
+        const delivery = useDelivery && product.delivery
+            ? product.deliveryPrice
+            : 0;
+
         const rent = days * product.pricePerDay;
+        const total = rent + delivery + product.deposit;
 
         daysEl.textContent = days;
         rentTotal.textContent = `R$ ${rent}`;
-        deliveryTotal.textContent = "R$ 0";
-        grandTotal.textContent = `R$ ${rent + product.deposit}`;
+        deliveryTotal.textContent = `R$ ${delivery}`;
+        grandTotal.textContent = `R$ ${total}`;
 
-        return rent + product.deposit;
+        return {
+            days,
+            delivery,
+            total
+        };
 
     }
 
-    startDate.onchange = calculate;
-    endDate.onchange = calculate;
+    startDate.onchange = () => {
 
-    document.querySelector("#confirm-reservation").onclick = async () => {
+        endDate.min = startDate.value;
 
-        const total = calculate();
+        if (endDate.value < startDate.value) {
+            endDate.value = startDate.value;
+        }
 
-        await fetch(API_RENTALS, {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-
-                productId: product._id,
-                ownerId: product.ownerId,
-                renterId: user._id,
-
-                startDate: startDate.value,
-                endDate: endDate.value,
-
-                total,
-                notes: notes.value
-
-            })
-
-        });
-
-        const chatResponse = await fetch(API_CHATS, {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json"
-            },
-
-            body: JSON.stringify({
-
-                productId: product._id,
-
-                ownerId: product.ownerId,
-                renterId: user._id,
-
-                ownerName: product.ownerName,
-                renterName: user.name,
-                productTitle: product.title
-
-            })
-
-        });
-
-        const chat = await chatResponse.json();
-
-        alert("Reserva criada com sucesso!");
-
-        window.location.href = `chat.html?chat=${chat._id}`;
+        calculate();
 
     };
+
+    endDate.onchange = calculate;
+
+    document
+        .querySelectorAll('input[name="delivery"]')
+        .forEach(radio => {
+            radio.onchange = calculate;
+        });
+
+    // ==========================================
+    // CONFIRMAR RESERVA
+    // ==========================================
+
+    document
+        .querySelector("#confirm-reservation")
+        .onclick = async () => {
+
+            const values = calculate();
+
+            try {
+
+                // 1. Criar aluguel
+                const rentalResponse = await fetch(
+                    `${API}/rentals`,
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            productId: product._id,
+
+                            renterId: user._id,
+
+                            startDate: startDate.value,
+                            endDate: endDate.value,
+
+                            days: values.days,
+
+                            delivery: values.delivery > 0,
+                            deliveryPrice: values.delivery,
+
+                            total: values.total
+
+                        })
+
+                    }
+                );
+
+                if (!rentalResponse.ok) {
+
+                    const err = await rentalResponse.json();
+                    throw new Error(err.error);
+
+                }
+
+                const rental = await rentalResponse.json();
+
+                // 2. Criar chat
+                const chatResponse = await fetch(
+                    `${API}/chats`,
+                    {
+
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+
+                            rentalId: rental._id,
+
+                            productId: product._id,
+
+                            ownerId: product.ownerId,
+                            renterId: user._id,
+
+                            ownerName: product.ownerName,
+                            renterName: user.name,
+
+                            productTitle: product.title
+
+                        })
+
+                    }
+                );
+
+                const chat = await chatResponse.json();
+
+                alert("Solicitação enviada com sucesso!");
+
+                location.href =
+                    `chat.html?chat=${chat._id}`;
+
+            } catch (err) {
+
+                alert(err.message);
+
+            }
+
+        };
 
     await loadProduct();
 

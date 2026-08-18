@@ -1,8 +1,10 @@
 // ==========================================
-// ALUGASE — SOLICITAÇÕES
+// ALUGASE — SOLICITAÇÕES (BACKEND)
 // ==========================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+    const API = "https://alugase-api.onrender.com/api";
 
     const user = JSON.parse(localStorage.getItem("alugase_user"));
 
@@ -11,71 +13,37 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    // ==========================================
-    // DADOS (temporário)
-    // Em casa virá do MongoDB
-    // ==========================================
-
-    let requests = JSON.parse(
-        localStorage.getItem("alugase_requests")
-    ) || [
-
-        {
-            id: "req001",
-            ownerId: user._id,
-
-            renterId: "user002",
-            renterName: "Mariana Costa",
-
-            productId: "prod001",
-            productTitle: "Câmera Canon EOS",
-            productImage: "📷",
-
-            city: "São Paulo",
-
-            startDate: "2026-08-18",
-            endDate: "2026-08-20",
-
-            days: 3,
-            total: 240,
-
-            status: "pending",
-
-            chatId: "chat001"
-        },
-
-        {
-            id: "req002",
-            ownerId: user._id,
-
-            renterId: "user003",
-            renterName: "Lucas Almeida",
-
-            productId: "prod002",
-            productTitle: "Notebook Lenovo",
-            productImage: "💻",
-
-            city: "Guarulhos",
-
-            startDate: "2026-08-25",
-            endDate: "2026-08-27",
-
-            days: 3,
-            total: 210,
-
-            status: "approved",
-
-            chatId: "chat002"
-        }
-
-    ];
-
     const list = document.querySelector("#requests-list");
     const empty = document.querySelector("#empty-state");
-
     const filters = document.querySelectorAll(".filter-btn");
 
+    let requests = [];
     let currentFilter = "all";
+
+    // ==========================================
+    // CARREGAR SOLICITAÇÕES
+    // ==========================================
+
+    async function loadRequests() {
+
+        try {
+
+            const response = await fetch(
+                `${API}/rentals/owner/${user._id}`
+            );
+
+            requests = await response.json();
+
+            render();
+
+        } catch (err) {
+
+            console.error(err);
+            alert("Erro ao carregar solicitações.");
+
+        }
+
+    }
 
     // ==========================================
     // FORMATAR DATA
@@ -116,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // RENDERIZAR
+    // RENDER
     // ==========================================
 
     function render() {
@@ -132,7 +100,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     r.status === currentFilter
                 );
 
-        if (filtered.length === 0) {
+        if (!filtered.length) {
 
             empty.style.display = "block";
             return;
@@ -141,12 +109,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         empty.style.display = "none";
 
-        filtered.forEach(request => {
+        filtered.forEach(rental => {
 
-            const initials = request.renterName
+            const renter = rental.renterId;
+            const product = rental.productId;
+
+            const initials = renter.name
                 .split(" ")
                 .map(n => n[0])
-                .slice(0, 2)
+                .slice(0,2)
                 .join("")
                 .toUpperCase();
 
@@ -166,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         <div class="user-info">
 
-                            <h3>${request.renterName}</h3>
+                            <h3>${renter.name}</h3>
 
                             <p>Solicitou um aluguel</p>
 
@@ -174,97 +145,72 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     </div>
 
-                    <span class="status ${request.status}">
-                        ${statusLabel(request.status)}
+                    <span class="status ${rental.status}">
+                        ${statusLabel(rental.status)}
                     </span>
 
                 </div>
 
-
                 <div class="product-box">
 
                     <div class="product-image">
-                        ${request.productImage}
+                        ${product.image}
                     </div>
 
                     <div class="product-details">
 
-                        <h4>${request.productTitle}</h4>
+                        <h4>${product.title}</h4>
 
-                        <p>📍 ${request.city}</p>
+                        <p>📍 ${product.city}</p>
 
                         <div class="price">
-                            R$ ${request.total}
+                            R$ ${rental.total}
                         </div>
 
                     </div>
 
                 </div>
 
-
                 <div class="request-info">
 
                     <div class="info-item">
-
                         <span>Retirada</span>
-
-                        <strong>
-                            ${formatDate(request.startDate)}
-                        </strong>
-
+                        <strong>${formatDate(rental.startDate)}</strong>
                     </div>
 
                     <div class="info-item">
-
                         <span>Devolução</span>
-
-                        <strong>
-                            ${formatDate(request.endDate)}
-                        </strong>
-
+                        <strong>${formatDate(rental.endDate)}</strong>
                     </div>
 
                     <div class="info-item">
-
-                        <span>Duração</span>
-
-                        <strong>
-                            ${request.days} dias
-                        </strong>
-
+                        <span>Dias</span>
+                        <strong>${rental.days} dias</strong>
                     </div>
 
                     <div class="info-item">
-
                         <span>Total</span>
-
-                        <strong>
-                            R$ ${request.total}
-                        </strong>
-
+                        <strong>R$ ${rental.total}</strong>
                     </div>
 
                 </div>
 
-
                 <div class="request-actions">
 
                     ${
-                        request.status === "pending"
+                        rental.status === "pending"
 
                         ? `
 
                         <button
                             class="btn-accept"
-                            data-id="${request.id}"
-                        >
+                            data-id="${rental._id}">
                             Aceitar
                         </button>
 
                         <button
                             class="btn-reject"
-                            data-id="${request.id}"
-                        >
+                            data-id="${rental._id}">
                             Recusar
                         </button>
 
@@ -276,8 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     <button
                         class="btn-chat"
-                        data-chat="${request.chatId}"
-                    >
+                        data-chat="${rental.chatId}">
                         Chat
                     </button>
 
@@ -294,75 +239,78 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // EVENTOS DOS BOTÕES
+    // ACEITAR / RECUSAR
     // ==========================================
 
     function addEvents() {
 
-        document
-            .querySelectorAll(".btn-accept")
-            .forEach(button => {
+        document.querySelectorAll(".btn-accept")
+        .forEach(button => {
 
-                button.onclick = () => {
+            button.onclick = async () => {
 
-                    const id = button.dataset.id;
+                await fetch(
+                    `${API}/rentals/${button.dataset.id}/status`,
+                    {
 
-                    const request = requests.find(
-                        r => r.id === id
-                    );
+                        method:"PUT",
 
-                    request.status = "approved";
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
 
-                    save();
+                        body:JSON.stringify({
+                            status:"approved"
+                        })
 
-                    alert(
-                        "Solicitação aprovada!"
-                    );
+                    }
+                );
 
-                    render();
+                loadRequests();
 
-                };
+            };
 
-            });
+        });
 
-        document
-            .querySelectorAll(".btn-reject")
-            .forEach(button => {
+        document.querySelectorAll(".btn-reject")
+        .forEach(button => {
 
-                button.onclick = () => {
+            button.onclick = async () => {
 
-                    const id = button.dataset.id;
+                await fetch(
+                    `${API}/rentals/${button.dataset.id}/status`,
+                    {
 
-                    const request = requests.find(
-                        r => r.id === id
-                    );
+                        method:"PUT",
 
-                    request.status = "rejected";
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
 
-                    save();
+                        body:JSON.stringify({
+                            status:"rejected"
+                        })
 
-                    alert(
-                        "Solicitação recusada."
-                    );
+                    }
+                );
 
-                    render();
+                loadRequests();
 
-                };
+            };
 
-            });
+        });
 
-        document
-            .querySelectorAll(".btn-chat")
-            .forEach(button => {
+        document.querySelectorAll(".btn-chat")
+        .forEach(button => {
 
-                button.onclick = () => {
+            button.onclick = () => {
 
-                    window.location.href =
-                        `chat.html?id=${button.dataset.chat}`;
+                window.location.href =
+                    `chat.html?chat=${button.dataset.chat}`;
 
-                };
+            };
 
-            });
+        });
 
     }
 
@@ -389,19 +337,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-    // ==========================================
-    // SALVAR
-    // ==========================================
-
-    function save() {
-
-        localStorage.setItem(
-            "alugase_requests",
-            JSON.stringify(requests)
-        );
-
-    }
-
-    render();
+    await loadRequests();
 
 });
