@@ -84,139 +84,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     // MENU MOBILE
     // ==========================================
 
-    function openMobileMenu() {
+    const mobileMenuButton = document.getElementById("mobile-menu-button");
+    const mobileMenu = document.getElementById("mobile-menu");
 
-        if (!mobileMenu || !mobileMenuButton) {
-            return;
-        }
+    console.log("MENU:", mobileMenu);
+    console.log("BOTÃO:", mobileMenuButton);
 
-        mobileMenu.classList.add("active");
+    if (mobileMenuButton && mobileMenu) {
 
-        mobileMenuButton.setAttribute(
-            "aria-expanded",
-            "true"
-        );
+        mobileMenuButton.addEventListener("click", function () {
 
-        mobileMenuButton.setAttribute(
-            "aria-label",
-            "Fechar menu"
-        );
+            console.log("CLIQUE NO MENU");
 
-        mobileMenuButton.textContent = "✕";
+            mobileMenu.classList.toggle("active");
 
-    }
+            const aberto =
+                mobileMenu.classList.contains("active");
 
-
-    function closeMobileMenu() {
-
-        if (!mobileMenu || !mobileMenuButton) {
-            return;
-        }
-
-        mobileMenu.classList.remove("active");
-
-        mobileMenuButton.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-
-        mobileMenuButton.setAttribute(
-            "aria-label",
-            "Abrir menu"
-        );
-
-        mobileMenuButton.textContent = "☰";
-
-    }
-
-
-    function toggleMobileMenu() {
-
-        if (!mobileMenu) {
-            return;
-        }
-
-        if (mobileMenu.classList.contains("active")) {
-
-            closeMobileMenu();
-
-        } else {
-
-            openMobileMenu();
-
-        }
-
-    }
-
-
-    if (mobileMenuButton) {
-
-        mobileMenuButton.addEventListener(
-            "click",
-            toggleMobileMenu
-        );
-
-    }
-
-
-    // ==========================================
-    // FECHAR MENU AO CLICAR EM UM LINK
-    // ==========================================
-
-    if (mobileMenu) {
-
-        const mobileLinks =
-            mobileMenu.querySelectorAll("a");
-
-        mobileLinks.forEach(link => {
-
-            link.addEventListener(
-                "click",
-                () => {
-
-                    closeMobileMenu();
-
-                }
+            mobileMenuButton.setAttribute(
+                "aria-expanded",
+                aberto ? "true" : "false"
             );
+
+            mobileMenuButton.textContent =
+                aberto ? "✕" : "☰";
 
         });
 
     }
-
-
-    // ==========================================
-    // FECHAR MENU AO CLICAR FORA
-    // ==========================================
-
-    document.addEventListener(
-        "click",
-        event => {
-
-            if (!mobileMenu || !mobileMenuButton) {
-                return;
-            }
-
-            if (!mobileMenu.classList.contains("active")) {
-                return;
-            }
-
-            const clickedInsideMenu =
-                mobileMenu.contains(event.target);
-
-            const clickedButton =
-                mobileMenuButton.contains(event.target);
-
-            if (
-                !clickedInsideMenu &&
-                !clickedButton
-            ) {
-
-                closeMobileMenu();
-
-            }
-
-        }
-    );
 
 
     // ==========================================
@@ -343,16 +238,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 <div class="product-image">
 
-                    ${
-                        product.image
-                            ? `
+                    ${product.image
+                    ? `
                                 <img
                                     src="${product.image}"
                                     alt="${product.title || "Produto"}"
                                 >
                               `
-                            : "📦"
-                    }
+                    : "📦"
+                }
 
                 </div>
 
