@@ -14,11 +14,7 @@
      ALUGASE — HEADER
 ========================================== -->
 
-<!-- ==========================================
-     ALUGASE — HEADER
-========================================== -->
-
-<header>
+<header class="site-header">
 
     <nav class="navbar">
 
@@ -32,6 +28,7 @@
             type="button"
             aria-label="Abrir menu"
             aria-expanded="false"
+            aria-controls="mobile-menu"
         >
             ☰
         </button>
@@ -91,11 +88,10 @@
 
 
         <!-- ======================================
-             AÇÕES DESKTOP
+             AÇÕES
         ======================================= -->
 
         <div class="nav-buttons">
-
 
             <!-- CHAT -->
 
@@ -106,17 +102,12 @@
                 aria-label="Chat"
                 title="Chat"
             >
-
-                <span class="chat-icon">
-                    💬
-                </span>
+                <span class="chat-icon">💬</span>
 
                 <span
                     class="chat-badge"
                     id="chat-badge"
-                    style="display:none;"
                 ></span>
-
             </button>
 
 
@@ -129,21 +120,16 @@
                 aria-label="Notificações"
                 title="Notificações"
             >
-
-                <span class="notification-bell">
-                    🔔
-                </span>
+                <span class="notification-bell">🔔</span>
 
                 <span
                     class="notification-badge"
                     id="notification-badge"
-                    style="display:none;"
                 ></span>
-
             </button>
 
 
-            <!-- LOGIN / PERFIL -->
+            <!-- ENTRAR -->
 
             <button
                 class="btn-secondary"
@@ -164,15 +150,14 @@
                 Anunciar
             </button>
 
-
         </div>
 
     </nav>
 
 
-    <!-- ==========================================
+    <!-- ======================================
          MENU MOBILE
-    =========================================== -->
+    ======================================= -->
 
     <div
         class="mobile-menu"
@@ -180,100 +165,64 @@
     >
 
         <a href="index.html">
-
             🏠
             <span>Início</span>
-
         </a>
-
 
         <a href="explorar.html">
-
             🔎
             <span>Explorar</span>
-
         </a>
-
 
         <a href="index.html#categorias">
-
             📦
             <span>Categorias</span>
-
         </a>
-
 
         <a href="index.html#como-funciona">
-
             ⚙️
             <span>Como funciona</span>
-
         </a>
-
-
-        <!-- CHAT -->
 
         <a
             href="chat.html"
             id="mobile-chat"
         >
-
             💬
             <span>Chat</span>
-
         </a>
-
-
-        <!-- NOTIFICAÇÕES -->
 
         <a
             href="notificacoes.html"
             id="mobile-notifications"
         >
-
             🔔
             <span>Notificações</span>
-
         </a>
-
-
-        <!-- ENTRAR -->
 
         <a
             href="login.html"
             id="mobile-login"
         >
-
             👤
             <span>Entrar</span>
-
         </a>
-
-
-        <!-- PERFIL -->
 
         <a
             href="perfil.html"
             id="mobile-profile"
-            style="display:none;"
+            style="display: none;"
         >
-
             👤
             <span>Meu Perfil</span>
-
         </a>
-
-
-        <!-- ANUNCIAR -->
 
         <a
             href="novo-anuncio.html"
             id="mobile-announce"
         >
-
             ➕
             <span>Anunciar</span>
-
         </a>
 
     </div>
@@ -585,7 +534,7 @@
 
 </main>
 
-<!-- <script src="js/navbar.js"></script> -->
+<script src="js/navbar.js"></script>
 <script src="./js/perfil.js"></script>
 
 

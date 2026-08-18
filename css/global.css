@@ -1,9 +1,12 @@
-/* ================================
+/* =========================================================
    ALUGASE — GLOBAL CSS
-================================ */
+   Versão limpa e consolidada
+========================================================= */
 
 
-/* ---------- RESET ---------- */
+/* =========================================================
+   RESET
+========================================================= */
 
 * {
     margin: 0;
@@ -23,7 +26,9 @@ body {
 }
 
 button,
-input {
+input,
+select,
+textarea {
     font: inherit;
 }
 
@@ -42,9 +47,12 @@ img {
 }
 
 
-/* ---------- CORES ---------- */
+/* =========================================================
+   VARIÁVEIS
+========================================================= */
 
 :root {
+
     --primary: #16a34a;
     --primary-dark: #15803d;
     --primary-light: #dcfce7;
@@ -58,10 +66,13 @@ img {
     --border: #e5e9e6;
 
     --shadow: 0 10px 30px rgba(20, 40, 25, 0.08);
+
 }
 
 
-/* ---------- CONTAINERS ---------- */
+/* =========================================================
+   CONTAINERS
+========================================================= */
 
 .navbar,
 .hero-content,
@@ -74,9 +85,9 @@ img {
 }
 
 
-/* ==========================================
-   HEADER / NAVBAR
-========================================== */
+/* =========================================================
+   HEADER
+========================================================= */
 
 header {
     width: 100%;
@@ -86,35 +97,48 @@ header {
     border-bottom: 1px solid var(--border);
 
     position: relative;
+
     z-index: 1000;
 }
 
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
 .navbar {
+
     min-height: 76px;
 
     display: flex;
+
     align-items: center;
 
-    gap: 25px;
+    justify-content: space-between;
+
+    gap: 24px;
 }
 
 
-/* ==========================================
+/* =========================================================
    LOGO
-========================================== */
+========================================================= */
 
 .logo {
     flex-shrink: 0;
 }
 
 .logo a {
+
     display: flex;
+
     align-items: center;
 
     gap: 10px;
 }
 
 .logo img {
+
     width: 46px;
     height: 46px;
 
@@ -122,53 +146,63 @@ header {
 }
 
 .logo h2 {
+
     margin: 0;
 
     color: var(--primary);
 
     font-size: 28px;
+
     font-weight: 800;
 
     letter-spacing: 1px;
 }
 
 
-/* ==========================================
-   LINKS
-========================================== */
+/* =========================================================
+   MENU PRINCIPAL
+========================================================= */
 
 .nav-links {
+
     flex: 1;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
-    gap: 28px;
+    gap: 26px;
 
     list-style: none;
 }
 
 .nav-links a {
+
     color: var(--text-secondary);
 
     font-size: 15px;
+
     font-weight: 600;
 
-    transition: 0.2s ease;
+    transition: color 0.2s ease;
 }
 
 .nav-links a:hover {
+
     color: var(--primary);
 }
 
 
-/* ==========================================
+/* =========================================================
    AÇÕES DA NAVBAR
-========================================== */
+========================================================= */
 
 .nav-buttons {
+
     display: flex;
+
     align-items: center;
 
     gap: 10px;
@@ -177,12 +211,13 @@ header {
 }
 
 
-/* ==========================================
+/* =========================================================
    BOTÕES
-========================================== */
+========================================================= */
 
 .btn-primary,
 .btn-secondary {
+
     border-radius: 10px;
 
     padding: 11px 20px;
@@ -192,13 +227,16 @@ header {
     transition:
         transform 0.2s ease,
         background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
         box-shadow 0.2s ease;
 }
 
 
-/* PRIMÁRIO */
+/* BOTÃO PRIMÁRIO */
 
 .btn-primary {
+
     border: none;
 
     background: var(--primary);
@@ -207,6 +245,7 @@ header {
 }
 
 .btn-primary:hover {
+
     background: var(--primary-dark);
 
     transform: translateY(-2px);
@@ -216,9 +255,10 @@ header {
 }
 
 
-/* SECUNDÁRIO */
+/* BOTÃO SECUNDÁRIO */
 
 .btn-secondary {
+
     background: transparent;
 
     color: var(--text);
@@ -227,27 +267,33 @@ header {
 }
 
 .btn-secondary:hover {
+
     border-color: var(--primary);
 
     color: var(--primary);
 }
 
 
-/* ==========================================
+/* =========================================================
    CHAT
-========================================== */
+========================================================= */
 
 .chat-nav {
+
     position: relative;
 
     width: 42px;
     height: 42px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
+    flex-shrink: 0;
+
     border: none;
+
     border-radius: 12px;
 
     background: #f0fdf4;
@@ -258,12 +304,14 @@ header {
 }
 
 .chat-nav:hover {
-    background: #dcfce7;
+
+    background: var(--primary-light);
 
     transform: translateY(-1px);
 }
 
 .chat-icon {
+
     font-size: 21px;
 
     line-height: 1;
@@ -273,6 +321,7 @@ header {
 /* BADGE DO CHAT */
 
 .chat-badge {
+
     position: absolute;
 
     top: -4px;
@@ -283,6 +332,11 @@ header {
 
     padding: 0 5px;
 
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
     border-radius: 999px;
 
     background: #dc2626;
@@ -290,31 +344,38 @@ header {
     color: #ffffff;
 
     font-size: 10px;
-    font-weight: 800;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-weight: 800;
 
     border: 2px solid #ffffff;
 }
 
+.chat-badge.show {
 
-/* ==========================================
+    display: flex;
+}
+
+
+/* =========================================================
    NOTIFICAÇÕES
-========================================== */
+========================================================= */
 
 .notification-nav {
+
     position: relative;
 
     width: 42px;
     height: 42px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
+    flex-shrink: 0;
+
     border: none;
+
     border-radius: 12px;
 
     background: #f0fdf4;
@@ -325,21 +386,24 @@ header {
 }
 
 .notification-nav:hover {
-    background: #dcfce7;
+
+    background: var(--primary-light);
 
     transform: translateY(-1px);
 }
 
 .notification-bell {
+
     font-size: 21px;
 
     line-height: 1;
 }
 
 
-/* BADGE */
+/* BADGE DAS NOTIFICAÇÕES */
 
 .notification-badge {
+
     position: absolute;
 
     top: -4px;
@@ -350,6 +414,11 @@ header {
 
     padding: 0 5px;
 
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
     border-radius: 999px;
 
     background: #dc2626;
@@ -357,36 +426,38 @@ header {
     color: #ffffff;
 
     font-size: 10px;
-    font-weight: 800;
 
-    display: none;
-    align-items: center;
-    justify-content: center;
+    font-weight: 800;
 
     border: 2px solid #ffffff;
 }
 
 .notification-badge.show {
+
     display: flex;
 }
 
 
-/* ==========================================
+/* =========================================================
    HERO
-========================================== */
+========================================================= */
 
 .hero {
+
     min-height: 560px;
 
     display: flex;
+
     align-items: center;
 
     background:
+
         radial-gradient(
             circle at 80% 30%,
             rgba(22, 163, 74, 0.13),
             transparent 35%
         ),
+
         linear-gradient(
             135deg,
             #f7fcf8 0%,
@@ -395,10 +466,12 @@ header {
 }
 
 .hero-content {
+
     padding: 80px 0;
 }
 
 .hero h1 {
+
     max-width: 760px;
 
     font-size: clamp(40px, 5vw, 64px);
@@ -411,6 +484,7 @@ header {
 }
 
 .hero p {
+
     max-width: 650px;
 
     color: var(--text-secondary);
@@ -421,14 +495,16 @@ header {
 }
 
 
-/* ==========================================
+/* =========================================================
    BUSCA
-========================================== */
+========================================================= */
 
 .search-box {
+
     width: min(720px, 100%);
 
     display: flex;
+
     align-items: center;
 
     background: #ffffff;
@@ -443,11 +519,13 @@ header {
 }
 
 .search-box input {
+
     flex: 1;
 
     min-width: 0;
 
     border: none;
+
     outline: none;
 
     padding: 14px 16px;
@@ -458,27 +536,31 @@ header {
 }
 
 .search-box input::placeholder {
+
     color: #9aa39d;
 }
 
 .search-box .btn-primary {
+
     padding: 13px 25px;
 }
 
 
-/* ==========================================
+/* =========================================================
    SEÇÕES
-========================================== */
+========================================================= */
 
 .categories,
 .products,
 .steps {
+
     padding: 90px 0;
 }
 
 .categories h2,
 .products h2,
 .steps h2 {
+
     font-size: 32px;
 
     letter-spacing: -1px;
@@ -487,11 +569,12 @@ header {
 }
 
 
-/* ==========================================
+/* =========================================================
    CATEGORIAS
-========================================== */
+========================================================= */
 
 .category-grid {
+
     display: grid;
 
     grid-template-columns: repeat(6, 1fr);
@@ -500,12 +583,15 @@ header {
 }
 
 .category-card {
+
     min-height: 130px;
 
     display: flex;
+
     flex-direction: column;
 
     align-items: center;
+
     justify-content: center;
 
     gap: 10px;
@@ -522,13 +608,16 @@ header {
 }
 
 .category-card span {
+
     color: var(--text);
 
     font-size: 14px;
+
     font-weight: 600;
 }
 
 .category-card:hover {
+
     transform: translateY(-5px);
 
     border-color: #bbebc9;
@@ -539,15 +628,17 @@ header {
 }
 
 
-/* ==========================================
+/* =========================================================
    PRODUTOS
-========================================== */
+========================================================= */
 
 .products {
+
     background: #ffffff;
 }
 
 .products-grid {
+
     display: grid;
 
     grid-template-columns: repeat(3, 1fr);
@@ -556,6 +647,7 @@ header {
 }
 
 .product-card {
+
     overflow: hidden;
 
     background: #ffffff;
@@ -570,15 +662,18 @@ header {
 }
 
 .product-card:hover {
+
     transform: translateY(-5px);
 
     box-shadow: var(--shadow);
 }
 
 .product-image {
+
     height: 220px;
 
     background:
+
         linear-gradient(
             135deg,
             #dff7e6,
@@ -587,12 +682,14 @@ header {
 }
 
 .product-card h3 {
+
     font-size: 19px;
 
     margin: 18px 20px 5px;
 }
 
 .product-card p {
+
     color: var(--text-secondary);
 
     font-size: 14px;
@@ -601,6 +698,7 @@ header {
 }
 
 .product-card strong {
+
     color: var(--primary-dark);
 
     font-size: 19px;
@@ -609,12 +707,14 @@ header {
 }
 
 
-/* ==========================================
+/* =========================================================
    BANNER
-========================================== */
+========================================================= */
 
 .banner {
+
     margin-top: 30px;
+
     margin-bottom: 30px;
 
     padding: 70px;
@@ -622,6 +722,7 @@ header {
     border-radius: 24px;
 
     background:
+
         linear-gradient(
             135deg,
             #15803d,
@@ -634,12 +735,14 @@ header {
 }
 
 .banner h2 {
+
     font-size: 36px;
 
     margin-bottom: 10px;
 }
 
 .banner p {
+
     max-width: 550px;
 
     margin: 0 auto 25px;
@@ -648,25 +751,29 @@ header {
 }
 
 .banner .btn-primary {
+
     background: #ffffff;
 
     color: var(--primary-dark);
 }
 
 .banner .btn-primary:hover {
+
     background: #f0fdf4;
 }
 
 
-/* ==========================================
+/* =========================================================
    COMO FUNCIONA
-========================================== */
+========================================================= */
 
 .steps {
+
     text-align: center;
 }
 
 .steps-grid {
+
     display: grid;
 
     grid-template-columns: repeat(4, 1fr);
@@ -675,6 +782,7 @@ header {
 }
 
 .step-card {
+
     padding: 30px 20px;
 
     border: 1px solid var(--border);
@@ -685,27 +793,31 @@ header {
 }
 
 .step-card:first-child {
+
     border-color: #bce8c8;
 }
 
 .step-card h3 {
+
     margin: 15px 0 8px;
 
     font-size: 19px;
 }
 
 .step-card p {
+
     color: var(--text-secondary);
 
     font-size: 14px;
 }
 
 
-/* ==========================================
+/* =========================================================
    FOOTER
-========================================== */
+========================================================= */
 
 footer {
+
     margin-top: 70px;
 
     background: #14532d;
@@ -714,6 +826,7 @@ footer {
 }
 
 .footer-content {
+
     width: min(1200px, 92%);
 
     margin: auto;
@@ -724,16 +837,19 @@ footer {
 }
 
 .footer-content h2 {
+
     margin-bottom: 12px;
 
     letter-spacing: 1px;
 }
 
 .footer-content p {
+
     color: #d1fae5;
 }
 
 .footer-links {
+
     display: flex;
 
     justify-content: center;
@@ -746,184 +862,194 @@ footer {
 }
 
 .footer-links a {
+
     color: #ffffff;
 
-    transition: 0.2s;
+    transition: 0.2s ease;
 }
 
 .footer-links a:hover {
+
     color: #86efac;
 }
 
 .copyright {
+
     font-size: 14px;
 
     opacity: 0.8;
 }
 
 
-/* ==========================================
+/* =========================================================
    TABLET
-========================================== */
+========================================================= */
 
 @media (max-width: 1000px) {
 
     .navbar {
+
         gap: 15px;
     }
 
     .nav-links {
+
         gap: 16px;
     }
 
     .nav-links a {
+
         font-size: 14px;
     }
 
     .nav-buttons {
+
         gap: 7px;
     }
 
     .nav-buttons .btn-primary,
     .nav-buttons .btn-secondary {
+
         padding: 10px 14px;
     }
 
     .category-grid {
+
         grid-template-columns: repeat(3, 1fr);
     }
 
     .products-grid {
+
         grid-template-columns: repeat(2, 1fr);
     }
 
     .steps-grid {
+
         grid-template-columns: repeat(2, 1fr);
     }
+
 }
 
 
-/* ==========================================
+/* =========================================================
    MOBILE
-========================================== */
+========================================================= */
 
 @media (max-width: 768px) {
 
-    /*
-       IMPORTANTE:
-       Não existe hamburger.
-       Não existe menu mobile.
-       Mantemos a navbar em uma única linha.
-    */
+    /* -----------------------------------------
+       NAVBAR
+    ----------------------------------------- */
 
     .navbar {
-        width: 96%;
+
+        width: 94%;
 
         min-height: 66px;
 
         gap: 10px;
     }
 
+    /*
+       No mobile:
+       - menu hamburger NÃO existe
+       - links principais ficam ocultos
+       - chat e notificações continuam
+       - Entrar e Anunciar ficam ocultos
+    */
 
-    /* LOGO */
+    .nav-links {
+
+        display: none;
+    }
 
     .logo {
-        flex-shrink: 1;
+
+        flex: 1;
     }
 
     .logo a {
+
+        justify-content: center;
+
         gap: 6px;
     }
 
     .logo img {
+
         width: 36px;
+
         height: 36px;
     }
 
     .logo h2 {
+
         font-size: 21px;
     }
 
-
-    /* LINKS */
-
-    .nav-links {
-        display: none;
-    }
-
-
-    /* AÇÕES */
-
     .nav-buttons {
-        gap: 6px;
+
+        gap: 7px;
     }
-
-
-    /*
-       No celular escondemos os textos
-       "Entrar" e "Anunciar".
-    */
 
     .nav-buttons .btn-primary,
     .nav-buttons .btn-secondary {
+
         display: none;
     }
 
-
-    /* CHAT */
-
-    .chat-nav {
-        width: 38px;
-        height: 38px;
-
-        border-radius: 10px;
-    }
-
-    .chat-icon {
-        font-size: 19px;
-    }
-
-
-    /* NOTIFICAÇÕES */
-
+    .chat-nav,
     .notification-nav {
+
         width: 38px;
+
         height: 38px;
 
         border-radius: 10px;
     }
 
+    .chat-icon,
     .notification-bell {
+
         font-size: 19px;
     }
 
 
-    /* HERO */
+    /* -----------------------------------------
+       HERO
+    ----------------------------------------- */
 
     .hero {
+
         min-height: auto;
     }
 
     .hero-content {
+
         width: 94%;
 
         padding: 65px 0;
     }
 
     .hero h1 {
+
         font-size: clamp(34px, 10vw, 42px);
 
         letter-spacing: -1.5px;
     }
 
     .hero p {
+
         font-size: 16px;
     }
 
 
-    /* BUSCA */
+    /* -----------------------------------------
+       BUSCA
+    ----------------------------------------- */
 
     .search-box {
+
         flex-direction: column;
 
         align-items: stretch;
@@ -932,19 +1058,24 @@ footer {
     }
 
     .search-box input {
+
         width: 100%;
     }
 
     .search-box .btn-primary {
+
         width: 100%;
     }
 
 
-    /* CATEGORIAS */
+    /* -----------------------------------------
+       SEÇÕES
+    ----------------------------------------- */
 
     .categories,
     .products,
     .steps {
+
         width: 94%;
 
         padding: 65px 0;
@@ -953,41 +1084,58 @@ footer {
     .categories h2,
     .products h2,
     .steps h2 {
+
         font-size: 28px;
     }
 
+
+    /* -----------------------------------------
+       CATEGORIAS
+    ----------------------------------------- */
+
     .category-grid {
+
         grid-template-columns: repeat(2, 1fr);
 
         gap: 12px;
     }
 
     .category-card {
+
         min-height: 115px;
     }
 
 
-    /* PRODUTOS */
+    /* -----------------------------------------
+       PRODUTOS
+    ----------------------------------------- */
 
     .products-grid {
+
         grid-template-columns: 1fr;
 
         gap: 16px;
     }
 
 
-    /* PASSOS */
+    /* -----------------------------------------
+       PASSOS
+    ----------------------------------------- */
 
     .steps-grid {
+
         grid-template-columns: 1fr;
 
         gap: 15px;
     }
 
 
-    /* BANNER */
+    /* -----------------------------------------
+       BANNER
+    ----------------------------------------- */
 
     .banner {
+
         width: 94%;
 
         padding: 45px 25px;
@@ -996,71 +1144,95 @@ footer {
     }
 
     .banner h2 {
+
         font-size: 28px;
     }
 
 
-    /* FOOTER */
+    /* -----------------------------------------
+       FOOTER
+    ----------------------------------------- */
 
     .footer-content {
+
         width: 94%;
     }
 
     .footer-links {
+
         gap: 14px;
     }
+
 }
 
 
-/* ==========================================
+/* =========================================================
    CELULARES PEQUENOS
-========================================== */
+========================================================= */
 
 @media (max-width: 420px) {
 
     .navbar {
+
         width: 96%;
     }
 
-    .logo h2 {
-        font-size: 18px;
+    .logo a {
+
+        gap: 5px;
     }
 
     .logo img {
+
         width: 32px;
+
         height: 32px;
+    }
+
+    .logo h2 {
+
+        font-size: 18px;
     }
 
     .chat-nav,
     .notification-nav {
+
         width: 36px;
+
         height: 36px;
     }
 
     .chat-icon,
     .notification-bell {
+
         font-size: 18px;
     }
 
-    .notification-badge,
-    .chat-badge {
+    .chat-badge,
+    .notification-badge {
+
         min-width: 17px;
+
         height: 17px;
 
         font-size: 9px;
     }
 
     .hero h1 {
+
         font-size: 34px;
     }
 
     .category-card {
+
         min-height: 105px;
 
         font-size: 27px;
     }
 
     .category-card span {
+
         font-size: 13px;
     }
+
 }

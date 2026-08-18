@@ -9,19 +9,213 @@
   <link rel="stylesheet" href="./css/anuncio.css">
 </head>
 <body>
+<!-- ==========================================
+     ALUGASE — HEADER
+========================================== -->
 
-<header>
-  <nav class="navbar">
-    <div class="logo">
-      <a href="index.html">
-        <h2>ALUGASE</h2>
-      </a>
+<header class="site-header">
+
+    <nav class="navbar">
+
+        <!-- MENU MOBILE -->
+
+        <button
+            class="mobile-menu-button"
+            id="mobile-menu-button"
+            type="button"
+            aria-label="Abrir menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+        >
+            ☰
+        </button>
+
+
+        <!-- LOGO -->
+
+        <div class="logo">
+
+            <a href="index.html">
+
+                <img
+                    src="assets/logo.png"
+                    alt="Logo Alugase"
+                >
+
+                <h2>ALUGASE</h2>
+
+            </a>
+
+        </div>
+
+
+        <!-- MENU DESKTOP -->
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">
+                    Início
+                </a>
+            </li>
+
+            <li>
+                <a href="explorar.html">
+                    Explorar
+                </a>
+            </li>
+
+            <li>
+                <a href="index.html#categorias">
+                    Categorias
+                </a>
+            </li>
+
+            <li>
+                <a href="index.html#como-funciona">
+                    Como funciona
+                </a>
+            </li>
+
+        </ul>
+
+
+        <!-- AÇÕES -->
+
+        <div class="nav-buttons">
+
+            <!-- CHAT -->
+
+            <button
+                class="chat-nav"
+                id="chat-button"
+                type="button"
+                aria-label="Chat"
+                title="Chat"
+            >
+                <span class="chat-icon">💬</span>
+
+                <span
+                    class="chat-badge"
+                    id="chat-badge"
+                ></span>
+            </button>
+
+
+            <!-- NOTIFICAÇÕES -->
+
+            <button
+                class="notification-nav"
+                id="notification-button"
+                type="button"
+                aria-label="Notificações"
+                title="Notificações"
+            >
+                <span class="notification-bell">🔔</span>
+
+                <span
+                    class="notification-badge"
+                    id="notification-badge"
+                ></span>
+            </button>
+
+
+            <!-- ENTRAR -->
+
+            <button
+                class="btn-secondary"
+                id="login-button"
+                type="button"
+            >
+                Entrar
+            </button>
+
+
+            <!-- ANUNCIAR -->
+
+            <button
+                class="btn-primary"
+                id="announce-button"
+                type="button"
+            >
+                Anunciar
+            </button>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MENU MOBILE -->
+
+    <div
+        class="mobile-menu"
+        id="mobile-menu"
+    >
+
+        <a href="index.html">
+            🏠
+            <span>Início</span>
+        </a>
+
+        <a href="explorar.html">
+            🔎
+            <span>Explorar</span>
+        </a>
+
+        <a href="index.html#categorias">
+            📦
+            <span>Categorias</span>
+        </a>
+
+        <a href="index.html#como-funciona">
+            ⚙️
+            <span>Como funciona</span>
+        </a>
+
+        <a
+            href="chat.html"
+            id="mobile-chat"
+        >
+            💬
+            <span>Chat</span>
+        </a>
+
+        <a
+            href="notificacoes.html"
+            id="mobile-notifications"
+        >
+            🔔
+            <span>Notificações</span>
+        </a>
+
+        <a
+            href="login.html"
+            id="mobile-login"
+        >
+            👤
+            <span>Entrar</span>
+        </a>
+
+        <a
+            href="perfil.html"
+            id="mobile-profile"
+            style="display: none;"
+        >
+            👤
+            <span>Meu Perfil</span>
+        </a>
+
+        <a
+            href="novo-anuncio.html"
+            id="mobile-announce"
+        >
+            ➕
+            <span>Anunciar</span>
+        </a>
+
     </div>
 
-    <div class="nav-buttons">
-      <a href="perfil.html" class="btn-secondary">Meu Perfil</a>
-    </div>
-  </nav>
 </header>
 
 <main class="ad-page">
@@ -279,6 +473,7 @@
 
 </main>
 
+<script src="js/navbar.js"></script>
 <script src="./js/anuncio.js"></script>
 </body>
 </html>
