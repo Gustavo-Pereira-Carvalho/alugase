@@ -2,159 +2,365 @@
 // ALUGASE — NOTIFICAÇÕES
 // ==========================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-    const user = JSON.parse(localStorage.getItem("alugase_user"));
+        const API =
+            "https://alugase-api.onrender.com/api/notifications";
 
-    if (!user) {
-        window.location.href = "login.html";
-        return;
-    }
 
-    // ==========================================
-    // NOTIFICAÇÕES (temporário)
-    // Em casa virá do MongoDB
-    // ==========================================
+        // ======================================
+        // USUÁRIO
+        // ======================================
 
-    let notifications = JSON.parse(
-        localStorage.getItem("alugase_notifications")
-    ) || [
+        const user =
+            JSON.parse(
+                localStorage.getItem(
+                    "alugase_user"
+                )
+            );
 
-        {
-            id: "n001",
-            type: "request",
-            title: "Nova solicitação recebida",
-            message: "Mariana quer alugar sua Câmera Canon EOS.",
-            icon: "📦",
-            read: false,
-            time: "Agora",
-            link: "solicitacoes.html"
-        },
 
-        {
-            id: "n002",
-            type: "chat",
-            title: "Nova mensagem",
-            message: "Lucas enviou uma mensagem no chat.",
-            icon: "💬",
-            read: false,
-            time: "12 min",
-            link: "chat.html?id=chat002"
-        },
+        if (!user) {
 
-        {
-            id: "n003",
-            type: "approved",
-            title: "Aluguel aprovado",
-            message: "Seu pedido do Notebook Lenovo foi aprovado.",
-            icon: "✅",
-            read: true,
-            time: "1 hora",
-            link: "chat.html?id=chat003"
-        }
+            window.location.href =
+                "login.html";
 
-    ];
-
-    const list = document.querySelector("#notifications-list");
-    const empty = document.querySelector("#empty-state");
-
-    // ==========================================
-    // SALVAR
-    // ==========================================
-
-    function save() {
-
-        localStorage.setItem(
-            "alugase_notifications",
-            JSON.stringify(notifications)
-        );
-
-    }
-
-    // ==========================================
-    // RENDER
-    // ==========================================
-
-    function render() {
-
-        list.innerHTML = "";
-
-        if (notifications.length === 0) {
-
-            empty.style.display = "block";
             return;
 
         }
 
-        empty.style.display = "none";
 
-        notifications.forEach(notification => {
+        const list =
+            document.querySelector(
+                "#notifications-list"
+            );
 
-            const card = document.createElement("article");
 
-            card.className =
-                `notification-card ${
-                    notification.read ? "" : "unread"
-                }`;
+        const empty =
+            document.querySelector(
+                "#empty-state"
+            );
 
-            card.innerHTML = `
 
-                <div class="notification-icon">
-                    ${notification.icon}
-                </div>
+        const readAllButton =
+            document.querySelector(
+                "#read-all"
+            );
 
-                <div class="notification-content">
 
-                    <h3>${notification.title}</h3>
+        let notifications = [];
 
-                    <p>${notification.message}</p>
 
-                    <span class="notification-time">
-                        ${notification.time}
-                    </span>
+        // ======================================
+        // FORMATAR TEMPO
+        // ======================================
 
-                </div>
+        function formatTime(date) {
 
-            `;
+            const now =
+                new Date();
 
-            card.onclick = () => {
 
-                notification.read = true;
+            const notificationDate =
+                new Date(date);
 
-                save();
+
+            const diff =
+                Math.floor(
+                    (
+                        now -
+                        notificationDate
+                    ) / 1000
+                );
+
+
+            if (diff < 60) {
+
+                return "Agora";
+
+            }
+
+
+            const minutes =
+                Math.floor(
+                    diff / 60
+                );
+
+
+            if (minutes < 60) {
+
+                return (
+                    minutes === 1
+                        ? "1 minuto atrás"
+                        : `${minutes} minutos atrás`
+                );
+
+            }
+
+
+            const hours =
+                Math.floor(
+                    minutes / 60
+                );
+
+
+            if (hours < 24) {
+
+                return (
+                    hours === 1
+                        ? "1 hora atrás"
+                        : `${hours} horas atrás`
+                );
+
+            }
+
+
+            const days =
+                Math.floor(
+                    hours / 24
+                );
+
+
+            if (days < 7) {
+
+                return (
+                    days === 1
+                        ? "Ontem"
+                        : `${days} dias atrás`
+                );
+
+            }
+
+
+            return notificationDate
+                .toLocaleDateString(
+                    "pt-BR"
+                );
+
+        }
+
+
+        // ======================================
+        // BUSCAR NOTIFICAÇÕES
+        // ======================================
+
+        async function loadNotifications() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API}/user/${user._id}`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Erro ao buscar notificações."
+                    );
+
+                }
+
+
+                notifications =
+                    await response.json();
+
 
                 render();
 
-                window.location.href = notification.link;
 
-            };
+            } catch (error) {
 
-            list.appendChild(card);
+                console.error(
+                    "ERRO NOTIFICAÇÕES:",
+                    error
+                );
 
-        });
+            }
+
+        }
+
+
+        // ======================================
+        // RENDERIZAR
+        // ======================================
+
+        function render() {
+
+            list.innerHTML = "";
+
+
+            if (
+                !notifications.length
+            ) {
+
+                empty.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            empty.style.display =
+                "none";
+
+
+            notifications.forEach(
+                notification => {
+
+                    const card =
+                        document.createElement(
+                            "article"
+                        );
+
+
+                    card.className =
+                        `notification-card ${
+                            notification.read
+                                ? ""
+                                : "unread"
+                        }`;
+
+
+                    card.innerHTML = `
+
+                        <div class="notification-icon">
+
+                            ${
+                                notification.icon ||
+                                "🔔"
+                            }
+
+                        </div>
+
+
+                        <div class="notification-content">
+
+                            <h3>
+                                ${notification.title}
+                            </h3>
+
+
+                            <p>
+                                ${notification.message}
+                            </p>
+
+
+                            <span class="notification-time">
+
+                                ${
+                                    formatTime(
+                                        notification.createdAt
+                                    )
+                                }
+
+                            </span>
+
+                        </div>
+
+                    `;
+
+
+                    card.addEventListener(
+                        "click",
+                        async () => {
+
+                            // Marcar como lida
+                            if (
+                                !notification.read
+                            ) {
+
+                                await fetch(
+                                    `${API}/${notification._id}/read`,
+                                    {
+                                        method:
+                                            "PUT"
+                                    }
+                                );
+
+                            }
+
+
+                            // Abrir destino
+                            if (
+                                notification.link &&
+                                notification.link !== "#"
+                            ) {
+
+                                window.location.href =
+                                    notification.link;
+
+                                return;
+
+                            }
+
+
+                            await loadNotifications();
+
+                        }
+                    );
+
+
+                    list.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+        }
+
+
+        // ======================================
+        // MARCAR TODAS COMO LIDAS
+        // ======================================
+
+        readAllButton.addEventListener(
+            "click",
+            async () => {
+
+                try {
+
+                    await fetch(
+                        `${API}/user/${user._id}/read-all`,
+                        {
+                            method:
+                                "PUT"
+                        }
+                    );
+
+
+                    await loadNotifications();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "ERRO AO MARCAR TODAS:",
+                        error
+                    );
+
+                }
+
+            }
+        );
+
+
+        // ======================================
+        // ATUALIZAÇÃO AUTOMÁTICA
+        // ======================================
+
+        await loadNotifications();
+
+
+        setInterval(
+            loadNotifications,
+            5000
+        );
 
     }
-
-    // ==========================================
-    // MARCAR TODAS
-    // ==========================================
-
-    document
-        .querySelector("#read-all")
-        .addEventListener("click", () => {
-
-            notifications.forEach(n => {
-
-                n.read = true;
-
-            });
-
-            save();
-
-            render();
-
-        });
-
-    render();
-
-})
+);
