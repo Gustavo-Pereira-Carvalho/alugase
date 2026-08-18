@@ -121,6 +121,45 @@ header {
 
 
 /* =========================================================
+   MENU MOBILE
+========================================================= */
+
+.mobile-menu-button {
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #f0fdf4;
+
+    color: #166534;
+
+    font-size: 22px;
+
+    line-height: 1;
+
+    transition: 0.2s ease;
+}
+
+.mobile-menu-button:hover {
+
+    background: var(--primary-light);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
    LOGO
 ========================================================= */
 
@@ -435,6 +474,71 @@ header {
 .notification-badge.show {
 
     display: flex;
+}
+
+
+/* =========================================================
+   MENU MOBILE
+========================================================= */
+
+.mobile-menu {
+
+    display: none;
+
+    position: absolute;
+
+    top: calc(100% + 8px);
+
+    left: 3%;
+
+    right: 3%;
+
+    background: #ffffff;
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    box-shadow: var(--shadow);
+
+    padding: 8px;
+
+    z-index: 1100;
+}
+
+.mobile-menu.active {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+.mobile-menu a {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px 14px;
+
+    border-radius: 10px;
+
+    color: var(--text);
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.mobile-menu a:hover {
+
+    background: var(--background-secondary);
+
+    color: var(--primary);
 }
 
 
@@ -950,22 +1054,36 @@ footer {
         gap: 10px;
     }
 
-    /*
-       No mobile:
-       - menu hamburger NÃO existe
-       - links principais ficam ocultos
-       - chat e notificações continuam
-       - Entrar e Anunciar ficam ocultos
-    */
+
+    /* -----------------------------------------
+       MENU HAMBURGER
+    ----------------------------------------- */
+
+    .mobile-menu-button {
+
+        display: flex;
+    }
+
+
+    /* -----------------------------------------
+       LINKS DESKTOP
+    ----------------------------------------- */
 
     .nav-links {
 
         display: none;
     }
 
+
+    /* -----------------------------------------
+       LOGO
+    ----------------------------------------- */
+
     .logo {
 
         flex: 1;
+
+        min-width: 0;
     }
 
     .logo a {
@@ -987,16 +1105,32 @@ footer {
         font-size: 21px;
     }
 
+
+    /* -----------------------------------------
+       AÇÕES
+    ----------------------------------------- */
+
     .nav-buttons {
 
         gap: 7px;
     }
+
+
+    /*
+       Entrar e Anunciar ficam dentro
+       do menu mobile.
+    */
 
     .nav-buttons .btn-primary,
     .nav-buttons .btn-secondary {
 
         display: none;
     }
+
+
+    /* -----------------------------------------
+       CHAT / NOTIFICAÇÕES
+    ----------------------------------------- */
 
     .chat-nav,
     .notification-nav {
@@ -1012,6 +1146,71 @@ footer {
     .notification-bell {
 
         font-size: 19px;
+    }
+
+
+    /* -----------------------------------------
+       MENU MOBILE
+    ----------------------------------------- */
+
+    .mobile-menu {
+
+        display: none;
+
+        position: absolute;
+
+        top: 100%;
+
+        left: 3%;
+
+        right: 3%;
+
+        background: #ffffff;
+
+        border: 1px solid var(--border);
+
+        border-radius: 14px;
+
+        box-shadow: var(--shadow);
+
+        padding: 8px;
+
+        z-index: 1100;
+    }
+
+    .mobile-menu.active {
+
+        display: flex;
+
+        flex-direction: column;
+    }
+
+    .mobile-menu a {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        padding: 13px 14px;
+
+        border-radius: 10px;
+
+        color: var(--text);
+
+        font-size: 15px;
+
+        font-weight: 600;
+
+        transition: 0.2s ease;
+    }
+
+    .mobile-menu a:hover {
+
+        background: var(--background-secondary);
+
+        color: var(--primary);
     }
 
 
@@ -1175,6 +1374,15 @@ footer {
     .navbar {
 
         width: 96%;
+    }
+
+    .mobile-menu-button {
+
+        width: 36px;
+
+        height: 36px;
+
+        font-size: 20px;
     }
 
     .logo a {
