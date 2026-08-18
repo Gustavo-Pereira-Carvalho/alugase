@@ -1,49 +1,84 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const API = "https://alugase-api.onrender.com/api/chats";
+    const API =
+        "https://alugase-api.onrender.com/api/chats";
 
-    const user = JSON.parse(
-        localStorage.getItem("alugase_user")
-    );
+
+    const user =
+        JSON.parse(
+            localStorage.getItem(
+                "alugase_user"
+            )
+        );
+
 
     if (!user) {
-        location.href = "login.html";
+
+        location.href =
+            "login.html";
+
         return;
+
     }
 
+
     const chatId =
-        new URLSearchParams(location.search).get("chat");
+        new URLSearchParams(
+            location.search
+        ).get("chat");
+
 
     const conversationList =
-        document.querySelector("#conversation-list");
+        document.querySelector(
+            "#conversation-list"
+        );
+
 
     const messages =
-        document.querySelector("#messages");
+        document.querySelector(
+            "#messages"
+        );
+
 
     const input =
-        document.querySelector("#message-input");
+        document.querySelector(
+            "#message-input"
+        );
+
 
     const sendButton =
-        document.querySelector("#send-btn");
+        document.querySelector(
+            "#send-btn"
+        );
+
 
     const toggleReservation =
-        document.querySelector("#toggle-reservation");
+        document.querySelector(
+            "#toggle-reservation"
+        );
+
 
     const reservationDetails =
-        document.querySelector("#reservation-details");
+        document.querySelector(
+            "#reservation-details"
+        );
+
 
     const reservationArrow =
-        document.querySelector("#reservation-arrow");
+        document.querySelector(
+            "#reservation-arrow"
+        );
 
 
     let chats = [];
+
     let currentChat = null;
 
     let sendingMessage = false;
 
 
     // ==========================================
-    // RESERVA / CARD DO ALUGUEL
+    // ABRIR / FECHAR CARD
     // ==========================================
 
     if (
@@ -55,23 +90,285 @@ document.addEventListener("DOMContentLoaded", async () => {
             "click",
             () => {
 
-                const isOpen =
-                    reservationDetails.classList.toggle("open");
+                const opened =
+                    reservationDetails.classList.toggle(
+                        "open"
+                    );
+
 
                 toggleReservation.classList.toggle(
                     "open",
-                    isOpen
+                    opened
                 );
+
 
                 if (reservationArrow) {
 
                     reservationArrow.textContent =
-                        isOpen ? "▲" : "▼";
+                        opened
+                            ? "▲"
+                            : "▼";
 
                 }
 
             }
         );
+
+    }
+
+
+    // ==========================================
+    // FORMATAR DINHEIRO
+    // ==========================================
+
+    function formatMoney(value) {
+
+        return Number(value || 0)
+            .toLocaleString(
+                "pt-BR",
+                {
+                    style: "currency",
+                    currency: "BRL"
+                }
+            );
+
+    }
+
+
+    // ==========================================
+    // FORMATAR DATA
+    // ==========================================
+
+    function formatDate(value) {
+
+        if (!value) {
+            return "--";
+        }
+
+
+        const date =
+            new Date(value);
+
+
+        return date.toLocaleDateString(
+            "pt-BR",
+            {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric"
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // STATUS DO ALUGUEL
+    // ==========================================
+
+    function rentalStatus(status) {
+
+        const statuses = {
+
+            pending: "Solicitado",
+
+            approved: "Aprovado",
+
+            rejected: "Recusado",
+
+            active: "Em andamento",
+
+            finished: "Finalizado"
+
+        };
+
+
+        return statuses[status] ||
+            status ||
+            "Solicitado";
+
+    }
+
+
+    // ==========================================
+    // ATUALIZAR CARD DO ALUGUEL
+    // ==========================================
+
+    function renderRentalCard() {
+
+        if (!currentChat) {
+            return;
+        }
+
+
+        const rental =
+            currentChat.rentalId;
+
+
+        /*
+         * Se o chat ainda não tiver um aluguel
+         * associado, mantém o card básico.
+         */
+
+        if (!rental) {
+
+            console.warn(
+                "Este chat não possui rentalId."
+            );
+
+            return;
+
+        }
+
+
+        const productTitle =
+            currentChat.productTitle ||
+            "Produto";
+
+
+        const productShort =
+            document.querySelector(
+                "#reservation-product-short"
+            );
+
+
+        const product =
+            document.querySelector(
+                "#reservation-product"
+            );
+
+
+        const status =
+            document.querySelector(
+                "#reservation-status"
+            );
+
+
+        const period =
+            document.querySelector(
+                "#reservation-period"
+            );
+
+
+        const total =
+            document.querySelector(
+                "#reservation-total"
+            );
+
+
+        const days =
+            document.querySelector(
+                "#reservation-days"
+            );
+
+
+        const delivery =
+            document.querySelector(
+                "#reservation-delivery"
+            );
+
+
+        const deposit =
+            document.querySelector(
+                "#reservation-deposit"
+            );
+
+
+        if (productShort) {
+
+            productShort.textContent =
+                productTitle;
+
+        }
+
+
+        if (product) {
+
+            product.textContent =
+                productTitle;
+
+        }
+
+
+        if (status) {
+
+            status.textContent =
+                rentalStatus(
+                    rental.status
+                );
+
+        }
+
+
+        if (period) {
+
+            period.textContent =
+                `${formatDate(
+                    rental.startDate
+                )} até ${formatDate(
+                    rental.endDate
+                )}`;
+
+        }
+
+
+        if (total) {
+
+            total.textContent =
+                formatMoney(
+                    rental.total
+                );
+
+        }
+
+
+        if (days) {
+
+            days.textContent =
+                `${rental.days || 0} ${
+                    rental.days === 1
+                        ? "dia"
+                        : "dias"
+                }`;
+
+        }
+
+
+        if (delivery) {
+
+            if (rental.delivery) {
+
+                const deliveryPrice =
+                    Number(
+                        rental.deliveryPrice || 0
+                    );
+
+
+                delivery.textContent =
+                    deliveryPrice > 0
+                        ? `Entrega (${formatMoney(
+                            deliveryPrice
+                        )})`
+                        : "Entrega";
+
+            } else {
+
+                delivery.textContent =
+                    "Retirada";
+
+            }
+
+        }
+
+
+        if (deposit) {
+
+            deposit.textContent =
+                formatMoney(
+                    rental.deposit
+                );
+
+        }
 
     }
 
@@ -84,9 +381,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
 
-            const response = await fetch(
-                `${API}/user/${user._id}`
-            );
+            const response =
+                await fetch(
+                    `${API}/user/${user._id}`
+                );
+
 
             if (!response.ok) {
 
@@ -96,41 +395,53 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             }
 
-            const data = await response.json();
 
-            chats = Array.isArray(data)
-                ? data
-                : [];
+            const data =
+                await response.json();
+
+
+            chats =
+                Array.isArray(data)
+                    ? data
+                    : [];
 
 
             if (!chats.length) {
 
                 currentChat = null;
 
-                conversationList.innerHTML =
-                    "<p style='padding:20px;color:#6b7280;'>Nenhuma conversa.</p>";
 
-                messages.innerHTML = "";
+                conversationList.innerHTML =
+                    `
+                    <p style="
+                        padding:20px;
+                        color:#6b7280;
+                    ">
+                        Nenhuma conversa.
+                    </p>
+                    `;
+
+
+                messages.innerHTML =
+                    "";
+
 
                 return;
 
             }
 
 
-            /*
-             * Se já existe um chat selecionado,
-             * tenta manter o mesmo.
-             */
-
             currentChat =
                 chats.find(
                     chat =>
-                        String(chat._id) === String(chatId)
+                        String(chat._id) ===
+                        String(chatId)
                 ) ||
                 chats[0];
 
 
             renderSidebar();
+
             renderChat();
 
 
@@ -141,8 +452,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 error
             );
 
+
             conversationList.innerHTML =
-                "<p style='padding:20px;color:#ef4444;'>Erro ao carregar conversas.</p>";
+                `
+                <p style="
+                    padding:20px;
+                    color:#ef4444;
+                ">
+                    Erro ao carregar conversas.
+                </p>
+                `;
 
         }
 
@@ -155,7 +474,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function renderSidebar() {
 
-        conversationList.innerHTML = "";
+        conversationList.innerHTML =
+            "";
 
 
         chats.forEach(chat => {
@@ -165,9 +485,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 String(user._id);
 
 
-            const otherName = isOwner
-                ? chat.renterName
-                : chat.ownerName;
+            const otherName =
+                isOwner
+                    ? chat.renterName
+                    : chat.ownerName;
 
 
             const lastMessage =
@@ -180,13 +501,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             const card =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             card.className =
                 `conversation ${
                     currentChat &&
-                    String(currentChat._id) ===
+                    String(
+                        currentChat._id
+                    ) ===
                     String(chat._id)
                         ? "active"
                         : ""
@@ -194,9 +519,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             const avatar =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
-            avatar.className = "avatar";
+
+            avatar.className =
+                "avatar";
+
 
             avatar.textContent =
                 (otherName || "?")
@@ -205,29 +535,42 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             const info =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
-            info.className = "conv-info";
+
+            info.className =
+                "conv-info";
 
 
             const name =
-                document.createElement("h4");
+                document.createElement(
+                    "h4"
+                );
+
 
             name.textContent =
-                otherName || "Usuário";
+                otherName ||
+                "Usuário";
 
 
             const last =
-                document.createElement("p");
+                document.createElement(
+                    "p"
+                );
+
 
             last.textContent =
                 lastMessage;
 
 
             info.appendChild(name);
+
             info.appendChild(last);
 
             card.appendChild(avatar);
+
             card.appendChild(info);
 
 
@@ -235,9 +578,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "click",
                 () => {
 
-                    currentChat = chat;
+                    currentChat =
+                        chat;
+
 
                     renderSidebar();
+
                     renderChat();
 
 
@@ -251,7 +597,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
 
 
-            conversationList.appendChild(card);
+            conversationList.appendChild(
+                card
+            );
 
         });
 
@@ -270,42 +618,47 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         const isOwner =
-            String(currentChat.ownerId) ===
+            String(
+                currentChat.ownerId
+            ) ===
             String(user._id);
 
 
-        const otherName = isOwner
-            ? currentChat.renterName
-            : currentChat.ownerName;
+        const otherName =
+            isOwner
+                ? currentChat.renterName
+                : currentChat.ownerName;
 
 
         const chatName =
-            document.querySelector("#chat-name");
+            document.querySelector(
+                "#chat-name"
+            );
+
 
         const chatAvatar =
-            document.querySelector("#chat-avatar");
+            document.querySelector(
+                "#chat-avatar"
+            );
+
 
         const chatStatus =
-            document.querySelector("#chat-status");
-
-        const reservationProduct =
             document.querySelector(
-                "#reservation-product"
+                "#chat-status"
             );
 
-        const reservationProductShort =
-            document.querySelector(
-                "#reservation-product-short"
-            );
 
         const viewProduct =
-            document.querySelector("#view-product");
+            document.querySelector(
+                "#view-product"
+            );
 
 
         if (chatName) {
 
             chatName.textContent =
-                otherName || "Usuário";
+                otherName ||
+                "Usuário";
 
         }
 
@@ -323,35 +676,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (chatStatus) {
 
             chatStatus.textContent =
-                currentChat.status || "Ativo";
-
-        }
-
-
-        if (reservationProduct) {
-
-            reservationProduct.textContent =
-                currentChat.productTitle ||
-                "Produto";
-
-        }
-
-
-        if (reservationProductShort) {
-
-            reservationProductShort.textContent =
-                currentChat.productTitle ||
-                "Produto";
+                currentChat.status ||
+                "Ativo";
 
         }
 
 
         if (viewProduct) {
 
-            if (currentChat.productId) {
+            if (
+                currentChat.productId
+            ) {
 
                 viewProduct.href =
-                    `produto.html?id=${currentChat.productId}`;
+                    `produto.html?id=${
+                        currentChat.productId
+                    }`;
 
                 viewProduct.style.display =
                     "";
@@ -366,11 +706,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ==========================================
-        // MENSAGENS
-        // ==========================================
+        // Atualiza o card
+        renderRentalCard();
 
-        messages.innerHTML = "";
+
+        // ======================================
+        // MENSAGENS
+        // ======================================
+
+        messages.innerHTML =
+            "";
 
 
         if (
@@ -379,75 +724,103 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
 
             const empty =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
-            empty.style.textAlign = "center";
-            empty.style.color = "#6b7280";
-            empty.style.padding = "30px";
+
+            empty.style.textAlign =
+                "center";
+
+
+            empty.style.color =
+                "#6b7280";
+
+
+            empty.style.padding =
+                "30px";
+
 
             empty.textContent =
                 "Nenhuma mensagem ainda.";
 
-            messages.appendChild(empty);
+
+            messages.appendChild(
+                empty
+            );
+
 
             return;
 
         }
 
 
-        currentChat.messages.forEach(msg => {
+        currentChat.messages.forEach(
+            msg => {
 
-            const sent =
-                String(msg.senderId) ===
-                String(user._id);
-
-
-            const bubble =
-                document.createElement("div");
-
-
-            bubble.className =
-                `message ${
-                    sent
-                        ? "sent"
-                        : "received"
-                }`;
+                const sent =
+                    String(
+                        msg.senderId
+                    ) ===
+                    String(user._id);
 
 
-            const text =
-                document.createElement("div");
-
-            text.textContent =
-                msg.text || "";
-
-
-            const time =
-                document.createElement("span");
-
-            time.className = "time";
+                const bubble =
+                    document.createElement(
+                        "div"
+                    );
 
 
-            const date =
-                new Date(msg.createdAt);
+                bubble.className =
+                    `message ${
+                        sent
+                            ? "sent"
+                            : "received"
+                    }`;
 
 
-            time.textContent =
-                date.toLocaleTimeString(
-                    "pt-BR",
-                    {
-                        hour: "2-digit",
-                        minute: "2-digit"
-                    }
+                const text =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                text.textContent =
+                    msg.text || "";
+
+
+                const time =
+                    document.createElement(
+                        "span"
+                    );
+
+
+                time.className =
+                    "time";
+
+
+                time.textContent =
+                    new Date(
+                        msg.createdAt
+                    ).toLocaleTimeString(
+                        "pt-BR",
+                        {
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        }
+                    );
+
+
+                bubble.appendChild(text);
+
+                bubble.appendChild(time);
+
+                messages.appendChild(
+                    bubble
                 );
 
-
-            bubble.appendChild(text);
-            bubble.appendChild(time);
-
-
-            messages.appendChild(bubble);
-
-        });
+            }
+        );
 
 
         messages.scrollTop =
@@ -457,7 +830,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // VERIFICAR NOVAS MENSAGENS
+    // ATUALIZAÇÃO AUTOMÁTICA
     // ==========================================
 
     async function checkNewMessages() {
@@ -497,14 +870,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 updatedChat.messages || [];
 
 
-            /*
-             * Verifica quantidade.
-             *
-             * Também verifica o ID da última
-             * mensagem para evitar renderizações
-             * desnecessárias.
-             */
-
             const oldLast =
                 oldMessages.length
                     ? oldMessages[
@@ -521,44 +886,60 @@ document.addEventListener("DOMContentLoaded", async () => {
                     : null;
 
 
-            const hasNewMessage =
+            const changed =
                 newMessages.length !==
-                oldMessages.length;
+                    oldMessages.length ||
+                (
+                    newLast &&
+                    oldLast &&
+                    String(newLast._id) !==
+                    String(oldLast._id)
+                );
 
 
-            const lastMessageChanged =
-                newLast &&
-                oldLast &&
-                String(newLast._id) !==
-                String(oldLast._id);
+            /*
+             * Também verifica se o Rental mudou.
+             *
+             * Exemplo:
+             *
+             * pending → approved
+             */
+
+            const oldRental =
+                currentChat.rentalId;
+
+
+            const newRental =
+                updatedChat.rentalId;
+
+
+            const rentalChanged =
+                JSON.stringify(
+                    oldRental
+                ) !==
+                JSON.stringify(
+                    newRental
+                );
 
 
             if (
-                hasNewMessage ||
-                lastMessageChanged
+                changed ||
+                rentalChanged
             ) {
 
                 currentChat =
                     updatedChat;
 
 
-                /*
-                 * Atualiza o chat aberto.
-                 */
-
-                renderChat();
-
-
-                /*
-                 * Atualiza a última mensagem
-                 * da sidebar.
-                 */
-
                 const index =
                     chats.findIndex(
                         chat =>
-                            String(chat._id) ===
-                            String(updatedChat._id)
+                            String(
+                                chat._id
+                            ) ===
+                            String(
+                                updatedChat._id
+                            )
                     );
 
 
@@ -567,22 +948,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                     chats[index] =
                         updatedChat;
 
-                    renderSidebar();
-
                 }
+
+
+                renderChat();
+
+                renderSidebar();
 
             }
 
         } catch (error) {
 
-            /*
-             * Não mostramos alerta para o usuário,
-             * porque uma falha momentânea no polling
-             * não deve atrapalhar o chat.
-             */
-
             console.error(
-                "Erro ao verificar mensagens:",
+                "Erro no polling:",
                 error
             );
 
@@ -622,13 +1000,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        sendingMessage = true;
+        sendingMessage =
+            true;
 
 
         if (sendButton) {
 
-            sendButton.disabled = true;
-            sendButton.textContent = "Enviando...";
+            sendButton.disabled =
+                true;
+
+            sendButton.textContent =
+                "Enviando...";
 
         }
 
@@ -643,19 +1025,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                         method: "POST",
 
                         headers: {
+
                             "Content-Type":
                                 "application/json"
+
                         },
 
-                        body: JSON.stringify({
+                        body:
+                            JSON.stringify({
 
-                            senderId:
-                                user._id,
+                                senderId:
+                                    user._id,
 
-                            text:
-                                text
+                                text:
+                                    text
 
-                        })
+                            })
 
                     }
                 );
@@ -677,26 +1062,23 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
-            /*
-             * O backend devolve o chat atualizado.
-             * Então podemos atualizar imediatamente,
-             * sem esperar os 2 segundos do polling.
-             */
-
-            currentChat = data;
+            currentChat =
+                data;
 
 
-            input.value = "";
+            input.value =
+                "";
 
 
             renderChat();
+
             renderSidebar();
 
 
         } catch (error) {
 
             console.error(
-                "Erro ao enviar mensagem:",
+                "Erro ao enviar:",
                 error
             );
 
@@ -705,16 +1087,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "Não foi possível enviar a mensagem."
             );
 
-
         } finally {
 
-            sendingMessage = false;
+            sendingMessage =
+                false;
 
 
             if (sendButton) {
 
-                sendButton.disabled = false;
-                sendButton.textContent = "Enviar";
+                sendButton.disabled =
+                    false;
+
+                sendButton.textContent =
+                    "Enviar";
 
             }
 
@@ -764,7 +1149,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     /*
-     * Verifica novas mensagens a cada 2 segundos.
+     * Atualização automática.
      */
 
     setInterval(
