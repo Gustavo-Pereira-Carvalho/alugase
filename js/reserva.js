@@ -196,9 +196,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                             ownerId: product.ownerId,
                             renterId: user._id,
 
-                            ownerName: product.ownerName,
-                            renterName: user.name,
-
                             productTitle: product.title
 
                         })
