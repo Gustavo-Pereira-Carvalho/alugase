@@ -1,11 +1,8 @@
-// ==========================================
-// ALUGASE — RESERVA (API ONLINE)
-// ==========================================
-
 document.addEventListener("DOMContentLoaded", async () => {
 
     const API_PRODUCTS = "https://alugase-api.onrender.com/api/products";
     const API_RENTALS = "https://alugase-api.onrender.com/api/rentals";
+    const API_CHATS = "https://alugase-api.onrender.com/api/chats";
 
     const user = JSON.parse(localStorage.getItem("alugase_user"));
 
@@ -15,23 +12,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const productId = new URLSearchParams(window.location.search).get("id");
+    const productId = new URLSearchParams(location.search).get("id");
 
     if (!productId) {
         window.location.href = "index.html";
         return;
     }
 
-    // ==========================
-    // ELEMENTOS
-    // ==========================
-
     const startDate = document.querySelector("#start-date");
     const endDate = document.querySelector("#end-date");
-
-    const deliveryOptions = document.querySelectorAll(
-        'input[name="delivery"]'
-    );
 
     const dailyPrice = document.querySelector("#daily-price");
     const daysEl = document.querySelector("#days");
@@ -44,60 +33,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let product;
 
-    // ==========================
-    // CARREGAR PRODUTO
-    // ==========================
-
     async function loadProduct() {
 
-        try {
+        const response = await fetch(`${API_PRODUCTS}/${productId}`);
 
-            const response = await fetch(`${API_PRODUCTS}/${productId}`);
+        product = await response.json();
 
-            if (!response.ok)
-                throw new Error();
+        document.querySelector("#product-title").textContent = product.title;
+        document.querySelector("#product-category").textContent = product.category;
+        document.querySelector("#product-city").textContent = product.city;
+        document.querySelector("#product-image").textContent = product.image;
 
-            product = await response.json();
-
-            fillScreen();
-
-        } catch {
-
-            alert("Produto não encontrado.");
-            window.location.href = "index.html";
-
-        }
-
-    }
-
-    // ==========================
-    // PREENCHER TELA
-    // ==========================
-
-    function fillScreen() {
-
-        document.querySelector("#product-title").textContent =
-            product.title;
-
-        document.querySelector("#product-category").textContent =
-            product.category.toUpperCase();
-
-        document.querySelector("#product-city").textContent =
-            `📍 ${product.city}`;
-
-        document.querySelector("#product-image").textContent =
-            product.image || "📦";
-
-        dailyPrice.textContent =
-            `R$ ${product.pricePerDay}`;
-
-        depositTotal.textContent =
-            `R$ ${product.deposit}`;
-
-        document.querySelector("#delivery-text").textContent =
-            product.delivery
-                ? `+ R$ ${product.deliveryPrice}`
-                : "Entrega indisponível";
+        dailyPrice.textContent = `R$ ${product.pricePerDay}`;
+        depositTotal.textContent = `R$ ${product.deposit}`;
 
         const today = new Date().toISOString().split("T")[0];
 
@@ -111,127 +59,89 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-    // ==========================
-    // CALCULAR
-    // ==========================
-
     function calculate() {
 
         const start = new Date(startDate.value);
         const end = new Date(endDate.value);
 
         let days = Math.ceil(
-            (end - start) / (1000 * 60 * 60 * 24)
+            (end - start) / 86400000
         ) + 1;
 
-        if (days <= 0 || isNaN(days))
-            days = 1;
-
-        const useDelivery =
-            document.querySelector(
-                'input[name="delivery"]:checked'
-            ).value === "delivery";
-
-        const delivery =
-            useDelivery && product.delivery
-                ? product.deliveryPrice
-                : 0;
+        if (days <= 0) days = 1;
 
         const rent = days * product.pricePerDay;
 
-        const total =
-            rent + delivery + product.deposit;
-
         daysEl.textContent = days;
         rentTotal.textContent = `R$ ${rent}`;
-        deliveryTotal.textContent = `R$ ${delivery}`;
-        grandTotal.textContent = `R$ ${total}`;
+        deliveryTotal.textContent = "R$ 0";
+        grandTotal.textContent = `R$ ${rent + product.deposit}`;
 
-        return { days, rent, delivery, total };
+        return rent + product.deposit;
 
     }
 
-    startDate.addEventListener("change", () => {
+    startDate.onchange = calculate;
+    endDate.onchange = calculate;
 
-        endDate.min = startDate.value;
+    document.querySelector("#confirm-reservation").onclick = async () => {
 
-        if (endDate.value < startDate.value)
-            endDate.value = startDate.value;
+        const total = calculate();
 
-        calculate();
+        await fetch(API_RENTALS, {
 
-    });
+            method: "POST",
 
-    endDate.addEventListener("change", calculate);
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-    deliveryOptions.forEach(option =>
-        option.addEventListener("change", calculate)
-    );
+            body: JSON.stringify({
 
-    // ==========================
-    // CONFIRMAR RESERVA
-    // ==========================
+                productId: product._id,
+                ownerId: product.ownerId,
+                renterId: user._id,
 
-    document
-        .querySelector("#confirm-reservation")
-        .addEventListener("click", async () => {
+                startDate: startDate.value,
+                endDate: endDate.value,
 
-            const values = calculate();
+                total,
+                notes: notes.value
 
-            const reservation = {
+            })
+
+        });
+
+        const chatResponse = await fetch(API_CHATS, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
 
                 productId: product._id,
 
                 ownerId: product.ownerId,
-
                 renterId: user._id,
 
-                startDate: startDate.value,
+                ownerName: product.ownerName,
+                renterName: user.name,
+                productTitle: product.title
 
-                endDate: endDate.value,
-
-                delivery:
-                    document.querySelector(
-                        'input[name="delivery"]:checked'
-                    ).value === "delivery",
-
-                notes: notes.value,
-
-                total: values.total
-
-            };
-
-            try {
-
-                const response = await fetch(API_RENTALS, {
-
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify(reservation)
-
-                });
-
-                const data = await response.json();
-
-                if (!response.ok)
-                    throw new Error(data.error);
-
-                alert("Reserva criada com sucesso!");
-
-                // Depois criaremos o chat real
-                window.location.href = "perfil.html";
-
-            } catch (error) {
-
-                alert(error.message);
-
-            }
+            })
 
         });
+
+        const chat = await chatResponse.json();
+
+        alert("Reserva criada com sucesso!");
+
+        window.location.href = `chat.html?chat=${chat._id}`;
+
+    };
 
     await loadProduct();
 
