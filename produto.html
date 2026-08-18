@@ -18,6 +18,10 @@
      ALUGASE — HEADER
 ========================================== -->
 
+<!-- ==========================================
+     ALUGASE — HEADER
+========================================== -->
+
 <header>
 
     <nav class="navbar">
@@ -97,6 +101,29 @@
         <div class="nav-buttons">
 
 
+            <!-- CHAT -->
+
+            <button
+                class="chat-nav"
+                id="chat-button"
+                type="button"
+                aria-label="Chat"
+                title="Chat"
+            >
+
+                <span class="chat-icon">
+                    💬
+                </span>
+
+                <span
+                    class="chat-badge"
+                    id="chat-badge"
+                    style="display:none;"
+                ></span>
+
+            </button>
+
+
             <!-- NOTIFICAÇÕES -->
 
             <button
@@ -104,6 +131,7 @@
                 id="notification-button"
                 type="button"
                 aria-label="Notificações"
+                title="Notificações"
             >
 
                 <span class="notification-bell">
@@ -155,9 +183,6 @@
         id="mobile-menu"
     >
 
-
-        <!-- INÍCIO -->
-
         <a href="index.html">
 
             🏠
@@ -165,8 +190,6 @@
 
         </a>
 
-
-        <!-- EXPLORAR -->
 
         <a href="explorar.html">
 
@@ -176,8 +199,6 @@
         </a>
 
 
-        <!-- CATEGORIAS -->
-
         <a href="index.html#categorias">
 
             📦
@@ -186,12 +207,23 @@
         </a>
 
 
-        <!-- COMO FUNCIONA -->
-
         <a href="index.html#como-funciona">
 
             ⚙️
             <span>Como funciona</span>
+
+        </a>
+
+
+        <!-- CHAT -->
+
+        <a
+            href="chat.html"
+            id="mobile-chat"
+        >
+
+            💬
+            <span>Chat</span>
 
         </a>
 
@@ -222,7 +254,7 @@
         </a>
 
 
-        <!-- MEU PERFIL -->
+        <!-- PERFIL -->
 
         <a
             href="perfil.html"
@@ -247,7 +279,6 @@
             <span>Anunciar</span>
 
         </a>
-
 
     </div>
 
@@ -565,8 +596,9 @@
 
 </footer>
 
-<script src="./js/produto.js"></script>
 <script src="js/navbar.js"></script>
+<script src="./js/produto.js"></script>
+
 
 </body>
 </html>

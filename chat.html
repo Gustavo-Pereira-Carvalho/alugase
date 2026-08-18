@@ -19,244 +19,203 @@
 <body>
 
 
-<!-- ==========================================
+    <!-- ==========================================
      ALUGASE — HEADER
 ========================================== -->
 
-<header>
+    <header>
 
-    <nav class="navbar">
+        <nav class="navbar">
 
-        <!-- ======================================
+            <!-- ======================================
              MENU MOBILE
         ======================================= -->
 
-        <button
-            class="mobile-menu-button"
-            id="mobile-menu-button"
-            type="button"
-            aria-label="Abrir menu"
-            aria-expanded="false"
-        >
-            ☰
-        </button>
+            <button class="mobile-menu-button" id="mobile-menu-button" type="button" aria-label="Abrir menu"
+                aria-expanded="false">
+                ☰
+            </button>
 
 
-        <!-- ======================================
+            <!-- ======================================
              LOGO
         ======================================= -->
 
-        <div class="logo">
+            <div class="logo">
 
-            <a href="index.html">
+                <a href="index.html">
 
-                <img
-                    src="assets/logo.png"
-                    alt="Logo Alugase"
-                >
+                    <img src="assets/logo.png" alt="Logo Alugase">
 
-                <h2>ALUGASE</h2>
+                    <h2>ALUGASE</h2>
 
-            </a>
+                </a>
 
-        </div>
+            </div>
 
 
-        <!-- ======================================
+            <!-- ======================================
              MENU DESKTOP
         ======================================= -->
 
-        <ul class="nav-links">
+            <ul class="nav-links">
 
-            <li>
-                <a href="index.html">
-                    Início
-                </a>
-            </li>
+                <li>
+                    <a href="index.html">
+                        Início
+                    </a>
+                </li>
 
-            <li>
-                <a href="explorar.html">
-                    Explorar
-                </a>
-            </li>
+                <li>
+                    <a href="explorar.html">
+                        Explorar
+                    </a>
+                </li>
 
-            <li>
-                <a href="index.html#categorias">
-                    Categorias
-                </a>
-            </li>
+                <li>
+                    <a href="index.html#categorias">
+                        Categorias
+                    </a>
+                </li>
 
-            <li>
-                <a href="index.html#como-funciona">
-                    Como funciona
-                </a>
-            </li>
+                <li>
+                    <a href="index.html#como-funciona">
+                        Como funciona
+                    </a>
+                </li>
 
-        </ul>
+            </ul>
 
 
-        <!-- ======================================
+            <!-- ======================================
              AÇÕES DESKTOP
         ======================================= -->
 
-        <div class="nav-buttons">
+            <div class="nav-buttons">
+
+
+                <!-- NOTIFICAÇÕES -->
+
+                <button class="notification-nav" id="notification-button" type="button" aria-label="Notificações">
+
+                    <span class="notification-bell">
+                        🔔
+                    </span>
+
+                    <span class="notification-badge" id="notification-badge" style="display:none;"></span>
+
+                </button>
+
+
+                <!-- LOGIN / PERFIL -->
+
+                <button class="btn-secondary" id="login-button" type="button">
+                    Entrar
+                </button>
+
+
+                <!-- ANUNCIAR -->
+
+                <button class="btn-primary" id="announce-button" type="button">
+                    Anunciar
+                </button>
+
+
+            </div>
+
+        </nav>
+
+
+        <!-- ==========================================
+         MENU MOBILE
+    =========================================== -->
+
+        <div class="mobile-menu" id="mobile-menu">
+
+
+            <!-- INÍCIO -->
+
+            <a href="index.html">
+
+                🏠
+                <span>Início</span>
+
+            </a>
+
+
+            <!-- EXPLORAR -->
+
+            <a href="explorar.html">
+
+                🔎
+                <span>Explorar</span>
+
+            </a>
+
+
+            <!-- CATEGORIAS -->
+
+            <a href="index.html#categorias">
+
+                📦
+                <span>Categorias</span>
+
+            </a>
+
+
+            <!-- COMO FUNCIONA -->
+
+            <a href="index.html#como-funciona">
+
+                ⚙️
+                <span>Como funciona</span>
+
+            </a>
 
 
             <!-- NOTIFICAÇÕES -->
 
-            <button
-                class="notification-nav"
-                id="notification-button"
-                type="button"
-                aria-label="Notificações"
-            >
+            <a href="notificacoes.html" id="mobile-notifications">
 
-                <span class="notification-bell">
-                    🔔
-                </span>
+                🔔
+                <span>Notificações</span>
 
-                <span
-                    class="notification-badge"
-                    id="notification-badge"
-                    style="display:none;"
-                ></span>
-
-            </button>
+            </a>
 
 
-            <!-- LOGIN / PERFIL -->
+            <!-- ENTRAR -->
 
-            <button
-                class="btn-secondary"
-                id="login-button"
-                type="button"
-            >
-                Entrar
-            </button>
+            <a href="login.html" id="mobile-login">
+
+                👤
+                <span>Entrar</span>
+
+            </a>
+
+
+            <!-- MEU PERFIL -->
+
+            <a href="perfil.html" id="mobile-profile" style="display:none;">
+
+                👤
+                <span>Meu Perfil</span>
+
+            </a>
 
 
             <!-- ANUNCIAR -->
 
-            <button
-                class="btn-primary"
-                id="announce-button"
-                type="button"
-            >
-                Anunciar
-            </button>
+            <a href="novo-anuncio.html" id="mobile-announce">
+
+                ➕
+                <span>Anunciar</span>
+
+            </a>
 
 
         </div>
 
-    </nav>
-
-
-    <!-- ==========================================
-         MENU MOBILE
-    =========================================== -->
-
-    <div
-        class="mobile-menu"
-        id="mobile-menu"
-    >
-
-
-        <!-- INÍCIO -->
-
-        <a href="index.html">
-
-            🏠
-            <span>Início</span>
-
-        </a>
-
-
-        <!-- EXPLORAR -->
-
-        <a href="explorar.html">
-
-            🔎
-            <span>Explorar</span>
-
-        </a>
-
-
-        <!-- CATEGORIAS -->
-
-        <a href="index.html#categorias">
-
-            📦
-            <span>Categorias</span>
-
-        </a>
-
-
-        <!-- COMO FUNCIONA -->
-
-        <a href="index.html#como-funciona">
-
-            ⚙️
-            <span>Como funciona</span>
-
-        </a>
-
-
-        <!-- NOTIFICAÇÕES -->
-
-        <a
-            href="notificacoes.html"
-            id="mobile-notifications"
-        >
-
-            🔔
-            <span>Notificações</span>
-
-        </a>
-
-
-        <!-- ENTRAR -->
-
-        <a
-            href="login.html"
-            id="mobile-login"
-        >
-
-            👤
-            <span>Entrar</span>
-
-        </a>
-
-
-        <!-- MEU PERFIL -->
-
-        <a
-            href="perfil.html"
-            id="mobile-profile"
-            style="display:none;"
-        >
-
-            👤
-            <span>Meu Perfil</span>
-
-        </a>
-
-
-        <!-- ANUNCIAR -->
-
-        <a
-            href="novo-anuncio.html"
-            id="mobile-announce"
-        >
-
-            ➕
-            <span>Anunciar</span>
-
-        </a>
-
-
-    </div>
-
-</header>
+    </header>
 
 
 
@@ -465,9 +424,9 @@
     </main>
 
 
-
-    <script src="./js/chat.js"></script>
     <script src="js/navbar.js"></script>
+    <script src="./js/chat.js"></script>
+
 
 </body>
 
