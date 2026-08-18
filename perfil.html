@@ -10,109 +10,42 @@
 </head>
 <body>
 
-<!-- ==========================================
-     ALUGASE — HEADER
-========================================== -->
-
 <header>
+  <nav class="navbar">
 
-    <nav class="navbar">
+    <div class="logo">
+      <a href="index.html">
+        <h2>ALUGASE</h2>
+      </a>
+    </div>
 
-        <!-- LOGO -->
-        <div class="logo">
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="explorar.html">Explorar</a></li>
+      <li><a href="index.html#categorias">Categorias</a></li>
+    </ul>
 
-            <a href="index.html">
+    <div class="nav-buttons">
 
-                <img
-                    src="assets/logo.png"
-                    alt="Logo Alugase"
-                >
+      <a href="solicitacoes.html" class="btn-secondary">
+        Solicitações
+      </a>
 
-                <h2>ALUGASE</h2>
+      <a href="chat.html" class="btn-secondary">
+        Conversas
+      </a>
 
-            </a>
+      <button class="btn-primary" id="new-ad">
+        + Novo anúncio
+      </button>
 
-        </div>
+      <button class="btn-secondary" id="logout">
+        Sair
+      </button>
 
+    </div>
 
-        <!-- MENU -->
-        <ul class="nav-links">
-
-            <li>
-                <a href="index.html">
-                    Início
-                </a>
-            </li>
-
-            <li>
-                <a href="explorar.html">
-                    Explorar
-                </a>
-            </li>
-
-            <li>
-                <a href="index.html#categorias">
-                    Categorias
-                </a>
-            </li>
-
-            <li>
-                <a href="index.html#como-funciona">
-                    Como funciona
-                </a>
-            </li>
-
-        </ul>
-
-
-        <!-- AÇÕES -->
-        <div class="nav-buttons">
-
-            <!-- NOTIFICAÇÕES -->
-            <button
-                class="notification-nav"
-                id="notification-button"
-                type="button"
-                aria-label="Notificações"
-                title="Notificações"
-            >
-
-                <span class="notification-bell">
-                    🔔
-                </span>
-
-                <span
-                    class="notification-badge"
-                    id="notification-badge"
-                    style="display: none;"
-                ></span>
-
-            </button>
-
-
-            <!-- ENTRAR -->
-            <button
-                class="btn-secondary"
-                type="button"
-                id="login-button"
-            >
-                Entrar
-            </button>
-
-
-            <!-- ANUNCIAR -->
-            <button
-                class="btn-primary"
-                type="button"
-                id="announce-button"
-            >
-                Anunciar
-            </button>
-
-        </div>
-
-    </nav>
-
+  </nav>
 </header>
 
 <main class="profile-page">
@@ -420,9 +353,7 @@
 
 </main>
 
-<script src="js/navbar.js"></script>
 <script src="./js/perfil.js"></script>
-
 
 </body>
 </html>
