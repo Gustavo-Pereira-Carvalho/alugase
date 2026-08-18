@@ -1,5 +1,11 @@
+// ==========================================
+// ALUGASE — HOME
+// API ONLINE
+// ==========================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+
+    const API = "https://alugase-api.onrender.com/api/products";
 
     const searchInput = document.querySelector("#search-input");
     const searchButton = document.querySelector("#search-button");
@@ -8,11 +14,101 @@ document.addEventListener("DOMContentLoaded", () => {
     const announceButtons = document.querySelectorAll(".btn-primary");
     const categoryCards = document.querySelectorAll(".category-card");
 
+    const productsGrid = document.querySelector("#products-grid");
+
     const user = JSON.parse(localStorage.getItem("alugase_user"));
 
-    // ==========================
-    // BUSCA -> EXPLORAR
-    // ==========================
+    // ==========================================
+    // CARREGAR PRODUTOS
+    // ==========================================
+
+    async function loadProducts() {
+
+        if (!productsGrid) return;
+
+        productsGrid.innerHTML = `
+            <p class="empty-message">Carregando anúncios...</p>
+        `;
+
+        try {
+
+            const response = await fetch(API);
+            const products = await response.json();
+
+            renderProducts(products);
+
+        } catch (error) {
+
+            console.error(error);
+
+            productsGrid.innerHTML = `
+                <p class="empty-message">
+                    Não foi possível carregar os anúncios.
+                </p>
+            `;
+
+        }
+
+    }
+
+    // ==========================================
+    // RENDERIZAR PRODUTOS
+    // ==========================================
+
+    function renderProducts(products) {
+
+        productsGrid.innerHTML = "";
+
+        if (products.length === 0) {
+
+            productsGrid.innerHTML = `
+                <p class="empty-message">
+                    Nenhum anúncio disponível.
+                </p>
+            `;
+
+            return;
+
+        }
+
+        products.forEach(product => {
+
+            const card = document.createElement("article");
+
+            card.className = "product-card";
+
+            card.innerHTML = `
+                <div class="product-image">
+                    ${product.image || "📦"}
+                </div>
+
+                <div class="product-content">
+                    <h3>${product.title}</h3>
+
+                    <p>📍 ${product.city}</p>
+
+                    <strong>
+                        R$ ${product.pricePerDay}/dia
+                    </strong>
+                </div>
+            `;
+
+            card.onclick = () => {
+
+                window.location.href =
+                    `produto.html?id=${product._id}`;
+
+            };
+
+            productsGrid.appendChild(card);
+
+        });
+
+    }
+
+    // ==========================================
+    // BUSCA → EXPLORAR
+    // ==========================================
 
     function goToExplore() {
 
@@ -44,9 +140,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-    // ==========================
+    // ==========================================
     // CATEGORIAS
-    // ==========================
+    // ==========================================
 
     categoryCards.forEach(card => {
 
@@ -61,9 +157,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-    // ==========================
-    // LOGIN
-    // ==========================
+    // ==========================================
+    // LOGIN / PERFIL
+    // ==========================================
 
     if (loginButton) {
 
@@ -89,9 +185,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    // ==========================
+    // ==========================================
     // ANUNCIAR
-    // ==========================
+    // ==========================================
 
     announceButtons.forEach(button => {
 
@@ -114,5 +210,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
     });
+
+    // ==========================================
+    // INICIAR
+    // ==========================================
+
+    await loadProducts();
 
 });

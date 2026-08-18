@@ -1,4 +1,10 @@
+// ==========================================
+// ALUGASE — CADASTRO (API ONLINE)
+// ==========================================
+
 document.addEventListener("DOMContentLoaded", () => {
+
+    const API = "https://alugase-api.onrender.com/api/users";
 
     const form = document.querySelector("#register-form");
 
@@ -19,20 +25,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // MOSTRAR / ESCONDER SENHA
     // ==========================================
 
-    function toggleVisibility(input){
+    function toggleVisibility(input) {
 
         input.type =
             input.type === "password"
-            ? "text"
-            : "password";
+                ? "text"
+                : "password";
 
     }
 
-    togglePassword.addEventListener("click", () => {
+    togglePassword?.addEventListener("click", () => {
         toggleVisibility(password);
     });
 
-    toggleConfirm.addEventListener("click", () => {
+    toggleConfirm?.addEventListener("click", () => {
         toggleVisibility(confirmPassword);
     });
 
@@ -42,18 +48,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     phone.addEventListener("input", () => {
 
-        let value = phone.value.replace(/\D/g, "");
+        let value = phone.value.replace(/\D/g, "").slice(0, 11);
 
-        value = value.substring(0,11);
-
-        if(value.length > 10){
+        if (value.length > 10) {
 
             value = value.replace(
                 /(\d{2})(\d{5})(\d+)/,
                 "($1) $2-$3"
             );
 
-        }else{
+        } else {
 
             value = value.replace(
                 /(\d{2})(\d{4})(\d+)/,
@@ -74,60 +78,65 @@ document.addEventListener("DOMContentLoaded", () => {
 
         e.preventDefault();
 
-        if(password.value.length < 8){
+        if (name.value.trim().length < 3) {
+
+            alert("Digite seu nome completo.");
+            return;
+
+        }
+
+        if (password.value.length < 8) {
 
             alert("A senha deve possuir pelo menos 8 caracteres.");
             return;
 
         }
 
-        if(password.value !== confirmPassword.value){
+        if (password.value !== confirmPassword.value) {
 
             alert("As senhas não coincidem.");
             return;
 
         }
 
-        if(!terms.checked){
+        if (!terms.checked) {
 
             alert("Aceite os Termos de Uso.");
             return;
 
         }
 
-        const user = {
+        const newUser = {
 
             name: name.value.trim(),
             email: email.value.trim().toLowerCase(),
             phone: phone.value.trim(),
             city: city.value.trim(),
-
             password: password.value
 
         };
 
-        try{
+        try {
 
-            const response = await fetch(
-                "http://localhost:3000/api/users",
-                {
+            const response = await fetch(API, {
 
-                    method: "POST",
+                method: "POST",
 
-                    headers:{
-                        "Content-Type":"application/json"
-                    },
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-                    body: JSON.stringify(user)
+                body: JSON.stringify(newUser)
 
-                }
-            );
+            });
 
             const data = await response.json();
 
-            if(!response.ok){
+            if (!response.ok) {
 
-                throw new Error(data.error);
+                throw new Error(
+                    data.error || "Erro ao criar conta."
+                );
 
             }
 
@@ -135,9 +144,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             window.location.href = "login.html";
 
-        }catch(error){
+        } catch (error) {
 
-            alert("Erro: " + error.message);
+            alert(error.message);
 
         }
 

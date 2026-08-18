@@ -1,6 +1,10 @@
+// ==========================================
+// ALUGASE — NOVO ANÚNCIO (API ONLINE)
+// ==========================================
+
 document.addEventListener("DOMContentLoaded", () => {
 
-    const API = "http://localhost:3000/api/products";
+    const API = "https://alugase-api.onrender.com/api/products";
 
     // ==========================================
     // USUÁRIO
@@ -68,10 +72,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const sumDeposit = document.querySelector("#sum-deposit");
     const sumDelivery = document.querySelector("#sum-delivery");
 
-    let selectedImage = "📦";
+    let selectedIcon = "📦";
 
     // ==========================================
-    // MOSTRAR VEÍCULOS
+    // CATEGORIA
     // ==========================================
 
     category.addEventListener("change", () => {
@@ -87,6 +91,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         }
 
+        selectedIcon = icon.value || "📦";
+
+    });
+
+    icon.addEventListener("change", () => {
+
+        selectedIcon = icon.value;
+
     });
 
     // ==========================================
@@ -96,7 +108,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateSummary() {
 
         sumPrice.textContent = `R$ ${price.value || 0}`;
-
         sumDeposit.textContent = `R$ ${deposit.value || 0}`;
 
         sumDelivery.textContent = delivery.checked
@@ -115,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
     updateSummary();
 
     // ==========================================
-    // UPLOAD IMAGENS
+    // PREVIEW IMAGENS
     // ==========================================
 
     selectImages.onclick = () => images.click();
@@ -127,12 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const files = [...images.files];
 
-        if (!files.length) {
-            selectedImage = "📦";
-            return;
-        }
-
-        selectedImage = "🖼️";
+        if (!files.length) return;
 
         files.forEach(file => {
 
@@ -141,10 +147,11 @@ document.addEventListener("DOMContentLoaded", () => {
             reader.onload = e => {
 
                 const div = document.createElement("div");
+
                 div.className = "preview-item";
 
                 div.innerHTML = `
-                    <img src="${e.target.result}">
+                    <img src="${e.target.result}" alt="Preview">
                 `;
 
                 previewGrid.appendChild(div);
@@ -165,15 +172,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     crlv.onchange = () => {
 
-        if (crlv.files.length) {
-
-            crlvName.textContent = crlv.files[0].name;
-
-        } else {
-
-            crlvName.textContent = "Nenhum arquivo selecionado";
-
-        }
+        crlvName.textContent = crlv.files.length
+            ? crlv.files[0].name
+            : "Nenhum arquivo selecionado";
 
     };
 
@@ -186,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
         plate.value = plate.value
             .toUpperCase()
             .replace(/[^A-Z0-9]/g, "")
-            .substring(0, 7);
+            .slice(0, 7);
 
     });
 
@@ -194,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         renavam.value = renavam.value
             .replace(/\D/g, "")
-            .substring(0, 11);
+            .slice(0, 11);
 
     });
 
@@ -206,10 +207,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         e.preventDefault();
 
-        // -------------------
-        // IDENTIDADE
-        // -------------------
-
         if (!user.identityVerified) {
 
             alert("Verifique sua identidade antes de anunciar.");
@@ -219,10 +216,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
 
         }
-
-        // -------------------
-        // VEÍCULOS
-        // -------------------
 
         if (category.value === "Veículos") {
 
@@ -256,30 +249,28 @@ document.addEventListener("DOMContentLoaded", () => {
         const product = {
 
             ownerId: user._id,
-
             ownerName: user.name,
 
-            title: title.value,
-
+            title: title.value.trim(),
             category: category.value,
-
-            description: description.value,
-
-            city: city.value,
+            description: description.value.trim(),
+            city: city.value.trim(),
 
             pricePerDay: Number(price.value),
-
             deposit: Number(deposit.value),
 
             pickup: pickup.checked,
-
             delivery: delivery.checked,
 
             deliveryPrice: delivery.checked
                 ? Number(deliveryPrice.value)
                 : 0,
 
-            image: icon.value,
+            image: selectedIcon,
+
+            verified: true,
+            status: "available",
+            rating: 5.0,
 
             vehicle: category.value === "Veículos"
                 ? {
@@ -312,16 +303,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const data = await response.json();
 
-            if (!response.ok)
-                throw new Error(data.error);
+            if (!response.ok) {
+                throw new Error(data.error || "Erro ao publicar anúncio.");
+            }
 
             alert("Anúncio publicado com sucesso!");
 
             window.location.href = "perfil.html";
 
-        } catch (err) {
+        } catch (error) {
 
-            alert(err.message);
+            alert(error.message);
 
         }
 

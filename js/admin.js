@@ -1,230 +1,326 @@
-document.addEventListener("DOMContentLoaded",()=>{
+// ==========================================
+// ALUGASE — PAINEL ADMIN
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    const API = "https://alugase-api.onrender.com/api";
+
+    // ==========================================
+    // DADOS TEMPORÁRIOS
+    // (Chat será substituído pelo backend)
+    // ==========================================
+
+    let users = 0;
+    let ads = 0;
+
+    let verifications = [
+        {
+            id: 1,
+            name: "Mariana Oliveira",
+            cpf: "123.456.789-00",
+            status: "Pendente"
+        },
+        {
+            id: 2,
+            name: "Lucas Pereira",
+            cpf: "987.654.321-00",
+            status: "Pendente"
+        }
+    ];
+
+    let disputes = [
+        {
+            id: 1,
+            product: "Câmera Canon EOS",
+            value: "R$ 300",
+            reason: "Produto voltou com risco"
+        },
+        {
+            id: 2,
+            product: "Notebook Lenovo",
+            value: "R$ 500",
+            reason: "Atraso na devolução"
+        }
+    ];
 
-// ================= DADOS =================
+    let chats = [
+        {
+            id: 1,
+            user: "Gustavo Pereira",
+            status: "Aberto",
+            messages: [
+                {
+                    from: "user",
+                    text: "Olá, meu produto voltou danificado."
+                },
+                {
+                    from: "support",
+                    text: "Pode enviar fotos do produto?"
+                }
+            ]
+        }
+    ];
 
-const users=152;
-const ads=87;
+    let currentChat = chats[0];
 
-let verifications=[
- {id:1,name:"Mariana Oliveira",cpf:"123.456.789-00",status:"Pendente"},
- {id:2,name:"Lucas Pereira",cpf:"987.654.321-00",status:"Pendente"}
-];
+    // ==========================================
+    // CARREGAR MÉTRICAS
+    // ==========================================
 
-let disputes=[
- {id:1,product:"Câmera Canon EOS",value:"R$ 300",reason:"Produto voltou com risco"},
- {id:2,product:"Notebook Lenovo",value:"R$ 500",reason:"Atraso na devolução"}
-];
+    async function loadMetrics() {
 
-let chats=[
-{
- id:1,
- user:"Gustavo Pereira",
- status:"Aberto",
- messages:[
-   {from:"user",text:"Olá, meu produto voltou danificado."},
-   {from:"user",text:"Posso solicitar a caução?"},
-   {from:"support",text:"Olá Gustavo! Pode enviar as fotos do produto?"}
- ]
-},
-{
- id:2,
- user:"Mariana Oliveira",
- status:"Aberto",
- messages:[
-   {from:"user",text:"Meu aluguel foi cancelado e ainda não recebi o reembolso."}
- ]
-}
-];
+        try {
 
-let currentChat=chats[0];
+            const products = await fetch(`${API}/products`)
+                .then(r => r.json());
 
-// ================= MÉTRICAS =================
+            ads = products.length;
 
-document.querySelector("#users-count").textContent=users;
-document.querySelector("#ads-count").textContent=ads;
-document.querySelector("#tickets-count").textContent=chats.length;
-document.querySelector("#verify-count").textContent=verifications.length;
+            // Até criarmos a rota /users
+            users = 152;
 
-// ================= ABAS =================
+            document.querySelector("#users-count").textContent = users;
+            document.querySelector("#ads-count").textContent = ads;
+            document.querySelector("#tickets-count").textContent = chats.length;
+            document.querySelector("#verify-count").textContent =
+                verifications.length;
 
-document.querySelectorAll(".tab").forEach(tab=>{
- tab.onclick=()=>{
-   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-   document.querySelectorAll(".content").forEach(c=>c.classList.remove("active"));
+        } catch (error) {
 
-   tab.classList.add("active");
-   document.querySelector("#"+tab.dataset.tab).classList.add("active");
- };
-});
+            console.error(error);
 
-// ================= CHAT =================
+        }
 
-const chatList=document.querySelector("#chat-list");
-const messages=document.querySelector("#messages");
+    }
 
-function renderChatList(){
+    // ==========================================
+    // ABAS
+    // ==========================================
 
- chatList.innerHTML="";
+    document.querySelectorAll(".tab").forEach(tab => {
 
- chats.forEach(chat=>{
+        tab.onclick = () => {
 
-   const item=document.createElement("div");
+            document
+                .querySelectorAll(".tab")
+                .forEach(t => t.classList.remove("active"));
 
-   item.className=`chat-item ${currentChat.id===chat.id?"active":""}`;
+            document
+                .querySelectorAll(".content")
+                .forEach(c => c.classList.remove("active"));
 
-   item.innerHTML=`
-     <h4>${chat.user}</h4>
-     <p>${chat.messages.at(-1).text}</p>
-   `;
+            tab.classList.add("active");
 
-   item.onclick=()=>{
-     currentChat=chat;
-     renderChatList();
-     renderMessages();
-   };
+            document
+                .querySelector(`#${tab.dataset.tab}`)
+                .classList.add("active");
 
-   chatList.appendChild(item);
+        };
 
- });
+    });
 
-}
+    // ==========================================
+    // CHAT
+    // ==========================================
 
-function renderMessages(){
+    const chatList = document.querySelector("#chat-list");
+    const messages = document.querySelector("#messages");
 
- document.querySelector("#chat-user").textContent=currentChat.user;
- document.querySelector("#chat-status").textContent=currentChat.status;
+    function renderChatList() {
 
- messages.innerHTML="";
+        chatList.innerHTML = "";
 
- currentChat.messages.forEach(msg=>{
+        chats.forEach(chat => {
 
-   const div=document.createElement("div");
+            const item = document.createElement("div");
 
-   div.className=`message ${msg.from==="user"?"user":"support"}`;
+            item.className =
+                `chat-item ${currentChat.id === chat.id ? "active" : ""}`;
 
-   div.textContent=msg.text;
+            item.innerHTML = `
+                <h4>${chat.user}</h4>
+                <p>${chat.messages.at(-1).text}</p>
+            `;
 
-   messages.appendChild(div);
+            item.onclick = () => {
 
- });
+                currentChat = chat;
 
- messages.scrollTop=messages.scrollHeight;
+                renderChatList();
+                renderMessages();
 
-}
+            };
 
-document.querySelector("#send-message").onclick=()=>{
+            chatList.appendChild(item);
 
- const input=document.querySelector("#message-input");
+        });
 
- if(!input.value.trim()) return;
+    }
 
- currentChat.messages.push({
-   from:"support",
-   text:input.value
- });
+    function renderMessages() {
 
- input.value="";
+        document.querySelector("#chat-user").textContent =
+            currentChat.user;
 
- renderMessages();
- renderChatList();
+        document.querySelector("#chat-status").textContent =
+            currentChat.status;
 
-};
+        messages.innerHTML = "";
 
-// ================= VERIFICAÇÕES =================
+        currentChat.messages.forEach(msg => {
 
-function renderVerify(){
+            const div = document.createElement("div");
 
- const list=document.querySelector("#verify-list");
+            div.className =
+                `message ${msg.from === "user" ? "user" : "support"}`;
 
- list.innerHTML="";
+            div.textContent = msg.text;
 
- verifications.forEach(person=>{
+            messages.appendChild(div);
 
-   const card=document.createElement("div");
+        });
 
-   card.className="item-card";
+        messages.scrollTop = messages.scrollHeight;
 
-   card.innerHTML=`
-     <div>
-       <h3>${person.name}</h3>
-       <p>${person.cpf}</p>
-       <span class="status pending">${person.status}</span>
-     </div>
+    }
 
-     <div>
-       <button class="btn-primary approve">Aprovar</button>
-     </div>
-   `;
+    document.querySelector("#send-message").onclick = () => {
 
-   card.querySelector(".approve").onclick=()=>{
-     person.status="Aprovado";
-     card.querySelector(".status").textContent="Aprovado";
-     card.querySelector(".status").className="status approved";
-   };
+        const input = document.querySelector("#message-input");
 
-   list.appendChild(card);
+        if (!input.value.trim()) return;
 
- });
+        currentChat.messages.push({
 
-}
+            from: "support",
+            text: input.value
 
-// ================= DISPUTAS =================
+        });
 
-function renderDisputes(){
+        input.value = "";
 
- const list=document.querySelector("#dispute-list");
+        renderMessages();
+        renderChatList();
 
- list.innerHTML="";
+    };
 
- disputes.forEach(item=>{
+    // ==========================================
+    // VERIFICAÇÕES
+    // ==========================================
 
-   const card=document.createElement("div");
+    function renderVerify() {
 
-   card.className="item-card";
+        const list = document.querySelector("#verify-list");
 
-   card.innerHTML=`
-     <div>
-       <h3>${item.product}</h3>
-       <p>${item.reason}</p>
-       <strong>Caução: ${item.value}</strong>
-     </div>
+        list.innerHTML = "";
 
-     <button class="btn-primary close">
-       Encerrar
-     </button>
-   `;
+        verifications.forEach(person => {
 
-   card.querySelector(".close").onclick=()=>{
-     disputes=disputes.filter(d=>d.id!==item.id);
-     renderDisputes();
-   };
+            const card = document.createElement("div");
 
-   list.appendChild(card);
+            card.className = "item-card";
 
- });
+            card.innerHTML = `
+                <div>
+                    <h3>${person.name}</h3>
+                    <p>${person.cpf}</p>
+                    <span class="status pending">${person.status}</span>
+                </div>
 
-}
+                <button class="btn-primary approve">
+                    Aprovar
+                </button>
+            `;
 
-// ================= DASHBOARD =================
+            card.querySelector(".approve").onclick = () => {
 
-document.querySelector("#activity-list").innerHTML=`
-<p>🟢 Mariana enviou documentos para verificação.</p>
-<p>💬 Gustavo abriu um atendimento de suporte.</p>
-<p>📦 Novo anúncio publicado em São Paulo.</p>
-<p>⭐ Aluguel concluído com sucesso.</p>
-`;
+                person.status = "Aprovado";
 
-// ================= LOGOUT =================
+                renderVerify();
 
-document.querySelector("#logout").onclick=()=>{
- window.location.href="index.html";
-};
+            };
 
-// ================= INICIAR =================
+            list.appendChild(card);
 
-renderChatList();
-renderMessages();
-renderVerify();
-renderDisputes();
+        });
+
+    }
+
+    // ==========================================
+    // DISPUTAS
+    // ==========================================
+
+    function renderDisputes() {
+
+        const list = document.querySelector("#dispute-list");
+
+        list.innerHTML = "";
+
+        disputes.forEach(item => {
+
+            const card = document.createElement("div");
+
+            card.className = "item-card";
+
+            card.innerHTML = `
+                <div>
+                    <h3>${item.product}</h3>
+                    <p>${item.reason}</p>
+                    <strong>Caução: ${item.value}</strong>
+                </div>
+
+                <button class="btn-primary close">
+                    Encerrar
+                </button>
+            `;
+
+            card.querySelector(".close").onclick = () => {
+
+                disputes = disputes.filter(
+                    d => d.id !== item.id
+                );
+
+                renderDisputes();
+
+            };
+
+            list.appendChild(card);
+
+        });
+
+    }
+
+    // ==========================================
+    // DASHBOARD
+    // ==========================================
+
+    document.querySelector("#activity-list").innerHTML = `
+        <p>🟢 Nova solicitação de verificação recebida.</p>
+        <p>💬 Atendimento aberto por um usuário.</p>
+        <p>📦 Novo anúncio publicado.</p>
+        <p>⭐ Reserva concluída com sucesso.</p>
+    `;
+
+    // ==========================================
+    // LOGOUT
+    // ==========================================
+
+    document.querySelector("#logout").onclick = () => {
+
+        window.location.href = "index.html";
+
+    };
+
+    // ==========================================
+    // INICIAR
+    // ==========================================
+
+    await loadMetrics();
+
+    renderChatList();
+    renderMessages();
+    renderVerify();
+    renderDisputes();
 
 });

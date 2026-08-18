@@ -1,21 +1,23 @@
+// ==========================================
+// ALUGASE — PRODUTO (API ONLINE)
+// ==========================================
+
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const API_PRODUCTS = "http://localhost:3000/api/products";
+    const API = "https://alugase-api.onrender.com/api/products";
 
     const user = JSON.parse(localStorage.getItem("alugase_user"));
 
-    const productId = new URLSearchParams(
-        window.location.search
-    ).get("id");
+    const productId = new URLSearchParams(window.location.search).get("id");
 
     if (!productId) {
         window.location.href = "index.html";
         return;
     }
 
-    // ==========================
+    // ==========================================
     // ELEMENTOS
-    // ==========================
+    // ==========================================
 
     const categoryLabel = document.querySelector(".product-category");
     const categoryLink = document.querySelector(".product-category-link");
@@ -28,10 +30,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const description = document.querySelector(".product-description p");
 
     const price = document.querySelector(".pricing strong");
-
     const deliveryLabel = document.querySelector("#delivery-label");
     const depositTotal = document.querySelector("#deposit-total");
-
     const ownerName = document.querySelector("#owner-name");
 
     const startDate = document.querySelector("#start-date");
@@ -45,17 +45,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let product;
 
-    // ==========================
+    // ==========================================
     // CARREGAR PRODUTO
-    // ==========================
+    // ==========================================
 
     async function loadProduct() {
 
         try {
 
-            const response = await fetch(
-                `${API_PRODUCTS}/${productId}`
-            );
+            const response = await fetch(`${API}/${productId}`);
 
             if (!response.ok) throw new Error();
 
@@ -63,22 +61,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             fillScreen();
 
-        } catch {
+        } catch (error) {
+
+            console.error(error);
 
             alert("Produto não encontrado.");
-            window.location.href = "index.html";
+
+            window.location.href = "explorar.html";
 
         }
 
     }
 
-    // ==========================
+    // ==========================================
     // PREENCHER TELA
-    // ==========================
+    // ==========================================
 
     function fillScreen() {
 
-        document.title = `${product.title} | Alugase`;
+        document.title = `${product.title} | ALUGASE`;
 
         categoryLabel.textContent = product.category.toUpperCase();
         categoryLink.textContent = product.category;
@@ -94,29 +95,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         deliveryLabel.textContent = product.delivery
             ? `+ R$ ${product.deliveryPrice}`
-            : "Indisponível";
+            : "Somente retirada";
 
         depositTotal.textContent = `R$ ${product.deposit}`;
 
-        ownerName.textContent = product.ownerName || "Proprietário";
+        ownerName.textContent =
+            product.ownerName || "Usuário Verificado";
 
-        // data mínima = hoje
         const today = new Date().toISOString().split("T")[0];
 
         startDate.min = today;
         endDate.min = today;
 
+        startDate.value = today;
+        endDate.value = today;
+
         updateTotals();
 
     }
 
-    // ==========================
+    // ==========================================
     // DIÁRIAS
-    // ==========================
+    // ==========================================
 
     function getDays() {
-
-        if (!startDate.value || !endDate.value) return 0;
 
         const start = new Date(startDate.value);
         const end = new Date(endDate.value);
@@ -125,7 +127,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             (end - start) / (1000 * 60 * 60 * 24)
         ) + 1;
 
-        return diff > 0 ? diff : 0;
+        return diff > 0 ? diff : 1;
 
     }
 
@@ -135,21 +137,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const days = getDays();
 
-        const delivery =
+        const deliverySelected =
             document.querySelector(
                 'input[name="delivery"]:checked'
-            ).value === "delivery" &&
-            product.delivery;
+            )?.value === "delivery";
 
-        const deliveryValue = delivery
-            ? product.deliveryPrice
-            : 0;
+        const deliveryValue =
+            deliverySelected && product.delivery
+                ? product.deliveryPrice
+                : 0;
 
         const daily = days * product.pricePerDay;
 
         dailyTotal.textContent = `R$ ${daily}`;
         deliveryTotal.textContent = `R$ ${deliveryValue}`;
-        rentalTotal.textContent = `R$ ${daily + deliveryValue + product.deposit}`;
+        rentalTotal.textContent =
+            `R$ ${daily + deliveryValue + product.deposit}`;
 
     }
 
@@ -169,31 +172,32 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document
         .querySelectorAll('input[name="delivery"]')
-        .forEach(radio => {
-            radio.addEventListener("change", updateTotals);
-        });
+        .forEach(radio =>
+            radio.addEventListener("change", updateTotals)
+        );
 
-    // ==========================
-    // IR PARA RESERVA
-    // ==========================
+    // ==========================================
+    // CONTINUAR PARA RESERVA
+    // ==========================================
 
     rentalButton.addEventListener("click", () => {
 
         if (!user) {
 
             alert("Faça login para continuar.");
+
             window.location.href = "login.html";
+
             return;
 
         }
 
         if (!user.identityVerified) {
 
-            alert(
-                "Você precisa verificar sua identidade antes de realizar aluguéis."
-            );
+            alert("Verifique sua identidade antes de alugar.");
 
             window.location.href = "perfil.html";
+
             return;
 
         }
@@ -203,26 +207,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             !user.driverLicenseVerified
         ) {
 
-            alert(
-                "Este veículo exige uma CNH verificada."
-            );
+            alert("É necessário possuir uma CNH verificada.");
 
             window.location.href = "perfil.html";
+
             return;
 
         }
 
-        if (getDays() <= 0) {
-
-            alert("Selecione um período válido.");
-            return;
-
-        }
-
-        // Agora abre a página de reserva
         window.location.href = `reserva.html?id=${product._id}`;
 
     });
+
+    // ==========================================
 
     await loadProduct();
 

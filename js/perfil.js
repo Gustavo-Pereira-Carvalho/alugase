@@ -1,10 +1,14 @@
+// ==========================================
+// ALUGASE — PERFIL (API ONLINE)
+// ==========================================
+
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const API = "http://localhost:3000/api";
+    const API = "https://alugase-api.onrender.com/api";
 
-    // ==========================
+    // ==========================================
     // USUÁRIO
-    // ==========================
+    // ==========================================
 
     const user = JSON.parse(localStorage.getItem("alugase_user"));
 
@@ -13,9 +17,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    // ==========================
+    // ==========================================
     // ELEMENTOS
-    // ==========================
+    // ==========================================
 
     const avatar = document.querySelector("#avatar");
     const userName = document.querySelector("#user-name");
@@ -28,16 +32,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const adsList = document.querySelector("#ads-list");
     const rentalsList = document.querySelector("#rentals-list");
 
-    // ==========================
+    // ==========================================
     // PERFIL
-    // ==========================
+    // ==========================================
 
     userName.textContent = user.name;
 
     const year = new Date(user.createdAt).getFullYear();
 
-    userLocation.textContent =
-        `${user.city} • Membro desde ${year}`;
+    userLocation.textContent = `${user.city} • Membro desde ${year}`;
 
     avatar.textContent = user.name
         .split(" ")
@@ -45,8 +48,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .slice(0, 2)
         .join("")
         .toUpperCase();
-
-    // ---------- Verificações ----------
 
     if (user.identityVerified) {
 
@@ -78,9 +79,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-    // ==========================
+    // ==========================================
     // ABAS
-    // ==========================
+    // ==========================================
 
     const tabs = document.querySelectorAll(".tab");
     const contents = document.querySelectorAll(".content");
@@ -102,9 +103,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     });
 
-    // ==========================
+    // ==========================================
     // BOTÕES
-    // ==========================
+    // ==========================================
 
     document.querySelector("#logout").onclick = () => {
 
@@ -124,146 +125,156 @@ document.addEventListener("DOMContentLoaded", async () => {
         () => window.location.href = "novo-anuncio.html"
     );
 
-    // ==========================
-    // CARREGAR ANÚNCIOS
-    // ==========================
+    // ==========================================
+    // ANÚNCIOS
+    // ==========================================
 
     async function loadAds() {
 
-        const response = await fetch(
-            `${API}/products/user/${user._id}`
-        );
+        try {
 
-        const products = await response.json();
+            const response = await fetch(
+                `${API}/products/user/${user._id}`
+            );
 
-        adsList.innerHTML = "";
+            const products = await response.json();
 
-        if (products.length === 0) {
+            adsList.innerHTML = "";
 
-            document.querySelector("#empty-ads").style.display = "block";
-            return;
+            if (products.length === 0) {
 
-        }
+                document.querySelector("#empty-ads").style.display = "block";
+                return;
 
-        document.querySelector("#empty-ads").style.display = "none";
+            }
 
-        products.forEach(product => {
+            document.querySelector("#empty-ads").style.display = "none";
 
-            adsList.innerHTML += `
-            <div class="item-card">
+            products.forEach(product => {
 
-                <div class="item-image">
-                    ${product.image}
-                </div>
+                adsList.innerHTML += `
+                <div class="item-card">
 
-                <div class="item-info">
+                    <div class="item-image">
+                        ${product.image || "📦"}
+                    </div>
 
-                    <h3>${product.title}</h3>
+                    <div class="item-info">
 
-                    <p>R$ ${product.pricePerDay} / dia</p>
+                        <h3>${product.title}</h3>
 
-                    <span class="status ${product.status === "available"
-                        ? "available"
-                        : "rented"}">
+                        <p>R$ ${product.pricePerDay} / dia</p>
 
-                        ${product.status === "available"
-                            ? "Disponível"
-                            : "Alugado"}
+                        <span class="status ${product.status === "available" ? "available" : "rented"}">
+                            ${product.status === "available" ? "Disponível" : "Alugado"}
+                        </span>
 
-                    </span>
+                    </div>
 
-                </div>
+                    <button
+                        class="btn-secondary edit-ad"
+                        data-id="${product._id}"
+                    >
+                        Editar
+                    </button>
 
-                <button
-                    class="btn-secondary edit-ad"
-                    data-id="${product._id}"
-                >
-                    Editar
-                </button>
-
-            </div>`;
-
-        });
-
-        document.querySelectorAll(".edit-ad")
-            .forEach(button => {
-
-                button.onclick = () => {
-
-                    window.location.href =
-                        `editar-anuncio.html?id=${button.dataset.id}`;
-
-                };
+                </div>`;
 
             });
 
-    }
+            document.querySelectorAll(".edit-ad")
+                .forEach(button => {
 
-    // ==========================
-    // CARREGAR ALUGUÉIS
-    // ==========================
+                    button.onclick = () => {
 
-    async function loadRentals() {
+                        window.location.href =
+                            `editar-anuncio.html?id=${button.dataset.id}`;
 
-        const response = await fetch(
-            `${API}/rentals/user/${user._id}`
-        );
+                    };
 
-        const rentals = await response.json();
+                });
 
-        rentalsList.innerHTML = "";
+        } catch (error) {
 
-        if (rentals.length === 0) {
-
-            document.querySelector("#empty-rentals").style.display = "block";
-            return;
+            console.error(error);
 
         }
 
-        document.querySelector("#empty-rentals").style.display = "none";
+    }
 
-        rentals.forEach(rental => {
+    // ==========================================
+    // ALUGUÉIS
+    // ==========================================
 
-            const product = rental.productId;
+    async function loadRentals() {
 
-            const start =
-                new Date(rental.startDate)
-                .toLocaleDateString("pt-BR");
+        try {
 
-            const end =
-                new Date(rental.endDate)
-                .toLocaleDateString("pt-BR");
+            const response = await fetch(
+                `${API}/rentals/user/${user._id}`
+            );
 
-            rentalsList.innerHTML += `
-            <div class="item-card">
+            const rentals = await response.json();
 
-                <div class="item-image">
-                    ${product.image}
-                </div>
+            rentalsList.innerHTML = "";
 
-                <div class="item-info">
+            if (rentals.length === 0) {
 
-                    <h3>${product.title}</h3>
+                document.querySelector("#empty-rentals").style.display = "block";
+                return;
 
-                    <p>${start} até ${end}</p>
+            }
 
-                    <span class="status progress">
-                        ${rental.status}
-                    </span>
+            document.querySelector("#empty-rentals").style.display = "none";
 
-                </div>
+            rentals.forEach(rental => {
 
-                <strong>R$ ${rental.total}</strong>
+                const product = rental.productId;
 
-            </div>`;
+                const start =
+                    new Date(rental.startDate)
+                        .toLocaleDateString("pt-BR");
 
-        });
+                const end =
+                    new Date(rental.endDate)
+                        .toLocaleDateString("pt-BR");
+
+                rentalsList.innerHTML += `
+                <div class="item-card">
+
+                    <div class="item-image">
+                        ${product.image || "📦"}
+                    </div>
+
+                    <div class="item-info">
+
+                        <h3>${product.title}</h3>
+
+                        <p>${start} até ${end}</p>
+
+                        <span class="status progress">
+                            ${rental.status}
+                        </span>
+
+                    </div>
+
+                    <strong>R$ ${rental.total}</strong>
+
+                </div>`;
+
+            });
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
 
     }
 
-    // ==========================
+    // ==========================================
     // CPF
-    // ==========================
+    // ==========================================
 
     const cpf = document.querySelector("#cpf");
     const cpfStatus = document.querySelector("#cpf-status");
@@ -325,11 +336,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     });
 
-    // ==========================
-    // RG
-    // ==========================
+    // ==========================================
+    // RG / CNH / CEP
+    // ==========================================
 
     const rg = document.querySelector("#rg");
+    const cnh = document.querySelector("#cnh");
+    const cep = document.querySelector("#cep");
+
+    const number = document.querySelector("#number");
+    const street = document.querySelector("#street");
+    const district = document.querySelector("#district");
+    const city = document.querySelector("#city");
+    const state = document.querySelector("#state");
 
     rg?.addEventListener("input", () => {
 
@@ -359,25 +378,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     });
 
-    // ==========================
-    // CNH
-    // ==========================
-
-    const cnh = document.querySelector("#cnh");
-
     cnh?.addEventListener("input", () => {
 
-        cnh.value = cnh.value
-            .replace(/\D/g, "")
-            .slice(0, 11);
+        cnh.value = cnh.value.replace(/\D/g, "").slice(0, 11);
 
     });
-
-    // ==========================
-    // CEP
-    // ==========================
-
-    const cep = document.querySelector("#cep");
 
     cep?.addEventListener("input", () => {
 
@@ -410,64 +415,71 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     });
 
-    // ==========================
-    // ENVIAR DOCUMENTOS
-    // ==========================
+    // ==========================================
+    // VERIFICAÇÃO
+    // ==========================================
 
-    document.querySelector("#verify-account")?.addEventListener("click", async () => {
+    document.querySelector("#verify-account")
+        ?.addEventListener("click", async () => {
 
-        if (!validateCPF(cpf.value)) {
-            alert("CPF inválido.");
-            return;
-        }
-
-        if (rg.value.length < 11) {
-            alert("RG inválido.");
-            return;
-        }
-
-        const body = {
-
-            cpf: cpf.value,
-            rg: rg.value,
-            cnh: cnh.value,
-            cep: cep.value,
-            number: number.value,
-
-            street: street.value,
-            district: district.value,
-            city: city.value,
-            state: state.value
-
-        };
-
-        const response = await fetch(
-            `${API}/users/verify/${user._id}`,
-            {
-                method: "PUT",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(body)
+            if (!validateCPF(cpf.value)) {
+                alert("CPF inválido.");
+                return;
             }
-        );
 
-        const updated = await response.json();
+            const body = {
 
-        localStorage.setItem(
-            "alugase_user",
-            JSON.stringify(updated)
-        );
+                cpf: cpf.value,
+                rg: rg.value,
+                cnh: cnh.value,
 
-        alert("Documentos enviados com sucesso!");
+                cep: cep.value,
+                number: number.value,
 
-        location.reload();
+                street: street.value,
+                district: district.value,
+                city: city.value,
+                state: state.value
 
-    });
+            };
 
-    // ==========================
+            try {
+
+                const response = await fetch(
+                    `${API}/users/verify/${user._id}`,
+                    {
+
+                        method: "PUT",
+
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify(body)
+
+                    }
+                );
+
+                const updated = await response.json();
+
+                localStorage.setItem(
+                    "alugase_user",
+                    JSON.stringify(updated)
+                );
+
+                alert("Documentos enviados com sucesso!");
+
+                location.reload();
+
+            } catch (error) {
+
+                alert("Erro ao enviar documentos.");
+
+            }
+
+        });
+
+    // ==========================================
 
     await loadAds();
     await loadRentals();

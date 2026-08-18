@@ -1,10 +1,11 @@
 // ==========================================
-// ALUGASE — RESERVA
+// ALUGASE — RESERVA (API ONLINE)
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const API_PRODUCTS = "http://localhost:3000/api/products";
+    const API_PRODUCTS = "https://alugase-api.onrender.com/api/products";
+    const API_RENTALS = "https://alugase-api.onrender.com/api/rentals";
 
     const user = JSON.parse(localStorage.getItem("alugase_user"));
 
@@ -51,9 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
 
-            const response = await fetch(
-                `${API_PRODUCTS}/${productId}`
-            );
+            const response = await fetch(`${API_PRODUCTS}/${productId}`);
 
             if (!response.ok)
                 throw new Error();
@@ -113,7 +112,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ==========================
-    // CALCULAR TOTAL
+    // CALCULAR
     // ==========================
 
     function calculate() {
@@ -148,15 +147,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         deliveryTotal.textContent = `R$ ${delivery}`;
         grandTotal.textContent = `R$ ${total}`;
 
+        return { days, rent, delivery, total };
+
     }
 
     startDate.addEventListener("change", () => {
 
         endDate.min = startDate.value;
 
-        if (endDate.value < startDate.value) {
+        if (endDate.value < startDate.value)
             endDate.value = startDate.value;
-        }
 
         calculate();
 
@@ -174,26 +174,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document
         .querySelector("#confirm-reservation")
-        .addEventListener("click", () => {
+        .addEventListener("click", async () => {
+
+            const values = calculate();
 
             const reservation = {
 
-                id: Date.now().toString(),
-
                 productId: product._id,
-
-                productTitle: product.title,
-
-                productImage: product.image,
 
                 ownerId: product.ownerId,
 
-                ownerName:
-                    product.ownerName || "Proprietário",
-
                 renterId: user._id,
-
-                renterName: user.name,
 
                 startDate: startDate.value,
 
@@ -202,78 +193,43 @@ document.addEventListener("DOMContentLoaded", async () => {
                 delivery:
                     document.querySelector(
                         'input[name="delivery"]:checked'
-                    ).value,
+                    ).value === "delivery",
 
                 notes: notes.value,
 
-                total: grandTotal.textContent,
-
-                status: "pending"
+                total: values.total
 
             };
 
-            // Salva reserva temporariamente
+            try {
 
-            const reservations = JSON.parse(
-                localStorage.getItem("alugase_reservations")
-            ) || [];
+                const response = await fetch(API_RENTALS, {
 
-            reservations.push(reservation);
+                    method: "POST",
 
-            localStorage.setItem(
-                "alugase_reservations",
-                JSON.stringify(reservations)
-            );
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
 
-            // Cria chat automaticamente
+                    body: JSON.stringify(reservation)
 
-            const chats = JSON.parse(
-                localStorage.getItem("alugase_chats")
-            ) || [];
+                });
 
-            chats.push({
+                const data = await response.json();
 
-                id: reservation.id,
+                if (!response.ok)
+                    throw new Error(data.error);
 
-                productId: product._id,
+                alert("Reserva criada com sucesso!");
 
-                product: product.title,
+                // Depois criaremos o chat real
+                window.location.href = "perfil.html";
 
-                owner: reservation.ownerName,
+            } catch (error) {
 
-                ownerAvatar:
-                    reservation.ownerName
-                        .charAt(0)
-                        .toUpperCase(),
+                alert(error.message);
 
-                online: true,
-
-                messages: [
-                    {
-                        sender: "owner",
-                        text:
-                            "Olá! Recebi sua solicitação de aluguel.",
-                        time: new Date().toLocaleTimeString(
-                            "pt-BR",
-                            {
-                                hour: "2-digit",
-                                minute: "2-digit"
-                            }
-                        )
-                    }
-                ]
-
-            });
-
-            localStorage.setItem(
-                "alugase_chats",
-                JSON.stringify(chats)
-            );
-
-            alert("Solicitação enviada com sucesso!");
-
-            window.location.href =
-                `chat.html?chat=${reservation.id}`;
+            }
 
         });
 
