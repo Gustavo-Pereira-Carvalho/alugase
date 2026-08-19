@@ -27,18 +27,16 @@
     position:sticky;
     top:20px;
     width:100%;
-    max-width:560px;
 }
 
 .main-product-image{
     width:100%;
     aspect-ratio:1/1;
-
+    max-height:560px;
+    background:#f6faf7;
     border:1px solid var(--border);
-    border-radius:20px;
+    border-radius:22px;
     overflow:hidden;
-    background:#f8faf9;
-
     display:flex;
     align-items:center;
     justify-content:center;
@@ -52,29 +50,35 @@
 }
 
 .emoji-image{
-    font-size:120px;
+    font-size:110px;
 }
-
-/* Miniaturas */
 
 .product-thumbnails{
     display:flex;
     gap:10px;
     margin-top:14px;
-    flex-wrap:wrap;
+    overflow-x:auto;
+    padding-bottom:4px;
+}
+
+.product-thumbnails::-webkit-scrollbar{
+    height:6px;
+}
+
+.product-thumbnails::-webkit-scrollbar-thumb{
+    background:#d1d5db;
+    border-radius:20px;
 }
 
 .thumbnail{
     width:78px;
     height:78px;
-
     border-radius:12px;
     border:2px solid transparent;
-
     overflow:hidden;
     background:#fff;
     cursor:pointer;
-
+    flex-shrink:0;
     padding:0;
 }
 
@@ -82,14 +86,63 @@
     width:100%;
     height:100%;
     object-fit:cover;
+    display:block;
 }
 
 .thumbnail.active{
     border-color:#16A34A;
 }
 
-.thumbnail span{
+.thumbnail.emoji{
+    display:flex;
+    align-items:center;
+    justify-content:center;
     font-size:34px;
+}
+
+/* ==========================================
+   RESPONSIVIDADE
+========================================== */
+
+@media(max-width:950px){
+
+    .product-details{
+        grid-template-columns:1fr;
+        gap:32px;
+    }
+
+    .product-gallery{
+        position:static;
+    }
+
+    .main-product-image{
+        max-height:420px;
+    }
+
+}
+
+@media(max-width:600px){
+
+    .product-page{
+        width:94%;
+        padding-top:20px;
+    }
+
+    .main-product-image{
+        aspect-ratio:1/1;
+        max-height:330px;
+        border-radius:18px;
+    }
+
+    .thumbnail{
+        width:64px;
+        height:64px;
+    }
+
+    .emoji-image{
+        font-size:80px;
+    }
+
 }
 /* INFO */
 
