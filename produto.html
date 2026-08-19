@@ -1,185 +1,469 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Produto | Alugase</title>
 
-  <link rel="stylesheet" href="./css/global.css">
-  <link rel="stylesheet" href="./css/produto.css">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Produto | Alugase</title>
+
+    <link
+        rel="stylesheet"
+        href="./css/global.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="./css/produto.css"
+    >
+
 </head>
+
 <body>
 
 <header>
-  <nav class="navbar">
 
-    <div class="logo">
-      <a href="index.html">
-        <img src="assets/logo.png" alt="Logo">
-        <h2>ALUGASE</h2>
-      </a>
-    </div>
+    <nav class="navbar">
 
-    <ul class="nav-links">
-      <li><a href="index.html">Início</a></li>
-      <li><a href="explorar.html">Explorar</a></li>
-      <li><a href="index.html#categorias">Categorias</a></li>
-    </ul>
+        <div class="logo">
 
-    <div class="nav-buttons">
-      <button id="login-button" class="btn-secondary">Entrar</button>
-      <button id="announce-button" class="btn-primary">Anunciar</button>
-    </div>
+            <a href="index.html">
 
-  </nav>
+                <img
+                    src="assets/logo.png"
+                    alt="Logo Alugase"
+                >
+
+                <h2>ALUGASE</h2>
+
+            </a>
+
+        </div>
+
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">
+                    Início
+                </a>
+            </li>
+
+            <li>
+                <a href="explorar.html">
+                    Explorar
+                </a>
+            </li>
+
+            <li>
+                <a href="index.html#categorias">
+                    Categorias
+                </a>
+            </li>
+
+        </ul>
+
+
+        <div class="nav-buttons">
+
+            <button
+                id="login-button"
+                class="btn-secondary"
+            >
+                Entrar
+            </button>
+
+            <button
+                id="announce-button"
+                class="btn-primary"
+            >
+                Anunciar
+            </button>
+
+        </div>
+
+    </nav>
+
 </header>
+
 
 <main class="product-page">
 
-  <div class="breadcrumb">
-    <a href="index.html">Início</a>
-    <span>›</span>
-    <a class="product-category-link">Categoria</a>
-    <span>›</span>
-    <span id="breadcrumb-title">Produto</span>
-  </div>
 
-  <section class="product-details">
+    <!-- ==========================================
+         BREADCRUMB
+    =========================================== -->
 
-    <!-- GALERIA -->
-<div class="product-gallery">
+    <div class="breadcrumb">
 
-    <div class="main-product-image" id="main-image">
-        <span>📦</span>
+        <a href="index.html">
+            Início
+        </a>
+
+        <span>›</span>
+
+        <a
+            href="explorar.html"
+            class="product-category-link"
+        >
+            Categoria
+        </a>
+
+        <span>›</span>
+
+        <span id="breadcrumb-title">
+            Produto
+        </span>
+
     </div>
 
-    <div class="product-thumbnails" id="product-thumbnails"></div>
 
-</div>
+    <!-- ==========================================
+         PRODUTO
+    =========================================== -->
 
-    <!-- INFO -->
-    <div class="product-info">
+    <section class="product-details">
 
-      <span class="product-category">CATEGORIA</span>
 
-      <h1 id="product-title">Carregando...</h1>
+        <!-- ======================================
+             GALERIA
+        ======================================= -->
 
-      <div class="product-rating">
-        <strong>⭐ 5.0</strong>
-        <span>0 avaliações</span>
-      </div>
+        <div class="product-gallery">
 
-      <p class="product-location">📍 Cidade</p>
+            <div
+                class="main-product-image"
+                id="main-image"
+            >
 
-      <div class="product-description">
-        <h2>Sobre este produto</h2>
-        <p>Descrição...</p>
-      </div>
+                <span>📦</span>
 
-      <div class="pricing">
-        <span>A partir de</span>
-        <strong>R$ 0</strong>
-        <small>/dia</small>
-      </div>
+            </div>
 
-      <div class="rental-box">
 
-        <h2>Escolha o período</h2>
-
-        <div class="date-fields">
-
-          <div class="date-field">
-            <label>Retirada</label>
-            <input type="date" id="start-date">
-          </div>
-
-          <div class="date-field">
-            <label>Devolução</label>
-            <input type="date" id="end-date">
-          </div>
+            <div
+                class="product-thumbnails"
+                id="product-thumbnails"
+            ></div>
 
         </div>
 
-        <div class="delivery-options">
 
-          <h3>Entrega</h3>
+        <!-- ======================================
+             INFORMAÇÕES
+        ======================================= -->
 
-          <label class="delivery-option">
-            <input type="radio" name="delivery" value="pickup" checked>
-            <span>📍 Retirar</span>
-            <strong>Grátis</strong>
-          </label>
+        <div class="product-info">
 
-          <label class="delivery-option">
-            <input type="radio" name="delivery" value="delivery">
-            <span>🚚 Entrega</span>
-            <strong id="delivery-label">+ R$ 0</strong>
-          </label>
+
+            <span class="product-category">
+                CATEGORIA
+            </span>
+
+
+            <h1 id="product-title">
+                Carregando...
+            </h1>
+
+
+            <div class="product-rating">
+
+                <strong>
+                    ⭐ <span id="product-rating">
+                        5.0
+                    </span>
+                </strong>
+
+                <span>
+                    <span id="product-reviews">
+                        0
+                    </span>
+                    avaliações
+                </span>
+
+            </div>
+
+
+            <p
+                class="product-location"
+                id="product-location"
+            >
+                📍 Cidade
+            </p>
+
+
+            <!-- DESCRIÇÃO -->
+
+            <div class="product-description">
+
+                <h2>
+                    Sobre este produto
+                </h2>
+
+                <p id="product-description">
+                    Descrição...
+                </p>
+
+            </div>
+
+
+            <!-- PREÇO -->
+
+            <div class="pricing">
+
+                <span>
+                    A partir de
+                </span>
+
+                <strong>
+                    R$ 0
+                </strong>
+
+                <small>
+                    /dia
+                </small>
+
+            </div>
+
+
+            <!-- ==================================
+                 CAIXA DE ALUGUEL
+            =================================== -->
+
+            <div class="rental-box">
+
+                <h2>
+                    Escolha o período
+                </h2>
+
+
+                <!-- DATAS -->
+
+                <div class="date-fields">
+
+                    <div class="date-field">
+
+                        <label for="start-date">
+                            Retirada
+                        </label>
+
+                        <input
+                            type="date"
+                            id="start-date"
+                        >
+
+                    </div>
+
+
+                    <div class="date-field">
+
+                        <label for="end-date">
+                            Devolução
+                        </label>
+
+                        <input
+                            type="date"
+                            id="end-date"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- ENTREGA -->
+
+                <div class="delivery-options">
+
+                    <h3>
+                        Entrega
+                    </h3>
+
+
+                    <label class="delivery-option">
+
+                        <input
+                            type="radio"
+                            name="delivery"
+                            value="pickup"
+                            checked
+                        >
+
+                        <span>
+                            📍 Retirar
+                        </span>
+
+                        <strong>
+                            Grátis
+                        </strong>
+
+                    </label>
+
+
+                    <label class="delivery-option">
+
+                        <input
+                            type="radio"
+                            name="delivery"
+                            value="delivery"
+                        >
+
+                        <span>
+                            🚚 Entrega
+                        </span>
+
+                        <strong id="delivery-label">
+                            + R$ 0
+                        </strong>
+
+                    </label>
+
+                </div>
+
+
+                <!-- RESUMO -->
+
+                <div class="rental-summary">
+
+                    <div>
+
+                        <span>
+                            Diárias
+                        </span>
+
+                        <strong id="daily-total">
+                            R$ 0
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Entrega
+                        </span>
+
+                        <strong id="delivery-total">
+                            R$ 0
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Caução
+                        </span>
+
+                        <strong id="deposit-total">
+                            R$ 0
+                        </strong>
+
+                    </div>
+
+
+                    <div class="summary-total">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <strong id="rental-total">
+                            R$ 0
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    id="rental-button"
+                    class="btn-primary rental-button"
+                >
+                    Solicitar aluguel
+                </button>
+
+            </div>
 
         </div>
 
-        <div class="rental-summary">
+    </section>
 
-          <div>
-            <span>Diárias</span>
-            <strong id="daily-total">R$ 0</strong>
-          </div>
 
-          <div>
-            <span>Entrega</span>
-            <strong id="delivery-total">R$ 0</strong>
-          </div>
+    <!-- ==========================================
+         PROPRIETÁRIO
+    =========================================== -->
 
-          <div>
-            <span>Caução</span>
-            <strong id="deposit-total">R$ 0</strong>
-          </div>
+    <section class="owner-section">
 
-          <div class="summary-total">
-            <span>Total</span>
-            <strong id="rental-total">R$ 0</strong>
-          </div>
+        <h2>
+            Sobre o proprietário
+        </h2>
+
+
+        <div class="owner-card">
+
+
+            <!-- FOTO -->
+
+            <div
+                class="owner-avatar"
+                id="owner-avatar"
+            >
+                👤
+            </div>
+
+
+            <!-- INFORMAÇÕES -->
+
+            <div class="owner-info">
+
+                <h3 id="owner-name">
+                    Proprietário
+                </h3>
+
+
+                <p id="owner-verification">
+                    ✓ Usuário verificado
+                </p>
+
+
+                <div class="owner-extra">
+
+                    <span>
+                        ⭐ <strong id="owner-rating">
+                            5.0
+                        </strong>
+                    </span>
+
+                    <span>
+                        <strong id="owner-reviews">
+                            0
+                        </strong>
+                        avaliações
+                    </span>
+
+                </div>
+
+            </div>
 
         </div>
 
-        <button id="rental-button" class="btn-primary rental-button">
-          Solicitar aluguel
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
- <section class="owner-section">
-
-  <h2>Sobre o proprietário</h2>
-
-  <div class="owner-card">
-
-    <div class="owner-avatar" id="owner-avatar">
-      👤
-    </div>
-
-    <div class="owner-info">
-
-      <h3 id="owner-name">
-        Proprietário
-      </h3>
-
-      <p id="owner-status">
-        ✓ Usuário verificado
-      </p>
-
-    </div>
-
-  </div>
-
-</section>
+    </section>
 
 </main>
 
+
 <script src="./js/produto.js"></script>
+
 </body>
+
 </html>
