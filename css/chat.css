@@ -1169,3 +1169,196 @@
     }
 
 }
+
+/* ==========================================
+   PRODUTO NO CHAT
+========================================== */
+
+.chat-product-card{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    margin:0 18px 18px;
+
+    padding:14px;
+
+    background:#fff;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:16px;
+
+    position:relative;
+
+}
+
+
+.chat-product-image{
+
+    width:90px;
+
+    height:80px;
+
+    min-width:90px;
+
+    border-radius:12px;
+
+    background:#f3f4f6;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    overflow:hidden;
+
+}
+
+
+.chat-product-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+
+.chat-product-image span{
+
+    font-size:28px;
+
+}
+
+
+.chat-product-info{
+
+    min-width:0;
+
+    flex:1;
+
+}
+
+
+.chat-product-category{
+
+    display:inline-block;
+
+    padding:4px 9px;
+
+    border-radius:999px;
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+    font-size:11px;
+
+    font-weight:600;
+
+    margin-bottom:5px;
+
+}
+
+
+.chat-product-info h3{
+
+    margin:0 0 5px;
+
+    font-size:16px;
+
+}
+
+
+.chat-product-info p{
+
+    margin:4px 0;
+
+    color:#6b7280;
+
+    font-size:13px;
+
+}
+
+
+.chat-product-info strong{
+
+    display:block;
+
+    margin-top:7px;
+
+    color:#166534;
+
+    font-size:14px;
+
+}
+
+
+.chat-product-status{
+
+    align-self:flex-start;
+
+    padding:6px 10px;
+
+    border-radius:999px;
+
+    background:#dcfce7;
+
+    color:#15803d;
+
+    font-size:11px;
+
+    font-weight:700;
+
+}
+
+
+/* ==========================================
+   CELULAR
+========================================== */
+
+@media (max-width:600px){
+
+    .chat-product-card{
+
+        margin:0 14px 14px;
+
+        gap:12px;
+
+        padding:10px;
+
+    }
+
+
+    .chat-product-image{
+
+        width:70px;
+
+        height:65px;
+
+        min-width:70px;
+
+    }
+
+
+    .chat-product-info h3{
+
+        font-size:14px;
+
+    }
+
+
+    .chat-product-status{
+
+        display:none;
+
+    }
+
+}
