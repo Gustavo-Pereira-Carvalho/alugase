@@ -1,6 +1,11 @@
+// ==========================================
+// ALUGASE — PERFIL
+// ==========================================
+
 document.addEventListener("DOMContentLoaded", async () => {
 
     const API = "https://alugase-api.onrender.com/api";
+
 
     // ==========================================
     // USUÁRIO
@@ -18,32 +23,43 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
+
     // ==========================================
     // ELEMENTOS
     // ==========================================
 
     const avatar = document.querySelector("#avatar");
-    const avatarImage = document.querySelector("#avatar-image");
-    const avatarInitials = document.querySelector("#avatar-initials");
 
-    const avatarEdit = document.querySelector("#avatar-edit");
-    const profileImageInput = document.querySelector("#profile-image-input");
+    const profileImageInput =
+        document.querySelector("#profile-image-input");
 
-    const userName = document.querySelector("#user-name");
-    const userLocation = document.querySelector("#user-location");
+    const userName =
+        document.querySelector("#user-name");
 
-    const verifiedBadge = document.querySelector("#verified-badge");
-    const identityStatus = document.querySelector("#identity-status");
-    const cnhStatus = document.querySelector("#cnh-status");
+    const userLocation =
+        document.querySelector("#user-location");
 
-    const adsList = document.querySelector("#ads-list");
-    const rentalsList = document.querySelector("#rentals-list");
+    const verifiedBadge =
+        document.querySelector("#verified-badge");
 
-    const notificationBadge = document.querySelector("#notification-badge");
+    const identityStatus =
+        document.querySelector("#identity-status");
+
+    const cnhStatus =
+        document.querySelector("#cnh-status");
+
+    const adsList =
+        document.querySelector("#ads-list");
+
+    const rentalsList =
+        document.querySelector("#rentals-list");
+
+    const notificationBadge =
+        document.querySelector("#notification-badge");
 
 
     // ==========================================
-    // FOTO DE PERFIL
+    // INICIAIS
     // ==========================================
 
     function getInitials(name) {
@@ -63,27 +79,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
+    // ==========================================
+    // MOSTRAR AVATAR
+    // ==========================================
+
     function renderAvatar() {
 
-        const initials = getInitials(user.name);
-
-        avatarInitials.textContent = initials;
+        avatar.innerHTML = "";
 
         if (user.profileImage) {
 
-            avatarImage.src = user.profileImage;
+            const img = document.createElement("img");
 
-            avatarImage.style.display = "block";
+            img.src = user.profileImage;
 
-            avatarInitials.style.display = "none";
+            img.alt = `Foto de perfil de ${user.name}`;
+
+            img.onerror = () => {
+
+                avatar.innerHTML =
+                    getInitials(user.name);
+
+            };
+
+            avatar.appendChild(img);
 
         } else {
 
-            avatarImage.removeAttribute("src");
-
-            avatarImage.style.display = "none";
-
-            avatarInitials.style.display = "block";
+            avatar.textContent =
+                getInitials(user.name);
 
         }
 
@@ -94,292 +118,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // SELECIONAR FOTO
-    // ==========================================
-
-    avatarEdit?.addEventListener("click", () => {
-
-        profileImageInput?.click();
-
-    });
-
-
-    avatar?.addEventListener("click", () => {
-
-        profileImageInput?.click();
-
-    });
-
-
-    // ==========================================
-    // COMPRIMIR IMAGEM
-    // ==========================================
-
-    function compressImage(file) {
-
-        return new Promise((resolve, reject) => {
-
-            const reader = new FileReader();
-
-            reader.onload = event => {
-
-                const image = new Image();
-
-                image.onload = () => {
-
-                    const MAX_SIZE = 800;
-
-                    let width = image.width;
-                    let height = image.height;
-
-
-                    if (width > height) {
-
-                        if (width > MAX_SIZE) {
-
-                            height =
-                                height * (MAX_SIZE / width);
-
-                            width = MAX_SIZE;
-
-                        }
-
-                    } else {
-
-                        if (height > MAX_SIZE) {
-
-                            width =
-                                width * (MAX_SIZE / height);
-
-                            height = MAX_SIZE;
-
-                        }
-
-                    }
-
-
-                    const canvas =
-                        document.createElement("canvas");
-
-                    canvas.width = Math.round(width);
-                    canvas.height = Math.round(height);
-
-
-                    const context =
-                        canvas.getContext("2d");
-
-                    context.drawImage(
-                        image,
-                        0,
-                        0,
-                        canvas.width,
-                        canvas.height
-                    );
-
-
-                    const compressed =
-                        canvas.toDataURL(
-                            "image/jpeg",
-                            0.82
-                        );
-
-                    resolve(compressed);
-
-                };
-
-
-                image.onerror = () => {
-
-                    reject(
-                        new Error("Não foi possível carregar a imagem.")
-                    );
-
-                };
-
-
-                image.src = event.target.result;
-
-            };
-
-
-            reader.onerror = () => {
-
-                reject(
-                    new Error("Erro ao ler a imagem.")
-                );
-
-            };
-
-
-            reader.readAsDataURL(file);
-
-        });
-
-    }
-
-
-    // ==========================================
-    // UPLOAD DA FOTO
-    // ==========================================
-
-    profileImageInput?.addEventListener(
-        "change",
-        async event => {
-
-            const file =
-                event.target.files?.[0];
-
-            if (!file) {
-                return;
-            }
-
-
-            // ======================================
-            // VALIDAR TIPO
-            // ======================================
-
-            if (!file.type.startsWith("image/")) {
-
-                alert(
-                    "Selecione uma imagem válida."
-                );
-
-                profileImageInput.value = "";
-
-                return;
-
-            }
-
-
-            // ======================================
-            // TAMANHO ORIGINAL
-            // ======================================
-
-            if (file.size > 10 * 1024 * 1024) {
-
-                alert(
-                    "A imagem original deve ter no máximo 10 MB."
-                );
-
-                profileImageInput.value = "";
-
-                return;
-
-            }
-
-
-            try {
-
-                avatarEdit.disabled = true;
-
-                avatarEdit.textContent = "⏳";
-
-
-                // ==================================
-                // COMPRIMIR
-                // ==================================
-
-                const compressed =
-                    await compressImage(file);
-
-
-                // ==================================
-                // PREVIEW IMEDIATO
-                // ==================================
-
-                avatarImage.src = compressed;
-
-                avatarImage.style.display = "block";
-
-                avatarInitials.style.display = "none";
-
-
-                // ==================================
-                // ENVIAR PARA API
-                // ==================================
-
-                const response =
-                    await fetch(
-                        `${API}/users/profile-image/${user._id}`,
-                        {
-
-                            method: "PUT",
-
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                profileImage: compressed
-                            })
-
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.error ||
-                        "Não foi possível atualizar a foto."
-                    );
-
-                }
-
-
-                // ==================================
-                // ATUALIZAR USUÁRIO
-                // ==================================
-
-                user = data;
-
-
-                localStorage.setItem(
-                    "alugase_user",
-                    JSON.stringify(user)
-                );
-
-
-                renderAvatar();
-
-
-            } catch (error) {
-
-                console.error(
-                    "Erro ao atualizar foto:",
-                    error
-                );
-
-                alert(
-                    error.message ||
-                    "Erro ao atualizar foto."
-                );
-
-                renderAvatar();
-
-            } finally {
-
-                avatarEdit.disabled = false;
-
-                avatarEdit.textContent = "📷";
-
-                profileImageInput.value = "";
-
-            }
-
-        }
-    );
-
-
-    // ==========================================
     // PERFIL
     // ==========================================
 
-    userName.textContent = user.name;
+    userName.textContent =
+        user.name || "Usuário";
 
 
     const year = user.createdAt
@@ -388,7 +131,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     userLocation.textContent =
-        `${user.city} • Membro desde ${year}`;
+        `${user.city || "Cidade"} • Membro desde ${year}`;
 
 
     // ==========================================
@@ -403,7 +146,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         verifiedBadge.className =
             "verified";
 
-
         identityStatus.textContent =
             "Verificado";
 
@@ -417,7 +159,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         verifiedBadge.className =
             "pending";
-
 
         identityStatus.textContent =
             "Pendente";
@@ -448,6 +189,175 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
+    // FOTO DE PERFIL
+    // ==========================================
+
+    profileImageInput?.addEventListener(
+        "change",
+        async () => {
+
+            const file =
+                profileImageInput.files[0];
+
+            if (!file) {
+                return;
+            }
+
+
+            // --------------------------------------
+            // VALIDAR TIPO
+            // --------------------------------------
+
+            const allowedTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+
+            if (!allowedTypes.includes(file.type)) {
+
+                alert(
+                    "Escolha uma imagem JPG, PNG ou WEBP."
+                );
+
+                profileImageInput.value = "";
+
+                return;
+
+            }
+
+
+            // --------------------------------------
+            // VALIDAR TAMANHO
+            // --------------------------------------
+
+            if (file.size > 5 * 1024 * 1024) {
+
+                alert(
+                    "A imagem pode ter no máximo 5 MB."
+                );
+
+                profileImageInput.value = "";
+
+                return;
+
+            }
+
+
+            // --------------------------------------
+            // LOADING
+            // --------------------------------------
+
+            const oldContent =
+                avatar.innerHTML;
+
+            avatar.style.pointerEvents =
+                "none";
+
+            avatar.style.opacity =
+                "0.6";
+
+
+            try {
+
+                const formData =
+                    new FormData();
+
+                formData.append(
+                    "image",
+                    file
+                );
+
+
+                // ----------------------------------
+                // UPLOAD
+                // ----------------------------------
+
+                const response =
+                    await fetch(
+                        `${API}/users/profile-image/${user._id}`,
+                        {
+                            method: "PUT",
+                            body: formData
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Erro ao enviar imagem."
+                    );
+
+                }
+
+
+                // ----------------------------------
+                // ATUALIZAR USUÁRIO
+                // ----------------------------------
+
+                user = data;
+
+
+                localStorage.setItem(
+                    "alugase_user",
+                    JSON.stringify(user)
+                );
+
+
+                // ----------------------------------
+                // ATUALIZAR AVATAR
+                // ----------------------------------
+
+                renderAvatar();
+
+
+                alert(
+                    "Foto de perfil atualizada!"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Erro foto de perfil:",
+                    error
+                );
+
+
+                avatar.innerHTML =
+                    oldContent;
+
+
+                alert(
+                    error.message ||
+                    "Não foi possível atualizar a foto."
+                );
+
+            } finally {
+
+                avatar.style.pointerEvents =
+                    "";
+
+                avatar.style.opacity =
+                    "";
+
+                profileImageInput.value =
+                    "";
+
+            }
+
+        }
+    );
+
+
+    // ==========================================
     // ABAS
     // ==========================================
 
@@ -460,27 +370,36 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     tabs.forEach(tab => {
 
-        tab.addEventListener("click", () => {
+        tab.addEventListener(
+            "click",
+            () => {
 
-            tabs.forEach(t =>
-                t.classList.remove("active")
-            );
+                tabs.forEach(t =>
+                    t.classList.remove("active")
+                );
 
-            contents.forEach(c =>
-                c.classList.remove("active")
-            );
-
-
-            tab.classList.add("active");
+                contents.forEach(c =>
+                    c.classList.remove("active")
+                );
 
 
-            document
-                .querySelector(
-                    `#${tab.dataset.tab}`
-                )
-                .classList.add("active");
+                tab.classList.add("active");
 
-        });
+
+                const content =
+                    document.querySelector(
+                        `#${tab.dataset.tab}`
+                    );
+
+
+                if (content) {
+
+                    content.classList.add("active");
+
+                }
+
+            }
+        );
 
     });
 
@@ -489,22 +408,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     // BOTÕES
     // ==========================================
 
-    document.querySelector("#new-ad").onclick = () => {
-
-        window.location.href =
-            "novo-anuncio.html";
-
-    };
-
-
-    document
-        .querySelector("#empty-new-ad")
-        ?.addEventListener("click", () => {
+    document.querySelector("#new-ad").onclick =
+        () => {
 
             window.location.href =
                 "novo-anuncio.html";
 
-        });
+        };
+
+
+    document
+        .querySelector("#empty-new-ad")
+        ?.addEventListener(
+            "click",
+            () => {
+
+                window.location.href =
+                    "novo-anuncio.html";
+
+            }
+        );
 
 
     // ==========================================
@@ -522,11 +445,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             if (!response.ok) {
-
                 throw new Error(
                     "Erro ao carregar anúncios."
                 );
-
             }
 
 
@@ -547,8 +468,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 document.querySelector(
                     "#empty-ads"
-                ).style.display =
-                    "block";
+                ).style.display = "block";
 
                 return;
 
@@ -557,20 +477,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             document.querySelector(
                 "#empty-ads"
-            ).style.display =
-                "none";
+            ).style.display = "none";
 
 
             products.forEach(product => {
+
+                const imageHTML =
+                    product.image
+                        ? `<img src="${product.image}" alt="${product.title || "Produto"}">`
+                        : "📦";
+
 
                 adsList.innerHTML += `
 
                     <div class="item-card">
 
                         <div class="item-image">
-
-                            ${product.image || "📦"}
-
+                            ${imageHTML}
                         </div>
 
 
@@ -580,19 +503,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 ${product.title}
                             </h3>
 
-
                             <p>
                                 R$ ${product.pricePerDay} / dia
                             </p>
 
 
-                            <span
-                                class="status ${
-                                    product.status === "available"
-                                        ? "available"
-                                        : "rented"
-                                }"
-                            >
+                            <span class="status ${
+                                product.status === "available"
+                                    ? "available"
+                                    : "rented"
+                            }">
 
                                 ${
                                     product.status === "available"
@@ -672,7 +592,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 await response.json();
 
 
-            rentalsList.innerHTML = "";
+            rentalsList.innerHTML =
+                "";
 
 
             const myRentals =
@@ -690,13 +611,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                 myRentals.length;
 
 
+            // --------------------------------------
+            // RENDA
+            // --------------------------------------
+
             const income =
                 rentals
                     .filter(r =>
                         String(
                             r.ownerId?._id ||
                             r.ownerId
-                        ) === String(user._id) &&
+                        ) === String(user._id)
+                        &&
                         r.status === "finished"
                     )
                     .reduce(
@@ -709,15 +635,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.querySelector(
                 "#total-income"
             ).textContent =
-                `R$ ${income.toFixed(2)}`;
+                `R$ ${income.toFixed(2).replace(".", ",")}`;
 
+
+            // --------------------------------------
+            // NOTIFICAÇÕES
+            // --------------------------------------
 
             const pending =
                 rentals.filter(r =>
                     String(
                         r.ownerId?._id ||
                         r.ownerId
-                    ) === String(user._id) &&
+                    ) === String(user._id)
+                    &&
                     r.status === "pending"
                 ).length;
 
@@ -742,6 +673,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
+            // --------------------------------------
+            // NENHUM ALUGUEL
+            // --------------------------------------
+
             if (myRentals.length === 0) {
 
                 document.querySelector(
@@ -760,24 +695,36 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "none";
 
 
+            // --------------------------------------
+            // LISTAR
+            // --------------------------------------
+
             myRentals.forEach(rental => {
 
                 const product =
                     rental.productId || {};
 
 
+                const imageHTML =
+                    product.image
+                        ? `<img src="${product.image}" alt="${product.title || "Produto"}">`
+                        : "📦";
+
+
                 rentalsList.innerHTML += `
 
                     <div class="item-card">
 
+
                         <div class="item-image">
 
-                            ${product.image || "📦"}
+                            ${imageHTML}
 
                         </div>
 
 
                         <div class="item-info">
+
 
                             <h3>
                                 ${product.title || "Produto"}
@@ -807,11 +754,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                             </p>
 
 
-                            <span
-                                class="status progress"
-                            >
+                            <span class="status progress">
+
                                 ${rental.status}
+
                             </span>
+
 
                         </div>
 
@@ -819,8 +767,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <strong>
                             R$ ${Number(
                                 rental.total || 0
-                            ).toFixed(2)}
+                            ).toFixed(2).replace(".", ",")}
                         </strong>
+
 
                     </div>
 
@@ -886,8 +835,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             digit = 0;
 
 
-        if (digit !== Number(number[9]))
+        if (
+            digit !==
+            Number(number[9])
+        ) {
+
             return false;
+
+        }
 
 
         sum = 0;
@@ -910,8 +865,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             digit = 0;
 
 
-        return digit ===
-            Number(number[10]);
+        return (
+            digit ===
+            Number(number[10])
+        );
 
     }
 
@@ -947,7 +904,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
 
 
-            cpf.value = value;
+            cpf.value =
+                value;
 
         }
     );
@@ -957,7 +915,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         "blur",
         () => {
 
-            if (validateCPF(cpf.value)) {
+            if (
+                validateCPF(cpf.value)
+            ) {
 
                 cpfStatus.textContent =
                     "CPF válido";
@@ -1080,6 +1040,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             "click",
             async () => {
 
+
                 if (!validateCPF(cpf.value)) {
 
                     alert(
@@ -1089,6 +1050,52 @@ document.addEventListener("DOMContentLoaded", async () => {
                     return;
 
                 }
+
+
+                if (!rg.value.trim()) {
+
+                    alert(
+                        "Informe o RG."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!cep.value.trim()) {
+
+                    alert(
+                        "Informe o CEP."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!number.value.trim()) {
+
+                    alert(
+                        "Informe o número do endereço."
+                    );
+
+                    return;
+
+                }
+
+
+                const button =
+                    document.querySelector(
+                        "#verify-account"
+                    );
+
+
+                button.disabled =
+                    true;
+
+                button.textContent =
+                    "Enviando...";
 
 
                 try {
@@ -1154,7 +1161,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
 
 
-                    user = updated;
+                    user =
+                        updated;
 
 
                     localStorage.setItem(
@@ -1178,10 +1186,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                         error
                     );
 
+
                     alert(
                         error.message ||
                         "Erro ao enviar documentos."
                     );
+
+
+                } finally {
+
+                    button.disabled =
+                        false;
+
+                    button.textContent =
+                        "Enviar documentos";
 
                 }
 
