@@ -1,14 +1,14 @@
 // ==========================================
-// ALUGASE — PERFIL (API ONLINE)
+// ALUGASE — PERFIL
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", async () => {
 
     const API = "https://alugase-api.onrender.com/api";
 
-    // ==========================================
+    // ==========================
     // USUÁRIO
-    // ==========================================
+    // ==========================
 
     const user = JSON.parse(localStorage.getItem("alugase_user"));
 
@@ -17,37 +17,49 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    // ==========================================
+    // ==========================
     // ELEMENTOS
-    // ==========================================
+    // ==========================
 
     const avatar = document.querySelector("#avatar");
+    const miniAvatar = document.querySelector("#profile-mini");
+
     const userName = document.querySelector("#user-name");
     const userLocation = document.querySelector("#user-location");
-    const verifiedBadge = document.querySelector("#verified-badge");
 
+    const verifiedBadge = document.querySelector("#verified-badge");
     const identityStatus = document.querySelector("#identity-status");
     const cnhStatus = document.querySelector("#cnh-status");
 
     const adsList = document.querySelector("#ads-list");
     const rentalsList = document.querySelector("#rentals-list");
 
-    // ==========================================
+    const notificationBadge =
+        document.querySelector("#notification-badge");
+
+    // ==========================
     // PERFIL
-    // ==========================================
+    // ==========================
 
     userName.textContent = user.name;
 
-    const year = new Date(user.createdAt).getFullYear();
-
-    userLocation.textContent = `${user.city} • Membro desde ${year}`;
-
-    avatar.textContent = user.name
+    const initials = user.name
         .split(" ")
         .map(n => n[0])
         .slice(0, 2)
         .join("")
         .toUpperCase();
+
+    avatar.textContent = initials;
+
+    if (miniAvatar) {
+        miniAvatar.textContent = initials;
+    }
+
+    const year = new Date(user.createdAt).getFullYear();
+
+    userLocation.textContent =
+        `${user.city} • Membro desde ${year}`;
 
     if (user.identityVerified) {
 
@@ -79,9 +91,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-    // ==========================================
+    // ==========================
     // ABAS
-    // ==========================================
+    // ==========================
 
     const tabs = document.querySelectorAll(".tab");
     const contents = document.querySelectorAll(".content");
@@ -90,8 +102,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         tab.addEventListener("click", () => {
 
-            tabs.forEach(t => t.classList.remove("active"));
-            contents.forEach(c => c.classList.remove("active"));
+            tabs.forEach(t =>
+                t.classList.remove("active")
+            );
+
+            contents.forEach(c =>
+                c.classList.remove("active")
+            );
 
             tab.classList.add("active");
 
@@ -103,13 +120,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     });
 
-    // ==========================================
+    // ==========================
     // BOTÕES
-    // ==========================================
+    // ==========================
 
     document.querySelector("#logout").onclick = () => {
 
         localStorage.removeItem("alugase_user");
+
         window.location.href = "index.html";
 
     };
@@ -120,14 +138,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     };
 
-    document.querySelector("#empty-new-ad")?.addEventListener(
-        "click",
-        () => window.location.href = "novo-anuncio.html"
-    );
+    document
+        .querySelector("#empty-new-ad")
+        ?.addEventListener("click", () => {
 
-    // ==========================================
+            window.location.href = "novo-anuncio.html";
+
+        });
+
+    // ==========================
     // ANÚNCIOS
-    // ==========================================
+    // ==========================
 
     async function loadAds() {
 
@@ -140,6 +161,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const products = await response.json();
 
             adsList.innerHTML = "";
+
+            document.querySelector("#total-ads").textContent =
+                products.length;
 
             if (products.length === 0) {
 
@@ -165,8 +189,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                         <p>R$ ${product.pricePerDay} / dia</p>
 
-                        <span class="status ${product.status === "available" ? "available" : "rented"}">
-                            ${product.status === "available" ? "Disponível" : "Alugado"}
+                        <span class="status ${product.status === "available"
+                        ? "available"
+                        : "rented"}">
+
+                            ${product.status === "available"
+                        ? "Disponível"
+                        : "Alugado"}
+
                         </span>
 
                     </div>
@@ -178,11 +208,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                         Editar
                     </button>
 
-                </div>`;
+                </div>
+                `;
 
             });
 
-            document.querySelectorAll(".edit-ad")
+            document
+                .querySelectorAll(".edit-ad")
                 .forEach(button => {
 
                     button.onclick = () => {
@@ -194,17 +226,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 });
 
-        } catch (error) {
+        } catch (err) {
 
-            console.error(error);
+            console.error(err);
 
         }
 
     }
 
-    // ==========================================
+    // ==========================
     // ALUGUÉIS
-    // ==========================================
+    // ==========================
 
     async function loadRentals() {
 
@@ -217,6 +249,33 @@ document.addEventListener("DOMContentLoaded", async () => {
             const rentals = await response.json();
 
             rentalsList.innerHTML = "";
+
+            document.querySelector("#total-rentals").textContent =
+                rentals.filter(r =>
+                    String(r.renterId) === user._id
+                ).length;
+
+            const income = rentals
+                .filter(r =>
+                    String(r.ownerId) === user._id &&
+                    r.status === "finished"
+                )
+                .reduce((acc, r) => acc + r.total, 0);
+
+            document.querySelector("#total-income").textContent =
+                `R$ ${income}`;
+
+            const pending = rentals.filter(r =>
+                String(r.ownerId) === user._id &&
+                r.status === "pending"
+            ).length;
+
+            if (notificationBadge && pending > 0) {
+
+                notificationBadge.style.display = "flex";
+                notificationBadge.textContent = pending;
+
+            }
 
             if (rentals.length === 0) {
 
@@ -231,26 +290,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 const product = rental.productId;
 
-                const start =
-                    new Date(rental.startDate)
-                        .toLocaleDateString("pt-BR");
-
-                const end =
-                    new Date(rental.endDate)
-                        .toLocaleDateString("pt-BR");
-
                 rentalsList.innerHTML += `
                 <div class="item-card">
 
                     <div class="item-image">
-                        ${product.image || "📦"}
+                        ${product?.image || "📦"}
                     </div>
 
                     <div class="item-info">
 
-                        <h3>${product.title}</h3>
+                        <h3>${product?.title || "Produto"}</h3>
 
-                        <p>${start} até ${end}</p>
+                        <p>
+                            ${new Date(rental.startDate).toLocaleDateString("pt-BR")}
+                            até
+                            ${new Date(rental.endDate).toLocaleDateString("pt-BR")}
+                        </p>
 
                         <span class="status progress">
                             ${rental.status}
@@ -260,21 +315,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     <strong>R$ ${rental.total}</strong>
 
-                </div>`;
+                </div>
+                `;
 
             });
 
-        } catch (error) {
+        } catch (err) {
 
-            console.error(error);
+            console.error(err);
 
         }
 
     }
 
-    // ==========================================
+    // ==========================
     // CPF
-    // ==========================================
+    // ==========================
 
     const cpf = document.querySelector("#cpf");
     const cpfStatus = document.querySelector("#cpf-status");
@@ -284,6 +340,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         number = number.replace(/\D/g, "");
 
         if (number.length !== 11) return false;
+
         if (/^(\d)\1+$/.test(number)) return false;
 
         let sum = 0;
@@ -292,6 +349,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             sum += Number(number[i]) * (10 - i);
 
         let digit = (sum * 10) % 11;
+
         if (digit === 10) digit = 0;
 
         if (digit !== Number(number[9])) return false;
@@ -302,6 +360,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             sum += Number(number[i]) * (11 - i);
 
         digit = (sum * 10) % 11;
+
         if (digit === 10) digit = 0;
 
         return digit === Number(number[10]);
@@ -310,7 +369,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     cpf?.addEventListener("input", () => {
 
-        let value = cpf.value.replace(/\D/g, "").slice(0, 11);
+        let value = cpf.value
+            .replace(/\D/g, "")
+            .slice(0, 11);
 
         value = value.replace(/(\d{3})(\d)/, "$1.$2");
         value = value.replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
@@ -336,9 +397,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     });
 
-    // ==========================================
+    // ==========================
     // RG / CNH / CEP
-    // ==========================================
+    // ==========================
 
     const rg = document.querySelector("#rg");
     const cnh = document.querySelector("#cnh");
@@ -352,7 +413,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     rg?.addEventListener("input", () => {
 
-        let value = rg.value.toUpperCase().replace(/[^0-9X]/g, "");
+        let value = rg.value
+            .toUpperCase()
+            .replace(/[^0-9X]/g, "");
 
         if (value.includes("X"))
             value = value.replace(/X/g, "") + "X";
@@ -380,13 +443,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     cnh?.addEventListener("input", () => {
 
-        cnh.value = cnh.value.replace(/\D/g, "").slice(0, 11);
+        cnh.value = cnh.value
+            .replace(/\D/g, "")
+            .slice(0, 11);
 
     });
 
     cep?.addEventListener("input", () => {
 
-        let value = cep.value.replace(/\D/g, "").slice(0, 8);
+        let value = cep.value
+            .replace(/\D/g, "")
+            .slice(0, 8);
 
         value = value.replace(/(\d{5})(\d)/, "$1-$2");
 
@@ -415,16 +482,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     });
 
-    // ==========================================
+    // ==========================
     // VERIFICAÇÃO
-    // ==========================================
+    // ==========================
 
-    document.querySelector("#verify-account")
+    document
+        .querySelector("#verify-account")
         ?.addEventListener("click", async () => {
 
             if (!validateCPF(cpf.value)) {
+
                 alert("CPF inválido.");
                 return;
+
             }
 
             const body = {
@@ -448,7 +518,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const response = await fetch(
                     `${API}/users/verify/${user._id}`,
                     {
-
                         method: "PUT",
 
                         headers: {
@@ -471,7 +540,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 location.reload();
 
-            } catch (error) {
+            } catch {
 
                 alert("Erro ao enviar documentos.");
 
@@ -479,7 +548,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         });
 
-    // ==========================================
+    // ==========================
+    // INICIAR
+    // ==========================
 
     await loadAds();
     await loadRentals();
