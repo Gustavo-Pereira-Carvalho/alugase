@@ -1,26 +1,38 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
+    // ==========================================
+    // CONFIGURAÇÃO
+    // ==========================================
+
     const API =
         "https://alugase-api.onrender.com/api/chats";
 
+    const RENTALS_API =
+        "https://alugase-api.onrender.com/api/rentals";
+
+
+    // ==========================================
+    // USUÁRIO LOGADO
+    // ==========================================
 
     const user =
         JSON.parse(
-            localStorage.getItem(
-                "alugase_user"
-            )
+            localStorage.getItem("alugase_user")
         );
 
 
-    if (!user) {
+    if (!user || !user._id) {
 
-        location.href =
-            "login.html";
+        location.href = "login.html";
 
         return;
 
     }
 
+
+    // ==========================================
+    // ELEMENTOS
+    // ==========================================
 
     const chatId =
         new URLSearchParams(
@@ -70,6 +82,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
 
+    const badge =
+        document.querySelector(
+            "#notification-badge"
+        );
+
+
     let chats = [];
 
     let currentChat = null;
@@ -78,41 +96,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // ABRIR / FECHAR CARD
+    // FUNÇÃO PARA COMPARAR IDs
     // ==========================================
 
-    if (
-        toggleReservation &&
-        reservationDetails
-    ) {
+    function sameId(a, b) {
 
-        toggleReservation.addEventListener(
-            "click",
-            () => {
+        if (!a || !b) {
+            return false;
+        }
 
-                const opened =
-                    reservationDetails.classList.toggle(
-                        "open"
-                    );
-
-
-                toggleReservation.classList.toggle(
-                    "open",
-                    opened
-                );
-
-
-                if (reservationArrow) {
-
-                    reservationArrow.textContent =
-                        opened
-                            ? "▲"
-                            : "▼";
-
-                }
-
-            }
-        );
+        return String(a) === String(b);
 
     }
 
@@ -148,6 +141,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const date =
             new Date(value);
+
+
+        if (isNaN(date.getTime())) {
+            return "--";
+        }
 
 
         return date.toLocaleDateString(
@@ -191,6 +189,126 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
+    // NOTIFICAÇÕES
+    // ==========================================
+
+    async function loadNotifications() {
+
+        if (!badge) {
+            return;
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${RENTALS_API}/user/${user._id}`
+                );
+
+
+            if (!response.ok) {
+                return;
+            }
+
+
+            const rentals =
+                await response.json();
+
+
+            if (!Array.isArray(rentals)) {
+                return;
+            }
+
+
+            const pending =
+                rentals.filter(rental => {
+
+                    const ownerId =
+                        rental.ownerId?._id ||
+                        rental.ownerId;
+
+
+                    return (
+                        sameId(
+                            ownerId,
+                            user._id
+                        ) &&
+                        rental.status === "pending"
+                    );
+
+                }).length;
+
+
+            if (pending > 0) {
+
+                badge.style.display =
+                    "flex";
+
+                badge.textContent =
+                    pending;
+
+            } else {
+
+                badge.style.display =
+                    "none";
+
+            }
+
+
+        } catch (error) {
+
+            console.log(
+                "Notificações indisponíveis.",
+                error
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // ABRIR / FECHAR CARD DO ALUGUEL
+    // ==========================================
+
+    if (
+        toggleReservation &&
+        reservationDetails
+    ) {
+
+        toggleReservation.addEventListener(
+            "click",
+            () => {
+
+                const opened =
+                    reservationDetails.classList.toggle(
+                        "open"
+                    );
+
+
+                toggleReservation.classList.toggle(
+                    "open",
+                    opened
+                );
+
+
+                if (reservationArrow) {
+
+                    reservationArrow.textContent =
+                        opened
+                            ? "▲"
+                            : "▼";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
     // ATUALIZAR CARD DO ALUGUEL
     // ==========================================
 
@@ -206,8 +324,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         /*
-         * Se o chat ainda não tiver um aluguel
-         * associado, mantém o card básico.
+         * Alguns chats podem ainda não possuir
+         * um aluguel associado.
          */
 
         if (!rental) {
@@ -324,9 +442,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (days) {
 
+            const totalDays =
+                Number(
+                    rental.days || 0
+                );
+
+
             days.textContent =
-                `${rental.days || 0} ${
-                    rental.days === 1
+                `${totalDays} ${
+                    totalDays === 1
                         ? "dia"
                         : "dias"
                 }`;
@@ -381,6 +505,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
 
+            conversationList.innerHTML =
+                `
+                <p style="
+                    padding:20px;
+                    color:#6b7280;
+                ">
+                    Carregando conversas...
+                </p>
+                `;
+
+
             const response =
                 await fetch(
                     `${API}/user/${user._id}`
@@ -389,8 +524,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (!response.ok) {
 
+                const errorText =
+                    await response.text();
+
+
+                console.error(
+                    "Erro HTTP ao carregar chats:",
+                    response.status,
+                    errorText
+                );
+
+
                 throw new Error(
-                    "Erro ao carregar conversas."
+                    `Erro HTTP ${response.status}`
                 );
 
             }
@@ -398,6 +544,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const data =
                 await response.json();
+
+
+            console.log(
+                "Chats recebidos:",
+                data
+            );
 
 
             chats =
@@ -423,7 +575,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                 messages.innerHTML =
-                    "";
+                    `
+                    <div style="
+                        text-align:center;
+                        padding:40px 20px;
+                        color:#6b7280;
+                    ">
+                        Nenhuma conversa encontrada.
+                    </div>
+                    `;
 
 
                 return;
@@ -431,11 +591,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
+            /*
+             * Se veio ?chat=ID, abre esse chat.
+             * Caso contrário, abre o primeiro.
+             */
+
             currentChat =
                 chats.find(
                     chat =>
-                        String(chat._id) ===
-                        String(chatId)
+                        sameId(
+                            chat._id,
+                            chatId
+                        )
                 ) ||
                 chats[0];
 
@@ -455,12 +622,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             conversationList.innerHTML =
                 `
-                <p style="
+                <div style="
                     padding:20px;
-                    color:#ef4444;
                 ">
-                    Erro ao carregar conversas.
-                </p>
+
+                    <p style="
+                        color:#ef4444;
+                        font-weight:600;
+                        margin-bottom:8px;
+                    ">
+                        Erro ao carregar conversas.
+                    </p>
+
+                    <p style="
+                        color:#6b7280;
+                        font-size:14px;
+                    ">
+                        Verifique se a API do Alugase
+                        está online.
+                    </p>
+
+                </div>
                 `;
 
         }
@@ -474,15 +656,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function renderSidebar() {
 
-        conversationList.innerHTML =
-            "";
+        conversationList.innerHTML = "";
 
 
         chats.forEach(chat => {
 
+            /*
+             * ownerId pode ser:
+             *
+             * "123"
+             *
+             * ou
+             *
+             * { _id: "123", ... }
+             */
+
+            const ownerId =
+                chat.ownerId?._id ||
+                chat.ownerId;
+
+
             const isOwner =
-                String(chat.ownerId) ===
-                String(user._id);
+                sameId(
+                    ownerId,
+                    user._id
+                );
 
 
             const otherName =
@@ -509,14 +707,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             card.className =
                 `conversation ${
                     currentChat &&
-                    String(
-                        currentChat._id
-                    ) ===
-                    String(chat._id)
+                    sameId(
+                        currentChat._id,
+                        chat._id
+                    )
                         ? "active"
                         : ""
                 }`;
 
+
+            // ==================================
+            // AVATAR
+            // ==================================
 
             const avatar =
                 document.createElement(
@@ -533,6 +735,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     .charAt(0)
                     .toUpperCase();
 
+
+            // ==================================
+            // INFORMAÇÕES
+            // ==================================
 
             const info =
                 document.createElement(
@@ -562,17 +768,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             last.textContent =
-                lastMessage;
+                lastMessage ||
+                "Nova conversa";
 
 
             info.appendChild(name);
 
             info.appendChild(last);
 
+
             card.appendChild(avatar);
 
             card.appendChild(info);
 
+
+            // ==================================
+            // CLIQUE
+            // ==================================
 
             card.addEventListener(
                 "click",
@@ -617,11 +829,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
+        const ownerId =
+            currentChat.ownerId?._id ||
+            currentChat.ownerId;
+
+
         const isOwner =
-            String(
-                currentChat.ownerId
-            ) ===
-            String(user._id);
+            sameId(
+                ownerId,
+                user._id
+            );
 
 
         const otherName =
@@ -682,16 +899,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
+        // ======================================
+        // PRODUTO
+        // ======================================
+
         if (viewProduct) {
 
             if (
                 currentChat.productId
             ) {
 
+                const productId =
+                    currentChat.productId?._id ||
+                    currentChat.productId;
+
+
                 viewProduct.href =
-                    `produto.html?id=${
-                        currentChat.productId
-                    }`;
+                    `produto.html?id=${productId}`;
+
 
                 viewProduct.style.display =
                     "";
@@ -706,7 +931,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // Atualiza o card
+        // ======================================
+        // ALUGUEL
+        // ======================================
+
         renderRentalCard();
 
 
@@ -714,8 +942,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // MENSAGENS
         // ======================================
 
-        messages.innerHTML =
-            "";
+        messages.innerHTML = "";
 
 
         if (
@@ -758,11 +985,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         currentChat.messages.forEach(
             msg => {
 
+                const senderId =
+                    msg.senderId?._id ||
+                    msg.senderId;
+
+
                 const sent =
-                    String(
-                        msg.senderId
-                    ) ===
-                    String(user._id);
+                    sameId(
+                        senderId,
+                        user._id
+                    );
 
 
                 const bubble =
@@ -799,16 +1031,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "time";
 
 
-                time.textContent =
-                    new Date(
-                        msg.createdAt
-                    ).toLocaleTimeString(
-                        "pt-BR",
-                        {
-                            hour: "2-digit",
-                            minute: "2-digit"
-                        }
-                    );
+                if (msg.createdAt) {
+
+                    time.textContent =
+                        new Date(
+                            msg.createdAt
+                        ).toLocaleTimeString(
+                            "pt-BR",
+                            {
+                                hour: "2-digit",
+                                minute: "2-digit"
+                            }
+                        );
+
+                }
 
 
                 bubble.appendChild(text);
@@ -892,17 +1128,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 (
                     newLast &&
                     oldLast &&
-                    String(newLast._id) !==
-                    String(oldLast._id)
+                    !sameId(
+                        newLast._id,
+                        oldLast._id
+                    )
                 );
 
 
             /*
-             * Também verifica se o Rental mudou.
-             *
-             * Exemplo:
-             *
-             * pending → approved
+             * Verifica também alterações no aluguel.
              */
 
             const oldRental =
@@ -934,10 +1168,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const index =
                     chats.findIndex(
                         chat =>
-                            String(
-                                chat._id
-                            ) ===
-                            String(
+                            sameId(
+                                chat._id,
                                 updatedChat._id
                             )
                     );
@@ -1046,8 +1278,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
 
 
-            const data =
-                await response.json();
+            let data;
+
+
+            try {
+
+                data =
+                    await response.json();
+
+            } catch {
+
+                data = {};
+
+            }
 
 
             if (!response.ok) {
@@ -1066,8 +1309,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                 data;
 
 
-            input.value =
-                "";
+            input.value = "";
+
+
+            const index =
+                chats.findIndex(
+                    chat =>
+                        sameId(
+                            chat._id,
+                            currentChat._id
+                        )
+                );
+
+
+            if (index !== -1) {
+
+                chats[index] =
+                    currentChat;
+
+            }
 
 
             renderChat();
@@ -1122,75 +1382,78 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    input.addEventListener(
-        "keydown",
-        event => {
+    if (input) {
 
-            if (
-                event.key === "Enter" &&
-                !event.shiftKey
-            ) {
+        input.addEventListener(
+            "keydown",
+            event => {
 
-                event.preventDefault();
+                if (
+                    event.key === "Enter" &&
+                    !event.shiftKey
+                ) {
 
-                sendMessage();
+                    event.preventDefault();
+
+                    sendMessage();
+
+                }
 
             }
+        );
 
-        }
+    }
+
+
+    // ==========================================
+    // INICIALIZAÇÃO
+    // ==========================================
+
+    console.log(
+        "ALUGASE Chat iniciado."
     );
 
 
-    // ==========================================
-    // INICIAR
-    // ==========================================
+    console.log(
+        "Usuário:",
+        user._id
+    );
 
-    await loadChats();
+
+    console.log(
+        "Chat:",
+        chatId
+    );
 
 
     /*
-     * Atualização automática.
+     * Carrega conversas e notificações
+     * independentemente.
      */
+
+    await Promise.all([
+        loadChats(),
+        loadNotifications()
+    ]);
+
+
+    // ==========================================
+    // POLLING
+    // ==========================================
 
     setInterval(
         checkNewMessages,
         2000
     );
 
+
+    /*
+     * Atualiza notificações periodicamente.
+     */
+
+    setInterval(
+        loadNotifications,
+        10000
+    );
+
 });
-
-// ==========================================
-// HEADER
-// ==========================================
-
-const badge = document.querySelector("#notification-badge");
-
-if (badge && user) {
-
-    try {
-
-        const response = await fetch(
-            `https://alugase-api.onrender.com/api/rentals/user/${user._id}`
-        );
-
-        const rentals = await response.json();
-
-        const pending = rentals.filter(r =>
-            r.ownerId === user._id &&
-            r.status === "pending"
-        ).length;
-
-        if (pending > 0) {
-
-            badge.style.display = "flex";
-            badge.textContent = pending;
-
-        }
-
-    } catch (e) {
-
-        console.log("Notificações indisponíveis.");
-
-    }
-
-}
