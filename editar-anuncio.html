@@ -12,7 +12,6 @@
 
     <title>Editar Anúncio | Alugase</title>
 
-
     <link
         rel="stylesheet"
         href="./css/global.css"
@@ -42,9 +41,6 @@
 
     <nav class="navbar">
 
-
-        <!-- LOGO -->
-
         <div class="logo">
 
             <a href="index.html">
@@ -54,16 +50,12 @@
                     alt="Logo Alugase"
                 >
 
-                <h2>
-                    ALUGASE
-                </h2>
+                <h2>ALUGASE</h2>
 
             </a>
 
         </div>
 
-
-        <!-- NAVEGAÇÃO -->
 
         <div class="nav-buttons">
 
@@ -76,7 +68,6 @@
 
         </div>
 
-
     </nav>
 
 </header>
@@ -84,13 +75,11 @@
 
 
 <!-- ==========================================
-     CONTEÚDO
+     MAIN
 ========================================== -->
 
 <main class="ad-page">
 
-
-    <!-- TÍTULO -->
 
     <div class="page-title">
 
@@ -118,18 +107,14 @@
 
         <!-- ======================================
              INFORMAÇÕES BÁSICAS
-        ======================================= -->
+        ====================================== -->
 
         <section class="form-section">
-
 
             <h2>
                 Informações básicas
             </h2>
 
-
-
-            <!-- NOME -->
 
             <div class="form-group">
 
@@ -140,15 +125,12 @@
                 <input
                     type="text"
                     id="title"
-                    placeholder="Ex: Câmera Canon EOS"
                     required
                 >
 
             </div>
 
 
-
-            <!-- CATEGORIA + ÍCONE -->
 
             <div class="grid-2">
 
@@ -246,12 +228,9 @@
 
                 </div>
 
-
             </div>
 
 
-
-            <!-- DESCRIÇÃO -->
 
             <div class="form-group">
 
@@ -262,15 +241,12 @@
                 <textarea
                     id="description"
                     rows="5"
-                    placeholder="Descreva o produto, suas condições e informações importantes..."
                     required
                 ></textarea>
 
             </div>
 
 
-
-            <!-- CIDADE -->
 
             <div class="form-group">
 
@@ -281,70 +257,28 @@
                 <input
                     type="text"
                     id="city"
-                    placeholder="Ex: São Paulo"
                     required
                 >
 
             </div>
 
-
         </section>
 
 
 
-        <!-- ==========================================
-             IMAGENS
-        =========================================== -->
-
-        <section class="form-section">
-
-
-            <h2>
-                Imagens
-            </h2>
-
-
-            <p class="form-description">
-
-                As imagens atuais do anúncio serão mantidas
-                durante a edição.
-
-            </p>
-
-
-            <div
-                id="current-images"
-                class="current-images"
-            >
-
-                <p>
-                    Carregando imagens...
-                </p>
-
-            </div>
-
-
-        </section>
-
-
-
-        <!-- ==========================================
+        <!-- ======================================
              PREÇO
-        =========================================== -->
+        ====================================== -->
 
         <section class="form-section">
-
 
             <h2>
                 Preço
             </h2>
 
 
-
             <div class="grid-2">
 
-
-                <!-- PREÇO -->
 
                 <div class="form-group">
 
@@ -352,28 +286,17 @@
                         Preço por dia
                     </label>
 
-                    <div class="input-money">
-
-                        <span>
-                            R$
-                        </span>
-
-                        <input
-                            type="number"
-                            id="price"
-                            min="1"
-                            step="0.01"
-                            placeholder="0,00"
-                            required
-                        >
-
-                    </div>
+                    <input
+                        type="number"
+                        id="price"
+                        min="1"
+                        step="0.01"
+                        required
+                    >
 
                 </div>
 
 
-
-                <!-- CAUÇÃO -->
 
                 <div class="form-group">
 
@@ -381,50 +304,12 @@
                         Caução
                     </label>
 
-                    <div class="input-money">
-
-                        <span>
-                            R$
-                        </span>
-
-                        <input
-                            type="number"
-                            id="deposit"
-                            min="0"
-                            step="0.01"
-                            placeholder="0,00"
-                            required
-                        >
-
-                    </div>
-
-                </div>
-
-
-            </div>
-
-
-
-            <!-- ENTREGA -->
-
-            <div class="form-group">
-
-                <label for="deliveryPrice">
-                    Taxa de entrega
-                </label>
-
-                <div class="input-money">
-
-                    <span>
-                        R$
-                    </span>
-
                     <input
                         type="number"
-                        id="deliveryPrice"
+                        id="deposit"
                         min="0"
                         step="0.01"
-                        placeholder="0,00"
+                        required
                     >
 
                 </div>
@@ -432,16 +317,32 @@
             </div>
 
 
+
+            <div class="form-group">
+
+                <label for="deliveryPrice">
+                    Taxa de entrega
+                </label>
+
+                <input
+                    type="number"
+                    id="deliveryPrice"
+                    min="0"
+                    step="0.01"
+                    value="0"
+                >
+
+            </div>
+
         </section>
 
 
 
-        <!-- ==========================================
+        <!-- ======================================
              STATUS
-        =========================================== -->
+        ====================================== -->
 
         <section class="form-section">
-
 
             <h2>
                 Status do anúncio
@@ -463,25 +364,15 @@
 
             </label>
 
-
-            <p class="form-description">
-
-                Desative esta opção para pausar temporariamente
-                o anúncio.
-
-            </p>
-
-
         </section>
 
 
 
-        <!-- ==========================================
+        <!-- ======================================
              RESUMO
-        =========================================== -->
+        ====================================== -->
 
         <section class="form-section">
-
 
             <h2>
                 Resumo
@@ -522,6 +413,20 @@
                 <div>
 
                     <span>
+                        Entrega
+                    </span>
+
+                    <strong id="sum-delivery">
+                        R$ 0,00
+                    </strong>
+
+                </div>
+
+
+
+                <div>
+
+                    <span>
                         Status
                     </span>
 
@@ -531,17 +436,15 @@
 
                 </div>
 
-
             </div>
-
 
         </section>
 
 
 
-        <!-- ==========================================
+        <!-- ======================================
              AÇÕES
-        =========================================== -->
+        ====================================== -->
 
         <div class="actions">
 
@@ -557,12 +460,12 @@
 
 
             <button
-                type="submit"
                 class="btn-primary"
+                type="submit"
+                id="save-btn"
             >
                 Salvar alterações
             </button>
-
 
         </div>
 
@@ -573,10 +476,6 @@
 </main>
 
 
-
-<!-- ==========================================
-     JAVASCRIPT
-========================================== -->
 
 <script src="./js/editar-anuncio.js"></script>
 
