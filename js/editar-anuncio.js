@@ -5,7 +5,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
     // ==========================================
-    // API
+    // CONFIGURAÇÃO
     // ==========================================
 
     const API =
@@ -20,15 +20,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
-        user =
-            JSON.parse(
-                localStorage.getItem("alugase_user")
-            );
+        user = JSON.parse(
+            localStorage.getItem("alugase_user")
+        );
 
     } catch (error) {
 
         console.error(
-            "Erro ao ler usuário:",
+            "Erro ao carregar usuário:",
             error
         );
 
@@ -62,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!productId) {
 
         alert(
-            "Anúncio não informado."
+            "Anúncio não encontrado."
         );
 
         window.location.href =
@@ -80,82 +79,57 @@ document.addEventListener("DOMContentLoaded", async () => {
     const form =
         document.querySelector("#edit-form");
 
-
     const title =
         document.querySelector("#title");
-
 
     const category =
         document.querySelector("#category");
 
-
     const icon =
         document.querySelector("#icon");
-
 
     const description =
         document.querySelector("#description");
 
-
     const city =
         document.querySelector("#city");
-
 
     const price =
         document.querySelector("#price");
 
-
     const deposit =
         document.querySelector("#deposit");
-
 
     const deliveryPrice =
         document.querySelector("#deliveryPrice");
 
-
     const active =
         document.querySelector("#active");
-
 
     const deleteButton =
         document.querySelector("#delete-btn");
 
-
     const sumPrice =
         document.querySelector("#sum-price");
-
 
     const sumDeposit =
         document.querySelector("#sum-deposit");
 
-
     const sumStatus =
         document.querySelector("#sum-status");
 
+    const currentImages =
+        document.querySelector("#current-images");
+
 
     // ==========================================
-    // VERIFICAR ELEMENTOS
+    // VERIFICAR FORMULÁRIO
     // ==========================================
 
-    if (
-        !form ||
-        !title ||
-        !category ||
-        !icon ||
-        !description ||
-        !city ||
-        !price ||
-        !deposit ||
-        !deliveryPrice ||
-        !active
-    ) {
+    if (!form) {
 
         console.error(
-            "Elementos necessários da página não encontrados."
-        );
-
-        alert(
-            "Erro ao carregar o formulário de edição."
+            "Formulário #edit-form não encontrado."
         );
 
         return;
@@ -164,26 +138,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // PRODUTO ATUAL
+    // PRODUTO
     // ==========================================
 
     let product = null;
 
 
     // ==========================================
-    // DINHEIRO
+    // FORMATAR DINHEIRO
     // ==========================================
 
     function money(value) {
 
-        return Number(value || 0)
-            .toLocaleString(
-                "pt-BR",
-                {
-                    style: "currency",
-                    currency: "BRL"
-                }
-            );
+        return Number(value || 0).toLocaleString(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL"
+            }
+        );
 
     }
 
@@ -223,14 +196,100 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // CONVERTER STATUS
+    // MOSTRAR IMAGENS
     // ==========================================
 
-    function getStatus() {
+    function renderCurrentImages() {
 
-        return active.checked
-            ? "available"
-            : "paused";
+        if (!currentImages) {
+            return;
+        }
+
+
+        currentImages.innerHTML = "";
+
+
+        const images =
+            Array.isArray(product?.images)
+                ? product.images
+                : [];
+
+
+        if (!images.length) {
+
+            currentImages.innerHTML = `
+
+                <div class="no-images">
+
+                    <span>
+                        📷
+                    </span>
+
+                    <p>
+                        Este anúncio não possui imagens.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        images.forEach(
+            (image, index) => {
+
+                const wrapper =
+                    document.createElement("div");
+
+
+                wrapper.className =
+                    "current-image";
+
+
+                const img =
+                    document.createElement("img");
+
+
+                img.src =
+                    image;
+
+
+                img.alt =
+                    `${product.title || "Produto"} - imagem ${index + 1}`;
+
+
+                img.loading =
+                    "lazy";
+
+
+                img.onerror =
+                    () => {
+
+                        wrapper.innerHTML = `
+
+                            <div class="image-error">
+                                Imagem indisponível
+                            </div>
+
+                        `;
+
+                    };
+
+
+                wrapper.appendChild(
+                    img
+                );
+
+
+                currentImages.appendChild(
+                    wrapper
+                );
+
+            }
+        );
 
     }
 
@@ -244,7 +303,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
 
             console.log(
-                "Carregando produto:",
+                "Buscando produto:",
                 productId
             );
 
@@ -280,42 +339,68 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             // ==================================
-            // PREENCHER FORMULÁRIO
+            // VERIFICAR DONO
+            // ==================================
+
+            const ownerId =
+                product.ownerId?._id ||
+                product.ownerId;
+
+
+            if (
+                ownerId &&
+                String(ownerId) !==
+                String(user._id)
+            ) {
+
+                alert(
+                    "Você não pode editar este anúncio."
+                );
+
+                window.location.href =
+                    "perfil.html";
+
+                return;
+
+            }
+
+
+            // ==================================
+            // NOME
             // ==================================
 
             title.value =
                 product.title || "";
 
 
+            // ==================================
+            // CATEGORIA
+            // ==================================
+
             category.value =
                 product.category || "";
 
 
-            /*
-             * O campo icon é um select de emojis.
-             *
-             * O produto antigo pode ter:
-             *
-             * product.icon
-             *
-             * ou
-             *
-             * product.image
-             *
-             * Por isso tentamos primeiro icon.
-             */
+            // ==================================
+            // ÍCONE
+            // ==================================
 
-            if (
-                product.icon &&
+            const productIcon =
+                product.icon || "📦";
+
+
+            const iconExists =
                 [...icon.options].some(
                     option =>
                         option.value ===
-                        product.icon
-                )
-            ) {
+                        productIcon
+                );
+
+
+            if (iconExists) {
 
                 icon.value =
-                    product.icon;
+                    productIcon;
 
             } else {
 
@@ -325,13 +410,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
+            // ==================================
+            // DESCRIÇÃO
+            // ==================================
+
             description.value =
                 product.description || "";
 
 
+            // ==================================
+            // CIDADE
+            // ==================================
+
             city.value =
                 product.city || "";
 
+
+            // ==================================
+            // PREÇOS
+            // ==================================
 
             price.value =
                 product.pricePerDay ?? 0;
@@ -345,9 +442,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 product.deliveryPrice ?? 0;
 
 
+            // ==================================
+            // STATUS
+            // ==================================
+
             active.checked =
                 product.status === "available";
 
+
+            // ==================================
+            // IMAGENS
+            // ==================================
+
+            renderCurrentImages();
+
+
+            // ==================================
+            // RESUMO
+            // ==================================
 
             updateSummary();
 
@@ -362,7 +474,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             alert(
                 error.message ||
-                "Produto não encontrado."
+                "Não foi possível carregar o anúncio."
             );
 
 
@@ -378,25 +490,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     // EVENTOS DO RESUMO
     // ==========================================
 
-    price.addEventListener(
+    price?.addEventListener(
         "input",
         updateSummary
     );
 
 
-    deposit.addEventListener(
+    deposit?.addEventListener(
         "input",
         updateSummary
     );
 
 
-    deliveryPrice.addEventListener(
+    deliveryPrice?.addEventListener(
         "input",
         updateSummary
     );
 
 
-    active.addEventListener(
+    active?.addEventListener(
         "change",
         updateSummary
     );
@@ -413,9 +525,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             event.preventDefault();
 
 
-            // ----------------------------------
-            // VALIDAR
-            // ----------------------------------
+            // ==================================
+            // VALIDAÇÕES
+            // ==================================
 
             if (!title.value.trim()) {
 
@@ -474,7 +586,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             const depositValue =
-                Number(deposit.value || 0);
+                Number(
+                    deposit.value || 0
+                );
 
 
             const deliveryValue =
@@ -531,22 +645,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
-            // ----------------------------------
+            // ==================================
             // BOTÃO
-            // ----------------------------------
+            // ==================================
 
-            const submitButton =
+            const saveButton =
                 form.querySelector(
                     'button[type="submit"]'
                 );
 
 
-            if (submitButton) {
+            if (saveButton) {
 
-                submitButton.disabled =
+                saveButton.disabled =
                     true;
 
-                submitButton.textContent =
+                saveButton.textContent =
                     "Salvando...";
 
             }
@@ -555,7 +669,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             try {
 
                 // ==================================
-                // DADOS
+                // MONTAR DADOS
                 // ==================================
 
                 const updatedProduct = {
@@ -568,17 +682,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     icon:
                         icon.value,
-
-                    /*
-                     * Mantemos a imagem existente.
-                     *
-                     * Isso é importante porque
-                     * o select "icon" não representa
-                     * uma URL de imagem.
-                     */
-
-                    image:
-                        product?.image || "",
 
                     description:
                         description.value.trim(),
@@ -596,13 +699,30 @@ document.addEventListener("DOMContentLoaded", async () => {
                         deliveryValue,
 
                     status:
-                        getStatus()
+                        active.checked
+                            ? "available"
+                            : "paused",
+
+                    /*
+                     * IMPORTANTE:
+                     *
+                     * O backend utiliza "images".
+                     *
+                     * Mantemos as imagens existentes
+                     * porque esta página ainda não
+                     * substitui os arquivos.
+                     */
+
+                    images:
+                        Array.isArray(product.images)
+                            ? product.images
+                            : []
 
                 };
 
 
                 console.log(
-                    "Atualizando produto:",
+                    "Enviando atualização:",
                     updatedProduct
                 );
 
@@ -640,7 +760,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                 console.log(
-                    "Resposta da API:",
+                    "Resposta do servidor:",
                     data
                 );
 
@@ -653,6 +773,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                     );
 
                 }
+
+
+                // ==================================
+                // ATUALIZAR LOCALSTORAGE
+                // ==================================
+
+                product =
+                    data;
 
 
                 // ==================================
@@ -671,7 +799,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             } catch (error) {
 
                 console.error(
-                    "Erro ao salvar anúncio:",
+                    "Erro ao salvar:",
                     error
                 );
 
@@ -684,12 +812,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             } finally {
 
-                if (submitButton) {
+                if (saveButton) {
 
-                    submitButton.disabled =
+                    saveButton.disabled =
                         false;
 
-                    submitButton.textContent =
+                    saveButton.textContent =
                         "Salvar alterações";
 
                 }
@@ -729,6 +857,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             try {
 
+                // ==================================
+                // DELETE
+                // ==================================
+
                 const response =
                     await fetch(
                         `${API}/${productId}`,
@@ -754,6 +886,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 }
 
+
+                // ==================================
+                // SUCESSO
+                // ==================================
 
                 alert(
                     "Anúncio excluído com sucesso!"
