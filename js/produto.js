@@ -7,267 +7,233 @@ document.addEventListener("DOMContentLoaded", async () => {
     const API = "https://alugase-api.onrender.com/api/products";
 
     const user = JSON.parse(localStorage.getItem("alugase_user"));
-
-    const productId =
-        new URLSearchParams(location.search).get("id");
+    const productId = new URLSearchParams(location.search).get("id");
 
     if (!productId) {
         location.href = "index.html";
         return;
     }
 
-    const categoryLabel =
-        document.querySelector(".product-category");
+    const categoryLabel = document.querySelector(".product-category");
+    const categoryLink = document.querySelector(".product-category-link");
+    const breadcrumbTitle = document.querySelector("#breadcrumb-title");
 
-    const categoryLink =
-        document.querySelector(".product-category-link");
+    const title = document.querySelector("#product-title");
+    const mainImage = document.querySelector("#main-image");
+    const thumbnails = document.querySelector(".product-thumbnails");
 
-    const breadcrumb =
-        document.querySelector("#breadcrumb-title");
+    const locationText = document.querySelector(".product-location");
+    const description = document.querySelector(".product-description p");
 
-    const title =
-        document.querySelector("#product-title");
+    const price = document.querySelector(".pricing strong");
+    const deliveryLabel = document.querySelector("#delivery-label");
+    const depositTotal = document.querySelector("#deposit-total");
 
-    const mainImage =
-        document.querySelector("#main-image");
+    const ownerName = document.querySelector("#owner-name");
+    const ownerRating = document.querySelector("#owner-rating");
+    const ownerReviews = document.querySelector("#owner-reviews");
+    const ownerRentals = document.querySelector("#owner-rentals");
+    const ownerYears = document.querySelector("#owner-years");
 
-    const thumbnails =
-        document.querySelector("#product-thumbnails");
+    const startDate = document.querySelector("#start-date");
+    const endDate = document.querySelector("#end-date");
 
-    const locationText =
-        document.querySelector(".product-location");
+    const dailyTotal = document.querySelector("#daily-total");
+    const deliveryTotal = document.querySelector("#delivery-total");
+    const rentalTotal = document.querySelector("#rental-total");
 
-    const description =
-        document.querySelector(".product-description p");
-
-    const price =
-        document.querySelector(".pricing strong");
-
-    const deliveryLabel =
-        document.querySelector("#delivery-label");
-
-    const deposit =
-        document.querySelector("#deposit-total");
-
-    const owner =
-        document.querySelector("#owner-name");
-
-    const start =
-        document.querySelector("#start-date");
-
-    const end =
-        document.querySelector("#end-date");
-
-    const daily =
-        document.querySelector("#daily-total");
-
-    const delivery =
-        document.querySelector("#delivery-total");
-
-    const total =
-        document.querySelector("#rental-total");
-
-    const button =
-        document.querySelector("#rental-button");
+    const rentalButton = document.querySelector("#rental-button");
 
     let product;
 
-    // =======================================
+    // ==========================
     // CARREGAR
-    // =======================================
+    // ==========================
 
-    const response = await fetch(`${API}/${productId}`);
+    async function loadProduct(){
 
-    product = await response.json();
+        const res = await fetch(`${API}/${productId}`);
 
-    render();
+        if(!res.ok){
+            alert("Produto não encontrado.");
+            location.href = "explorar.html";
+            return;
+        }
 
-    // =======================================
+        product = await res.json();
 
-    function render() {
+        fillScreen();
+    }
 
-        document.title = `${product.title} | ALUGASE`;
+    // ==========================
+    // GALERIA
+    // ==========================
 
-        categoryLabel.textContent =
-            product.category.toUpperCase();
+    function changeImage(src){
 
-        categoryLink.textContent =
-            product.category;
+        mainImage.innerHTML = `<img src="${src}" alt="${product.title}">`;
 
-        breadcrumb.textContent =
-            product.title;
+        document.querySelectorAll(".thumbnail")
+            .forEach(t=>t.classList.remove("active"));
 
-        title.textContent =
-            product.title;
+    }
 
-        locationText.textContent =
-            `📍 ${product.city}`;
+    function renderGallery(){
 
-        description.textContent =
-            product.description;
+        thumbnails.innerHTML="";
 
-        price.textContent =
-            `R$ ${product.pricePerDay}`;
+        if(product.images && product.images.length){
 
-        deposit.textContent =
-            `R$ ${product.deposit}`;
+            changeImage(product.images[0]);
 
-        deliveryLabel.textContent =
+            product.images.forEach((img,index)=>{
+
+                const btn=document.createElement("button");
+
+                btn.className=`thumbnail ${index===0?"active":""}`;
+
+                btn.innerHTML=`<img src="${img}" alt="">`;
+
+                btn.onclick=()=>{
+
+                    changeImage(img);
+
+                    document.querySelectorAll(".thumbnail")
+                        .forEach(t=>t.classList.remove("active"));
+
+                    btn.classList.add("active");
+                };
+
+                thumbnails.appendChild(btn);
+
+            });
+
+        }else{
+
+            mainImage.innerHTML=`<div class="emoji-image">${product.image || "📦"}</div>`;
+
+            thumbnails.innerHTML=`
+                <button class="thumbnail emoji active">
+                    ${product.image || "📦"}
+                </button>
+            `;
+        }
+    }
+
+    // ==========================
+    // PREENCHER
+    // ==========================
+
+    function fillScreen(){
+
+        document.title=`${product.title} | ALUGASE`;
+
+        categoryLabel.textContent=product.category.toUpperCase();
+        categoryLink.textContent=product.category;
+        breadcrumbTitle.textContent=product.title;
+
+        title.textContent=product.title;
+
+        renderGallery();
+
+        locationText.textContent=`📍 ${product.city}`;
+        description.textContent=product.description;
+
+        price.textContent=`R$ ${product.pricePerDay}`;
+
+        deliveryLabel.textContent=
             product.delivery
                 ? `+ R$ ${product.deliveryPrice}`
                 : "Somente retirada";
 
-        owner.textContent =
-            product.ownerName || "Usuário";
+        depositTotal.textContent=`R$ ${product.deposit}`;
 
-        renderGallery();
+        ownerName.textContent=product.ownerName || "Usuário";
 
-        const today =
-            new Date().toISOString().split("T")[0];
+        ownerRating.textContent=product.rating || "5.0";
+        ownerReviews.textContent=product.reviews || "0";
+        ownerRentals.textContent="1";
 
-        start.min = today;
-        end.min = today;
+        ownerYears.textContent=new Date(product.createdAt)
+            .getFullYear();
 
-        start.value = today;
-        end.value = today;
+        const today=new Date().toISOString().split("T")[0];
 
-        calculate();
+        startDate.min=today;
+        endDate.min=today;
 
+        startDate.value=today;
+        endDate.value=today;
+
+        updateTotals();
     }
 
-    // =======================================
-    // GALERIA
-    // =======================================
+    // ==========================
+    // CÁLCULOS
+    // ==========================
 
-    function renderGallery() {
+    function getDays(){
 
-        thumbnails.innerHTML = "";
+        const start=new Date(startDate.value);
+        const end=new Date(endDate.value);
 
-        if (!product.images || product.images.length === 0) {
+        const diff=Math.ceil((end-start)/86400000)+1;
 
-            mainImage.innerHTML =
-                `<div class="emoji-image">📦</div>`;
-
-            return;
-
-        }
-
-        changeImage(product.images[0]);
-
-        product.images.forEach((url, index) => {
-
-            const thumb =
-                document.createElement("button");
-
-            thumb.className =
-                `thumbnail ${index === 0 ? "active" : ""}`;
-
-            thumb.innerHTML =
-                `<img src="${url}" alt="">`;
-
-            thumb.onclick = () => {
-
-                document
-                    .querySelectorAll(".thumbnail")
-                    .forEach(t =>
-                        t.classList.remove("active")
-                    );
-
-                thumb.classList.add("active");
-
-                changeImage(url);
-
-            };
-
-            thumbnails.appendChild(thumb);
-
-        });
-
+        return diff>0?diff:1;
     }
 
-    function changeImage(url) {
+    function updateTotals(){
 
-        mainImage.innerHTML = `
-            <img src="${url}" alt="${product.title}">
-        `;
+        const days=getDays();
 
-    }
-
-    // =======================================
-    // CÁLCULO
-    // =======================================
-
-    function daysBetween() {
-
-        const a = new Date(start.value);
-        const b = new Date(end.value);
-
-        const d =
-            Math.ceil((b - a) / 86400000) + 1;
-
-        return d > 0 ? d : 1;
-
-    }
-
-    function calculate() {
-
-        const days = daysBetween();
-
-        const deliverySelected =
+        const deliverySelected=
             document.querySelector(
                 'input[name="delivery"]:checked'
-            ).value === "delivery";
+            ).value==="delivery";
 
-        const deliveryValue =
+        const deliveryValue=
             deliverySelected && product.delivery
                 ? product.deliveryPrice
                 : 0;
 
-        const rent =
-            days * product.pricePerDay;
+        const daily=days*product.pricePerDay;
 
-        daily.textContent =
-            `R$ ${rent}`;
+        dailyTotal.textContent=`R$ ${daily}`;
+        deliveryTotal.textContent=`R$ ${deliveryValue}`;
 
-        delivery.textContent =
-            `R$ ${deliveryValue}`;
-
-        total.textContent =
-            `R$ ${rent + deliveryValue + product.deposit}`;
-
+        rentalTotal.textContent=
+            `R$ ${daily+deliveryValue+product.deposit}`;
     }
 
-    start.onchange = () => {
+    startDate.onchange=()=>{
 
-        end.min = start.value;
+        endDate.min=startDate.value;
 
-        if (end.value < start.value)
-            end.value = start.value;
+        if(endDate.value<startDate.value)
+            endDate.value=startDate.value;
 
-        calculate();
-
+        updateTotals();
     };
 
-    end.onchange = calculate;
+    endDate.onchange=updateTotals;
 
-    document
-        .querySelectorAll('input[name="delivery"]')
-        .forEach(r => r.onchange = calculate);
+    document.querySelectorAll('input[name="delivery"]')
+        .forEach(r=>r.onchange=updateTotals);
 
-    // =======================================
-    // RESERVAR
-    // =======================================
+    // ==========================
+    // ALUGAR
+    // ==========================
 
-    button.onclick = () => {
+    rentalButton.onclick=()=>{
 
-        if (!user) {
-            location.href = "login.html";
+        if(!user){
+            location.href="login.html";
             return;
         }
 
-        location.href =
-            `reserva.html?id=${product._id}`;
-
+        location.href=`reserva.html?id=${product._id}`;
     };
+
+    await loadProduct();
 
 });
