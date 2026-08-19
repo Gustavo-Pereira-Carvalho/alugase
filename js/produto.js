@@ -7,17 +7,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const API = "https://alugase-api.onrender.com/api/products";
 
     const user = JSON.parse(localStorage.getItem("alugase_user"));
-
-    const productId = new URLSearchParams(window.location.search).get("id");
+    const productId = new URLSearchParams(location.search).get("id");
 
     if (!productId) {
-        window.location.href = "index.html";
+        location.href = "index.html";
         return;
     }
-
-    // ==========================================
-    // ELEMENTOS
-    // ==========================================
 
     const categoryLabel = document.querySelector(".product-category");
     const categoryLink = document.querySelector(".product-category-link");
@@ -45,37 +40,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let product;
 
-    // ==========================================
-    // CARREGAR PRODUTO
-    // ==========================================
-
     async function loadProduct() {
 
-        try {
+        const response = await fetch(`${API}/${productId}`);
 
-            const response = await fetch(`${API}/${productId}`);
-
-            if (!response.ok) throw new Error();
-
-            product = await response.json();
-
-            fillScreen();
-
-        } catch (error) {
-
-            console.error(error);
-
+        if (!response.ok) {
             alert("Produto não encontrado.");
-
-            window.location.href = "explorar.html";
-
+            location.href = "explorar.html";
+            return;
         }
 
-    }
+        product = await response.json();
 
-    // ==========================================
-    // PREENCHER TELA
-    // ==========================================
+        fillScreen();
+
+    }
 
     function fillScreen() {
 
@@ -86,7 +65,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         breadcrumbTitle.textContent = product.title;
 
         title.textContent = product.title;
-        image.textContent = product.image || "📦";
+
+        // IMAGEM PRINCIPAL
+        if (product.images && product.images.length > 0) {
+
+            image.innerHTML = `
+                <img src="${product.images[0]}" alt="${product.title}">
+            `;
+
+        } else {
+
+            image.innerHTML = `<div class="emoji-image">📦</div>`;
+
+        }
 
         locationText.textContent = `📍 ${product.city}`;
         description.textContent = product.description;
@@ -99,8 +90,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         depositTotal.textContent = `R$ ${product.deposit}`;
 
-        ownerName.textContent =
-            product.ownerName || "Usuário Verificado";
+        ownerName.textContent = product.ownerName || "Usuário";
 
         const today = new Date().toISOString().split("T")[0];
 
@@ -114,18 +104,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-    // ==========================================
-    // DIÁRIAS
-    // ==========================================
-
     function getDays() {
 
         const start = new Date(startDate.value);
         const end = new Date(endDate.value);
 
-        const diff = Math.ceil(
-            (end - start) / (1000 * 60 * 60 * 24)
-        ) + 1;
+        const diff =
+            Math.ceil((end - start) / 86400000) + 1;
 
         return diff > 0 ? diff : 1;
 
@@ -133,14 +118,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function updateTotals() {
 
-        if (!product) return;
-
         const days = getDays();
 
         const deliverySelected =
-            document.querySelector(
-                'input[name="delivery"]:checked'
-            )?.value === "delivery";
+            document.querySelector('input[name="delivery"]:checked')?.value === "delivery";
 
         const deliveryValue =
             deliverySelected && product.delivery
@@ -156,70 +137,32 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-    startDate.addEventListener("change", () => {
+    startDate.onchange = () => {
 
         endDate.min = startDate.value;
 
-        if (endDate.value < startDate.value) {
+        if (endDate.value < startDate.value)
             endDate.value = startDate.value;
-        }
 
         updateTotals();
 
-    });
+    };
 
-    endDate.addEventListener("change", updateTotals);
+    endDate.onchange = updateTotals;
 
-    document
-        .querySelectorAll('input[name="delivery"]')
-        .forEach(radio =>
-            radio.addEventListener("change", updateTotals)
-        );
+    document.querySelectorAll('input[name="delivery"]')
+        .forEach(r => r.onchange = updateTotals);
 
-    // ==========================================
-    // CONTINUAR PARA RESERVA
-    // ==========================================
-
-    rentalButton.addEventListener("click", () => {
+    rentalButton.onclick = () => {
 
         if (!user) {
-
-            alert("Faça login para continuar.");
-
-            window.location.href = "login.html";
-
+            location.href = "login.html";
             return;
-
         }
 
-        if (!user.identityVerified) {
+        location.href = `reserva.html?id=${product._id}`;
 
-            alert("Verifique sua identidade antes de alugar.");
-
-            window.location.href = "perfil.html";
-
-            return;
-
-        }
-
-        if (
-            product.category === "Veículos" &&
-            !user.driverLicenseVerified
-        ) {
-
-            alert("É necessário possuir uma CNH verificada.");
-
-            window.location.href = "perfil.html";
-
-            return;
-
-        }
-
-        window.location.href = `reserva.html?id=${product._id}`;
-
-    });
-
-    // ==========================================
+    };
 
     await loadProduct();
 
