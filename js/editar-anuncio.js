@@ -2,311 +2,247 @@
 // ALUGASE — EDITAR ANÚNCIO
 // ==========================================
 
-document.addEventListener("DOMContentLoaded", async () => {
-
-    // ==========================================
-    // CONFIGURAÇÃO
-    // ==========================================
-
-    const API =
-        "https://alugase-api.onrender.com/api/products";
-
-
-    // ==========================================
-    // USUÁRIO
-    // ==========================================
-
-    let user = null;
-
-    try {
-
-        user = JSON.parse(
-            localStorage.getItem("alugase_user")
-        );
-
-    } catch (error) {
-
-        console.error(
-            "Erro ao carregar usuário:",
-            error
-        );
-
-    }
-
-
-    if (!user || !user._id) {
-
-        window.location.href =
-            "login.html";
-
-        return;
-
-    }
-
-
-    // ==========================================
-    // ID DO PRODUTO
-    // ==========================================
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-
-    const productId =
-        params.get("id");
-
-
-    if (!productId) {
-
-        alert(
-            "Anúncio não encontrado."
-        );
-
-        window.location.href =
-            "perfil.html";
-
-        return;
-
-    }
-
-
-    // ==========================================
-    // ELEMENTOS
-    // ==========================================
-
-    const form =
-        document.querySelector("#edit-form");
-
-    const title =
-        document.querySelector("#title");
-
-    const category =
-        document.querySelector("#category");
-
-    const icon =
-        document.querySelector("#icon");
-
-    const description =
-        document.querySelector("#description");
-
-    const city =
-        document.querySelector("#city");
-
-    const price =
-        document.querySelector("#price");
-
-    const deposit =
-        document.querySelector("#deposit");
-
-    const deliveryPrice =
-        document.querySelector("#deliveryPrice");
-
-    const active =
-        document.querySelector("#active");
-
-    const deleteButton =
-        document.querySelector("#delete-btn");
-
-    const sumPrice =
-        document.querySelector("#sum-price");
-
-    const sumDeposit =
-        document.querySelector("#sum-deposit");
-
-    const sumStatus =
-        document.querySelector("#sum-status");
-
-    const currentImages =
-        document.querySelector("#current-images");
-
-
-    // ==========================================
-    // VERIFICAR FORMULÁRIO
-    // ==========================================
-
-    if (!form) {
-
-        console.error(
-            "Formulário #edit-form não encontrado."
-        );
-
-        return;
-
-    }
-
-
-    // ==========================================
-    // PRODUTO
-    // ==========================================
-
-    let product = null;
-
-
-    // ==========================================
-    // FORMATAR DINHEIRO
-    // ==========================================
-
-    function money(value) {
-
-        return Number(value || 0).toLocaleString(
-            "pt-BR",
-            {
-                style: "currency",
-                currency: "BRL"
-            }
-        );
-
-    }
-
-
-    // ==========================================
-    // ATUALIZAR RESUMO
-    // ==========================================
-
-    function updateSummary() {
-
-        if (sumPrice) {
-
-            sumPrice.textContent =
-                money(price.value);
-
-        }
-
-
-        if (sumDeposit) {
-
-            sumDeposit.textContent =
-                money(deposit.value);
-
-        }
-
-
-        if (sumStatus) {
-
-            sumStatus.textContent =
-                active.checked
-                    ? "Disponível"
-                    : "Pausado";
-
-        }
-
-    }
-
-
-    // ==========================================
-    // MOSTRAR IMAGENS
-    // ==========================================
-
-    function renderCurrentImages() {
-
-        if (!currentImages) {
-            return;
-        }
-
-
-        currentImages.innerHTML = "";
-
-
-        const images =
-            Array.isArray(product?.images)
-                ? product.images
-                : [];
-
-
-        if (!images.length) {
-
-            currentImages.innerHTML = `
-
-                <div class="no-images">
-
-                    <span>
-                        📷
-                    </span>
-
-                    <p>
-                        Este anúncio não possui imagens.
-                    </p>
-
-                </div>
-
-            `;
-
-            return;
-
-        }
-
-
-        images.forEach(
-            (image, index) => {
-
-                const wrapper =
-                    document.createElement("div");
-
-
-                wrapper.className =
-                    "current-image";
-
-
-                const img =
-                    document.createElement("img");
-
-
-                img.src =
-                    image;
-
-
-                img.alt =
-                    `${product.title || "Produto"} - imagem ${index + 1}`;
-
-
-                img.loading =
-                    "lazy";
-
-
-                img.onerror =
-                    () => {
-
-                        wrapper.innerHTML = `
-
-                            <div class="image-error">
-                                Imagem indisponível
-                            </div>
-
-                        `;
-
-                    };
-
-
-                wrapper.appendChild(
-                    img
-                );
-
-
-                currentImages.appendChild(
-                    wrapper
-                );
-
-            }
-        );
-
-    }
-
-
-    // ==========================================
-    // CARREGAR PRODUTO
-    // ==========================================
-
-    async function loadProduct() {
-
-        try {
-
-            console.log(
-                "Buscando produto:",
-                productId
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
+
+        // ==========================================
+        // API
+        // ==========================================
+
+        const API =
+            "https://alugase-api.onrender.com/api/products";
+
+
+        // ==========================================
+        // USUÁRIO
+        // ==========================================
+
+        const user =
+            JSON.parse(
+                localStorage.getItem(
+                    "alugase_user"
+                )
             );
 
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        // ==========================================
+        // ID DO PRODUTO
+        // ==========================================
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const productId =
+            params.get("id");
+
+
+        if (!productId) {
+
+            alert(
+                "Anúncio não informado."
+            );
+
+            window.location.href =
+                "perfil.html";
+
+            return;
+
+        }
+
+
+        // ==========================================
+        // ELEMENTOS
+        // ==========================================
+
+        const form =
+            document.querySelector(
+                "#edit-form"
+            );
+
+
+        const title =
+            document.querySelector(
+                "#title"
+            );
+
+
+        const category =
+            document.querySelector(
+                "#category"
+            );
+
+
+        const icon =
+            document.querySelector(
+                "#icon"
+            );
+
+
+        const description =
+            document.querySelector(
+                "#description"
+            );
+
+
+        const city =
+            document.querySelector(
+                "#city"
+            );
+
+
+        const price =
+            document.querySelector(
+                "#price"
+            );
+
+
+        const deposit =
+            document.querySelector(
+                "#deposit"
+            );
+
+
+        const deliveryPrice =
+            document.querySelector(
+                "#deliveryPrice"
+            );
+
+
+        const active =
+            document.querySelector(
+                "#active"
+            );
+
+
+        const saveButton =
+            document.querySelector(
+                "#save-btn"
+            );
+
+
+        const deleteButton =
+            document.querySelector(
+                "#delete-btn"
+            );
+
+
+        const sumPrice =
+            document.querySelector(
+                "#sum-price"
+            );
+
+
+        const sumDeposit =
+            document.querySelector(
+                "#sum-deposit"
+            );
+
+
+        const sumDelivery =
+            document.querySelector(
+                "#sum-delivery"
+            );
+
+
+        const sumStatus =
+            document.querySelector(
+                "#sum-status"
+            );
+
+
+        // ==========================================
+        // PRODUTO ATUAL
+        // ==========================================
+
+        let product = null;
+
+
+        // ==========================================
+        // DINHEIRO
+        // ==========================================
+
+        function money(value) {
+
+            return Number(
+                value || 0
+            ).toLocaleString(
+                "pt-BR",
+                {
+                    style: "currency",
+                    currency: "BRL"
+                }
+            );
+
+        }
+
+
+        // ==========================================
+        // ATUALIZAR RESUMO
+        // ==========================================
+
+        function updateSummary() {
+
+            if (sumPrice) {
+
+                sumPrice.textContent =
+                    money(
+                        price.value
+                    );
+
+            }
+
+
+            if (sumDeposit) {
+
+                sumDeposit.textContent =
+                    money(
+                        deposit.value
+                    );
+
+            }
+
+
+            if (sumDelivery) {
+
+                sumDelivery.textContent =
+                    money(
+                        deliveryPrice.value
+                    );
+
+            }
+
+
+            if (sumStatus) {
+
+                sumStatus.textContent =
+                    active.checked
+                        ? "Disponível"
+                        : "Pausado";
+
+            }
+
+        }
+
+
+        // ==========================================
+        // CARREGAR PRODUTO
+        // ==========================================
+
+        try {
 
             const response =
                 await fetch(
@@ -316,12 +252,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const data =
                 await response.json();
-
-
-            console.log(
-                "Produto recebido:",
-                data
-            );
 
 
             if (!response.ok) {
@@ -338,9 +268,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 data;
 
 
-            // ==================================
-            // VERIFICAR DONO
-            // ==================================
+            // ======================================
+            // SEGURANÇA
+            // ======================================
 
             const ownerId =
                 product.ownerId?._id ||
@@ -348,7 +278,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             if (
-                ownerId &&
                 String(ownerId) !==
                 String(user._id)
             ) {
@@ -365,101 +294,57 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
-            // ==================================
-            // NOME
-            // ==================================
+            // ======================================
+            // PREENCHER FORMULÁRIO
+            // ======================================
 
             title.value =
                 product.title || "";
 
 
-            // ==================================
-            // CATEGORIA
-            // ==================================
-
             category.value =
                 product.category || "";
 
 
-            // ==================================
-            // ÍCONE
-            // ==================================
+            /*
+             * O campo icon é apenas visual.
+             * O banco atual utiliza "images".
+             *
+             * Não sobrescrevemos as imagens
+             * existentes durante a edição.
+             */
 
-            const productIcon =
-                product.icon || "📦";
-
-
-            const iconExists =
-                [...icon.options].some(
-                    option =>
-                        option.value ===
-                        productIcon
-                );
-
-
-            if (iconExists) {
-
-                icon.value =
-                    productIcon;
-
-            } else {
-
-                icon.value =
-                    "📦";
-
-            }
-
-
-            // ==================================
-            // DESCRIÇÃO
-            // ==================================
 
             description.value =
                 product.description || "";
 
 
-            // ==================================
-            // CIDADE
-            // ==================================
-
             city.value =
                 product.city || "";
 
 
-            // ==================================
-            // PREÇOS
-            // ==================================
-
             price.value =
-                product.pricePerDay ?? 0;
+                Number(
+                    product.pricePerDay || 0
+                );
 
 
             deposit.value =
-                product.deposit ?? 0;
+                Number(
+                    product.deposit || 0
+                );
 
 
             deliveryPrice.value =
-                product.deliveryPrice ?? 0;
+                Number(
+                    product.deliveryPrice || 0
+                );
 
-
-            // ==================================
-            // STATUS
-            // ==================================
 
             active.checked =
-                product.status === "available";
+                product.status ===
+                "available";
 
-
-            // ==================================
-            // IMAGENS
-            // ==================================
-
-            renderCurrentImages();
-
-
-            // ==================================
-            // RESUMO
-            // ==================================
 
             updateSummary();
 
@@ -474,348 +359,266 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             alert(
                 error.message ||
-                "Não foi possível carregar o anúncio."
+                "Produto não encontrado."
             );
 
 
             window.location.href =
                 "perfil.html";
 
+
+            return;
+
         }
 
-    }
 
+        // ==========================================
+        // EVENTOS DO RESUMO
+        // ==========================================
 
-    // ==========================================
-    // EVENTOS DO RESUMO
-    // ==========================================
+        [
+            price,
+            deposit,
+            deliveryPrice
+        ].forEach(
+            input => {
 
-    price?.addEventListener(
-        "input",
-        updateSummary
-    );
-
-
-    deposit?.addEventListener(
-        "input",
-        updateSummary
-    );
-
-
-    deliveryPrice?.addEventListener(
-        "input",
-        updateSummary
-    );
-
-
-    active?.addEventListener(
-        "change",
-        updateSummary
-    );
-
-
-    // ==========================================
-    // SALVAR ALTERAÇÕES
-    // ==========================================
-
-    form.addEventListener(
-        "submit",
-        async event => {
-
-            event.preventDefault();
-
-
-            // ==================================
-            // VALIDAÇÕES
-            // ==================================
-
-            if (!title.value.trim()) {
-
-                alert(
-                    "Informe o nome do produto."
+                input.addEventListener(
+                    "input",
+                    updateSummary
                 );
-
-                title.focus();
-
-                return;
 
             }
+        );
 
 
-            if (!category.value.trim()) {
+        active.addEventListener(
+            "change",
+            updateSummary
+        );
 
-                alert(
-                    "Selecione uma categoria."
-                );
 
-                category.focus();
+        // ==========================================
+        // SALVAR
+        // ==========================================
 
-                return;
+        form.addEventListener(
+            "submit",
+            async event => {
 
-            }
+                event.preventDefault();
 
 
-            if (!description.value.trim()) {
-
-                alert(
-                    "Informe uma descrição."
-                );
-
-                description.focus();
-
-                return;
-
-            }
-
-
-            if (!city.value.trim()) {
-
-                alert(
-                    "Informe a cidade."
-                );
-
-                city.focus();
-
-                return;
-
-            }
-
-
-            const priceValue =
-                Number(price.value);
-
-
-            const depositValue =
-                Number(
-                    deposit.value || 0
-                );
-
-
-            const deliveryValue =
-                Number(
-                    deliveryPrice.value || 0
-                );
-
-
-            if (
-                !Number.isFinite(priceValue) ||
-                priceValue <= 0
-            ) {
-
-                alert(
-                    "Informe um preço por dia válido."
-                );
-
-                price.focus();
-
-                return;
-
-            }
-
-
-            if (
-                !Number.isFinite(depositValue) ||
-                depositValue < 0
-            ) {
-
-                alert(
-                    "Informe uma caução válida."
-                );
-
-                deposit.focus();
-
-                return;
-
-            }
-
-
-            if (
-                !Number.isFinite(deliveryValue) ||
-                deliveryValue < 0
-            ) {
-
-                alert(
-                    "Informe uma taxa de entrega válida."
-                );
-
-                deliveryPrice.focus();
-
-                return;
-
-            }
-
-
-            // ==================================
-            // BOTÃO
-            // ==================================
-
-            const saveButton =
-                form.querySelector(
-                    'button[type="submit"]'
-                );
-
-
-            if (saveButton) {
-
-                saveButton.disabled =
-                    true;
-
-                saveButton.textContent =
-                    "Salvando...";
-
-            }
-
-
-            try {
-
-                // ==================================
-                // MONTAR DADOS
-                // ==================================
-
-                const updatedProduct = {
-
-                    title:
-                        title.value.trim(),
-
-                    category:
-                        category.value.trim(),
-
-                    icon:
-                        icon.value,
-
-                    description:
-                        description.value.trim(),
-
-                    city:
-                        city.value.trim(),
-
-                    pricePerDay:
-                        priceValue,
-
-                    deposit:
-                        depositValue,
-
-                    deliveryPrice:
-                        deliveryValue,
-
-                    status:
-                        active.checked
-                            ? "available"
-                            : "paused",
-
-                    /*
-                     * IMPORTANTE:
-                     *
-                     * O backend utiliza "images".
-                     *
-                     * Mantemos as imagens existentes
-                     * porque esta página ainda não
-                     * substitui os arquivos.
-                     */
-
-                    images:
-                        Array.isArray(product.images)
-                            ? product.images
-                            : []
-
-                };
-
-
-                console.log(
-                    "Enviando atualização:",
-                    updatedProduct
-                );
+                if (!product) {
+                    return;
+                }
 
 
                 // ==================================
-                // PUT
+                // VALIDAR
                 // ==================================
 
-                const response =
-                    await fetch(
-                        `${API}/${productId}`,
-                        {
+                if (
+                    !title.value.trim() ||
+                    !category.value.trim() ||
+                    !description.value.trim() ||
+                    !city.value.trim()
+                ) {
 
-                            method:
-                                "PUT",
-
-                            headers: {
-
-                                "Content-Type":
-                                    "application/json"
-
-                            },
-
-                            body:
-                                JSON.stringify(
-                                    updatedProduct
-                                )
-
-                        }
+                    alert(
+                        "Preencha todos os campos obrigatórios."
                     );
 
+                    return;
 
-                const data =
-                    await response.json();
-
-
-                console.log(
-                    "Resposta do servidor:",
-                    data
-                );
+                }
 
 
-                if (!response.ok) {
+                if (
+                    Number(price.value) <= 0
+                ) {
 
-                    throw new Error(
-                        data.error ||
-                        "Erro ao atualizar anúncio."
+                    alert(
+                        "O preço por dia deve ser maior que zero."
                     );
+
+                    return;
+
+                }
+
+
+                if (
+                    Number(deposit.value) < 0
+                ) {
+
+                    alert(
+                        "A caução não pode ser negativa."
+                    );
+
+                    return;
 
                 }
 
 
                 // ==================================
-                // ATUALIZAR LOCALSTORAGE
+                // LOADING
                 // ==================================
 
-                product =
-                    data;
+                saveButton.disabled =
+                    true;
 
 
-                // ==================================
-                // SUCESSO
-                // ==================================
-
-                alert(
-                    "Alterações salvas com sucesso!"
-                );
+                saveButton.textContent =
+                    "Salvando...";
 
 
-                window.location.href =
-                    "perfil.html";
+                try {
+
+                    /*
+                     * Mantemos as imagens atuais.
+                     * Isso é importante porque o cadastro
+                     * atual utiliza o campo "images".
+                     */
+
+                    const updatedProduct = {
+
+                        ownerId:
+                            product.ownerId,
+
+                        ownerName:
+                            product.ownerName,
+
+                        title:
+                            title.value.trim(),
+
+                        category:
+                            category.value,
+
+                        description:
+                            description.value.trim(),
+
+                        city:
+                            city.value.trim(),
+
+                        pricePerDay:
+                            Number(
+                                price.value
+                            ),
+
+                        deposit:
+                            Number(
+                                deposit.value
+                            ),
+
+                        pickup:
+                            Boolean(
+                                product.pickup
+                            ),
+
+                        delivery:
+                            Boolean(
+                                product.delivery
+                            ),
+
+                        deliveryPrice:
+                            Number(
+                                deliveryPrice.value || 0
+                            ),
+
+                        images:
+                            Array.isArray(
+                                product.images
+                            )
+                                ? product.images
+                                : [],
+
+                        vehicle:
+                            product.vehicle || null,
+
+                        verified:
+                            product.verified !== false,
+
+                        status:
+                            active.checked
+                                ? "available"
+                                : "paused"
+
+                    };
 
 
-            } catch (error) {
+                    // ==================================
+                    // REQUEST
+                    // ==================================
 
-                console.error(
-                    "Erro ao salvar:",
-                    error
-                );
+                    const response =
+                        await fetch(
+                            `${API}/${productId}`,
+                            {
+
+                                method: "PUT",
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/json"
+
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        updatedProduct
+                                    )
+
+                            }
+                        );
 
 
-                alert(
-                    error.message ||
-                    "Não foi possível salvar as alterações."
-                );
+                    const data =
+                        await response.json();
 
 
-            } finally {
+                    if (!response.ok) {
 
-                if (saveButton) {
+                        throw new Error(
+                            data.error ||
+                            "Erro ao salvar alterações."
+                        );
+
+                    }
+
+
+                    // ==================================
+                    // SUCESSO
+                    // ==================================
+
+                    alert(
+                        "Alterações salvas com sucesso!"
+                    );
+
+
+                    window.location.href =
+                        "perfil.html";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Erro ao salvar:",
+                        error
+                    );
+
+
+                    alert(
+                        error.message ||
+                        "Não foi possível salvar as alterações."
+                    );
+
+
+                } finally {
 
                     saveButton.disabled =
                         false;
+
 
                     saveButton.textContent =
                         "Salvar alterações";
@@ -823,114 +626,111 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
             }
-
-        }
-    );
+        );
 
 
-    // ==========================================
-    // EXCLUIR ANÚNCIO
-    // ==========================================
+        // ==========================================
+        // EXCLUIR
+        // ==========================================
 
-    deleteButton?.addEventListener(
-        "click",
-        async () => {
+        deleteButton.addEventListener(
+            "click",
+            async () => {
 
-            const confirmed =
-                confirm(
-                    "Deseja realmente excluir este anúncio?\n\nEssa ação não poderá ser desfeita."
-                );
-
-
-            if (!confirmed) {
-                return;
-            }
-
-
-            deleteButton.disabled =
-                true;
-
-
-            deleteButton.textContent =
-                "Excluindo...";
-
-
-            try {
-
-                // ==================================
-                // DELETE
-                // ==================================
-
-                const response =
-                    await fetch(
-                        `${API}/${productId}`,
-                        {
-
-                            method:
-                                "DELETE"
-
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.error ||
-                        "Erro ao excluir anúncio."
-                    );
-
+                if (!product) {
+                    return;
                 }
 
 
-                // ==================================
-                // SUCESSO
-                // ==================================
-
-                alert(
-                    "Anúncio excluído com sucesso!"
-                );
+                const confirmed =
+                    confirm(
+                        `Deseja realmente excluir o anúncio "${product.title}"?`
+                    );
 
 
-                window.location.href =
-                    "perfil.html";
-
-
-            } catch (error) {
-
-                console.error(
-                    "Erro ao excluir:",
-                    error
-                );
-
-
-                alert(
-                    error.message ||
-                    "Não foi possível excluir o anúncio."
-                );
+                if (!confirmed) {
+                    return;
+                }
 
 
                 deleteButton.disabled =
-                    false;
+                    true;
 
 
                 deleteButton.textContent =
-                    "Excluir anúncio";
+                    "Excluindo...";
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `${API}/${productId}`,
+                            {
+                                method: "DELETE",
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+                                body:
+                                    JSON.stringify({
+                                        ownerId:
+                                            user._id
+                                    })
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.error ||
+                            "Erro ao excluir anúncio."
+                        );
+
+                    }
+
+
+                    alert(
+                        "Anúncio excluído com sucesso!"
+                    );
+
+
+                    window.location.href =
+                        "perfil.html";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Erro ao excluir:",
+                        error
+                    );
+
+
+                    alert(
+                        error.message ||
+                        "Não foi possível excluir o anúncio."
+                    );
+
+
+                } finally {
+
+                    deleteButton.disabled =
+                        false;
+
+
+                    deleteButton.textContent =
+                        "Excluir anúncio";
+
+                }
 
             }
+        );
 
-        }
-    );
-
-
-    // ==========================================
-    // INICIAR
-    // ==========================================
-
-    await loadProduct();
-
-});
+    }
+);
