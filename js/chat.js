@@ -5,13 +5,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ==========================================
 
     const API =
-        "https://alugase-api.onrender.com/api/chats";
+        "https://alugase-api.onrender.com/api";
+
+    const CHATS_API =
+        `${API}/chats`;
 
     const RENTALS_API =
-        "https://alugase-api.onrender.com/api/rentals";
-
-    const PRODUCTS_API =
-        "https://alugase-api.onrender.com/api/products";
+        `${API}/rentals`;
 
 
     // ==========================================
@@ -21,15 +21,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     let user = null;
 
     try {
-        user = JSON.parse(
-            localStorage.getItem("alugase_user")
-        );
+
+        user =
+            JSON.parse(
+                localStorage.getItem("alugase_user")
+            );
+
     } catch (error) {
-        console.error("Erro ao ler usuário:", error);
+
+        console.error(
+            "Erro ao ler usuário:",
+            error
+        );
+
     }
 
+
     if (!user || !user._id) {
-        window.location.href = "login.html";
+
+        window.location.href =
+            "login.html";
+
         return;
     }
 
@@ -43,35 +55,64 @@ document.addEventListener("DOMContentLoaded", async () => {
             window.location.search
         ).get("chat");
 
+
     const conversationList =
-        document.querySelector("#conversation-list");
+        document.querySelector(
+            "#conversation-list"
+        );
+
 
     const messages =
-        document.querySelector("#messages");
+        document.querySelector(
+            "#messages"
+        );
+
 
     const input =
-        document.querySelector("#message-input");
+        document.querySelector(
+            "#message-input"
+        );
+
 
     const sendButton =
-        document.querySelector("#send-btn");
+        document.querySelector(
+            "#send-btn"
+        );
+
 
     const toggleReservation =
-        document.querySelector("#toggle-reservation");
+        document.querySelector(
+            "#toggle-reservation"
+        );
+
 
     const reservationDetails =
-        document.querySelector("#reservation-details");
+        document.querySelector(
+            "#reservation-details"
+        );
+
 
     const reservationArrow =
-        document.querySelector("#reservation-arrow");
+        document.querySelector(
+            "#reservation-arrow"
+        );
+
 
     const badge =
-        document.querySelector("#notification-badge");
+        document.querySelector(
+            "#notification-badge"
+        );
 
 
-    if (!conversationList || !messages) {
+    if (
+        !conversationList ||
+        !messages
+    ) {
+
         console.error(
             "Elementos principais do chat não encontrados."
         );
+
         return;
     }
 
@@ -81,15 +122,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ==========================================
 
     let chats = [];
+
     let currentChat = null;
+
     let currentProduct = null;
+
     let currentRental = null;
+
     let sendingMessage = false;
 
 
     // ==========================================
-    // COMPARAR IDS
+    // UTILITÁRIOS
     // ==========================================
+
+    function getId(value) {
+
+        if (!value) {
+            return null;
+        }
+
+        if (
+            typeof value === "object"
+        ) {
+
+            return (
+                value._id ||
+                value.id ||
+                null
+            );
+
+        }
+
+        return value;
+    }
+
 
     function sameId(a, b) {
 
@@ -101,38 +168,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    // ==========================================
-    // PEGAR ID
-    // ==========================================
-
-    function getId(value) {
-
-        if (!value) {
-            return null;
-        }
-
-        if (typeof value === "object") {
-            return value._id || value.id || null;
-        }
-
-        return value;
-    }
-
-
-    // ==========================================
-    // DINHEIRO
-    // ==========================================
-
     function formatMoney(value) {
 
-        const number = Number(value);
+        const number =
+            Number(value);
+
 
         if (
-            !Number.isFinite(number) ||
-            number < 0
+            !Number.isFinite(number)
         ) {
+
             return "R$ 0,00";
         }
+
 
         return number.toLocaleString(
             "pt-BR",
@@ -144,73 +192,60 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    // ==========================================
-    // DATA
-    // ==========================================
-
     function formatDate(value) {
 
         if (!value) {
             return "--";
         }
 
-        const date = new Date(value);
 
-        if (isNaN(date.getTime())) {
+        const date =
+            new Date(value);
+
+
+        if (
+            isNaN(
+                date.getTime()
+            )
+        ) {
+
             return "--";
         }
 
+
         return date.toLocaleDateString(
-            "pt-BR",
-            {
-                day: "2-digit",
-                month: "2-digit",
-                year: "numeric"
-            }
+            "pt-BR"
         );
     }
 
 
-    // ==========================================
-    // STATUS DO ALUGUEL
-    // ==========================================
-
     function rentalStatus(status) {
 
-        const statuses = {
-            pending: "Solicitado",
-            approved: "Aprovado",
-            rejected: "Recusado",
-            active: "Em andamento",
-            finished: "Finalizado"
-        };
+        switch (status) {
 
-        return statuses[status] ||
-            status ||
-            "Solicitado";
+            case "pending":
+                return "Pendente";
+
+            case "approved":
+                return "Aprovado";
+
+            case "rejected":
+                return "Recusado";
+
+            case "active":
+                return "Em andamento";
+
+            case "finished":
+                return "Finalizado";
+
+            default:
+                return status || "Solicitado";
+        }
     }
 
 
     // ==========================================
-    // STATUS DO PRODUTO
-    // ==========================================
-
-    function productStatus(status) {
-
-        if (status === "available") {
-            return "Disponível";
-        }
-
-        if (status === "rented") {
-            return "Indisponível";
-        }
-
-        return "Disponível";
-    }
-
-
-    // ==========================================
-    // CRIAR AVATAR
+    // AVATAR
     // ==========================================
 
     function createAvatar(
@@ -220,14 +255,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     ) {
 
         const avatar =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
-        avatar.className = className;
+
+        avatar.className =
+            className;
+
 
         const fallback =
             (name || "?")
                 .charAt(0)
                 .toUpperCase();
+
 
         if (
             profileImage &&
@@ -236,80 +277,120 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
 
             const img =
-                document.createElement("img");
+                document.createElement(
+                    "img"
+                );
 
-            img.src = profileImage;
+
+            img.src =
+                profileImage;
+
 
             img.alt =
                 `Foto de ${name || "usuário"}`;
 
-            img.className = "avatar-image";
 
-            img.loading = "lazy";
+            img.className =
+                "avatar-image";
+
+
+            img.loading =
+                "lazy";
+
 
             img.onerror = () => {
+
                 img.remove();
-                avatar.textContent = fallback;
+
+                avatar.textContent =
+                    fallback;
+
             };
 
-            avatar.appendChild(img);
+
+            avatar.appendChild(
+                img
+            );
 
         } else {
 
-            avatar.textContent = fallback;
+            avatar.textContent =
+                fallback;
         }
+
 
         return avatar;
     }
 
 
     // ==========================================
-    // PEGAR OUTRO USUÁRIO
+    // OUTRO USUÁRIO
     // ==========================================
 
     function getOtherUser(chat) {
 
-        const owner = chat.ownerId;
-        const renter = chat.renterId;
+        const owner =
+            chat.ownerId;
 
-        const ownerId = getId(owner);
-        const renterId = getId(renter);
 
-        const isOwner =
+        const renter =
+            chat.renterId;
+
+
+        const ownerId =
+            getId(owner);
+
+
+        const renterId =
+            getId(renter);
+
+
+        if (
             sameId(
                 ownerId,
                 user._id
-            );
-
-        if (isOwner) {
+            )
+        ) {
 
             return {
-                id: renterId,
+
+                id:
+                    renterId,
+
                 name:
                     renter?.name ||
                     chat.renterName ||
                     "Usuário",
+
                 profileImage:
                     renter?.profileImage ||
                     ""
+
             };
+
         }
 
+
         return {
-            id: ownerId,
+
+            id:
+                ownerId,
+
             name:
                 owner?.name ||
                 chat.ownerName ||
                 "Usuário",
+
             profileImage:
                 owner?.profileImage ||
                 ""
+
         };
     }
 
 
     // ==========================================
-    // CARREGAR DADOS DO CHAT
+    // CARREGAR PRODUTO E ALUGUEL
     // ==========================================
 
     async function loadChatData() {
@@ -317,6 +398,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!currentChat) {
 
             currentProduct = null;
+
             currentRental = null;
 
             renderRentalCard();
@@ -324,37 +406,61 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+
         /*
-         * O backend já utiliza:
+         * O backend de chats já faz:
          *
          * .populate("productId")
          * .populate("rentalId")
          *
-         * Portanto podemos usar diretamente
-         * os objetos recebidos.
+         * Portanto usamos diretamente
+         * os objetos retornados.
          */
+
 
         currentProduct =
             currentChat.productId &&
             typeof currentChat.productId === "object"
+
                 ? currentChat.productId
+
                 : null;
+
 
         currentRental =
             currentChat.rentalId &&
             typeof currentChat.rentalId === "object"
+
                 ? currentChat.rentalId
+
                 : null;
 
+
+        console.log(
+            "Produto do chat:",
+            currentProduct
+        );
+
+
+        console.log(
+            "Aluguel do chat:",
+            currentRental
+        );
+
+
         /*
-         * Caso algum backend antigo envie apenas IDs,
-         * fazemos o fallback pelas APIs.
+         * Fallback caso algum chat antigo
+         * ainda possua somente o ID.
          */
+
 
         if (!currentProduct) {
 
             const productId =
-                getId(currentChat.productId);
+                getId(
+                    currentChat.productId
+                );
+
 
             if (productId) {
 
@@ -362,12 +468,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     const response =
                         await fetch(
-                            `${PRODUCTS_API}/${productId}`
+                            `${API}/products/${productId}`
                         );
 
+
                     if (response.ok) {
+
                         currentProduct =
                             await response.json();
+
                     }
 
                 } catch (error) {
@@ -376,14 +485,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                         "Erro ao carregar produto:",
                         error
                     );
+
                 }
             }
         }
 
+
         if (!currentRental) {
 
             const rentalId =
-                getId(currentChat.rentalId);
+                getId(
+                    currentChat.rentalId
+                );
+
 
             if (rentalId) {
 
@@ -394,9 +508,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                             `${RENTALS_API}/${rentalId}`
                         );
 
+
                     if (response.ok) {
+
                         currentRental =
                             await response.json();
+
                     }
 
                 } catch (error) {
@@ -405,9 +522,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         "Erro ao carregar aluguel:",
                         error
                     );
+
                 }
             }
         }
+
 
         renderRentalCard();
     }
@@ -423,6 +542,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+
         try {
 
             const response =
@@ -430,16 +550,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                     `${RENTALS_API}/user/${user._id}`
                 );
 
+
             if (!response.ok) {
                 return;
             }
 
+
             const rentals =
                 await response.json();
 
-            if (!Array.isArray(rentals)) {
+
+            if (
+                !Array.isArray(rentals)
+            ) {
+
                 return;
             }
+
 
             const pending =
                 rentals.filter(
@@ -450,25 +577,34 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 rental.ownerId
                             );
 
+
                         return (
                             sameId(
                                 ownerId,
                                 user._id
                             ) &&
-                            rental.status === "pending"
+                            rental.status ===
+                            "pending"
                         );
+
                     }
                 ).length;
 
+
             if (pending > 0) {
 
-                badge.style.display = "flex";
-                badge.textContent = pending;
+                badge.style.display =
+                    "flex";
+
+                badge.textContent =
+                    pending;
 
             } else {
 
-                badge.style.display = "none";
+                badge.style.display =
+                    "none";
             }
+
 
         } catch (error) {
 
@@ -476,12 +612,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "Notificações indisponíveis.",
                 error
             );
+
         }
     }
 
 
     // ==========================================
-    // ABRIR / FECHAR ALUGUEL
+    // ABRIR / FECHAR CARD
     // ==========================================
 
     if (
@@ -498,521 +635,605 @@ document.addEventListener("DOMContentLoaded", async () => {
                         "open"
                     );
 
+
                 toggleReservation.classList.toggle(
                     "open",
                     opened
                 );
 
+
                 if (reservationArrow) {
 
                     reservationArrow.textContent =
-                        opened ? "▲" : "▼";
+                        opened
+                            ? "▲"
+                            : "▼";
+
                 }
+
             }
         );
     }
 
 
     // ==========================================
-    // CARD DO PRODUTO + ALUGUEL
+    // RENDERIZAR CARD
     // ==========================================
 
-// ==========================================
-// CARD DO PRODUTO + ALUGUEL
-// ==========================================
+    function renderRentalCard() {
 
-function renderRentalCard() {
+        // ======================================
+        // ELEMENTOS DO HTML
+        // ======================================
 
-    // ======================================
-    // ELEMENTOS DO PRODUTO
-    // ======================================
-
-    const productShort =
-        document.querySelector(
-            "#reservation-product-short"
-        );
-
-    const productImage =
-        document.querySelector(
-            "#reservation-product-image"
-        );
-
-    const product =
-        document.querySelector(
-            "#reservation-product"
-        );
-
-    const category =
-        document.querySelector(
-            "#reservation-category"
-        );
-
-    const city =
-        document.querySelector(
-            "#reservation-city"
-        );
-
-    const priceDay =
-        document.querySelector(
-            "#reservation-price-day"
-        );
-
-    const productDeposit =
-        document.querySelector(
-            "#reservation-product-deposit"
-        );
-
-    const productDelivery =
-        document.querySelector(
-            "#reservation-product-delivery"
-        );
-
-
-    // ======================================
-    // ELEMENTOS DO ALUGUEL
-    // ======================================
-
-    const status =
-        document.querySelector(
-            "#reservation-status"
-        );
-
-    const period =
-        document.querySelector(
-            "#reservation-period"
-        );
-
-    const total =
-        document.querySelector(
-            "#reservation-total"
-        );
-
-    const days =
-        document.querySelector(
-            "#reservation-days"
-        );
-
-    const delivery =
-        document.querySelector(
-            "#reservation-delivery"
-        );
-
-    const deposit =
-        document.querySelector(
-            "#reservation-deposit"
-        );
-
-
-    // ======================================
-    // PRODUTO
-    // ======================================
-
-    if (currentProduct) {
-
-        const productTitle =
-            currentProduct.title ||
-            "Produto";
-
-        const productCategory =
-            currentProduct.category ||
-            "Categoria";
-
-        const productCity =
-            currentProduct.city ||
-            "Cidade";
-
-        const productPrice =
-            Number(
-                currentProduct.pricePerDay || 0
+        const productShort =
+            document.querySelector(
+                "#reservation-product-short"
             );
 
-        const productDepositValue =
-            Number(
-                currentProduct.deposit || 0
+
+        const productImage =
+            document.querySelector(
+                "#reservation-product-image"
             );
 
-        const productDeliveryPrice =
-            Number(
-                currentProduct.deliveryPrice || 0
+
+        const product =
+            document.querySelector(
+                "#reservation-product"
             );
 
-        const canPickup =
-            currentProduct.pickup === true;
 
-        const canDelivery =
-            currentProduct.delivery === true;
-
-
-        // ==================================
-        // TÍTULO RESUMIDO
-        // ==================================
-
-        if (productShort) {
-
-            productShort.textContent =
-                productTitle;
-        }
+        const category =
+            document.querySelector(
+                "#reservation-category"
+            );
 
 
-        // ==================================
-        // TÍTULO
-        // ==================================
-
-        if (product) {
-
-            product.textContent =
-                productTitle;
-        }
+        const city =
+            document.querySelector(
+                "#reservation-city"
+            );
 
 
-        // ==================================
-        // CATEGORIA
-        // ==================================
-
-        if (category) {
-
-            category.textContent =
-                productCategory;
-        }
+        const priceDay =
+            document.querySelector(
+                "#reservation-price-day"
+            );
 
 
-        // ==================================
-        // CIDADE
-        // ==================================
-
-        if (city) {
-
-            city.textContent =
-                `📍 ${productCity}`;
-        }
+        const productDeposit =
+            document.querySelector(
+                "#reservation-product-deposit"
+            );
 
 
-        // ==================================
-        // PREÇO POR DIA
-        // ==================================
-
-        if (priceDay) {
-
-            priceDay.textContent =
-                `${formatMoney(productPrice)}`;
-        }
+        const productDelivery =
+            document.querySelector(
+                "#reservation-product-delivery"
+            );
 
 
-        // ==================================
-        // CAUÇÃO DO PRODUTO
-        // ==================================
+        const status =
+            document.querySelector(
+                "#reservation-status"
+            );
 
-        if (productDeposit) {
 
-            productDeposit.textContent =
-                formatMoney(
-                    productDepositValue
+        const period =
+            document.querySelector(
+                "#reservation-period"
+            );
+
+
+        const total =
+            document.querySelector(
+                "#reservation-total"
+            );
+
+
+        const days =
+            document.querySelector(
+                "#reservation-days"
+            );
+
+
+        const delivery =
+            document.querySelector(
+                "#reservation-delivery"
+            );
+
+
+        const deposit =
+            document.querySelector(
+                "#reservation-deposit"
+            );
+
+
+        // ======================================
+        // PRODUTO
+        // ======================================
+
+        if (currentProduct) {
+
+            /*
+             * EXATAMENTE COMO NA PÁGINA
+             * DE SOLICITAÇÕES:
+             *
+             * const product = rental.productId;
+             */
+
+
+            const title =
+                currentProduct.title ||
+                "Produto";
+
+
+            const productCategory =
+                currentProduct.category ||
+                "Categoria";
+
+
+            const productCity =
+                currentProduct.city ||
+                "Cidade";
+
+
+            const price =
+                Number(
+                    currentProduct.pricePerDay || 0
                 );
-        }
 
 
-        // ==================================
-        // ENTREGA DO PRODUTO
-        // ==================================
+            const depositValue =
+                Number(
+                    currentProduct.deposit || 0
+                );
 
-        if (productDelivery) {
 
-            if (canDelivery) {
+            const deliveryPrice =
+                Number(
+                    currentProduct.deliveryPrice || 0
+                );
 
-                productDelivery.textContent =
-                    productDeliveryPrice > 0
-                        ? formatMoney(
-                            productDeliveryPrice
-                        )
-                        : "Disponível";
 
-            } else {
+            const hasDelivery =
+                currentProduct.delivery === true;
 
-                productDelivery.textContent =
-                    "Não disponível";
+
+            // ==================================
+            // TÍTULO
+            // ==================================
+
+            if (productShort) {
+
+                productShort.textContent =
+                    title;
             }
-        }
 
 
-        // ==================================
-        // IMAGEM
-        // ==================================
+            if (product) {
 
-        if (productImage) {
-
-            productImage.innerHTML = "";
-
-            const imageUrl =
-                Array.isArray(
-                    currentProduct.images
-                ) &&
-                currentProduct.images.length > 0
-                    ? currentProduct.images[0]
-                    : null;
+                product.textContent =
+                    title;
+            }
 
 
-            if (imageUrl) {
+            // ==================================
+            // CATEGORIA
+            // ==================================
 
-                const image =
-                    document.createElement("img");
+            if (category) {
 
-                image.src =
-                    imageUrl;
+                category.textContent =
+                    productCategory;
+            }
 
-                image.alt =
-                    productTitle;
 
-                image.loading =
-                    "lazy";
+            // ==================================
+            // CIDADE
+            // ==================================
 
-                image.onerror = () => {
+            if (city) {
 
-                    productImage.innerHTML =
+                city.textContent =
+                    `📍 ${productCity}`;
+            }
+
+
+            // ==================================
+            // PREÇO
+            // ==================================
+
+            if (priceDay) {
+
+                priceDay.textContent =
+                    formatMoney(price);
+            }
+
+
+            // ==================================
+            // CAUÇÃO
+            // ==================================
+
+            if (productDeposit) {
+
+                productDeposit.textContent =
+                    formatMoney(
+                        depositValue
+                    );
+            }
+
+
+            // ==================================
+            // ENTREGA DO PRODUTO
+            // ==================================
+
+            if (productDelivery) {
+
+                if (hasDelivery) {
+
+                    productDelivery.textContent =
+                        deliveryPrice > 0
+
+                            ? formatMoney(
+                                deliveryPrice
+                            )
+
+                            : "Disponível";
+
+                } else {
+
+                    productDelivery.textContent =
+                        "Não disponível";
+                }
+            }
+
+
+            // ==================================
+            // IMAGEM
+            // ==================================
+
+            if (productImage) {
+
+                productImage.innerHTML =
+                    "";
+
+
+                /*
+                 * Seu backend atual salva:
+                 *
+                 * images: [...]
+                 *
+                 * Então primeiro tentamos images[0].
+                 *
+                 * Também deixamos fallback para
+                 * product.image caso exista em
+                 * produtos antigos.
+                 */
+
+
+                let imageUrl = null;
+
+
+                if (
+                    Array.isArray(
+                        currentProduct.images
+                    ) &&
+                    currentProduct.images.length
+                ) {
+
+                    imageUrl =
+                        currentProduct.images[0];
+
+                } else if (
+                    currentProduct.image
+                ) {
+
+                    imageUrl =
+                        currentProduct.image;
+                }
+
+
+                if (imageUrl) {
+
+                    const img =
+                        document.createElement(
+                            "img"
+                        );
+
+
+                    img.src =
+                        imageUrl;
+
+
+                    img.alt =
+                        title;
+
+
+                    img.loading =
+                        "lazy";
+
+
+                    img.onerror = () => {
+
+                        productImage.innerHTML =
+                            "📦";
+
+                    };
+
+
+                    productImage.appendChild(
+                        img
+                    );
+
+                } else {
+
+                    productImage.textContent =
                         "📦";
-                };
+                }
+            }
 
-                productImage.appendChild(
-                    image
-                );
 
-            } else {
+        } else {
+
+            // ==================================
+            // SEM PRODUTO
+            // ==================================
+
+            if (productShort) {
+
+                productShort.textContent =
+                    "Produto";
+            }
+
+
+            if (product) {
+
+                product.textContent =
+                    "Produto não encontrado.";
+            }
+
+
+            if (category) {
+
+                category.textContent =
+                    "Categoria";
+            }
+
+
+            if (city) {
+
+                city.textContent =
+                    "📍 Cidade";
+            }
+
+
+            if (priceDay) {
+
+                priceDay.textContent =
+                    "R$ 0,00";
+            }
+
+
+            if (productDeposit) {
+
+                productDeposit.textContent =
+                    "R$ 0,00";
+            }
+
+
+            if (productDelivery) {
+
+                productDelivery.textContent =
+                    "--";
+            }
+
+
+            if (productImage) {
 
                 productImage.textContent =
                     "📦";
             }
-        }
 
-    } else {
-
-        // ==================================
-        // PRODUTO NÃO ENCONTRADO
-        // ==================================
-
-        if (productShort) {
-            productShort.textContent =
-                "Produto";
-        }
-
-        if (product) {
-            product.textContent =
-                "Produto não encontrado.";
-        }
-
-        if (category) {
-            category.textContent =
-                "Categoria";
-        }
-
-        if (city) {
-            city.textContent =
-                "📍 --";
-        }
-
-        if (priceDay) {
-            priceDay.textContent =
-                "R$ 0,00";
-        }
-
-        if (productDeposit) {
-            productDeposit.textContent =
-                "R$ 0,00";
-        }
-
-        if (productDelivery) {
-            productDelivery.textContent =
-                "--";
-        }
-
-        if (productImage) {
-            productImage.textContent =
-                "📦";
-        }
-    }
-
-
-    // ======================================
-    // ALUGUEL
-    // ======================================
-
-    if (currentRental) {
-
-        // ==================================
-        // STATUS
-        // ==================================
-
-        if (status) {
-
-            status.textContent =
-                rentalStatus(
-                    currentRental.status
-                );
         }
 
 
-        // ==================================
-        // PERÍODO
-        // ==================================
+        // ======================================
+        // ALUGUEL
+        // ======================================
 
-        if (period) {
+        if (currentRental) {
 
-            const start =
-                formatDate(
-                    currentRental.startDate
-                );
+            /*
+             * EXATAMENTE COMO NA PÁGINA
+             * DE SOLICITAÇÕES:
+             *
+             * rental.startDate
+             * rental.endDate
+             * rental.days
+             * rental.total
+             */
 
-            const end =
-                formatDate(
-                    currentRental.endDate
-                );
 
-            if (
-                start !== "--" ||
-                end !== "--"
-            ) {
+            // ==================================
+            // STATUS
+            // ==================================
+
+            if (status) {
+
+                status.textContent =
+                    rentalStatus(
+                        currentRental.status
+                    );
+            }
+
+
+            // ==================================
+            // DATA
+            // ==================================
+
+            if (period) {
+
+                const start =
+                    formatDate(
+                        currentRental.startDate
+                    );
+
+
+                const end =
+                    formatDate(
+                        currentRental.endDate
+                    );
+
 
                 period.textContent =
                     `${start} até ${end}`;
+            }
 
-            } else {
+
+            // ==================================
+            // DIAS
+            // ==================================
+
+            if (days) {
+
+                const rentalDays =
+                    Number(
+                        currentRental.days || 0
+                    );
+
+
+                days.textContent =
+                    rentalDays > 0
+
+                        ? `${rentalDays} ${
+                            rentalDays === 1
+                                ? "dia"
+                                : "dias"
+                        }`
+
+                        : "--";
+            }
+
+
+            // ==================================
+            // TOTAL
+            // ==================================
+
+            if (total) {
+
+                total.textContent =
+                    formatMoney(
+                        currentRental.total
+                    );
+            }
+
+
+            // ==================================
+            // ENTREGA DO ALUGUEL
+            // ==================================
+
+            if (delivery) {
+
+                const rentalHasDelivery =
+                    currentRental.delivery === true;
+
+
+                const rentalDeliveryPrice =
+                    Number(
+                        currentRental.deliveryPrice || 0
+                    );
+
+
+                if (rentalHasDelivery) {
+
+                    delivery.textContent =
+                        rentalDeliveryPrice > 0
+
+                            ? formatMoney(
+                                rentalDeliveryPrice
+                            )
+
+                            : "Disponível";
+
+                } else {
+
+                    delivery.textContent =
+                        "Não solicitada";
+                }
+            }
+
+
+            // ==================================
+            // CAUÇÃO DO ALUGUEL
+            // ==================================
+
+            if (deposit) {
+
+                /*
+                 * O Rental salva o valor da
+                 * caução no momento da criação.
+                 *
+                 * Portanto usamos rental.deposit.
+                 */
+
+                deposit.textContent =
+                    formatMoney(
+                        currentRental.deposit
+                    );
+            }
+
+
+        } else {
+
+            // ==================================
+            // SEM ALUGUEL
+            // ==================================
+
+            if (status) {
+
+                status.textContent =
+                    "Sem solicitação";
+            }
+
+
+            if (period) {
 
                 period.textContent =
                     "--";
             }
-        }
 
 
-        // ==================================
-        // DIÁRIAS
-        // ==================================
-
-        if (days) {
-
-            const totalDays =
-                Number(
-                    currentRental.days || 0
-                );
-
-            if (totalDays > 0) {
-
-                days.textContent =
-                    `${totalDays} ${
-                        totalDays === 1
-                            ? "dia"
-                            : "dias"
-                    }`;
-
-            } else {
+            if (days) {
 
                 days.textContent =
                     "--";
             }
-        }
 
 
-        // ==================================
-        // TOTAL
-        // ==================================
+            if (total) {
 
-        if (total) {
-
-            total.textContent =
-                formatMoney(
-                    Number(
-                        currentRental.total || 0
-                    )
-                );
-        }
-
-
-        // ==================================
-        // ENTREGA DO ALUGUEL
-        // ==================================
-
-        if (delivery) {
-
-            const rentalDelivery =
-                currentRental.delivery === true;
-
-            const rentalDeliveryPrice =
-                Number(
-                    currentRental.deliveryPrice || 0
-                );
-
-
-            if (rentalDelivery) {
-
-                delivery.textContent =
-                    rentalDeliveryPrice > 0
-                        ? formatMoney(
-                            rentalDeliveryPrice
-                        )
-                        : "Disponível";
-
-            } else {
-
-                delivery.textContent =
-                    "Não solicitada";
+                total.textContent =
+                    "R$ 0,00";
             }
-        }
 
 
-        // ==================================
-        // CAUÇÃO DO ALUGUEL
-        // ==================================
+            if (delivery) {
 
-        if (deposit) {
+                delivery.textContent =
+                    "--";
+            }
 
-            deposit.textContent =
-                formatMoney(
-                    Number(
-                        currentRental.deposit || 0
-                    )
-                );
-        }
 
-    } else {
+            if (deposit) {
 
-        // ==================================
-        // SEM ALUGUEL
-        // ==================================
+                deposit.textContent =
+                    "R$ 0,00";
+            }
 
-        if (status) {
-
-            status.textContent =
-                "Sem solicitação";
-        }
-
-        if (period) {
-
-            period.textContent =
-                "--";
-        }
-
-        if (days) {
-
-            days.textContent =
-                "--";
-        }
-
-        if (total) {
-
-            total.textContent =
-                "R$ 0,00";
-        }
-
-        if (delivery) {
-
-            delivery.textContent =
-                "--";
-        }
-
-        if (deposit) {
-
-            deposit.textContent =
-                "R$ 0,00";
         }
     }
-}
 
 
     // ==========================================
@@ -1024,18 +1245,20 @@ function renderRentalCard() {
         try {
 
             conversationList.innerHTML = `
+
                 <p style="
                     padding:20px;
                     color:#6b7280;
                 ">
                     Carregando conversas...
                 </p>
+
             `;
 
 
             const response =
                 await fetch(
-                    `${API}/user/${user._id}`
+                    `${CHATS_API}/user/${user._id}`
                 );
 
 
@@ -1052,7 +1275,7 @@ function renderRentalCard() {
 
 
             console.log(
-                "Chats recebidos:",
+                "CHATS:",
                 data
             );
 
@@ -1066,21 +1289,26 @@ function renderRentalCard() {
             if (!chats.length) {
 
                 currentChat = null;
+
                 currentProduct = null;
+
                 currentRental = null;
 
 
                 conversationList.innerHTML = `
+
                     <p style="
                         padding:20px;
                         color:#6b7280;
                     ">
                         Nenhuma conversa.
                     </p>
+
                 `;
 
 
                 messages.innerHTML = `
+
                     <div style="
                         text-align:center;
                         padding:40px 20px;
@@ -1088,7 +1316,9 @@ function renderRentalCard() {
                     ">
                         Nenhuma conversa encontrada.
                     </div>
+
                 `;
+
 
                 renderRentalCard();
 
@@ -1113,6 +1343,7 @@ function renderRentalCard() {
 
             await loadChatData();
 
+
         } catch (error) {
 
             console.error(
@@ -1122,6 +1353,7 @@ function renderRentalCard() {
 
 
             conversationList.innerHTML = `
+
                 <div style="padding:20px;">
 
                     <p style="
@@ -1135,11 +1367,11 @@ function renderRentalCard() {
                         color:#6b7280;
                         font-size:14px;
                     ">
-                        Não foi possível conectar
-                        ao servidor.
+                        Não foi possível conectar ao servidor.
                     </p>
 
                 </div>
+
             `;
         }
     }
@@ -1151,7 +1383,8 @@ function renderRentalCard() {
 
     function renderSidebar() {
 
-        conversationList.innerHTML = "";
+        conversationList.innerHTML =
+            "";
 
 
         chats.forEach(chat => {
@@ -1163,14 +1396,18 @@ function renderRentalCard() {
             const lastMessage =
                 chat.messages &&
                 chat.messages.length
+
                     ? chat.messages[
                         chat.messages.length - 1
                     ].text
+
                     : "Nova conversa";
 
 
             const card =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             card.className =
@@ -1193,20 +1430,30 @@ function renderRentalCard() {
 
 
             const info =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
-            info.className = "conv-info";
+
+            info.className =
+                "conv-info";
 
 
             const name =
-                document.createElement("h4");
+                document.createElement(
+                    "h4"
+                );
+
 
             name.textContent =
                 otherUser.name;
 
 
             const last =
-                document.createElement("p");
+                document.createElement(
+                    "p"
+                );
+
 
             last.textContent =
                 lastMessage ||
@@ -1214,10 +1461,12 @@ function renderRentalCard() {
 
 
             info.appendChild(name);
+
             info.appendChild(last);
 
 
             card.appendChild(avatar);
+
             card.appendChild(info);
 
 
@@ -1225,11 +1474,16 @@ function renderRentalCard() {
                 "click",
                 async () => {
 
-                    currentChat = chat;
+                    currentChat =
+                        chat;
 
-                    currentProduct = null;
 
-                    currentRental = null;
+                    currentProduct =
+                        null;
+
+
+                    currentRental =
+                        null;
 
 
                     renderSidebar();
@@ -1245,11 +1499,15 @@ function renderRentalCard() {
 
 
                     await loadChatData();
+
                 }
             );
 
 
-            conversationList.appendChild(card);
+            conversationList.appendChild(
+                card
+            );
+
         });
     }
 
@@ -1276,15 +1534,18 @@ function renderRentalCard() {
                 "#chat-name"
             );
 
+
         const chatAvatar =
             document.querySelector(
                 "#chat-avatar"
             );
 
+
         const chatStatus =
             document.querySelector(
                 "#chat-status"
             );
+
 
         const viewProduct =
             document.querySelector(
@@ -1292,7 +1553,9 @@ function renderRentalCard() {
             );
 
 
+        // ======================================
         // NOME
+        // ======================================
 
         if (chatName) {
 
@@ -1301,11 +1564,14 @@ function renderRentalCard() {
         }
 
 
-        // FOTO
+        // ======================================
+        // AVATAR
+        // ======================================
 
         if (chatAvatar) {
 
-            chatAvatar.innerHTML = "";
+            chatAvatar.innerHTML =
+                "";
 
 
             const fallback =
@@ -1320,7 +1586,9 @@ function renderRentalCard() {
             ) {
 
                 const img =
-                    document.createElement("img");
+                    document.createElement(
+                        "img"
+                    );
 
 
                 img.src =
@@ -1341,10 +1609,13 @@ function renderRentalCard() {
 
                     chatAvatar.textContent =
                         fallback;
+
                 };
 
 
-                chatAvatar.appendChild(img);
+                chatAvatar.appendChild(
+                    img
+                );
 
             } else {
 
@@ -1354,7 +1625,9 @@ function renderRentalCard() {
         }
 
 
-        // STATUS
+        // ======================================
+        // STATUS CHAT
+        // ======================================
 
         if (chatStatus) {
 
@@ -1364,7 +1637,9 @@ function renderRentalCard() {
         }
 
 
+        // ======================================
         // VER PRODUTO
+        // ======================================
 
         if (viewProduct) {
 
@@ -1379,18 +1654,24 @@ function renderRentalCard() {
                 viewProduct.href =
                     `produto.html?id=${productId}`;
 
-                viewProduct.style.display = "";
+
+                viewProduct.style.display =
+                    "";
 
             } else {
 
-                viewProduct.style.display = "none";
+                viewProduct.style.display =
+                    "none";
             }
         }
 
 
+        // ======================================
         // MENSAGENS
+        // ======================================
 
-        messages.innerHTML = "";
+        messages.innerHTML =
+            "";
 
 
         if (
@@ -1399,23 +1680,31 @@ function renderRentalCard() {
         ) {
 
             const empty =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             empty.style.textAlign =
                 "center";
 
+
             empty.style.color =
                 "#6b7280";
 
+
             empty.style.padding =
                 "30px";
+
 
             empty.textContent =
                 "Nenhuma mensagem ainda.";
 
 
-            messages.appendChild(empty);
+            messages.appendChild(
+                empty
+            );
+
 
             return;
         }
@@ -1438,7 +1727,9 @@ function renderRentalCard() {
 
 
                 const bubble =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
 
                 bubble.className =
@@ -1450,7 +1741,9 @@ function renderRentalCard() {
 
 
                 const text =
-                    document.createElement("div");
+                    document.createElement(
+                        "div"
+                    );
 
 
                 text.textContent =
@@ -1458,7 +1751,9 @@ function renderRentalCard() {
 
 
                 const time =
-                    document.createElement("span");
+                    document.createElement(
+                        "span"
+                    );
 
 
                 time.className =
@@ -1470,20 +1765,29 @@ function renderRentalCard() {
                     time.textContent =
                         new Date(
                             msg.createdAt
-                        ).toLocaleTimeString(
-                            "pt-BR",
-                            {
-                                hour: "2-digit",
-                                minute: "2-digit"
-                            }
-                        );
+                        )
+                            .toLocaleTimeString(
+                                "pt-BR",
+                                {
+                                    hour:
+                                        "2-digit",
+
+                                    minute:
+                                        "2-digit"
+                                }
+                            );
                 }
 
 
                 bubble.appendChild(text);
+
                 bubble.appendChild(time);
 
-                messages.appendChild(bubble);
+
+                messages.appendChild(
+                    bubble
+                );
+
             }
         );
 
@@ -1508,7 +1812,7 @@ function renderRentalCard() {
 
             const response =
                 await fetch(
-                    `${API}/${currentChat._id}`
+                    `${CHATS_API}/${currentChat._id}`
                 );
 
 
@@ -1529,6 +1833,7 @@ function renderRentalCard() {
             const oldMessages =
                 currentChat.messages || [];
 
+
             const newMessages =
                 updatedChat.messages || [];
 
@@ -1539,43 +1844,35 @@ function renderRentalCard() {
 
 
             const rentalChanged =
-                JSON.stringify(
-                    currentChat.rentalId
+                String(
+                    getId(
+                        currentChat.rentalId
+                    )
                 ) !==
-                JSON.stringify(
-                    updatedChat.rentalId
+                String(
+                    getId(
+                        updatedChat.rentalId
+                    )
                 );
 
 
             const productChanged =
-                JSON.stringify(
-                    currentChat.productId
+                String(
+                    getId(
+                        currentChat.productId
+                    )
                 ) !==
-                JSON.stringify(
-                    updatedChat.productId
-                );
-
-
-            const profileChanged =
-                JSON.stringify(
-                    currentChat.ownerId?.profileImage
-                ) !==
-                JSON.stringify(
-                    updatedChat.ownerId?.profileImage
-                ) ||
-                JSON.stringify(
-                    currentChat.renterId?.profileImage
-                ) !==
-                JSON.stringify(
-                    updatedChat.renterId?.profileImage
+                String(
+                    getId(
+                        updatedChat.productId
+                    )
                 );
 
 
             if (
                 changed ||
                 rentalChanged ||
-                productChanged ||
-                profileChanged
+                productChanged
             ) {
 
                 currentChat =
@@ -1606,12 +1903,14 @@ function renderRentalCard() {
                 await loadChatData();
             }
 
+
         } catch (error) {
 
             console.error(
                 "Erro no polling:",
                 error
             );
+
         }
     }
 
@@ -1651,12 +1950,15 @@ function renderRentalCard() {
         }
 
 
-        sendingMessage = true;
+        sendingMessage =
+            true;
 
 
         if (sendButton) {
 
-            sendButton.disabled = true;
+            sendButton.disabled =
+                true;
+
 
             sendButton.textContent =
                 "Enviando...";
@@ -1667,9 +1969,10 @@ function renderRentalCard() {
 
             const response =
                 await fetch(
-                    `${API}/${currentChat._id}/messages`,
+                    `${CHATS_API}/${currentChat._id}/messages`,
                     {
-                        method: "POST",
+                        method:
+                            "POST",
 
                         headers: {
                             "Content-Type":
@@ -1678,11 +1981,13 @@ function renderRentalCard() {
 
                         body:
                             JSON.stringify({
+
                                 senderId:
                                     user._id,
 
                                 text:
                                     text
+
                             })
                     }
                 );
@@ -1707,7 +2012,8 @@ function renderRentalCard() {
                 data;
 
 
-            input.value = "";
+            input.value =
+                "";
 
 
             const index =
@@ -1733,6 +2039,7 @@ function renderRentalCard() {
 
             await loadChatData();
 
+
         } catch (error) {
 
             console.error(
@@ -1745,14 +2052,18 @@ function renderRentalCard() {
                 "Não foi possível enviar a mensagem."
             );
 
+
         } finally {
 
-            sendingMessage = false;
+            sendingMessage =
+                false;
 
 
             if (sendButton) {
 
-                sendButton.disabled = false;
+                sendButton.disabled =
+                    false;
+
 
                 sendButton.textContent =
                     "Enviar";
@@ -1802,10 +2113,12 @@ function renderRentalCard() {
         "ALUGASE Chat iniciado."
     );
 
+
     console.log(
         "Usuário:",
         user._id
     );
+
 
     console.log(
         "Chat:",
@@ -1826,6 +2139,7 @@ function renderRentalCard() {
         checkNewMessages,
         5000
     );
+
 
     setInterval(
         loadNotifications,
