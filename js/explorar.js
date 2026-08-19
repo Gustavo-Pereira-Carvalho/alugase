@@ -128,71 +128,71 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             card.className = "product-card";
 
-            card.innerHTML = `
-                <div class="product-image">
+card.innerHTML = `
+<div class="product-image">
 
-                    <button class="favorite-btn ${isFavorite ? "active" : ""}">
-                        ${isFavorite ? "❤" : "♡"}
-                    </button>
+    <button class="favorite-btn ${isFavorite ? "active" : ""}">
+        ${isFavorite ? "❤" : "♡"}
+    </button>
 
-                    <span>${product.image || "📦"}</span>
+    ${
+        product.images?.length
+        ? `<img src="${product.images[0]}" alt="${product.title}">`
+        : `<span>📦</span>`
+    }
 
-                </div>
+</div>
 
-                <div class="product-content">
+<div class="product-content">
 
-                    <div class="card-top">
+    <div class="card-top">
 
-                        <span class="category-tag">
-                            ${product.category}
-                        </span>
+        <span class="category-tag">
+            ${product.category}
+        </span>
 
-                        ${product.verified
-                            ? `<span class="verified">✓ Verificado</span>`
-                            : ""
-                        }
+        ${
+            product.verified
+            ? `<span class="verified">✓ Verificado</span>`
+            : ""
+        }
 
-                    </div>
+    </div>
 
-                    <h3>${product.title}</h3>
+    <h3>${product.title}</h3>
 
-                    <div class="location">
-                        📍 ${product.city}
-                    </div>
+    <div class="location">
+        📍 ${product.city}
+    </div>
 
-                    <div class="card-info">
+    <div class="card-info">
 
-                        <span>⭐ ${product.rating || "5.0"}</span>
+        <span>⭐ ${product.rating || "5.0"}</span>
 
-                        <span>
-                            ${product.delivery
-                                ? "🚚 Entrega"
-                                : "📍 Retirada"
-                            }
-                        </span>
+        <span>
+            ${product.delivery ? "🚚 Entrega" : "📍 Retirada"}
+        </span>
 
-                    </div>
+    </div>
 
-                    <div class="price-row">
+    <div class="price-row">
 
-                        <div>
+        <div>
 
-                            <div class="price">
-                                R$ ${product.pricePerDay}
-                            </div>
+            <div class="price">
+                R$ ${product.pricePerDay}
+            </div>
 
-                            <small>/dia</small>
+            <small>/dia</small>
 
-                        </div>
+        </div>
 
-                        <small>
-                            Caução R$ ${product.deposit}
-                        </small>
+        <small>Caução R$ ${product.deposit}</small>
 
-                    </div>
+    </div>
 
-                </div>
-            `;
+</div>
+`;
 
             // FAVORITOS
 
