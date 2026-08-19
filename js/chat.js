@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!user || !user._id) {
 
-        location.href = "login.html";
+        window.location.href = "login.html";
 
         return;
 
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // =========================================================
-    // PARÂMETROS
+    // ELEMENTOS
     // =========================================================
 
     const params =
@@ -46,10 +46,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const chatId =
         params.get("chat");
 
-
-    // =========================================================
-    // ELEMENTOS
-    // =========================================================
 
     const conversationList =
         document.querySelector(
@@ -99,13 +95,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
 
+    // =========================================================
+    // ESTADO
+    // =========================================================
+
     let chats = [];
 
     let currentChat = null;
 
     let currentProduct = null;
-
-    let currentRental = null;
 
     let sendingMessage = false;
 
@@ -121,29 +119,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         return String(a) === String(b);
-
-    }
-
-
-    // =========================================================
-    // PEGAR ID
-    // =========================================================
-
-    function getId(value) {
-
-        if (!value) {
-            return null;
-        }
-
-        if (typeof value === "object") {
-
-            return value._id ||
-                value.id ||
-                null;
-
-        }
-
-        return value;
 
     }
 
@@ -209,17 +184,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const statuses = {
 
-            pending: "Solicitado",
+            pending:
+                "Solicitado",
 
-            approved: "Aprovado",
+            approved:
+                "Aprovado",
 
-            rejected: "Recusado",
+            rejected:
+                "Recusado",
 
-            active: "Em andamento",
+            active:
+                "Em andamento",
 
-            finished: "Finalizado",
-
-            cancelled: "Cancelado"
+            finished:
+                "Finalizado"
 
         };
 
@@ -290,7 +268,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             avatar.appendChild(img);
 
-
         } else {
 
             avatar.textContent =
@@ -307,7 +284,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // =========================================================
-    // OUTRO USUÁRIO
+    // PEGAR OUTRO USUÁRIO
     // =========================================================
 
     function getOtherUser(chat) {
@@ -321,11 +298,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         const ownerId =
-            getId(owner);
+            owner?._id ||
+            owner;
 
 
         const renterId =
-            getId(renter);
+            renter?._id ||
+            renter;
 
 
         const isOwner =
@@ -376,23 +355,46 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // =========================================================
-    // CARREGAR PRODUTO
+    // PEGAR ID DO PRODUTO
     // =========================================================
 
-    async function loadProductForChat() {
+    function getProductId(chat) {
 
-        currentProduct = null;
-
-
-        if (!currentChat) {
+        if (!chat) {
             return null;
         }
 
 
-        const productId =
-            getId(
-                currentChat.productId
+        if (
+            chat.productId &&
+            typeof chat.productId === "object"
+        ) {
+
+            return (
+                chat.productId._id ||
+                chat.productId.id ||
+                null
             );
+
+        }
+
+
+        return chat.productId || null;
+
+    }
+
+
+    // =========================================================
+    // CARREGAR PRODUTO
+    // =========================================================
+
+    async function loadProduct(chat) {
+
+        currentProduct = null;
+
+
+        const productId =
+            getProductId(chat);
 
 
         if (!productId) {
@@ -462,697 +464,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // =========================================================
-    // CARREGAR ALUGUEL
-    // =========================================================
-
-    async function loadRentalForChat() {
-
-        currentRental = null;
-
-
-        if (!currentChat) {
-            return null;
-        }
-
-
-        // Se o backend já mandou o aluguel completo
-        if (
-            currentChat.rentalId &&
-            typeof currentChat.rentalId === "object"
-        ) {
-
-            currentRental =
-                currentChat.rentalId;
-
-
-            return currentRental;
-
-        }
-
-
-        const rentalId =
-            getId(
-                currentChat.rentalId
-            );
-
-
-        if (!rentalId) {
-            return null;
-        }
-
-
-        try {
-
-            console.log(
-                "Buscando aluguel:",
-                rentalId
-            );
-
-
-            const response =
-                await fetch(
-                    `${RENTALS_API}/${rentalId}`
-                );
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    `Aluguel HTTP ${response.status}`
-                );
-
-            }
-
-
-            const rental =
-                await response.json();
-
-
-            console.log(
-                "Aluguel carregado:",
-                rental
-            );
-
-
-            currentRental =
-                rental;
-
-
-            return rental;
-
-
-        } catch (error) {
-
-            console.error(
-                "Erro ao carregar aluguel:",
-                error
-            );
-
-
-            return null;
-
-        }
-
-    }
-
-
-    // =========================================================
-    // ATUALIZAR CARD DO PRODUTO
-    // =========================================================
-
-    function renderProductCard() {
-
-        const product =
-            currentProduct;
-
-
-        // -----------------------------------------------------
-        // Elementos do card
-        // -----------------------------------------------------
-
-        const productShort =
-            document.querySelector(
-                "#reservation-product-short"
-            );
-
-
-        const productElement =
-            document.querySelector(
-                "#reservation-product"
-            );
-
-
-        const productCategory =
-            document.querySelector(
-                "#reservation-category"
-            );
-
-
-        const productCity =
-            document.querySelector(
-                "#reservation-city"
-            );
-
-
-        const productPrice =
-            document.querySelector(
-                "#reservation-product-price"
-            );
-
-
-        const productDeposit =
-            document.querySelector(
-                "#reservation-product-deposit"
-            );
-
-
-        const productDelivery =
-            document.querySelector(
-                "#reservation-product-delivery"
-            );
-
-
-        const productImage =
-            document.querySelector(
-                "#reservation-product-image"
-            );
-
-
-        const productIcon =
-            document.querySelector(
-                "#reservation-product-icon"
-            );
-
-
-        // -----------------------------------------------------
-        // Produto não encontrado
-        // -----------------------------------------------------
-
-        if (!product) {
-
-            if (productShort) {
-
-                productShort.textContent =
-                    "Produto não encontrado";
-
-            }
-
-
-            if (productElement) {
-
-                productElement.textContent =
-                    "Produto não encontrado";
-
-            }
-
-
-            return;
-
-        }
-
-
-        // -----------------------------------------------------
-        // NOME
-        // -----------------------------------------------------
-
-        const title =
-            product.title ||
-            product.name ||
-            "Produto";
-
-
-        if (productShort) {
-
-            productShort.textContent =
-                title;
-
-        }
-
-
-        if (productElement) {
-
-            productElement.textContent =
-                title;
-
-        }
-
-
-        // -----------------------------------------------------
-        // CATEGORIA
-        // -----------------------------------------------------
-
-        if (productCategory) {
-
-            productCategory.textContent =
-                product.category ||
-                "Categoria não informada";
-
-        }
-
-
-        // -----------------------------------------------------
-        // CIDADE
-        // -----------------------------------------------------
-
-        if (productCity) {
-
-            productCity.textContent =
-                product.city ||
-                "Cidade não informada";
-
-        }
-
-
-        // -----------------------------------------------------
-        // PREÇO
-        // -----------------------------------------------------
-
-        if (productPrice) {
-
-            productPrice.textContent =
-                formatMoney(
-                    product.pricePerDay
-                );
-
-        }
-
-
-        // -----------------------------------------------------
-        // CAUÇÃO
-        // -----------------------------------------------------
-
-        if (productDeposit) {
-
-            productDeposit.textContent =
-                formatMoney(
-                    product.deposit
-                );
-
-        }
-
-
-        // -----------------------------------------------------
-        // ENTREGA
-        // -----------------------------------------------------
-
-        if (productDelivery) {
-
-            if (product.delivery) {
-
-                const deliveryPrice =
-                    Number(
-                        product.deliveryPrice || 0
-                    );
-
-
-                productDelivery.textContent =
-                    deliveryPrice > 0
-                        ? formatMoney(
-                            deliveryPrice
-                        )
-                        : "Disponível";
-
-            } else {
-
-                productDelivery.textContent =
-                    "Não disponível";
-
-            }
-
-        }
-
-
-        // -----------------------------------------------------
-        // IMAGEM
-        // -----------------------------------------------------
-
-        if (productImage) {
-
-            let imageUrl = "";
-
-
-            if (
-                Array.isArray(
-                    product.images
-                ) &&
-                product.images.length
-            ) {
-
-                imageUrl =
-                    product.images[0];
-
-            }
-
-
-            if (
-                !imageUrl &&
-                product.image
-            ) {
-
-                imageUrl =
-                    product.image;
-
-            }
-
-
-            if (imageUrl) {
-
-                productImage.src =
-                    imageUrl;
-
-                productImage.style.display =
-                    "block";
-
-                productImage.onerror =
-                    () => {
-
-                        productImage.style.display =
-                            "none";
-
-                    };
-
-            } else {
-
-                productImage.style.display =
-                    "none";
-
-            }
-
-        }
-
-
-        // -----------------------------------------------------
-        // ÍCONE
-        // -----------------------------------------------------
-
-        if (productIcon) {
-
-            productIcon.textContent =
-                product.icon ||
-                "📦";
-
-        }
-
-    }
-
-
-    // =========================================================
-    // CARD DO ALUGUEL
-    // =========================================================
-
-    function renderRentalCard() {
-
-        const rental =
-            currentRental;
-
-
-        if (!rental) {
-
-            console.log(
-                "Nenhum aluguel carregado."
-            );
-
-            return;
-
-        }
-
-
-        const product =
-            currentProduct;
-
-
-        // -----------------------------------------------------
-        // ELEMENTOS
-        // -----------------------------------------------------
-
-        const status =
-            document.querySelector(
-                "#reservation-status"
-            );
-
-
-        const period =
-            document.querySelector(
-                "#reservation-period"
-            );
-
-
-        const total =
-            document.querySelector(
-                "#reservation-total"
-            );
-
-
-        const days =
-            document.querySelector(
-                "#reservation-days"
-            );
-
-
-        const delivery =
-            document.querySelector(
-                "#reservation-delivery"
-            );
-
-
-        const deposit =
-            document.querySelector(
-                "#reservation-deposit"
-            );
-
-
-        const productShort =
-            document.querySelector(
-                "#reservation-product-short"
-            );
-
-
-        const productElement =
-            document.querySelector(
-                "#reservation-product"
-            );
-
-
-        // -----------------------------------------------------
-        // PRODUTO
-        // -----------------------------------------------------
-
-        const productTitle =
-            product?.title ||
-            product?.name ||
-            rental.productTitle ||
-            currentChat?.productTitle ||
-            "Produto";
-
-
-        if (productShort) {
-
-            productShort.textContent =
-                productTitle;
-
-        }
-
-
-        if (productElement) {
-
-            productElement.textContent =
-                productTitle;
-
-        }
-
-
-        // -----------------------------------------------------
-        // STATUS
-        // -----------------------------------------------------
-
-        if (status) {
-
-            status.textContent =
-                rentalStatus(
-                    rental.status
-                );
-
-        }
-
-
-        // -----------------------------------------------------
-        // PERÍODO
-        // -----------------------------------------------------
-
-        if (period) {
-
-            const start =
-                rental.startDate ||
-                rental.start;
-
-
-            const end =
-                rental.endDate ||
-                rental.end;
-
-
-            period.textContent =
-                `${formatDate(start)} até ${formatDate(end)}`;
-
-        }
-
-
-        // -----------------------------------------------------
-        // TOTAL
-        // -----------------------------------------------------
-
-        if (total) {
-
-            const totalValue =
-                rental.total ??
-                rental.totalPrice ??
-                rental.price ??
-                0;
-
-
-            total.textContent =
-                formatMoney(
-                    totalValue
-                );
-
-        }
-
-
-        // -----------------------------------------------------
-        // DIAS
-        // -----------------------------------------------------
-
-        if (days) {
-
-            let totalDays =
-                Number(
-                    rental.days || 0
-                );
-
-
-            // Se o backend não mandou days,
-            // calculamos pelas datas.
-
-            if (
-                totalDays <= 0 &&
-                rental.startDate &&
-                rental.endDate
-            ) {
-
-                const start =
-                    new Date(
-                        rental.startDate
-                    );
-
-
-                const end =
-                    new Date(
-                        rental.endDate
-                    );
-
-
-                const difference =
-                    Math.ceil(
-                        (
-                            end - start
-                        ) /
-                        (
-                            1000 *
-                            60 *
-                            60 *
-                            24
-                        )
-                    );
-
-
-                totalDays =
-                    Math.max(
-                        1,
-                        difference
-                    );
-
-            }
-
-
-            days.textContent =
-                `${totalDays} ${
-                    totalDays === 1
-                        ? "dia"
-                        : "dias"
-                }`;
-
-        }
-
-
-        // -----------------------------------------------------
-        // ENTREGA
-        // -----------------------------------------------------
-
-        if (delivery) {
-
-            const hasDelivery =
-                rental.delivery ??
-                product?.delivery ??
-                false;
-
-
-            if (hasDelivery) {
-
-                const deliveryPrice =
-                    Number(
-                        rental.deliveryPrice ??
-                        product?.deliveryPrice ??
-                        0
-                    );
-
-
-                delivery.textContent =
-                    deliveryPrice > 0
-                        ? `Entrega (${formatMoney(
-                            deliveryPrice
-                        )})`
-                        : "Entrega";
-
-            } else {
-
-                delivery.textContent =
-                    "Retirada";
-
-            }
-
-        }
-
-
-        // -----------------------------------------------------
-        // CAUÇÃO
-        // -----------------------------------------------------
-
-        if (deposit) {
-
-            const depositValue =
-                rental.deposit ??
-                product?.deposit ??
-                0;
-
-
-            deposit.textContent =
-                formatMoney(
-                    depositValue
-                );
-
-        }
-
-    }
-
-
-    // =========================================================
-    // CARREGAR TUDO DO CHAT
-    // =========================================================
-
-    async function loadChatData() {
-
-        if (!currentChat) {
-            return;
-        }
-
-
-        // Primeiro produto
-        await loadProductForChat();
-
-
-        // Depois aluguel
-        await loadRentalForChat();
-
-
-        // Renderiza
-        renderProductCard();
-
-        renderRentalCard();
-
-    }
-
-
-    // =========================================================
     // NOTIFICAÇÕES
     // =========================================================
 
@@ -1190,9 +501,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     rental => {
 
                         const ownerId =
-                            getId(
-                                rental.ownerId
-                            );
+                            rental.ownerId?._id ||
+                            rental.ownerId;
 
 
                         return (
@@ -1221,6 +531,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "none";
 
             }
+
 
         } catch (error) {
 
@@ -1270,6 +581,507 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             }
         );
+
+    }
+
+
+    // =========================================================
+    // CARD DO PRODUTO + ALUGUEL
+    // =========================================================
+
+    async function renderRentalCard() {
+
+        if (!currentChat) {
+            return;
+        }
+
+
+        const rental =
+            currentChat.rentalId;
+
+
+        const productShort =
+            document.querySelector(
+                "#reservation-product-short"
+            );
+
+
+        const product =
+            document.querySelector(
+                "#reservation-product"
+            );
+
+
+        const status =
+            document.querySelector(
+                "#reservation-status"
+            );
+
+
+        const period =
+            document.querySelector(
+                "#reservation-period"
+            );
+
+
+        const total =
+            document.querySelector(
+                "#reservation-total"
+            );
+
+
+        const days =
+            document.querySelector(
+                "#reservation-days"
+            );
+
+
+        const delivery =
+            document.querySelector(
+                "#reservation-delivery"
+            );
+
+
+        const deposit =
+            document.querySelector(
+                "#reservation-deposit"
+            );
+
+
+        // =====================================================
+        // CARREGAR PRODUTO
+        // =====================================================
+
+        let productData =
+            currentProduct;
+
+
+        if (!productData) {
+
+            productData =
+                await loadProduct(
+                    currentChat
+                );
+
+        }
+
+
+        // =====================================================
+        // DADOS DO PRODUTO
+        // =====================================================
+
+        const productTitle =
+            productData?.title ||
+            currentChat.productTitle ||
+            "Produto";
+
+
+        const productCategory =
+            productData?.category ||
+            "Categoria";
+
+
+        const productCity =
+            productData?.city ||
+            "Cidade";
+
+
+        const productPrice =
+            Number(
+                productData?.pricePerDay || 0
+            );
+
+
+        const productDeposit =
+            Number(
+                productData?.deposit || 0
+            );
+
+
+        const productDeliveryPrice =
+            Number(
+                productData?.deliveryPrice || 0
+            );
+
+
+        // =====================================================
+        // TOPO
+        // =====================================================
+
+        if (productShort) {
+
+            productShort.textContent =
+                productTitle;
+
+        }
+
+
+        if (product) {
+
+            product.textContent =
+                productTitle;
+
+        }
+
+
+        // =====================================================
+        // STATUS
+        // =====================================================
+
+        if (status) {
+
+            status.textContent =
+                rental
+                    ? rentalStatus(
+                        rental.status
+                    )
+                    : "Solicitado";
+
+        }
+
+
+        // =====================================================
+        // PERÍODO
+        // =====================================================
+
+        if (period) {
+
+            if (rental) {
+
+                period.textContent =
+                    `${formatDate(
+                        rental.startDate
+                    )} até ${formatDate(
+                        rental.endDate
+                    )}`;
+
+            } else {
+
+                period.textContent =
+                    "--";
+
+            }
+
+        }
+
+
+        // =====================================================
+        // DIAS
+        // =====================================================
+
+        let totalDays =
+            Number(
+                rental?.days || 0
+            );
+
+
+        // Se não tiver days, calcular pelas datas
+        if (
+            totalDays <= 0 &&
+            rental?.startDate &&
+            rental?.endDate
+        ) {
+
+            const start =
+                new Date(
+                    rental.startDate
+                );
+
+
+            const end =
+                new Date(
+                    rental.endDate
+                );
+
+
+            const difference =
+                end.getTime() -
+                start.getTime();
+
+
+            totalDays =
+                Math.ceil(
+                    difference /
+                    (1000 * 60 * 60 * 24)
+                );
+
+
+            if (totalDays < 1) {
+                totalDays = 1;
+            }
+
+        }
+
+
+        // =====================================================
+        // CAUÇÃO
+        // =====================================================
+
+        const rentalDeposit =
+            Number(
+                rental?.deposit ??
+                productDeposit ??
+                0
+            );
+
+
+        // =====================================================
+        // ENTREGA
+        // =====================================================
+
+        let deliveryText =
+            "Não disponível";
+
+
+        let rentalDeliveryPrice =
+            Number(
+                rental?.deliveryPrice || 0
+            );
+
+
+        if (rental?.delivery === true) {
+
+            if (rentalDeliveryPrice > 0) {
+
+                deliveryText =
+                    `Entrega (${formatMoney(
+                        rentalDeliveryPrice
+                    )})`;
+
+            } else if (
+                productDeliveryPrice > 0
+            ) {
+
+                deliveryText =
+                    `Entrega (${formatMoney(
+                        productDeliveryPrice
+                    )})`;
+
+            } else {
+
+                deliveryText =
+                    "Entrega";
+
+            }
+
+        } else if (
+            rental &&
+            rental.delivery === false
+        ) {
+
+            deliveryText =
+                "Retirada";
+
+        } else if (
+            productData?.delivery === true
+        ) {
+
+            if (productDeliveryPrice > 0) {
+
+                deliveryText =
+                    `Entrega (${formatMoney(
+                        productDeliveryPrice
+                    )})`;
+
+            } else {
+
+                deliveryText =
+                    "Entrega";
+
+            }
+
+        }
+
+
+        // =====================================================
+        // TOTAL
+        // =====================================================
+
+        let rentalTotal =
+            Number(
+                rental?.total || 0
+            );
+
+
+        // Se o aluguel ainda não possui total,
+        // calculamos com base no produto.
+        if (
+            rentalTotal <= 0 &&
+            totalDays > 0 &&
+            productPrice > 0
+        ) {
+
+            rentalTotal =
+                productPrice *
+                totalDays;
+
+
+            if (
+                rental?.delivery === true
+            ) {
+
+                rentalTotal +=
+                    rentalDeliveryPrice ||
+                    productDeliveryPrice;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // PREENCHER RESUMO
+        // =====================================================
+
+        if (days) {
+
+            if (totalDays > 0) {
+
+                days.textContent =
+                    `${totalDays} ${
+                        totalDays === 1
+                            ? "dia"
+                            : "dias"
+                    }`;
+
+            } else {
+
+                days.textContent =
+                    "--";
+
+            }
+
+        }
+
+
+        if (delivery) {
+
+            delivery.textContent =
+                deliveryText;
+
+        }
+
+
+        if (deposit) {
+
+            deposit.textContent =
+                formatMoney(
+                    rentalDeposit
+                );
+
+        }
+
+
+        if (total) {
+
+            total.textContent =
+                formatMoney(
+                    rentalTotal
+                );
+
+        }
+
+
+        // =====================================================
+        // MOSTRAR INFORMAÇÕES DO PRODUTO
+        // =====================================================
+
+        const productInfo =
+            document.querySelector(
+                "#reservation-product-info"
+            );
+
+
+        if (productInfo) {
+
+            productInfo.innerHTML = "";
+
+
+            const icon =
+                document.createElement("div");
+
+
+            icon.className =
+                "reservation-product-icon";
+
+
+            icon.textContent =
+                productData?.image ||
+                "📦";
+
+
+            const content =
+                document.createElement("div");
+
+
+            content.className =
+                "reservation-product-content";
+
+
+            const title =
+                document.createElement("strong");
+
+
+            title.textContent =
+                productTitle;
+
+
+            const category =
+                document.createElement("span");
+
+
+            category.textContent =
+                productCategory;
+
+
+            const city =
+                document.createElement("span");
+
+
+            city.textContent =
+                `📍 ${productCity}`;
+
+
+            const price =
+                document.createElement("strong");
+
+
+            price.textContent =
+                `${formatMoney(
+                    productPrice
+                )} / dia`;
+
+
+            content.appendChild(
+                title
+            );
+
+
+            content.appendChild(
+                category
+            );
+
+
+            content.appendChild(
+                city
+            );
+
+
+            content.appendChild(
+                price
+            );
+
+
+            productInfo.appendChild(
+                icon
+            );
+
+
+            productInfo.appendChild(
+                content
+            );
+
+        }
 
     }
 
@@ -1366,17 +1178,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             renderSidebar();
 
-            renderChat();
-
-            // IMPORTANTE:
-            // busca produto e aluguel
-            await loadChatData();
+            await renderChat();
 
 
         } catch (error) {
 
             console.error(
-                "Erro ao carregar conversas:",
+                "Erro ao carregar chats:",
                 error
             );
 
@@ -1395,7 +1203,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         color:#6b7280;
                         font-size:14px;
                     ">
-                        Não foi possível conectar ao servidor.
+                        Não foi possível conectar
+                        ao servidor.
                     </p>
 
                 </div>
@@ -1431,9 +1240,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             const card =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
             card.className =
@@ -1456,9 +1263,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             const info =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
             info.className =
@@ -1466,9 +1271,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             const name =
-                document.createElement(
-                    "h4"
-                );
+                document.createElement("h4");
 
 
             name.textContent =
@@ -1476,9 +1279,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             const last =
-                document.createElement(
-                    "p"
-                );
+                document.createElement("p");
 
 
             last.textContent =
@@ -1508,13 +1309,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         null;
 
 
-                    currentRental =
-                        null;
-
-
                     renderSidebar();
 
-                    renderChat();
+                    await renderChat();
 
 
                     history.replaceState(
@@ -1522,9 +1319,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         "",
                         `chat.html?chat=${chat._id}`
                     );
-
-
-                    await loadChatData();
 
                 }
             );
@@ -1543,7 +1337,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // RENDERIZAR CHAT
     // =========================================================
 
-    function renderChat() {
+    async function renderChat() {
 
         if (!currentChat) {
             return;
@@ -1580,9 +1374,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
 
 
-        // -----------------------------------------------------
+        // =====================================================
         // NOME
-        // -----------------------------------------------------
+        // =====================================================
 
         if (chatName) {
 
@@ -1592,9 +1386,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // -----------------------------------------------------
-        // AVATAR
-        // -----------------------------------------------------
+        // =====================================================
+        // FOTO
+        // =====================================================
 
         if (chatAvatar) {
 
@@ -1607,9 +1401,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             ) {
 
                 const img =
-                    document.createElement(
-                        "img"
-                    );
+                    document.createElement("img");
 
 
                 img.src =
@@ -1651,9 +1443,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // -----------------------------------------------------
-        // STATUS
-        // -----------------------------------------------------
+        // =====================================================
+        // STATUS DO CHAT
+        // =====================================================
 
         if (chatStatus) {
 
@@ -1664,17 +1456,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // -----------------------------------------------------
-        // BOTÃO VER PRODUTO
-        // -----------------------------------------------------
+        // =====================================================
+        // PRODUTO
+        // =====================================================
+
+        const productId =
+            getProductId(
+                currentChat
+            );
+
 
         if (viewProduct) {
-
-            const productId =
-                getId(
-                    currentChat.productId
-                );
-
 
             if (productId) {
 
@@ -1694,41 +1486,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // -----------------------------------------------------
-        // PRODUTO
-        // -----------------------------------------------------
+        // =====================================================
+        // ALUGUEL / PRODUTO
+        // =====================================================
 
-        const productShort =
-            document.querySelector(
-                "#reservation-product-short"
-            );
+        await renderRentalCard();
 
 
-        if (productShort) {
-
-            productShort.textContent =
-                "Carregando...";
-
-        }
-
-
-        const productElement =
-            document.querySelector(
-                "#reservation-product"
-            );
-
-
-        if (productElement) {
-
-            productElement.textContent =
-                "Carregando...";
-
-        }
-
-
-        // -----------------------------------------------------
+        // =====================================================
         // MENSAGENS
-        // -----------------------------------------------------
+        // =====================================================
 
         messages.innerHTML = "";
 
@@ -1739,9 +1506,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
 
             const empty =
-                document.createElement(
-                    "div"
-                );
+                document.createElement("div");
 
 
             empty.style.textAlign =
@@ -1764,94 +1529,86 @@ document.addEventListener("DOMContentLoaded", async () => {
                 empty
             );
 
-        } else {
 
-            currentChat.messages.forEach(
-                msg => {
-
-                    const senderId =
-                        getId(
-                            msg.senderId
-                        );
-
-
-                    const sent =
-                        sameId(
-                            senderId,
-                            user._id
-                        );
-
-
-                    const bubble =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    bubble.className =
-                        `message ${
-                            sent
-                                ? "sent"
-                                : "received"
-                        }`;
-
-
-                    const text =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    text.textContent =
-                        msg.text || "";
-
-
-                    const time =
-                        document.createElement(
-                            "span"
-                        );
-
-
-                    time.className =
-                        "time";
-
-
-                    if (msg.createdAt) {
-
-                        time.textContent =
-                            new Date(
-                                msg.createdAt
-                            ).toLocaleTimeString(
-                                "pt-BR",
-                                {
-                                    hour:
-                                        "2-digit",
-
-                                    minute:
-                                        "2-digit"
-                                }
-                            );
-
-                    }
-
-
-                    bubble.appendChild(text);
-
-                    bubble.appendChild(time);
-
-
-                    messages.appendChild(
-                        bubble
-                    );
-
-                }
-            );
-
-
-            messages.scrollTop =
-                messages.scrollHeight;
+            return;
 
         }
+
+
+        currentChat.messages.forEach(
+            msg => {
+
+                const senderId =
+                    msg.senderId?._id ||
+                    msg.senderId;
+
+
+                const sent =
+                    sameId(
+                        senderId,
+                        user._id
+                    );
+
+
+                const bubble =
+                    document.createElement("div");
+
+
+                bubble.className =
+                    `message ${
+                        sent
+                            ? "sent"
+                            : "received"
+                    }`;
+
+
+                const text =
+                    document.createElement("div");
+
+
+                text.textContent =
+                    msg.text || "";
+
+
+                const time =
+                    document.createElement("span");
+
+
+                time.className =
+                    "time";
+
+
+                if (msg.createdAt) {
+
+                    time.textContent =
+                        new Date(
+                            msg.createdAt
+                        ).toLocaleTimeString(
+                            "pt-BR",
+                            {
+                                hour: "2-digit",
+                                minute: "2-digit"
+                            }
+                        );
+
+                }
+
+
+                bubble.appendChild(text);
+
+                bubble.appendChild(time);
+
+
+                messages.appendChild(
+                    bubble
+                );
+
+            }
+        );
+
+
+        messages.scrollTop =
+            messages.scrollHeight;
 
     }
 
@@ -1946,6 +1703,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     updatedChat;
 
 
+                currentProduct =
+                    null;
+
+
                 const index =
                     chats.findIndex(
                         chat =>
@@ -1964,13 +1725,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
 
-                renderChat();
-
+                await renderChat();
 
                 renderSidebar();
-
-
-                await loadChatData();
 
             }
 
@@ -2081,6 +1838,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 data;
 
 
+            currentProduct =
+                null;
+
+
             input.value =
                 "";
 
@@ -2103,12 +1864,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
-            renderChat();
+            await renderChat();
 
             renderSidebar();
-
-
-            await loadChatData();
 
 
         } catch (error) {
@@ -2205,12 +1963,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // =========================================================
-    // POLLING
+    // ATUALIZAÇÃO AUTOMÁTICA
     // =========================================================
 
     setInterval(
         checkNewMessages,
-        5000
+        2000
     );
 
 
