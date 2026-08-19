@@ -1158,3 +1158,39 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
 });
+
+// ==========================================
+// HEADER
+// ==========================================
+
+const badge = document.querySelector("#notification-badge");
+
+if (badge && user) {
+
+    try {
+
+        const response = await fetch(
+            `https://alugase-api.onrender.com/api/rentals/user/${user._id}`
+        );
+
+        const rentals = await response.json();
+
+        const pending = rentals.filter(r =>
+            r.ownerId === user._id &&
+            r.status === "pending"
+        ).length;
+
+        if (pending > 0) {
+
+            badge.style.display = "flex";
+            badge.textContent = pending;
+
+        }
+
+    } catch (e) {
+
+        console.log("Notificações indisponíveis.");
+
+    }
+
+}
