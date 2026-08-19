@@ -237,204 +237,232 @@
 
 
 
-        <!-- ==================================
-             CARD DO ALUGUEL
-        =================================== -->
+<!-- ==========================================
+     CARD DO PRODUTO / ALUGUEL
+========================================== -->
 
-        <div class="reservation-card">
+<div class="reservation-card" id="reservation-card">
 
+    <!-- BOTÃO ABRIR / FECHAR -->
 
-            <!-- BOTÃO PARA ABRIR/FECHAR -->
+    <button
+        id="toggle-reservation"
+        class="reservation-toggle"
+        type="button"
+    >
 
-            <button
-                id="toggle-reservation"
-                class="reservation-toggle"
-                type="button"
-            >
+        <div class="reservation-toggle-content">
 
+            <div class="reservation-icon">
+                📦
+            </div>
 
-                <div
-                    class="reservation-toggle-content"
-                >
+            <div class="reservation-toggle-text">
 
-
-                    <!-- ÍCONE -->
-
-                    <div class="reservation-icon">
-
-                        📦
-
-                    </div>
-
-
-                    <!-- TEXTO -->
-
-                    <div
-                        class="reservation-toggle-text"
-                    >
-
-                        <span
-                            class="reservation-label"
-                        >
-                            Aluguel
-                        </span>
-
-
-                        <strong
-                            id="reservation-product-short"
-                            class="reservation-toggle-title"
-                        >
-                            Produto
-                        </strong>
-
-                    </div>
-
-
-                </div>
-
-
-                <!-- SETA -->
-
-                <span
-                    id="reservation-arrow"
-                    class="reservation-arrow"
-                >
-                    ▼
+                <span class="reservation-label">
+                    Produto
                 </span>
 
+                <strong
+                    id="reservation-product-short"
+                    class="reservation-toggle-title"
+                >
+                    Carregando...
+                </strong>
 
-            </button>
+            </div>
+
+        </div>
+
+        <span
+            id="reservation-arrow"
+            class="reservation-arrow"
+        >
+            ▼
+        </span>
+
+    </button>
 
 
+    <!-- ======================================
+         DETALHES
+    ======================================= -->
 
-            <!-- ==================================
-                 DETALHES DO ALUGUEL
-            =================================== -->
+    <div
+        id="reservation-details"
+        class="reservation-details"
+    >
+
+        <!-- ==================================
+             PRODUTO
+        =================================== -->
+
+        <div class="product-card-info">
 
             <div
-                id="reservation-details"
-                class="reservation-details"
+                class="product-card-image"
+                id="reservation-product-image"
             >
+                📦
+            </div>
 
 
-                <!-- TOPO -->
+            <div class="product-card-main">
 
-                <div class="reservation-top">
+                <h3 id="reservation-product">
+                    Produto
+                </h3>
 
+                <p id="reservation-category">
+                    Categoria
+                </p>
 
-                    <div>
+                <p id="reservation-city">
+                    📍 Cidade
+                </p>
 
+            </div>
 
-                        <!-- STATUS -->
-
-                        <span
-                            class="status"
-                            id="reservation-status"
-                        >
-                            Solicitado
-                        </span>
-
-
-                        <!-- PRODUTO -->
-
-                        <h3
-                            id="reservation-product"
-                        >
-                            Produto
-                        </h3>
+        </div>
 
 
-                        <!-- PERÍODO -->
+        <!-- ==================================
+             PREÇO DO PRODUTO
+        =================================== -->
 
-                        <p
-                            id="reservation-period"
-                        >
-                            --
-                        </p>
+        <div class="product-pricing">
 
+            <div>
 
-                    </div>
+                <span>
+                    Preço por dia
+                </span>
 
-
-                    <!-- VALOR TOTAL -->
-
-                    <div
-                        class="reservation-price"
-                        id="reservation-total"
-                    >
-                        R$ 0,00
-                    </div>
-
-
-                </div>
-
-
-
-                <!-- ==================================
-                     INFORMAÇÕES
-                =================================== -->
-
-                <div class="reservation-info">
-
-
-                    <!-- DIÁRIAS -->
-
-                    <div>
-
-                        <span>
-                            Diárias
-                        </span>
-
-                        <strong
-                            id="reservation-days"
-                        >
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <!-- ENTREGA -->
-
-                    <div>
-
-                        <span>
-                            Entrega
-                        </span>
-
-                        <strong
-                            id="reservation-delivery"
-                        >
-                            --
-                        </strong>
-
-                    </div>
-
-
-                    <!-- CAUÇÃO -->
-
-                    <div>
-
-                        <span>
-                            Caução
-                        </span>
-
-                        <strong
-                            id="reservation-deposit"
-                        >
-                            R$ 0,00
-                        </strong>
-
-                    </div>
-
-
-                </div>
-
+                <strong id="reservation-price-day">
+                    R$ 0,00
+                </strong>
 
             </div>
 
 
+            <div>
+
+                <span>
+                    Caução
+                </span>
+
+                <strong id="reservation-product-deposit">
+                    R$ 0,00
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    Entrega
+                </span>
+
+                <strong id="reservation-product-delivery">
+                    --
+                </strong>
+
+            </div>
+
         </div>
+
+
+        <!-- ==================================
+             ALUGUEL
+        =================================== -->
+
+        <div class="reservation-rental-info">
+
+            <div class="reservation-top">
+
+                <div>
+
+                    <span
+                        class="status"
+                        id="reservation-status"
+                    >
+                        Solicitado
+                    </span>
+
+
+                    <p
+                        id="reservation-period"
+                    >
+                        --
+                    </p>
+
+                </div>
+
+
+                <div
+                    class="reservation-price"
+                    id="reservation-total"
+                >
+                    R$ 0,00
+                </div>
+
+            </div>
+
+
+            <div class="reservation-info">
+
+                <div>
+
+                    <span>
+                        Diárias
+                    </span>
+
+                    <strong
+                        id="reservation-days"
+                    >
+                        --
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Entrega
+                    </span>
+
+                    <strong
+                        id="reservation-delivery"
+                    >
+                        --
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Caução
+                    </span>
+
+                    <strong
+                        id="reservation-deposit"
+                    >
+                        R$ 0,00
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 
 
