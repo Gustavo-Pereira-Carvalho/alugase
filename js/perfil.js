@@ -22,8 +22,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ==========================
 
     const avatar = document.querySelector("#avatar");
-    const miniAvatar = document.querySelector("#profile-mini");
-
     const userName = document.querySelector("#user-name");
     const userLocation = document.querySelector("#user-location");
 
@@ -34,14 +32,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const adsList = document.querySelector("#ads-list");
     const rentalsList = document.querySelector("#rentals-list");
 
-    const notificationBadge =
-        document.querySelector("#notification-badge");
+    const notificationBadge = document.querySelector("#notification-badge");
 
     // ==========================
     // PERFIL
     // ==========================
-
-    userName.textContent = user.name;
 
     const initials = user.name
         .split(" ")
@@ -51,15 +46,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         .toUpperCase();
 
     avatar.textContent = initials;
+    userName.textContent = user.name;
 
-    if (miniAvatar) {
-        miniAvatar.textContent = initials;
-    }
+    const year = user.createdAt
+        ? new Date(user.createdAt).getFullYear()
+        : new Date().getFullYear();
 
-    const year = new Date(user.createdAt).getFullYear();
-
-    userLocation.textContent =
-        `${user.city} • Membro desde ${year}`;
+    userLocation.textContent = `${user.city} • Membro desde ${year}`;
 
     if (user.identityVerified) {
 
@@ -102,13 +95,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         tab.addEventListener("click", () => {
 
-            tabs.forEach(t =>
-                t.classList.remove("active")
-            );
-
-            contents.forEach(c =>
-                c.classList.remove("active")
-            );
+            tabs.forEach(t => t.classList.remove("active"));
+            contents.forEach(c => c.classList.remove("active"));
 
             tab.classList.add("active");
 
@@ -124,27 +112,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     // BOTÕES
     // ==========================
 
-    document.querySelector("#logout").onclick = () => {
-
-        localStorage.removeItem("alugase_user");
-
-        window.location.href = "index.html";
-
-    };
-
     document.querySelector("#new-ad").onclick = () => {
-
         window.location.href = "novo-anuncio.html";
-
     };
 
-    document
-        .querySelector("#empty-new-ad")
-        ?.addEventListener("click", () => {
-
-            window.location.href = "novo-anuncio.html";
-
-        });
+    document.querySelector("#empty-new-ad")?.addEventListener("click", () => {
+        window.location.href = "novo-anuncio.html";
+    });
 
     // ==========================
     // ANÚNCIOS
@@ -154,22 +128,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
 
-            const response = await fetch(
-                `${API}/products/user/${user._id}`
-            );
-
+            const response = await fetch(`${API}/products/user/${user._id}`);
             const products = await response.json();
 
             adsList.innerHTML = "";
 
-            document.querySelector("#total-ads").textContent =
-                products.length;
+            document.querySelector("#total-ads").textContent = products.length;
 
             if (products.length === 0) {
-
                 document.querySelector("#empty-ads").style.display = "block";
                 return;
-
             }
 
             document.querySelector("#empty-ads").style.display = "none";
@@ -177,58 +145,41 @@ document.addEventListener("DOMContentLoaded", async () => {
             products.forEach(product => {
 
                 adsList.innerHTML += `
-                <div class="item-card">
+                    <div class="item-card">
 
-                    <div class="item-image">
-                        ${product.image || "📦"}
-                    </div>
+                        <div class="item-image">
+                            ${product.image || "📦"}
+                        </div>
 
-                    <div class="item-info">
+                        <div class="item-info">
+                            <h3>${product.title}</h3>
+                            <p>R$ ${product.pricePerDay} / dia</p>
 
-                        <h3>${product.title}</h3>
+                            <span class="status ${product.status === "available" ? "available" : "rented"}">
+                                ${product.status === "available" ? "Disponível" : "Alugado"}
+                            </span>
+                        </div>
 
-                        <p>R$ ${product.pricePerDay} / dia</p>
-
-                        <span class="status ${product.status === "available"
-                        ? "available"
-                        : "rented"}">
-
-                            ${product.status === "available"
-                        ? "Disponível"
-                        : "Alugado"}
-
-                        </span>
+                        <button class="btn-secondary edit-ad" data-id="${product._id}">
+                            Editar
+                        </button>
 
                     </div>
-
-                    <button
-                        class="btn-secondary edit-ad"
-                        data-id="${product._id}"
-                    >
-                        Editar
-                    </button>
-
-                </div>
                 `;
 
             });
 
-            document
-                .querySelectorAll(".edit-ad")
-                .forEach(button => {
+            document.querySelectorAll(".edit-ad").forEach(button => {
 
-                    button.onclick = () => {
+                button.onclick = () => {
+                    window.location.href = `editar-anuncio.html?id=${button.dataset.id}`;
+                };
 
-                        window.location.href =
-                            `editar-anuncio.html?id=${button.dataset.id}`;
-
-                    };
-
-                });
+            });
 
         } catch (err) {
 
-            console.error(err);
+            console.error("Erro anúncios:", err);
 
         }
 
@@ -242,87 +193,80 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
 
-            const response = await fetch(
-                `${API}/rentals/user/${user._id}`
-            );
-
+            const response = await fetch(`${API}/rentals/user/${user._id}`);
             const rentals = await response.json();
 
             rentalsList.innerHTML = "";
 
-            document.querySelector("#total-rentals").textContent =
-                rentals.filter(r =>
-                    String(r.renterId) === user._id
-                ).length;
+            const myRentals = rentals.filter(r =>
+                String(r.renterId._id || r.renterId) === user._id
+            );
+
+            document.querySelector("#total-rentals").textContent = myRentals.length;
 
             const income = rentals
                 .filter(r =>
-                    String(r.ownerId) === user._id &&
+                    String(r.ownerId._id || r.ownerId) === user._id &&
                     r.status === "finished"
                 )
-                .reduce((acc, r) => acc + r.total, 0);
+                .reduce((acc, r) => acc + Number(r.total), 0);
 
-            document.querySelector("#total-income").textContent =
-                `R$ ${income}`;
+            document.querySelector("#total-income").textContent = `R$ ${income}`;
 
             const pending = rentals.filter(r =>
-                String(r.ownerId) === user._id &&
+                String(r.ownerId._id || r.ownerId) === user._id &&
                 r.status === "pending"
             ).length;
 
             if (notificationBadge && pending > 0) {
-
                 notificationBadge.style.display = "flex";
                 notificationBadge.textContent = pending;
-
             }
 
-            if (rentals.length === 0) {
-
+            if (myRentals.length === 0) {
                 document.querySelector("#empty-rentals").style.display = "block";
                 return;
-
             }
 
             document.querySelector("#empty-rentals").style.display = "none";
 
-            rentals.forEach(rental => {
+            myRentals.forEach(rental => {
 
-                const product = rental.productId;
+                const product = rental.productId || {};
 
                 rentalsList.innerHTML += `
-                <div class="item-card">
+                    <div class="item-card">
 
-                    <div class="item-image">
-                        ${product?.image || "📦"}
+                        <div class="item-image">
+                            ${product.image || "📦"}
+                        </div>
+
+                        <div class="item-info">
+
+                            <h3>${product.title || "Produto"}</h3>
+
+                            <p>
+                                ${new Date(rental.startDate).toLocaleDateString("pt-BR")}
+                                até
+                                ${new Date(rental.endDate).toLocaleDateString("pt-BR")}
+                            </p>
+
+                            <span class="status progress">
+                                ${rental.status}
+                            </span>
+
+                        </div>
+
+                        <strong>R$ ${rental.total}</strong>
+
                     </div>
-
-                    <div class="item-info">
-
-                        <h3>${product?.title || "Produto"}</h3>
-
-                        <p>
-                            ${new Date(rental.startDate).toLocaleDateString("pt-BR")}
-                            até
-                            ${new Date(rental.endDate).toLocaleDateString("pt-BR")}
-                        </p>
-
-                        <span class="status progress">
-                            ${rental.status}
-                        </span>
-
-                    </div>
-
-                    <strong>R$ ${rental.total}</strong>
-
-                </div>
                 `;
 
             });
 
         } catch (err) {
 
-            console.error(err);
+            console.error("Erro aluguéis:", err);
 
         }
 
@@ -340,7 +284,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         number = number.replace(/\D/g, "");
 
         if (number.length !== 11) return false;
-
         if (/^(\d)\1+$/.test(number)) return false;
 
         let sum = 0;
@@ -351,7 +294,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         let digit = (sum * 10) % 11;
 
         if (digit === 10) digit = 0;
-
         if (digit !== Number(number[9])) return false;
 
         sum = 0;
@@ -369,9 +311,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     cpf?.addEventListener("input", () => {
 
-        let value = cpf.value
-            .replace(/\D/g, "")
-            .slice(0, 11);
+        let value = cpf.value.replace(/\D/g, "").slice(0, 11);
 
         value = value.replace(/(\d{3})(\d)/, "$1.$2");
         value = value.replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
@@ -384,21 +324,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     cpf?.addEventListener("blur", () => {
 
         if (validateCPF(cpf.value)) {
-
             cpfStatus.textContent = "CPF válido";
             cpfStatus.className = "valid";
-
         } else {
-
             cpfStatus.textContent = "CPF inválido";
             cpfStatus.className = "invalid";
-
         }
 
     });
 
     // ==========================
-    // RG / CNH / CEP
+    // CEP
     // ==========================
 
     const rg = document.querySelector("#rg");
@@ -411,66 +347,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const city = document.querySelector("#city");
     const state = document.querySelector("#state");
 
-    rg?.addEventListener("input", () => {
-
-        let value = rg.value
-            .toUpperCase()
-            .replace(/[^0-9X]/g, "");
-
-        if (value.includes("X"))
-            value = value.replace(/X/g, "") + "X";
-
-        const hasX = value.endsWith("X");
-
-        const digits = value.replace("X", "").slice(0, 8);
-
-        let formatted = digits;
-
-        if (digits.length > 2)
-            formatted = formatted.replace(/(\d{2})(\d+)/, "$1.$2");
-
-        if (digits.length > 5)
-            formatted = formatted.replace(/(\d{2})\.(\d{3})(\d+)/, "$1.$2.$3");
-
-        if (hasX)
-            formatted += "-X";
-        else if (digits.length === 8)
-            formatted += "-";
-
-        rg.value = formatted;
-
-    });
-
-    cnh?.addEventListener("input", () => {
-
-        cnh.value = cnh.value
-            .replace(/\D/g, "")
-            .slice(0, 11);
-
-    });
-
-    cep?.addEventListener("input", () => {
-
-        let value = cep.value
-            .replace(/\D/g, "")
-            .slice(0, 8);
-
-        value = value.replace(/(\d{5})(\d)/, "$1-$2");
-
-        cep.value = value;
-
-    });
-
     cep?.addEventListener("blur", async () => {
 
         const value = cep.value.replace(/\D/g, "");
 
         if (value.length !== 8) return;
 
-        const response = await fetch(
-            `https://viacep.com.br/ws/${value}/json/`
-        );
-
+        const response = await fetch(`https://viacep.com.br/ws/${value}/json/`);
         const data = await response.json();
 
         if (data.erro) return;
@@ -486,67 +369,56 @@ document.addEventListener("DOMContentLoaded", async () => {
     // VERIFICAÇÃO
     // ==========================
 
-    document
-        .querySelector("#verify-account")
-        ?.addEventListener("click", async () => {
+    document.querySelector("#verify-account")?.addEventListener("click", async () => {
 
-            if (!validateCPF(cpf.value)) {
+        if (!validateCPF(cpf.value)) {
+            alert("CPF inválido.");
+            return;
+        }
 
-                alert("CPF inválido.");
-                return;
+        try {
 
-            }
+            const response = await fetch(`${API}/users/verify/${user._id}`, {
 
-            const body = {
+                method: "PUT",
 
-                cpf: cpf.value,
-                rg: rg.value,
-                cnh: cnh.value,
+                headers: {
+                    "Content-Type": "application/json"
+                },
 
-                cep: cep.value,
-                number: number.value,
+                body: JSON.stringify({
 
-                street: street.value,
-                district: district.value,
-                city: city.value,
-                state: state.value
+                    cpf: cpf.value,
+                    rg: rg.value,
+                    cnh: cnh.value,
 
-            };
+                    cep: cep.value,
+                    number: number.value,
 
-            try {
+                    street: street.value,
+                    district: district.value,
+                    city: city.value,
+                    state: state.value
 
-                const response = await fetch(
-                    `${API}/users/verify/${user._id}`,
-                    {
-                        method: "PUT",
+                })
 
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
+            });
 
-                        body: JSON.stringify(body)
+            const updated = await response.json();
 
-                    }
-                );
+            localStorage.setItem("alugase_user", JSON.stringify(updated));
 
-                const updated = await response.json();
+            alert("Documentos enviados com sucesso!");
 
-                localStorage.setItem(
-                    "alugase_user",
-                    JSON.stringify(updated)
-                );
+            location.reload();
 
-                alert("Documentos enviados com sucesso!");
+        } catch {
 
-                location.reload();
+            alert("Erro ao enviar documentos.");
 
-            } catch {
+        }
 
-                alert("Erro ao enviar documentos.");
-
-            }
-
-        });
+    });
 
     // ==========================
     // INICIAR
