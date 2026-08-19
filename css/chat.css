@@ -2,49 +2,76 @@
    CHAT - ALUGASE
 ========================================== */
 
+
 /* ---------- LAYOUT ---------- */
 
 .chat-page{
+
     width:min(1400px,96%);
+
     margin:24px auto;
 
     height:calc(100dvh - 100px);
 
     display:grid;
-    grid-template-columns:320px minmax(0,1fr);
+
+    grid-template-columns:
+        320px
+        minmax(0,1fr);
 
     gap:20px;
+
 }
+
 
 .chat-sidebar,
 .chat-area{
+
     background:#fff;
+
     border:1px solid #e5e7eb;
+
     border-radius:18px;
+
     overflow:hidden;
 
     display:flex;
+
     flex-direction:column;
 
     min-height:0;
+
 }
+
 
 /* ---------- SIDEBAR ---------- */
 
 .sidebar-header{
+
     padding:18px;
+
     border-bottom:1px solid #eee;
+
     font-weight:700;
+
 }
+
 
 #conversation-list{
+
     flex:1;
+
     overflow-y:auto;
+
 }
 
+
 .conversation{
+
     display:flex;
+
     align-items:center;
+
     gap:12px;
 
     padding:14px 16px;
@@ -52,61 +79,120 @@
     cursor:pointer;
 
     border-bottom:1px solid #f3f4f6;
+
     transition:.2s;
+
 }
+
 
 .conversation:hover,
 .conversation.active{
+
     background:#f0fdf4;
+
 }
 
+
+/* ---------- AVATAR ---------- */
+
 .avatar{
+
     width:46px;
+
     height:46px;
+
+    min-width:46px;
+
     border-radius:50%;
 
     background:#16a34a;
+
     color:#fff;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 
     font-weight:700;
 
     flex-shrink:0;
+
+    overflow:hidden;
+
 }
+
+
+.avatar-image{
+
+    width:100%;
+
+    height:100%;
+
+    display:block;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+}
+
+
+/* ---------- INFO ---------- */
 
 .conv-info{
+
     flex:1;
+
     min-width:0;
+
 }
+
 
 .conv-info h4{
+
     font-size:15px;
+
     margin-bottom:3px;
+
 }
 
+
 .conv-info p{
+
     font-size:13px;
+
     color:#6b7280;
 
     white-space:nowrap;
+
     overflow:hidden;
+
     text-overflow:ellipsis;
+
 }
+
 
 /* ---------- CHAT ---------- */
 
 .chat-area{
+
     display:flex;
+
     flex-direction:column;
+
     min-height:0;
+
 }
 
+
 .chat-header{
+
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
 
     padding:16px 20px;
@@ -114,141 +200,236 @@
     border-bottom:1px solid #eee;
 
     flex-shrink:0;
+
 }
+
 
 .chat-user{
+
     display:flex;
+
     align-items:center;
+
     gap:12px;
+
     min-width:0;
+
 }
+
 
 .chat-user h3{
+
     font-size:16px;
+
 }
 
+
 #chat-status{
+
     font-size:13px;
+
     color:#16a34a;
+
 }
+
 
 /* ---------- RESERVA ---------- */
 
 .reservation-card{
+
     background:#f8fffa;
+
     border-bottom:1px solid #eee;
+
     flex-shrink:0;
+
 }
 
+
 .reservation-toggle{
+
     width:100%;
+
     border:none;
+
     background:transparent;
 
     padding:14px 18px;
 
     display:flex;
+
     justify-content:space-between;
+
     align-items:center;
 
     cursor:pointer;
+
 }
+
 
 .reservation-toggle-content{
+
     display:flex;
+
     gap:12px;
+
     align-items:center;
+
 }
 
+
 .reservation-icon{
+
     width:42px;
+
     height:42px;
 
     border-radius:12px;
+
     background:#dcfce7;
 
     display:flex;
+
     align-items:center;
+
     justify-content:center;
 
     font-size:20px;
+
 }
+
 
 .reservation-label{
+
     font-size:11px;
+
     color:#6b7280;
+
     text-transform:uppercase;
+
 }
+
 
 .reservation-toggle-title{
+
     font-size:14px;
+
     font-weight:600;
+
 }
+
 
 .reservation-arrow{
+
     color:#16a34a;
+
     transition:.2s;
+
 }
+
 
 .reservation-toggle.open .reservation-arrow{
+
     transform:rotate(180deg);
+
 }
+
 
 .reservation-details{
+
     display:none;
+
     padding:0 18px 18px;
+
 }
+
 
 .reservation-details.open{
+
     display:block;
+
 }
+
 
 .reservation-top{
+
     display:flex;
+
     justify-content:space-between;
+
     gap:15px;
+
     margin-bottom:14px;
+
 }
 
+
 .status{
+
     display:inline-block;
+
     padding:4px 10px;
 
     border-radius:999px;
 
     background:#fef3c7;
+
     color:#92400e;
 
     font-size:12px;
+
     font-weight:700;
+
 }
+
 
 .reservation-price{
+
     font-size:24px;
+
     font-weight:800;
+
     color:#166534;
+
 }
+
 
 .reservation-info{
+
     display:grid;
-    grid-template-columns:repeat(3,1fr);
+
+    grid-template-columns:
+        repeat(3,1fr);
+
     gap:12px;
+
 }
+
 
 .reservation-info span{
+
     display:block;
+
     font-size:12px;
+
     color:#6b7280;
+
 }
 
+
 .reservation-info strong{
+
     font-size:14px;
+
 }
+
 
 /* ---------- MENSAGENS ---------- */
 
 .messages{
+
     flex:1;
+
     min-height:0;
 
     overflow-y:auto;
@@ -256,15 +437,20 @@
     padding:20px;
 
     display:flex;
+
     flex-direction:column;
+
     gap:12px;
 
     background:#f3f4f6;
 
     -webkit-overflow-scrolling:touch;
+
 }
 
+
 .message{
+
     max-width:72%;
 
     padding:12px 14px;
@@ -274,71 +460,110 @@
     line-height:1.45;
 
     word-break:break-word;
+
 }
 
+
 .received{
+
     align-self:flex-start;
 
     background:#fff;
 
     border:1px solid #e5e7eb;
+
 }
 
+
 .sent{
+
     align-self:flex-end;
 
     background:#16a34a;
+
     color:#fff;
+
 }
 
+
 .time{
+
     display:block;
+
     margin-top:6px;
+
     font-size:11px;
+
     opacity:.8;
+
 }
+
 
 /* ---------- INPUT ---------- */
 
 .message-box{
+
     display:flex;
+
     align-items:center;
+
     gap:10px;
 
     padding:12px;
 
     background:#fff;
+
     border-top:1px solid #e5e7eb;
 
     flex-shrink:0;
+
 }
 
+
 .message-box input{
+
     flex:1;
+
     min-width:0;
 
     height:46px;
 
     border:1px solid #d1d5db;
+
     border-radius:23px;
 
     padding:0 16px;
 
     outline:none;
+
     background:#fff;
+
 }
+
 
 .message-box input:focus{
+
     border-color:#16a34a;
-    box-shadow:0 0 0 3px rgba(22,163,74,.08);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(22,163,74,.08);
+
 }
 
+
 .message-box button{
+
     height:46px;
+
     padding:0 18px;
+
     border-radius:23px;
+
     white-space:nowrap;
+
 }
+
 
 /* ==========================================
    TABLET
@@ -346,20 +571,31 @@
 
 @media (max-width:900px){
 
-.chat-page{
-    grid-template-columns:1fr;
-    gap:14px;
+    .chat-page{
+
+        grid-template-columns:1fr;
+
+        gap:14px;
+
+    }
+
+
+    .chat-sidebar{
+
+        max-height:150px;
+
+    }
+
+
+    .reservation-info{
+
+        grid-template-columns:
+            repeat(3,1fr);
+
+    }
+
 }
 
-.chat-sidebar{
-    max-height:150px;
-}
-
-.reservation-info{
-    grid-template-columns:repeat(3,1fr);
-}
-
-}
 
 /* ==========================================
    CELULAR
@@ -367,202 +603,333 @@
 
 @media (max-width:600px){
 
-html,
-body{
-    height:100dvh;
-    overflow:hidden;
+    html,
+    body{
+
+        height:100dvh;
+
+        overflow:hidden;
+
+    }
+
+
+    header{
+
+        height:60px;
+
+    }
+
+
+    .navbar{
+
+        height:60px;
+
+        min-height:60px;
+
+    }
+
+
+    .chat-page{
+
+        width:100%;
+
+        margin:0;
+
+        height:calc(100dvh - 60px);
+
+        display:flex;
+
+        flex-direction:column;
+
+        gap:0;
+
+    }
+
+
+    /* Conversas */
+
+    .chat-sidebar{
+
+        height:88px;
+
+        min-height:88px;
+
+        max-height:88px;
+
+        border:none;
+
+        border-bottom:1px solid #e5e7eb;
+
+        border-radius:0;
+
+    }
+
+
+    .sidebar-header{
+
+        display:none;
+
+    }
+
+
+    #conversation-list{
+
+        display:flex;
+
+        align-items:center;
+
+        overflow-x:auto;
+
+        overflow-y:hidden;
+
+        gap:8px;
+
+        padding:8px 10px;
+
+        scrollbar-width:none;
+
+    }
+
+
+    #conversation-list::-webkit-scrollbar{
+
+        display:none;
+
+    }
+
+
+    .conversation{
+
+        flex-direction:column;
+
+        justify-content:center;
+
+        width:68px;
+
+        min-width:68px;
+
+        height:70px;
+
+        gap:4px;
+
+        padding:5px;
+
+        border:none;
+
+        border-radius:12px;
+
+        background:#f9fafb;
+
+    }
+
+
+    .conversation .avatar{
+
+        width:38px;
+
+        min-width:38px;
+
+        height:38px;
+
+        font-size:14px;
+
+    }
+
+
+    .conv-info h4{
+
+        font-size:10px;
+
+        white-space:nowrap;
+
+        overflow:hidden;
+
+        text-overflow:ellipsis;
+
+        max-width:62px;
+
+        text-align:center;
+
+    }
+
+
+    .conv-info p{
+
+        display:none;
+
+    }
+
+
+    /* Chat */
+
+    .chat-area{
+
+        flex:1;
+
+        min-height:0;
+
+        border:none;
+
+        border-radius:0;
+
+    }
+
+
+    .chat-header{
+
+        padding:10px 14px;
+
+    }
+
+
+    .chat-header .btn-secondary{
+
+        display:none;
+
+    }
+
+
+    .chat-user .avatar{
+
+        width:38px;
+
+        min-width:38px;
+
+        height:38px;
+
+    }
+
+
+    .chat-user h3{
+
+        font-size:14px;
+
+    }
+
+
+    /* Reserva */
+
+    .reservation-toggle{
+
+        padding:10px 14px;
+
+    }
+
+
+    .reservation-icon{
+
+        width:36px;
+
+        height:36px;
+
+        font-size:17px;
+
+    }
+
+
+    .reservation-details{
+
+        padding:0 14px 14px;
+
+    }
+
+
+    .reservation-top{
+
+        flex-direction:column;
+
+        gap:8px;
+
+    }
+
+
+    .reservation-price{
+
+        font-size:20px;
+
+    }
+
+
+    .reservation-info{
+
+        grid-template-columns:
+            repeat(2,1fr);
+
+        gap:10px;
+
+    }
+
+
+    /* Mensagens */
+
+    .messages{
+
+        flex:1;
+
+        min-height:0;
+
+        padding:12px;
+
+        gap:8px;
+
+    }
+
+
+    .message{
+
+        max-width:85%;
+
+        font-size:14px;
+
+        padding:10px 12px;
+
+    }
+
+
+    /* INPUT */
+
+    .message-box{
+
+        position:sticky;
+
+        bottom:0;
+
+        padding:
+            10px
+            12px
+            calc(
+                10px +
+                env(safe-area-inset-bottom)
+            );
+
+        background:#fff;
+
+        z-index:50;
+
+    }
+
+
+    .message-box input{
+
+        height:44px;
+
+        font-size:14px;
+
+    }
+
+
+    .message-box button{
+
+        height:44px;
+
+        padding:0 16px;
+
+        font-size:13px;
+
+    }
+
 }
 
-header{
-    height:60px;
-}
-
-.navbar{
-    height:60px;
-    min-height:60px;
-}
-
-.chat-page{
-    width:100%;
-    margin:0;
-
-    height:calc(100dvh - 60px);
-
-    display:flex;
-    flex-direction:column;
-
-    gap:0;
-}
-
-/* Conversas */
-
-.chat-sidebar{
-    height:88px;
-    min-height:88px;
-    max-height:88px;
-
-    border:none;
-    border-bottom:1px solid #e5e7eb;
-    border-radius:0;
-}
-
-.sidebar-header{
-    display:none;
-}
-
-#conversation-list{
-    display:flex;
-    align-items:center;
-
-    overflow-x:auto;
-    overflow-y:hidden;
-
-    gap:8px;
-
-    padding:8px 10px;
-
-    scrollbar-width:none;
-}
-
-#conversation-list::-webkit-scrollbar{
-    display:none;
-}
-
-.conversation{
-    flex-direction:column;
-    justify-content:center;
-
-    width:68px;
-    min-width:68px;
-    height:70px;
-
-    gap:4px;
-
-    padding:5px;
-
-    border:none;
-    border-radius:12px;
-
-    background:#f9fafb;
-}
-
-.conversation .avatar{
-    width:38px;
-    height:38px;
-    font-size:14px;
-}
-
-.conv-info h4{
-    font-size:10px;
-
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-.conv-info p{
-    display:none;
-}
-
-/* Chat */
-
-.chat-area{
-    flex:1;
-    min-height:0;
-
-    border:none;
-    border-radius:0;
-}
-
-.chat-header{
-    padding:10px 14px;
-}
-
-.chat-header .btn-secondary{
-    display:none;
-}
-
-.chat-user .avatar{
-    width:38px;
-    height:38px;
-}
-
-.chat-user h3{
-    font-size:14px;
-}
-
-/* Reserva */
-
-.reservation-toggle{
-    padding:10px 14px;
-}
-
-.reservation-icon{
-    width:36px;
-    height:36px;
-    font-size:17px;
-}
-
-.reservation-details{
-    padding:0 14px 14px;
-}
-
-.reservation-top{
-    flex-direction:column;
-    gap:8px;
-}
-
-.reservation-price{
-    font-size:20px;
-}
-
-.reservation-info{
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-}
-
-/* Mensagens */
-
-.messages{
-    flex:1;
-    min-height:0;
-
-    padding:12px;
-
-    gap:8px;
-}
-
-.message{
-    max-width:85%;
-    font-size:14px;
-    padding:10px 12px;
-}
-
-/* INPUT FIXO */
-
-.message-box{
-    position:sticky;
-    bottom:0;
-
-    padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-
-    background:#fff;
-
-    z-index:50;
-}
-
-.message-box input{
-    height:44px;
-    font-size:14px;
-}
-
-.message-box button{
-    height:44px;
-    padding:0 16px;
-    font-size:13px;
-}
-
-}
 
 /* ==========================================
    CELULARES PEQUENOS
@@ -570,16 +937,25 @@ header{
 
 @media (max-width:380px){
 
-.message{
-    max-width:90%;
-}
+    .message{
 
-.message-box button{
-    padding:0 12px;
-}
+        max-width:90%;
 
-.reservation-info{
-    grid-template-columns:1fr 1fr;
-}
+    }
+
+
+    .message-box button{
+
+        padding:0 12px;
+
+    }
+
+
+    .reservation-info{
+
+        grid-template-columns:
+            1fr 1fr;
+
+    }
 
 }

@@ -23,7 +23,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!user || !user._id) {
 
-        location.href = "login.html";
+        location.href =
+            "login.html";
 
         return;
 
@@ -96,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // COMPARAR IDs
+    // COMPARAR IDS
     // ==========================================
 
     function sameId(a, b) {
@@ -189,6 +190,162 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
+    // CRIAR AVATAR
+    // ==========================================
+
+    function createAvatar(
+        name,
+        profileImage,
+        className = "avatar"
+    ) {
+
+        const avatar =
+            document.createElement("div");
+
+
+        avatar.className =
+            className;
+
+
+        // ======================================
+        // FOTO
+        // ======================================
+
+        if (
+            profileImage &&
+            typeof profileImage === "string" &&
+            profileImage.trim() !== ""
+        ) {
+
+            const img =
+                document.createElement("img");
+
+
+            img.src =
+                profileImage;
+
+
+            img.alt =
+                `Foto de ${name || "usuário"}`;
+
+
+            img.className =
+                "avatar-image";
+
+
+            img.loading =
+                "lazy";
+
+
+            img.onerror =
+                () => {
+
+                    img.remove();
+
+                    avatar.textContent =
+                        (name || "?")
+                            .charAt(0)
+                            .toUpperCase();
+
+                };
+
+
+            avatar.appendChild(
+                img
+            );
+
+
+        } else {
+
+            // ==================================
+            // INICIAL
+            // ==================================
+
+            avatar.textContent =
+                (name || "?")
+                    .charAt(0)
+                    .toUpperCase();
+
+        }
+
+
+        return avatar;
+
+    }
+
+
+    // ==========================================
+    // PEGAR OUTRO USUÁRIO
+    // ==========================================
+
+    function getOtherUser(chat) {
+
+        const owner =
+            chat.ownerId;
+
+
+        const renter =
+            chat.renterId;
+
+
+        const ownerId =
+            owner?._id ||
+            owner;
+
+
+        const renterId =
+            renter?._id ||
+            renter;
+
+
+        const isOwner =
+            sameId(
+                ownerId,
+                user._id
+            );
+
+
+        if (isOwner) {
+
+            return {
+
+                id:
+                    renterId,
+
+                name:
+                    renter?.name ||
+                    chat.renterName ||
+                    "Usuário",
+
+                profileImage:
+                    renter?.profileImage ||
+                    ""
+
+            };
+
+        }
+
+
+        return {
+
+            id:
+                ownerId,
+
+            name:
+                owner?.name ||
+                chat.ownerName ||
+                "Usuário",
+
+            profileImage:
+                owner?.profileImage ||
+                ""
+
+        };
+
+    }
+
+
+    // ==========================================
     // NOTIFICAÇÕES
     // ==========================================
 
@@ -222,22 +379,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             const pending =
-                rentals.filter(rental => {
+                rentals.filter(
+                    rental => {
 
-                    const ownerId =
-                        rental.ownerId?._id ||
-                        rental.ownerId;
+                        const ownerId =
+                            rental.ownerId?._id ||
+                            rental.ownerId;
 
 
-                    return (
-                        sameId(
-                            ownerId,
-                            user._id
-                        ) &&
-                        rental.status === "pending"
-                    );
+                        return (
+                            sameId(
+                                ownerId,
+                                user._id
+                            ) &&
+                            rental.status === "pending"
+                        );
 
-                }).length;
+                    }
+                ).length;
 
 
             if (pending > 0) {
@@ -324,13 +483,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         if (!rental) {
-
-            console.warn(
-                "Este chat não possui aluguel."
-            );
-
             return;
-
         }
 
 
@@ -519,17 +672,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (!response.ok) {
 
-                const errorText =
-                    await response.text();
-
-
-                console.error(
-                    "Erro HTTP:",
-                    response.status,
-                    errorText
-                );
-
-
                 throw new Error(
                     `Erro HTTP ${response.status}`
                 );
@@ -648,22 +790,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         chats.forEach(chat => {
 
-            const ownerId =
-                chat.ownerId?._id ||
-                chat.ownerId;
-
-
-            const isOwner =
-                sameId(
-                    ownerId,
-                    user._id
-                );
-
-
-            const otherName =
-                isOwner
-                    ? chat.renterName
-                    : chat.ownerName;
+            const otherUser =
+                getOtherUser(chat);
 
 
             const lastMessage =
@@ -693,21 +821,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }`;
 
 
+            // ==================================
+            // AVATAR COM FOTO
+            // ==================================
+
             const avatar =
-                document.createElement(
-                    "div"
+                createAvatar(
+                    otherUser.name,
+                    otherUser.profileImage
                 );
 
 
-            avatar.className =
-                "avatar";
-
-
-            avatar.textContent =
-                (otherName || "?")
-                    .charAt(0)
-                    .toUpperCase();
-
+            // ==================================
+            // INFORMAÇÕES
+            // ==================================
 
             const info =
                 document.createElement(
@@ -726,8 +853,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             name.textContent =
-                otherName ||
-                "Usuário";
+                otherUser.name;
 
 
             const last =
@@ -741,15 +867,27 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "Nova conversa";
 
 
-            info.appendChild(name);
+            info.appendChild(
+                name
+            );
 
-            info.appendChild(last);
+            info.appendChild(
+                last
+            );
 
 
-            card.appendChild(avatar);
+            card.appendChild(
+                avatar
+            );
 
-            card.appendChild(info);
+            card.appendChild(
+                info
+            );
 
+
+            // ==================================
+            // ABRIR CHAT
+            // ==================================
 
             card.addEventListener(
                 "click",
@@ -794,22 +932,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        const ownerId =
-            currentChat.ownerId?._id ||
-            currentChat.ownerId;
-
-
-        const isOwner =
-            sameId(
-                ownerId,
-                user._id
+        const otherUser =
+            getOtherUser(
+                currentChat
             );
-
-
-        const otherName =
-            isOwner
-                ? currentChat.renterName
-                : currentChat.ownerName;
 
 
         const chatName =
@@ -836,24 +962,83 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
 
 
+        // ======================================
+        // NOME
+        // ======================================
+
         if (chatName) {
 
             chatName.textContent =
-                otherName ||
-                "Usuário";
+                otherUser.name;
 
         }
 
+
+        // ======================================
+        // FOTO DO CHAT
+        // ======================================
 
         if (chatAvatar) {
 
-            chatAvatar.textContent =
-                (otherName || "?")
-                    .charAt(0)
-                    .toUpperCase();
+            chatAvatar.innerHTML = "";
+
+
+            if (
+                otherUser.profileImage &&
+                otherUser.profileImage.trim() !== ""
+            ) {
+
+                const img =
+                    document.createElement(
+                        "img"
+                    );
+
+
+                img.src =
+                    otherUser.profileImage;
+
+
+                img.alt =
+                    `Foto de ${otherUser.name}`;
+
+
+                img.className =
+                    "avatar-image";
+
+
+                img.onerror =
+                    () => {
+
+                        img.remove();
+
+                        chatAvatar.textContent =
+                            otherUser.name
+                                .charAt(0)
+                                .toUpperCase();
+
+                    };
+
+
+                chatAvatar.appendChild(
+                    img
+                );
+
+
+            } else {
+
+                chatAvatar.textContent =
+                    otherUser.name
+                        .charAt(0)
+                        .toUpperCase();
+
+            }
 
         }
 
+
+        // ======================================
+        // STATUS
+        // ======================================
 
         if (chatStatus) {
 
@@ -863,6 +1048,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         }
 
+
+        // ======================================
+        // PRODUTO
+        // ======================================
 
         if (viewProduct) {
 
@@ -888,6 +1077,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         }
 
+
+        // ======================================
+        // ALUGUEL
+        // ======================================
 
         renderRentalCard();
 
@@ -993,17 +1186,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                         ).toLocaleTimeString(
                             "pt-BR",
                             {
-                                hour: "2-digit",
-                                minute: "2-digit"
+                                hour:
+                                    "2-digit",
+
+                                minute:
+                                    "2-digit"
                             }
                         );
 
                 }
 
 
-                bubble.appendChild(text);
+                bubble.appendChild(
+                    text
+                );
 
-                bubble.appendChild(time);
+                bubble.appendChild(
+                    time
+                );
+
 
                 messages.appendChild(
                     bubble
@@ -1074,9 +1275,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
 
 
+            const profileChanged =
+                JSON.stringify(
+                    currentChat.ownerId?.profileImage
+                ) !==
+                JSON.stringify(
+                    updatedChat.ownerId?.profileImage
+                ) ||
+                JSON.stringify(
+                    currentChat.renterId?.profileImage
+                ) !==
+                JSON.stringify(
+                    updatedChat.renterId?.profileImage
+                );
+
+
             if (
                 changed ||
-                rentalChanged
+                rentalChanged ||
+                profileChanged
             ) {
 
                 currentChat =
@@ -1169,7 +1386,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     `${API}/${currentChat._id}/messages`,
                     {
 
-                        method: "POST",
+                        method:
+                            "POST",
 
                         headers: {
 
