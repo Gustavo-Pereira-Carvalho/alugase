@@ -11,41 +11,33 @@
 <body>
 
 <header>
-  <nav class="navbar">
+    <nav class="navbar profile-navbar">
 
-    <div class="logo">
-      <a href="index.html">
-        <h2>ALUGASE</h2>
-      </a>
-    </div>
+        <div class="logo">
+            <a href="index.html">
+                <img src="assets/logo.png" alt="Logo Alugase">
+                <h2>ALUGASE</h2>
+            </a>
+        </div>
 
-    <ul class="nav-links">
-      <li><a href="index.html">Início</a></li>
-      <li><a href="explorar.html">Explorar</a></li>
-      <li><a href="index.html#categorias">Categorias</a></li>
-    </ul>
+        <div class="profile-actions">
 
-    <div class="nav-buttons">
+            <a href="solicitacoes.html" class="nav-icon" title="Solicitações">
+                🔔
+                <span class="notification-badge" id="notification-badge">0</span>
+            </a>
 
-      <a href="solicitacoes.html" class="btn-secondary">
-        Solicitações
-      </a>
+            <a href="chat.html" class="nav-icon" title="Conversas">
+                💬
+            </a>
 
-      <a href="chat.html" class="btn-secondary">
-        Conversas
-      </a>
+            <div class="profile-mini" id="profile-mini">
+                GP
+            </div>
 
-      <button class="btn-primary" id="new-ad">
-        + Novo anúncio
-      </button>
+        </div>
 
-      <button class="btn-secondary" id="logout">
-        Sair
-      </button>
-
-    </div>
-
-  </nav>
+    </nav>
 </header>
 
 <main class="profile-page">
