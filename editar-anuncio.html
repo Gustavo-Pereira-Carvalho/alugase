@@ -1,189 +1,586 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Editar Anúncio | Alugase</title>
 
-  <link rel="stylesheet" href="./css/global.css">
-  <link rel="stylesheet" href="./css/anuncio.css">
-  <link rel="stylesheet" href="./css/editar-anuncio.css">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Editar Anúncio | Alugase</title>
+
+
+    <link
+        rel="stylesheet"
+        href="./css/global.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="./css/anuncio.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="./css/editar-anuncio.css"
+    >
+
 </head>
+
+
 <body>
 
+
+<!-- ==========================================
+     HEADER
+========================================== -->
+
 <header>
-  <nav class="navbar">
 
-    <div class="logo">
-      <a href="index.html">
-        <h2>ALUGASE</h2>
-      </a>
-    </div>
+    <nav class="navbar">
 
-    <div class="nav-buttons">
-      <a href="perfil.html" class="btn-secondary">
-        Voltar ao Perfil
-      </a>
-    </div>
 
-  </nav>
+        <!-- LOGO -->
+
+        <div class="logo">
+
+            <a href="index.html">
+
+                <img
+                    src="assets/logo.png"
+                    alt="Logo Alugase"
+                >
+
+                <h2>
+                    ALUGASE
+                </h2>
+
+            </a>
+
+        </div>
+
+
+        <!-- NAVEGAÇÃO -->
+
+        <div class="nav-buttons">
+
+            <a
+                href="perfil.html"
+                class="btn-secondary"
+            >
+                Voltar ao Perfil
+            </a>
+
+        </div>
+
+
+    </nav>
+
 </header>
+
+
+
+<!-- ==========================================
+     CONTEÚDO
+========================================== -->
 
 <main class="ad-page">
 
-  <div class="page-title">
-    <h1>Editar anúncio</h1>
-    <p>Atualize as informações do seu produto.</p>
-  </div>
 
-  <form id="edit-form" class="ad-form">
+    <!-- TÍTULO -->
 
-    <section class="form-section">
+    <div class="page-title">
 
-      <h2>Informações básicas</h2>
+        <h1>
+            Editar anúncio
+        </h1>
 
-      <div class="form-group">
-        <label>Nome do produto</label>
-        <input type="text" id="title" required>
-      </div>
-
-      <div class="grid-2">
-
-        <div class="form-group">
-          <label>Categoria</label>
-
-          <select id="category" required>
-            <option>Eletrônicos</option>
-            <option>Ferramentas</option>
-            <option>Casa</option>
-            <option>Veículos</option>
-            <option>Eventos</option>
-            <option>Serviços</option>
-          </select>
-
-        </div>
-
-        <div class="form-group">
-          <label>Ícone</label>
-
-          <select id="icon">
-            <option value="📦">📦 Padrão</option>
-            <option value="📷">📷 Câmera</option>
-            <option value="💻">💻 Notebook</option>
-            <option value="🔊">🔊 Caixa de Som</option>
-            <option value="🚲">🚲 Bicicleta</option>
-            <option value="🚗">🚗 Veículo</option>
-            <option value="🔧">🔧 Ferramenta</option>
-            <option value="🎉">🎉 Evento</option>
-            <option value="🏠">🏠 Casa</option>
-          </select>
-
-        </div>
-
-      </div>
-
-      <div class="form-group">
-        <label>Descrição</label>
-        <textarea id="description" rows="5" required></textarea>
-      </div>
-
-      <div class="form-group">
-        <label>Cidade</label>
-        <input type="text" id="city" required>
-      </div>
-
-    </section>
-
-    <section class="form-section">
-
-      <h2>Preço</h2>
-
-      <div class="grid-2">
-
-        <div class="form-group">
-          <label>Preço por dia</label>
-          <input type="number" id="price" min="1" required>
-        </div>
-
-        <div class="form-group">
-          <label>Caução</label>
-          <input type="number" id="deposit" min="0" required>
-        </div>
-
-      </div>
-
-      <div class="form-group">
-        <label>Taxa de entrega</label>
-        <input type="number" id="deliveryPrice" min="0">
-      </div>
-
-    </section>
-
-    <section class="form-section">
-
-      <h2>Status do anúncio</h2>
-
-      <label class="switch">
-
-        <input type="checkbox" id="active">
-
-        <span class="slider"></span>
-
-        <strong>Disponível para aluguel</strong>
-
-      </label>
-
-    </section>
-
-    <section class="form-section">
-
-      <h2>Resumo</h2>
-
-      <div class="summary">
-
-        <div>
-          <span>Preço</span>
-          <strong id="sum-price">R$ 0</strong>
-        </div>
-
-        <div>
-          <span>Caução</span>
-          <strong id="sum-deposit">R$ 0</strong>
-        </div>
-
-        <div>
-          <span>Status</span>
-          <strong id="sum-status">Disponível</strong>
-        </div>
-
-      </div>
-
-    </section>
-
-    <div class="actions">
-
-      <button
-        type="button"
-        class="btn-danger"
-        id="delete-btn"
-      >
-        Excluir anúncio
-      </button>
-
-      <button
-        class="btn-primary"
-        type="submit"
-      >
-        Salvar alterações
-      </button>
+        <p>
+            Atualize as informações do seu produto.
+        </p>
 
     </div>
 
-  </form>
+
+
+    <!-- ==========================================
+         FORMULÁRIO
+    ========================================== -->
+
+    <form
+        id="edit-form"
+        class="ad-form"
+    >
+
+
+        <!-- ======================================
+             INFORMAÇÕES BÁSICAS
+        ======================================= -->
+
+        <section class="form-section">
+
+
+            <h2>
+                Informações básicas
+            </h2>
+
+
+
+            <!-- NOME -->
+
+            <div class="form-group">
+
+                <label for="title">
+                    Nome do produto
+                </label>
+
+                <input
+                    type="text"
+                    id="title"
+                    placeholder="Ex: Câmera Canon EOS"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- CATEGORIA + ÍCONE -->
+
+            <div class="grid-2">
+
+
+                <div class="form-group">
+
+                    <label for="category">
+                        Categoria
+                    </label>
+
+                    <select
+                        id="category"
+                        required
+                    >
+
+                        <option value="">
+                            Selecione uma categoria
+                        </option>
+
+                        <option value="Eletrônicos">
+                            Eletrônicos
+                        </option>
+
+                        <option value="Ferramentas">
+                            Ferramentas
+                        </option>
+
+                        <option value="Casa">
+                            Casa
+                        </option>
+
+                        <option value="Veículos">
+                            Veículos
+                        </option>
+
+                        <option value="Eventos">
+                            Eventos
+                        </option>
+
+                        <option value="Serviços">
+                            Serviços
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <div class="form-group">
+
+                    <label for="icon">
+                        Ícone
+                    </label>
+
+                    <select id="icon">
+
+                        <option value="📦">
+                            📦 Padrão
+                        </option>
+
+                        <option value="📷">
+                            📷 Câmera
+                        </option>
+
+                        <option value="💻">
+                            💻 Notebook
+                        </option>
+
+                        <option value="🔊">
+                            🔊 Caixa de Som
+                        </option>
+
+                        <option value="🚲">
+                            🚲 Bicicleta
+                        </option>
+
+                        <option value="🚗">
+                            🚗 Veículo
+                        </option>
+
+                        <option value="🔧">
+                            🔧 Ferramenta
+                        </option>
+
+                        <option value="🎉">
+                            🎉 Evento
+                        </option>
+
+                        <option value="🏠">
+                            🏠 Casa
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- DESCRIÇÃO -->
+
+            <div class="form-group">
+
+                <label for="description">
+                    Descrição
+                </label>
+
+                <textarea
+                    id="description"
+                    rows="5"
+                    placeholder="Descreva o produto, suas condições e informações importantes..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+
+            <!-- CIDADE -->
+
+            <div class="form-group">
+
+                <label for="city">
+                    Cidade
+                </label>
+
+                <input
+                    type="text"
+                    id="city"
+                    placeholder="Ex: São Paulo"
+                    required
+                >
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             IMAGENS
+        =========================================== -->
+
+        <section class="form-section">
+
+
+            <h2>
+                Imagens
+            </h2>
+
+
+            <p class="form-description">
+
+                As imagens atuais do anúncio serão mantidas
+                durante a edição.
+
+            </p>
+
+
+            <div
+                id="current-images"
+                class="current-images"
+            >
+
+                <p>
+                    Carregando imagens...
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             PREÇO
+        =========================================== -->
+
+        <section class="form-section">
+
+
+            <h2>
+                Preço
+            </h2>
+
+
+
+            <div class="grid-2">
+
+
+                <!-- PREÇO -->
+
+                <div class="form-group">
+
+                    <label for="price">
+                        Preço por dia
+                    </label>
+
+                    <div class="input-money">
+
+                        <span>
+                            R$
+                        </span>
+
+                        <input
+                            type="number"
+                            id="price"
+                            min="1"
+                            step="0.01"
+                            placeholder="0,00"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CAUÇÃO -->
+
+                <div class="form-group">
+
+                    <label for="deposit">
+                        Caução
+                    </label>
+
+                    <div class="input-money">
+
+                        <span>
+                            R$
+                        </span>
+
+                        <input
+                            type="number"
+                            id="deposit"
+                            min="0"
+                            step="0.01"
+                            placeholder="0,00"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ENTREGA -->
+
+            <div class="form-group">
+
+                <label for="deliveryPrice">
+                    Taxa de entrega
+                </label>
+
+                <div class="input-money">
+
+                    <span>
+                        R$
+                    </span>
+
+                    <input
+                        type="number"
+                        id="deliveryPrice"
+                        min="0"
+                        step="0.01"
+                        placeholder="0,00"
+                    >
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             STATUS
+        =========================================== -->
+
+        <section class="form-section">
+
+
+            <h2>
+                Status do anúncio
+            </h2>
+
+
+            <label class="switch">
+
+                <input
+                    type="checkbox"
+                    id="active"
+                >
+
+                <span class="slider"></span>
+
+                <strong>
+                    Disponível para aluguel
+                </strong>
+
+            </label>
+
+
+            <p class="form-description">
+
+                Desative esta opção para pausar temporariamente
+                o anúncio.
+
+            </p>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             RESUMO
+        =========================================== -->
+
+        <section class="form-section">
+
+
+            <h2>
+                Resumo
+            </h2>
+
+
+            <div class="summary">
+
+
+                <div>
+
+                    <span>
+                        Preço
+                    </span>
+
+                    <strong id="sum-price">
+                        R$ 0,00
+                    </strong>
+
+                </div>
+
+
+
+                <div>
+
+                    <span>
+                        Caução
+                    </span>
+
+                    <strong id="sum-deposit">
+                        R$ 0,00
+                    </strong>
+
+                </div>
+
+
+
+                <div>
+
+                    <span>
+                        Status
+                    </span>
+
+                    <strong id="sum-status">
+                        Disponível
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ==========================================
+             AÇÕES
+        =========================================== -->
+
+        <div class="actions">
+
+
+            <button
+                type="button"
+                class="btn-danger"
+                id="delete-btn"
+            >
+                Excluir anúncio
+            </button>
+
+
+
+            <button
+                type="submit"
+                class="btn-primary"
+            >
+                Salvar alterações
+            </button>
+
+
+        </div>
+
+
+    </form>
+
 
 </main>
 
+
+
+<!-- ==========================================
+     JAVASCRIPT
+========================================== -->
+
 <script src="./js/editar-anuncio.js"></script>
 
+
 </body>
+
 </html>
