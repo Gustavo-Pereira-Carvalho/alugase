@@ -4,105 +4,228 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const API = "https://alugase-api.onrender.com/api/products";
+    // ==========================================
+    // API
+    // ==========================================
 
-    const user = JSON.parse(
-        localStorage.getItem("alugase_user")
-    );
+    const API = "https://alugase-api.onrender.com/api";
+
+    const PRODUCTS_API = `${API}/products`;
+    const USERS_API = `${API}/users`;
+
+
+    // ==========================================
+    // USUÁRIO LOGADO
+    // ==========================================
+
+    const user =
+        JSON.parse(
+            localStorage.getItem("alugase_user")
+        );
+
+
+    // ==========================================
+    // ID DO PRODUTO
+    // ==========================================
 
     const productId =
-        new URLSearchParams(location.search).get("id");
+        new URLSearchParams(
+            window.location.search
+        ).get("id");
+
 
     if (!productId) {
-        location.href = "index.html";
+
+        window.location.href = "index.html";
+
         return;
+
     }
+
 
     // ==========================================
     // ELEMENTOS
     // ==========================================
 
     const categoryLabel =
-        document.querySelector(".product-category");
+        document.querySelector(
+            ".product-category"
+        );
 
     const categoryLink =
-        document.querySelector(".product-category-link");
+        document.querySelector(
+            ".product-category-link"
+        );
 
     const breadcrumbTitle =
-        document.querySelector("#breadcrumb-title");
+        document.querySelector(
+            "#breadcrumb-title"
+        );
+
 
     const title =
-        document.querySelector("#product-title");
+        document.querySelector(
+            "#product-title"
+        );
+
 
     const mainImage =
-        document.querySelector("#main-image");
+        document.querySelector(
+            "#main-image"
+        );
+
 
     const thumbnails =
-        document.querySelector("#product-thumbnails");
+        document.querySelector(
+            "#product-thumbnails"
+        );
+
 
     const locationText =
-        document.querySelector(".product-location");
+        document.querySelector(
+            "#product-location"
+        );
+
 
     const description =
-        document.querySelector(".product-description p");
+        document.querySelector(
+            "#product-description"
+        );
+
+
+    const productRating =
+        document.querySelector(
+            "#product-rating"
+        );
+
+
+    const productReviews =
+        document.querySelector(
+            "#product-reviews"
+        );
+
 
     const price =
-        document.querySelector(".pricing strong");
+        document.querySelector(
+            ".pricing strong"
+        );
+
 
     const deliveryLabel =
-        document.querySelector("#delivery-label");
+        document.querySelector(
+            "#delivery-label"
+        );
+
 
     const depositTotal =
-        document.querySelector("#deposit-total");
+        document.querySelector(
+            "#deposit-total"
+        );
+
 
     // ==========================================
     // PROPRIETÁRIO
     // ==========================================
 
     const ownerAvatar =
-        document.querySelector("#owner-avatar");
+        document.querySelector(
+            "#owner-avatar"
+        );
 
-    const ownerPhoto =
-        document.querySelector("#owner-photo");
-
-    const ownerInitials =
-        document.querySelector("#owner-initials");
 
     const ownerName =
-        document.querySelector("#owner-name");
+        document.querySelector(
+            "#owner-name"
+        );
+
 
     const ownerVerification =
-        document.querySelector("#owner-verification");
+        document.querySelector(
+            "#owner-verification"
+        );
+
 
     const ownerRating =
-        document.querySelector("#owner-rating");
+        document.querySelector(
+            "#owner-rating"
+        );
+
 
     const ownerReviews =
-        document.querySelector("#owner-reviews");
+        document.querySelector(
+            "#owner-reviews"
+        );
+
 
     // ==========================================
-    // ALUGUEL
+    // DATAS
     // ==========================================
 
     const startDate =
-        document.querySelector("#start-date");
+        document.querySelector(
+            "#start-date"
+        );
+
 
     const endDate =
-        document.querySelector("#end-date");
+        document.querySelector(
+            "#end-date"
+        );
+
+
+    // ==========================================
+    // RESUMO
+    // ==========================================
 
     const dailyTotal =
-        document.querySelector("#daily-total");
+        document.querySelector(
+            "#daily-total"
+        );
+
 
     const deliveryTotal =
-        document.querySelector("#delivery-total");
+        document.querySelector(
+            "#delivery-total"
+        );
+
 
     const rentalTotal =
-        document.querySelector("#rental-total");
+        document.querySelector(
+            "#rental-total"
+        );
+
 
     const rentalButton =
-        document.querySelector("#rental-button");
+        document.querySelector(
+            "#rental-button"
+        );
 
-    let product;
+
+    // ==========================================
+    // VARIÁVEIS
+    // ==========================================
+
+    let product = null;
+    let owner = null;
+
+
+    // ==========================================
+    // FORMATAR DINHEIRO
+    // ==========================================
+
+    function formatMoney(value) {
+
+        return Number(value || 0)
+            .toLocaleString(
+                "pt-BR",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
+
+    }
+
 
     // ==========================================
     // CARREGAR PRODUTO
@@ -112,23 +235,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
 
-            const res =
-                await fetch(`${API}/${productId}`);
+            const response =
+                await fetch(
+                    `${PRODUCTS_API}/${productId}`
+                );
 
-            if (!res.ok) {
 
-                alert("Produto não encontrado.");
+            if (!response.ok) {
 
-                location.href = "explorar.html";
+                throw new Error(
+                    "Produto não encontrado."
+                );
 
-                return;
             }
 
-            product = await res.json();
 
-            console.log("Produto carregado:", product);
+            product =
+                await response.json();
+
+
+            await loadOwner();
+
 
             fillScreen();
+
 
         } catch (error) {
 
@@ -137,13 +267,80 @@ document.addEventListener("DOMContentLoaded", async () => {
                 error
             );
 
+
             alert(
                 "Não foi possível carregar o produto."
+            );
+
+
+            window.location.href =
+                "explorar.html";
+
+        }
+
+    }
+
+
+    // ==========================================
+    // CARREGAR PROPRIETÁRIO
+    // ==========================================
+
+    async function loadOwner() {
+
+        if (!product.ownerId) {
+
+            return;
+
+        }
+
+
+        try {
+
+            const ownerId =
+                typeof product.ownerId === "object"
+                    ? product.ownerId._id
+                    : product.ownerId;
+
+
+            if (!ownerId) {
+
+                return;
+
+            }
+
+
+            const response =
+                await fetch(
+                    `${USERS_API}/${ownerId}`
+                );
+
+
+            if (!response.ok) {
+
+                console.warn(
+                    "Não foi possível carregar proprietário."
+                );
+
+                return;
+
+            }
+
+
+            owner =
+                await response.json();
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao carregar proprietário:",
+                error
             );
 
         }
 
     }
+
 
     // ==========================================
     // GALERIA
@@ -151,197 +348,257 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function changeImage(src) {
 
+        if (!src) {
+
+            return;
+
+        }
+
+
         mainImage.innerHTML = `
+
             <img
                 src="${src}"
-                alt="${product.title}"
+                alt="${product.title || "Produto"}"
+                loading="lazy"
             >
+
         `;
+
 
         document
             .querySelectorAll(".thumbnail")
-            .forEach(t =>
-                t.classList.remove("active")
+            .forEach(
+                thumbnail =>
+                    thumbnail.classList.remove(
+                        "active"
+                    )
             );
 
     }
+
+
+    // ==========================================
+    // RENDERIZAR GALERIA
+    // ==========================================
 
     function renderGallery() {
 
         thumbnails.innerHTML = "";
 
+
         if (
-            product.images &&
             Array.isArray(product.images) &&
-            product.images.length
+            product.images.length > 0
         ) {
 
-            changeImage(product.images[0]);
+            changeImage(
+                product.images[0]
+            );
 
-            product.images.forEach((img, index) => {
 
-                const btn =
-                    document.createElement("button");
+            product.images.forEach(
+                (image, index) => {
 
-                btn.className =
-                    `thumbnail ${
-                        index === 0
-                            ? "active"
-                            : ""
-                    }`;
-
-                btn.type = "button";
-
-                btn.innerHTML = `
-                    <img
-                        src="${img}"
-                        alt="Imagem ${index + 1}"
-                    >
-                `;
-
-                btn.onclick = () => {
-
-                    changeImage(img);
-
-                    document
-                        .querySelectorAll(".thumbnail")
-                        .forEach(t =>
-                            t.classList.remove("active")
+                    const button =
+                        document.createElement(
+                            "button"
                         );
 
-                    btn.classList.add("active");
 
-                };
+                    button.type = "button";
 
-                thumbnails.appendChild(btn);
 
-            });
+                    button.className =
+                        `thumbnail ${
+                            index === 0
+                                ? "active"
+                                : ""
+                        }`;
+
+
+                    button.innerHTML = `
+
+                        <img
+                            src="${image}"
+                            alt="Imagem ${index + 1}"
+                            loading="lazy"
+                        >
+
+                    `;
+
+
+                    button.addEventListener(
+                        "click",
+                        () => {
+
+                            changeImage(image);
+
+
+                            document
+                                .querySelectorAll(
+                                    ".thumbnail"
+                                )
+                                .forEach(
+                                    item =>
+                                        item.classList
+                                            .remove(
+                                                "active"
+                                            )
+                                );
+
+
+                            button.classList.add(
+                                "active"
+                            );
+
+                        }
+                    );
+
+
+                    thumbnails.appendChild(
+                        button
+                    );
+
+                }
+            );
+
 
         } else {
 
-            const emoji =
-                product.image || "📦";
-
             mainImage.innerHTML = `
+
                 <div class="emoji-image">
-                    ${emoji}
+                    📦
                 </div>
+
             `;
 
-            thumbnails.innerHTML = `
-                <button
-                    class="thumbnail emoji active"
-                    type="button"
-                >
-                    ${emoji}
-                </button>
-            `;
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.type = "button";
+
+            button.className =
+                "thumbnail emoji active";
+
+
+            button.textContent =
+                "📦";
+
+
+            thumbnails.appendChild(
+                button
+            );
 
         }
 
     }
 
+
     // ==========================================
-    // PROPRIETÁRIO
+    // FOTO DO PROPRIETÁRIO
     // ==========================================
 
     function renderOwner() {
 
-        /*
-         * Dependendo de como o backend enviar,
-         * podemos encontrar o usuário em:
-         *
-         * product.owner
-         * product.ownerId
-         */
+        // --------------------------------------
+        // SEM PROPRIETÁRIO
+        // --------------------------------------
 
-        const owner =
-            product.owner ||
-            (
-                product.ownerId &&
-                typeof product.ownerId === "object"
-                    ? product.ownerId
-                    : null
-            ) ||
-            {};
+        if (!owner) {
 
-        // ======================================
+            ownerAvatar.innerHTML =
+                "👤";
+
+
+            ownerName.textContent =
+                product.ownerName ||
+                "Usuário";
+
+
+            ownerVerification.textContent =
+                "Usuário";
+
+
+            ownerRating.textContent =
+                product.rating || "5.0";
+
+
+            ownerReviews.textContent =
+                product.reviews || "0";
+
+
+            return;
+
+        }
+
+
+        // --------------------------------------
         // NOME
-        // ======================================
+        // --------------------------------------
 
-        const name =
+        ownerName.textContent =
             owner.name ||
             product.ownerName ||
             "Usuário";
 
-        ownerName.textContent = name;
 
-        // ======================================
-        // INICIAIS
-        // ======================================
-
-        const initials =
-            name
-                .split(" ")
-                .filter(Boolean)
-                .map(word => word[0])
-                .slice(0, 2)
-                .join("")
-                .toUpperCase();
-
-        ownerInitials.textContent =
-            initials || "👤";
-
-        // ======================================
+        // --------------------------------------
         // FOTO
-        // ======================================
+        // --------------------------------------
 
-        const photo =
-            owner.profileImage ||
-            owner.profilePhoto ||
-            owner.photo ||
-            product.ownerImage ||
-            product.ownerPhoto ||
-            "";
+        if (owner.profileImage) {
 
-        if (photo) {
+            ownerAvatar.innerHTML = `
 
-            ownerPhoto.src = photo;
+                <img
+                    src="${owner.profileImage}"
+                    alt="${owner.name || "Proprietário"}"
+                    class="owner-profile-image"
+                >
 
-            ownerPhoto.style.display =
-                "block";
-
-            ownerInitials.style.display =
-                "none";
-
-            ownerPhoto.onerror = () => {
-
-                ownerPhoto.style.display =
-                    "none";
-
-                ownerInitials.style.display =
-                    "flex";
-
-            };
+            `;
 
         } else {
 
-            ownerPhoto.style.display =
-                "none";
+            // ----------------------------------
+            // INICIAIS
+            // ----------------------------------
 
-            ownerInitials.style.display =
-                "flex";
+            const initials =
+                (owner.name || "U")
+                    .split(" ")
+                    .map(
+                        word =>
+                            word.charAt(0)
+                    )
+                    .slice(0, 2)
+                    .join("")
+                    .toUpperCase();
+
+
+            ownerAvatar.innerHTML = `
+                <span class="owner-initials">
+                    ${initials}
+                </span>
+            `;
 
         }
 
-        // ======================================
+
+        // --------------------------------------
         // VERIFICAÇÃO
-        // ======================================
+        // --------------------------------------
 
         if (owner.identityVerified) {
 
-            ownerVerification.innerHTML =
-                "✓ Usuário verificado";
+            ownerVerification.textContent =
+                "✓ Identidade verificada";
 
             ownerVerification.className =
                 "owner-verified";
@@ -351,19 +608,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             ownerVerification.textContent =
                 "Usuário";
 
-            ownerVerification.className =
-                "";
+            ownerVerification.className = "";
 
         }
 
-        // ======================================
-        // AVALIAÇÕES
-        // ======================================
+
+        // --------------------------------------
+        // AVALIAÇÃO
+        // --------------------------------------
 
         ownerRating.textContent =
             owner.rating ||
             product.rating ||
             "5.0";
+
 
         ownerReviews.textContent =
             owner.reviews ||
@@ -371,6 +629,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             "0";
 
     }
+
 
     // ==========================================
     // PREENCHER TELA
@@ -381,84 +640,151 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.title =
             `${product.title} | ALUGASE`;
 
+
+        // --------------------------------------
+        // CATEGORIA
+        // --------------------------------------
+
         categoryLabel.textContent =
             (
                 product.category ||
-                "Categoria"
+                "Produto"
             ).toUpperCase();
+
 
         categoryLink.textContent =
             product.category ||
             "Categoria";
 
+
+        categoryLink.href =
+            `explorar.html?categoria=${encodeURIComponent(
+                product.category || ""
+            )}`;
+
+
+        // --------------------------------------
+        // TÍTULO
+        // --------------------------------------
+
         breadcrumbTitle.textContent =
             product.title;
+
 
         title.textContent =
             product.title;
 
+
+        // --------------------------------------
+        // GALERIA
+        // --------------------------------------
+
         renderGallery();
 
-        // ======================================
-        // INFORMAÇÕES
-        // ======================================
+
+        // --------------------------------------
+        // LOCALIZAÇÃO
+        // --------------------------------------
 
         locationText.textContent =
-            `📍 ${product.city || "Localização não informada"}`;
+            `📍 ${product.city || "Não informado"}`;
+
+
+        // --------------------------------------
+        // DESCRIÇÃO
+        // --------------------------------------
 
         description.textContent =
             product.description ||
-            "Descrição não informada.";
+            "Este produto não possui descrição.";
+
+
+        // --------------------------------------
+        // AVALIAÇÃO
+        // --------------------------------------
+
+        productRating.textContent =
+            product.rating || "5.0";
+
+
+        productReviews.textContent =
+            product.reviews || "0";
+
+
+        // --------------------------------------
+        // PREÇO
+        // --------------------------------------
 
         price.textContent =
-            `R$ ${Number(
-                product.pricePerDay || 0
-            ).toFixed(2).replace(".", ",")}`;
+            `R$ ${formatMoney(
+                product.pricePerDay
+            )}`;
 
-        // ======================================
+
+        // --------------------------------------
         // ENTREGA
-        // ======================================
+        // --------------------------------------
 
-        deliveryLabel.textContent =
-            product.delivery
-                ? `+ R$ ${Number(
-                    product.deliveryPrice || 0
-                ).toFixed(2).replace(".", ",")}`
-                : "Somente retirada";
+        if (product.delivery) {
 
-        // ======================================
+            deliveryLabel.textContent =
+                `+ R$ ${formatMoney(
+                    product.deliveryPrice
+                )}`;
+
+        } else {
+
+            deliveryLabel.textContent =
+                "Somente retirada";
+
+        }
+
+
+        // --------------------------------------
         // CAUÇÃO
-        // ======================================
+        // --------------------------------------
 
         depositTotal.textContent =
-            `R$ ${Number(
-                product.deposit || 0
-            ).toFixed(2).replace(".", ",")}`;
+            `R$ ${formatMoney(
+                product.deposit
+            )}`;
 
-        // ======================================
+
+        // --------------------------------------
         // PROPRIETÁRIO
-        // ======================================
+        // --------------------------------------
 
         renderOwner();
 
-        // ======================================
+
+        // --------------------------------------
         // DATAS
-        // ======================================
+        // --------------------------------------
 
         const today =
             new Date()
                 .toISOString()
                 .split("T")[0];
 
-        startDate.min = today;
-        endDate.min = today;
 
-        startDate.value = today;
-        endDate.value = today;
+        startDate.min =
+            today;
+
+        endDate.min =
+            today;
+
+
+        startDate.value =
+            today;
+
+        endDate.value =
+            today;
+
 
         updateTotals();
 
     }
+
 
     // ==========================================
     // CALCULAR DIÁRIAS
@@ -466,42 +792,72 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function getDays() {
 
+        if (
+            !startDate.value ||
+            !endDate.value
+        ) {
+
+            return 1;
+
+        }
+
+
         const start =
-            new Date(startDate.value);
+            new Date(
+                `${startDate.value}T00:00:00`
+            );
+
 
         const end =
-            new Date(endDate.value);
+            new Date(
+                `${endDate.value}T00:00:00`
+            );
 
-        const diff =
+
+        const difference =
             Math.ceil(
-                (end - start) / 86400000
-            ) + 1;
+                (
+                    end - start
+                ) /
+                86400000
+            );
 
-        return diff > 0
-            ? diff
+
+        return difference >= 0
+            ? difference + 1
             : 1;
 
     }
 
+
     // ==========================================
-    // ATUALIZAR TOTAL
+    // ATUALIZAR TOTAIS
     // ==========================================
 
     function updateTotals() {
 
-        if (!product) return;
+        if (!product) {
+
+            return;
+
+        }
+
 
         const days =
             getDays();
+
 
         const selectedDelivery =
             document.querySelector(
                 'input[name="delivery"]:checked'
             );
 
+
         const deliverySelected =
             selectedDelivery &&
-            selectedDelivery.value === "delivery";
+            selectedDelivery.value ===
+                "delivery";
+
 
         const deliveryValue =
             deliverySelected &&
@@ -511,88 +867,226 @@ document.addEventListener("DOMContentLoaded", async () => {
                 )
                 : 0;
 
+
         const daily =
             days *
             Number(
                 product.pricePerDay || 0
             );
 
+
         const deposit =
             Number(
                 product.deposit || 0
             );
+
 
         const total =
             daily +
             deliveryValue +
             deposit;
 
+
         dailyTotal.textContent =
-            `R$ ${daily.toFixed(2).replace(".", ",")}`;
+            `R$ ${formatMoney(daily)}`;
+
 
         deliveryTotal.textContent =
-            `R$ ${deliveryValue.toFixed(2).replace(".", ",")}`;
+            `R$ ${formatMoney(
+                deliveryValue
+            )}`;
+
+
+        depositTotal.textContent =
+            `R$ ${formatMoney(
+                deposit
+            )}`;
+
 
         rentalTotal.textContent =
-            `R$ ${total.toFixed(2).replace(".", ",")}`;
+            `R$ ${formatMoney(total)}`;
 
     }
+
 
     // ==========================================
     // DATAS
     // ==========================================
 
-    startDate.onchange = () => {
+    startDate.addEventListener(
+        "change",
+        () => {
 
-        endDate.min =
-            startDate.value;
-
-        if (
-            endDate.value <
-            startDate.value
-        ) {
-
-            endDate.value =
+            endDate.min =
                 startDate.value;
 
+
+            if (
+                endDate.value <
+                startDate.value
+            ) {
+
+                endDate.value =
+                    startDate.value;
+
+            }
+
+
+            updateTotals();
+
         }
+    );
 
-        updateTotals();
 
-    };
+    endDate.addEventListener(
+        "change",
+        updateTotals
+    );
 
-    endDate.onchange =
-        updateTotals;
+
+    // ==========================================
+    // ENTREGA
+    // ==========================================
 
     document
         .querySelectorAll(
             'input[name="delivery"]'
         )
-        .forEach(radio => {
+        .forEach(
+            radio => {
 
-            radio.onchange =
-                updateTotals;
+                radio.addEventListener(
+                    "change",
+                    updateTotals
+                );
 
-        });
+            }
+        );
+
+
+    // ==========================================
+    // LOGIN
+    // ==========================================
+
+    const loginButton =
+        document.querySelector(
+            "#login-button"
+        );
+
+
+    if (loginButton) {
+
+        loginButton.addEventListener(
+            "click",
+            () => {
+
+                if (user) {
+
+                    window.location.href =
+                        "perfil.html";
+
+                } else {
+
+                    window.location.href =
+                        "login.html";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // ANUNCIAR
+    // ==========================================
+
+    const announceButton =
+        document.querySelector(
+            "#announce-button"
+        );
+
+
+    if (announceButton) {
+
+        announceButton.addEventListener(
+            "click",
+            () => {
+
+                if (!user) {
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+
+                window.location.href =
+                    "novo-anuncio.html";
+
+            }
+        );
+
+    }
+
 
     // ==========================================
     // SOLICITAR ALUGUEL
     // ==========================================
 
-    rentalButton.onclick = () => {
+    rentalButton.addEventListener(
+        "click",
+        () => {
 
-        if (!user) {
+            if (!user) {
 
-            location.href =
-                "login.html";
+                window.location.href =
+                    "login.html";
 
-            return;
+                return;
+
+            }
+
+
+            if (
+                !startDate.value ||
+                !endDate.value
+            ) {
+
+                alert(
+                    "Escolha o período do aluguel."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                endDate.value <
+                startDate.value
+            ) {
+
+                alert(
+                    "A data de devolução não pode ser anterior à retirada."
+                );
+
+                return;
+
+            }
+
+
+            window.location.href =
+                `reserva.html?id=${product._id}` +
+                `&start=${startDate.value}` +
+                `&end=${endDate.value}`;
+
         }
+    );
 
-        location.href =
-            `reserva.html?id=${product._id}`;
-
-    };
 
     // ==========================================
     // INICIAR
