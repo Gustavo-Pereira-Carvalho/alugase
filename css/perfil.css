@@ -411,3 +411,120 @@ input[readonly]{
         grid-template-columns:1fr;
     }
 }
+
+
+/* ==========================================
+   HEADER DO PERFIL
+========================================== */
+
+.profile-navbar{
+    min-height:72px;
+}
+
+.profile-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.nav-icon{
+    position:relative;
+
+    width:44px;
+    height:44px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+
+    background:#fff;
+
+    font-size:20px;
+
+    transition:.2s;
+}
+
+.nav-icon:hover{
+    background:#f0fdf4;
+    border-color:#16a34a;
+}
+
+.profile-mini{
+    width:44px;
+    height:44px;
+
+    border-radius:50%;
+
+    background:#16a34a;
+    color:#fff;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-weight:700;
+}
+
+.notification-badge{
+    position:absolute;
+    top:-4px;
+    right:-4px;
+
+    min-width:18px;
+    height:18px;
+
+    padding:0 5px;
+
+    display:none;
+    align-items:center;
+    justify-content:center;
+
+    background:#dc2626;
+    color:#fff;
+
+    border-radius:999px;
+
+    font-size:10px;
+    font-weight:700;
+
+    border:2px solid #fff;
+}
+
+/* ---------- CELULAR ---------- */
+
+@media(max-width:600px){
+
+    .profile-navbar{
+        min-height:60px;
+    }
+
+    .profile-navbar .logo h2{
+        font-size:20px;
+    }
+
+    .profile-navbar .logo img{
+        width:34px;
+        height:34px;
+    }
+
+    .profile-actions{
+        gap:6px;
+    }
+
+    .nav-icon,
+    .profile-mini{
+        width:38px;
+        height:38px;
+        font-size:18px;
+    }
+
+    .notification-badge{
+        min-width:16px;
+        height:16px;
+        font-size:9px;
+    }
+
+}
