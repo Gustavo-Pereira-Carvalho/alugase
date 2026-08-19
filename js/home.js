@@ -79,18 +79,26 @@ document.addEventListener("DOMContentLoaded", async () => {
             card.className = "product-card";
 
             card.innerHTML = `
-                <div class="product-image">
-                    ${product.image || "📦"}
-                </div>
+<div class="product-image">
 
-                <div class="product-content">
-                    <h3>${product.title}</h3>
+    ${
+        product.images?.length
+        ? `<img src="${product.images[0]}" alt="${product.title}">`
+        : "📦"
+    }
 
-                    <p>📍 ${product.city}</p>
+</div>
 
-                    <strong>R$ ${product.pricePerDay}/dia</strong>
-                </div>
-            `;
+<div class="product-content">
+
+    <h3>${product.title}</h3>
+
+    <p>📍 ${product.city}</p>
+
+    <strong>R$ ${product.pricePerDay}/dia</strong>
+
+</div>
+`;
 
             card.onclick = () => {
                 window.location.href = `produto.html?id=${product._id}`;
