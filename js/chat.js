@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // USUÁRIO LOGADO
+    // USUÁRIO
     // ==========================================
 
     const user =
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // FUNÇÃO PARA COMPARAR IDs
+    // COMPARAR IDs
     // ==========================================
 
     function sameId(a, b) {
@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // FORMATAR DINHEIRO
+    // DINHEIRO
     // ==========================================
 
     function formatMoney(value) {
@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // FORMATAR DATA
+    // DATA
     // ==========================================
 
     function formatDate(value) {
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // STATUS DO ALUGUEL
+    // STATUS
     // ==========================================
 
     function rentalStatus(status) {
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // ABRIR / FECHAR CARD DO ALUGUEL
+    // ABRIR / FECHAR ALUGUEL
     // ==========================================
 
     if (
@@ -309,7 +309,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // ATUALIZAR CARD DO ALUGUEL
+    // CARD DO ALUGUEL
     // ==========================================
 
     function renderRentalCard() {
@@ -323,15 +323,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             currentChat.rentalId;
 
 
-        /*
-         * Alguns chats podem ainda não possuir
-         * um aluguel associado.
-         */
-
         if (!rental) {
 
             console.warn(
-                "Este chat não possui rentalId."
+                "Este chat não possui aluguel."
             );
 
             return;
@@ -498,7 +493,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // CARREGAR CONVERSAS
+    // CARREGAR CHATS
     // ==========================================
 
     async function loadChats() {
@@ -529,7 +524,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                 console.error(
-                    "Erro HTTP ao carregar chats:",
+                    "Erro HTTP:",
                     response.status,
                     errorText
                 );
@@ -591,11 +586,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
-            /*
-             * Se veio ?chat=ID, abre esse chat.
-             * Caso contrário, abre o primeiro.
-             */
-
             currentChat =
                 chats.find(
                     chat =>
@@ -622,14 +612,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             conversationList.innerHTML =
                 `
-                <div style="
-                    padding:20px;
-                ">
+                <div style="padding:20px;">
 
                     <p style="
                         color:#ef4444;
                         font-weight:600;
-                        margin-bottom:8px;
                     ">
                         Erro ao carregar conversas.
                     </p>
@@ -638,8 +625,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         color:#6b7280;
                         font-size:14px;
                     ">
-                        Verifique se a API do Alugase
-                        está online.
+                        Não foi possível conectar
+                        ao servidor.
                     </p>
 
                 </div>
@@ -660,16 +647,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         chats.forEach(chat => {
-
-            /*
-             * ownerId pode ser:
-             *
-             * "123"
-             *
-             * ou
-             *
-             * { _id: "123", ... }
-             */
 
             const ownerId =
                 chat.ownerId?._id ||
@@ -716,10 +693,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }`;
 
 
-            // ==================================
-            // AVATAR
-            // ==================================
-
             const avatar =
                 document.createElement(
                     "div"
@@ -735,10 +708,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     .charAt(0)
                     .toUpperCase();
 
-
-            // ==================================
-            // INFORMAÇÕES
-            // ==================================
 
             const info =
                 document.createElement(
@@ -781,10 +750,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             card.appendChild(info);
 
-
-            // ==================================
-            // CLIQUE
-            // ==================================
 
             card.addEventListener(
                 "click",
@@ -899,24 +864,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ======================================
-        // PRODUTO
-        // ======================================
-
         if (viewProduct) {
 
-            if (
-                currentChat.productId
-            ) {
+            const productId =
+                currentChat.productId?._id ||
+                currentChat.productId;
 
-                const productId =
-                    currentChat.productId?._id ||
-                    currentChat.productId;
 
+            if (productId) {
 
                 viewProduct.href =
                     `produto.html?id=${productId}`;
-
 
                 viewProduct.style.display =
                     "";
@@ -930,10 +888,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         }
 
-
-        // ======================================
-        // ALUGUEL
-        // ======================================
 
         renderRentalCard();
 
@@ -1066,7 +1020,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // ATUALIZAÇÃO AUTOMÁTICA
+    // ATUALIZAR CHAT
     // ==========================================
 
     async function checkNewMessages() {
@@ -1106,53 +1060,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 updatedChat.messages || [];
 
 
-            const oldLast =
-                oldMessages.length
-                    ? oldMessages[
-                        oldMessages.length - 1
-                    ]
-                    : null;
-
-
-            const newLast =
-                newMessages.length
-                    ? newMessages[
-                        newMessages.length - 1
-                    ]
-                    : null;
-
-
             const changed =
                 newMessages.length !==
-                    oldMessages.length ||
-                (
-                    newLast &&
-                    oldLast &&
-                    !sameId(
-                        newLast._id,
-                        oldLast._id
-                    )
-                );
-
-
-            /*
-             * Verifica também alterações no aluguel.
-             */
-
-            const oldRental =
-                currentChat.rentalId;
-
-
-            const newRental =
-                updatedChat.rentalId;
+                oldMessages.length;
 
 
             const rentalChanged =
                 JSON.stringify(
-                    oldRental
+                    currentChat.rentalId
                 ) !==
                 JSON.stringify(
-                    newRental
+                    updatedChat.rentalId
                 );
 
 
@@ -1236,15 +1154,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             true;
 
 
-        if (sendButton) {
+        sendButton.disabled =
+            true;
 
-            sendButton.disabled =
-                true;
 
-            sendButton.textContent =
-                "Enviando...";
-
-        }
+        sendButton.textContent =
+            "Enviando...";
 
 
         try {
@@ -1278,19 +1193,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
 
 
-            let data;
-
-
-            try {
-
-                data =
-                    await response.json();
-
-            } catch {
-
-                data = {};
-
-            }
+            const data =
+                await response.json();
 
 
             if (!response.ok) {
@@ -1309,7 +1213,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 data;
 
 
-            input.value = "";
+            input.value =
+                "";
 
 
             const index =
@@ -1353,15 +1258,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 false;
 
 
-            if (sendButton) {
+            sendButton.disabled =
+                false;
 
-                sendButton.disabled =
-                    false;
 
-                sendButton.textContent =
-                    "Enviar";
-
-            }
+            sendButton.textContent =
+                "Enviar";
 
         }
 
@@ -1406,7 +1308,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // INICIALIZAÇÃO
+    // INICIAR
     // ==========================================
 
     console.log(
@@ -1426,19 +1328,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
 
-    /*
-     * Carrega conversas e notificações
-     * independentemente.
-     */
+    await loadChats();
 
-    await Promise.all([
-        loadChats(),
-        loadNotifications()
-    ]);
+    await loadNotifications();
 
 
     // ==========================================
-    // POLLING
+    // ATUALIZAÇÃO AUTOMÁTICA
     // ==========================================
 
     setInterval(
@@ -1446,10 +1342,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         2000
     );
 
-
-    /*
-     * Atualiza notificações periodicamente.
-     */
 
     setInterval(
         loadNotifications,
