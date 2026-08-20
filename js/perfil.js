@@ -1,5 +1,5 @@
 // ==========================================
-// ALUGASE - PERFIL JWT
+// ALUGASE — PERFIL (JWT)
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -14,7 +14,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let user;
 
-    // ---------------- BUSCAR USUÁRIO ----------------
+    // ==========================================
+    // BUSCAR USUÁRIO
+    // ==========================================
 
     try {
 
@@ -43,40 +45,73 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const userId = user._id || user.id;
 
-    // ---------------- ELEMENTOS ----------------
+    // ==========================================
+    // ELEMENTOS
+    // ==========================================
 
     const avatar = document.getElementById("avatar");
-    const name = document.getElementById("user-name");
-    const locationText = document.getElementById("user-location");
+    const profileImageInput = document.getElementById("profile-image-input");
+
+    const userName = document.getElementById("user-name");
+    const userLocation = document.getElementById("user-location");
+
+    const verifiedBadge = document.getElementById("verified-badge");
+    const identityStatus = document.getElementById("identity-status");
+    const cnhStatus = document.getElementById("cnh-status");
 
     const adsList = document.getElementById("ads-list");
     const rentalsList = document.getElementById("rentals-list");
+    const notificationBadge = document.getElementById("notification-badge");
 
-    const badge = document.getElementById("notification-badge");
+    const cpf = document.getElementById("cpf");
+    const rg = document.getElementById("rg");
+    const cnh = document.getElementById("cnh");
 
-    // ---------------- PERFIL ----------------
+    const cep = document.getElementById("cep");
+    const number = document.getElementById("number");
+    const street = document.getElementById("street");
+    const district = document.getElementById("district");
+    const city = document.getElementById("city");
+    const state = document.getElementById("state");
 
-    function initials(text) {
+    const cpfStatus = document.getElementById("cpf-status");
 
-        return text
-            .split(" ")
-            .map(i => i[0])
-            .slice(0,2)
+    // ==========================================
+    // INICIAIS
+    // ==========================================
+
+    function initials(name) {
+
+        if (!name) return "U";
+
+        return name
+            .trim()
+            .split(/\s+/)
+            .map(n => n[0])
+            .slice(0, 2)
             .join("")
             .toUpperCase();
 
     }
 
-    function renderAvatar(){
+    // ==========================================
+    // AVATAR
+    // ==========================================
+
+    function renderAvatar() {
 
         avatar.innerHTML = "";
 
-        if(user.profileImage){
+        if (user.profileImage) {
 
-            avatar.innerHTML =
-            `<img src="${user.profileImage}" alt="">`;
+            const img = document.createElement("img");
 
-        }else{
+            img.src = user.profileImage;
+            img.alt = user.name;
+
+            avatar.appendChild(img);
+
+        } else {
 
             avatar.textContent = initials(user.name);
 
@@ -86,190 +121,390 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     renderAvatar();
 
-    name.textContent = user.name;
+    // ==========================================
+    // DADOS
+    // ==========================================
 
-    locationText.textContent =
-    `${user.city} • Membro desde ${
-        new Date(user.createdAt).getFullYear()
-    }`;
+    userName.textContent = user.name;
 
-    // ---------------- FOTO ----------------
+    const year = user.createdAt
+        ? new Date(user.createdAt).getFullYear()
+        : 2026;
 
-    document
-    .getElementById("profile-image-input")
-    .addEventListener("change", async e=>{
+    userLocation.textContent =
+        `${user.city} • Membro desde ${year}`;
+
+    if (user.identityVerified) {
+
+        verifiedBadge.textContent = "✓ Verificado";
+        verifiedBadge.className = "verified";
+
+        identityStatus.textContent = "Verificado";
+        identityStatus.className = "status available";
+
+    }
+
+    if (user.driverLicenseVerified) {
+
+        cnhStatus.textContent = "CNH Verificada";
+        cnhStatus.className = "status available";
+
+    }
+
+    // Preencher formulário
+
+    cpf.value = user.cpf || "";
+    rg.value = user.rg || "";
+    cnh.value = user.cnh || "";
+
+    if (user.address) {
+
+        cep.value = user.address.cep || "";
+        number.value = user.address.number || "";
+        street.value = user.address.street || "";
+        district.value = user.address.district || "";
+        city.value = user.address.city || "";
+        state.value = user.address.state || "";
+
+    }
+
+    // ==========================================
+    // FOTO
+    // ==========================================
+
+    profileImageInput.addEventListener("change", async e => {
 
         const file = e.target.files[0];
-
-        if(!file) return;
+        if (!file) return;
 
         const form = new FormData();
         form.append("image", file);
 
-        const response = await fetch(
-            `${API}/users/profile-image/${userId}`,
-            {
-                method:"PUT",
-                headers:{
-                    Authorization:`Bearer ${token}`
-                },
-                body:form
-            }
-        );
+        try {
 
-        const data = await response.json();
+            const response = await fetch(
+                `${API}/users/profile-image/${userId}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: form
+                }
+            );
 
-        if(!response.ok){
-            alert(data.error);
-            return;
+            const data = await response.json();
+
+            if (!response.ok)
+                throw new Error(data.error);
+
+            user = data;
+
+            localStorage.setItem(
+                "alugase_user",
+                JSON.stringify(user)
+            );
+
+            renderAvatar();
+
+            alert("Foto atualizada!");
+
+        } catch (err) {
+
+            alert(err.message);
+
         }
-
-        user = data;
-        renderAvatar();
 
     });
 
-    // ---------------- ABAS ----------------
+    // ==========================================
+    // ABAS
+    // ==========================================
 
-    document.querySelectorAll(".tab").forEach(tab=>{
+    document.querySelectorAll(".tab").forEach(tab => {
 
-        tab.onclick=()=>{
+        tab.onclick = () => {
 
-            document
-            .querySelectorAll(".tab")
-            .forEach(t=>t.classList.remove("active"));
+            document.querySelectorAll(".tab")
+                .forEach(t => t.classList.remove("active"));
 
-            document
-            .querySelectorAll(".content")
-            .forEach(c=>c.classList.remove("active"));
+            document.querySelectorAll(".content")
+                .forEach(c => c.classList.remove("active"));
 
             tab.classList.add("active");
 
             document
-            .getElementById(tab.dataset.tab)
-            .classList.add("active");
+                .getElementById(tab.dataset.tab)
+                .classList.add("active");
 
         };
 
     });
 
-    // ---------------- ANÚNCIOS ----------------
+    // ==========================================
+    // ANÚNCIOS
+    // ==========================================
 
-    async function loadAds(){
+    async function loadAds() {
 
-        const response = await fetch(
-            `${API}/products/user/${userId}`
-        );
+        try {
 
-        const products = await response.json();
+            const response = await fetch(
+                `${API}/products/user/${userId}`
+            );
 
-        document.getElementById("total-ads").textContent =
-        products.length;
+            const products = await response.json();
 
-        if(products.length===0){
-            document.getElementById("empty-ads").style.display="block";
-            return;
+            document.getElementById("total-ads").textContent =
+                products.length;
+
+            adsList.innerHTML = "";
+
+            if (products.length === 0) {
+
+                document.getElementById("empty-ads").style.display = "block";
+                return;
+
+            }
+
+            document.getElementById("empty-ads").style.display = "none";
+
+            products.forEach(p => {
+
+                adsList.innerHTML += `
+                <div class="item-card">
+
+                    <div class="item-image">
+                        ${p.image
+                            ? `<img src="${p.image}" alt="">`
+                            : "📦"}
+                    </div>
+
+                    <div class="item-info">
+                        <h3>${p.title}</h3>
+                        <p>R$ ${p.pricePerDay} / dia</p>
+
+                        <span class="status ${
+                            p.status === "available"
+                                ? "available"
+                                : "rented"
+                        }">
+                            ${
+                                p.status === "available"
+                                    ? "Disponível"
+                                    : "Alugado"
+                            }
+                        </span>
+
+                    </div>
+
+                    <button
+                        class="btn-secondary"
+                        onclick="location.href='editar-anuncio.html?id=${p._id}'">
+
+                        Editar
+
+                    </button>
+
+                </div>
+                `;
+
+            });
+
+        } catch (err) {
+
+            console.log(err);
+
         }
-
-        adsList.innerHTML="";
-
-        products.forEach(p=>{
-
-            adsList.innerHTML += `
-            <div class="item-card">
-
-                <div class="item-image">
-                    ${
-                        p.image
-                        ? `<img src="${p.image}">`
-                        : "📦"
-                    }
-                </div>
-
-                <div class="item-info">
-                    <h3>${p.title}</h3>
-                    <p>R$ ${p.pricePerDay}/dia</p>
-                </div>
-
-                <button
-                    class="btn-secondary"
-                    onclick="location.href='editar-anuncio.html?id=${p._id}'">
-                    Editar
-                </button>
-
-            </div>
-            `;
-
-        });
 
     }
 
-    // ---------------- ALUGUÉIS ----------------
+    // ==========================================
+    // ALUGUÉIS
+    // ==========================================
 
-    async function loadRentals(){
+    async function loadRentals() {
 
-        const response = await fetch(
-            `${API}/rentals/user/${userId}`
-        );
+        try {
 
-        const rentals = await response.json();
+            const response = await fetch(
+                `${API}/rentals/user/${userId}`
+            );
 
-        const mine = rentals.filter(r=>
-            String(r.renterId?._id || r.renterId)===String(userId)
-        );
+            const rentals = await response.json();
 
-        document.getElementById("total-rentals").textContent =
-        mine.length;
+            rentalsList.innerHTML = "";
 
-        rentalsList.innerHTML="";
+            const mine = rentals.filter(r =>
+                String(r.renterId?._id || r.renterId) === String(userId)
+            );
 
-        if(mine.length===0){
-            document.getElementById("empty-rentals").style.display="block";
-            return;
+            document.getElementById("total-rentals").textContent =
+                mine.length;
+
+            const income = rentals
+                .filter(r =>
+                    String(r.ownerId?._id || r.ownerId) === String(userId)
+                    && r.status === "finished"
+                )
+                .reduce((acc, r) => acc + Number(r.total || 0), 0);
+
+            document.getElementById("total-income").textContent =
+                `R$ ${income.toFixed(2).replace(".", ",")}`;
+
+            const pending = rentals.filter(r =>
+                String(r.ownerId?._id || r.ownerId) === String(userId)
+                && r.status === "pending"
+            ).length;
+
+            if (pending > 0) {
+
+                notificationBadge.style.display = "flex";
+                notificationBadge.textContent = pending;
+
+            } else {
+
+                notificationBadge.style.display = "none";
+
+            }
+
+            if (mine.length === 0) {
+
+                document.getElementById("empty-rentals").style.display = "block";
+                return;
+
+            }
+
+            document.getElementById("empty-rentals").style.display = "none";
+
+            mine.forEach(r => {
+
+                rentalsList.innerHTML += `
+                <div class="item-card">
+
+                    <div class="item-image">
+                        ${
+                            r.productId?.image
+                            ? `<img src="${r.productId.image}" alt="">`
+                            : "📦"
+                        }
+                    </div>
+
+                    <div class="item-info">
+
+                        <h3>${r.productId?.title || "Produto"}</h3>
+
+                        <p>
+                            ${new Date(r.startDate).toLocaleDateString("pt-BR")}
+                            até
+                            ${new Date(r.endDate).toLocaleDateString("pt-BR")}
+                        </p>
+
+                        <span class="status progress">
+                            ${r.status}
+                        </span>
+
+                    </div>
+
+                    <strong>
+                        R$ ${Number(r.total).toFixed(2).replace(".", ",")}
+                    </strong>
+
+                </div>
+                `;
+
+            });
+
+        } catch (err) {
+
+            console.log(err);
+
         }
-
-        mine.forEach(r=>{
-
-            rentalsList.innerHTML += `
-            <div class="item-card">
-
-                <div class="item-image">
-                    ${
-                        r.productId?.image
-                        ? `<img src="${r.productId.image}">`
-                        : "📦"
-                    }
-                </div>
-
-                <div class="item-info">
-                    <h3>${r.productId?.title}</h3>
-                    <p>${new Date(r.startDate).toLocaleDateString("pt-BR")}</p>
-                </div>
-
-                <strong>
-                    R$ ${Number(r.total).toFixed(2)}
-                </strong>
-
-            </div>
-            `;
-
-        });
 
     }
 
-    // ---------------- CEP ----------------
+    // ==========================================
+    // CPF
+    // ==========================================
 
-    cep.addEventListener("blur", async ()=>{
+    function validateCPF(number) {
 
-        const value = cep.value.replace(/\D/g,"");
+        number = number.replace(/\D/g, "");
 
-        if(value.length!==8) return;
+        if (number.length !== 11) return false;
+        if (/^(\d)\1+$/.test(number)) return false;
+
+        let sum = 0;
+
+        for (let i = 0; i < 9; i++) {
+            sum += Number(number[i]) * (10 - i);
+        }
+
+        let digit = (sum * 10) % 11;
+        if (digit === 10) digit = 0;
+
+        if (digit !== Number(number[9])) return false;
+
+        sum = 0;
+
+        for (let i = 0; i < 10; i++) {
+            sum += Number(number[i]) * (11 - i);
+        }
+
+        digit = (sum * 10) % 11;
+        if (digit === 10) digit = 0;
+
+        return digit === Number(number[10]);
+
+    }
+
+    cpf.addEventListener("input", () => {
+
+        let value = cpf.value
+            .replace(/\D/g, "")
+            .slice(0, 11);
+
+        value = value.replace(/(\d{3})(\d)/, "$1.$2");
+        value = value.replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+        value = value.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
+
+        cpf.value = value;
+
+    });
+
+    cpf.addEventListener("blur", () => {
+
+        if (validateCPF(cpf.value)) {
+
+            cpfStatus.textContent = "CPF válido";
+            cpfStatus.className = "valid";
+
+        } else {
+
+            cpfStatus.textContent = "CPF inválido";
+            cpfStatus.className = "invalid";
+
+        }
+
+    });
+
+    // ==========================================
+    // CEP
+    // ==========================================
+
+    cep.addEventListener("blur", async () => {
+
+        const value = cep.value.replace(/\D/g, "");
+
+        if (value.length !== 8) return;
 
         const response = await fetch(
             `https://viacep.com.br/ws/${value}/json/`
         );
 
         const data = await response.json();
+
+        if (data.erro) return;
 
         street.value = data.logradouro || "";
         district.value = data.bairro || "";
@@ -278,66 +513,100 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     });
 
-    // ---------------- VERIFICAR ----------------
+    // ==========================================
+    // VERIFICAR CONTA
+    // ==========================================
 
-    document
-    .getElementById("verify-account")
-    .onclick = async ()=>{
+    document.getElementById("verify-account").onclick = async () => {
 
-        const response = await fetch(
-            `${API}/users/verify/${userId}`,
-            {
-                method:"PUT",
-                headers:{
-                    "Content-Type":"application/json",
-                    Authorization:`Bearer ${token}`
-                },
-                body:JSON.stringify({
-                    cpf:cpf.value,
-                    rg:rg.value,
-                    cnh:cnh.value,
-                    cep:cep.value,
-                    number:number.value,
-                    street:street.value,
-                    district:district.value,
-                    city:city.value,
-                    state:state.value
-                })
-            }
-        );
-
-        const data = await response.json();
-
-        if(!response.ok){
-            alert(data.error);
+        if (!validateCPF(cpf.value)) {
+            alert("CPF inválido.");
             return;
         }
 
-        alert("Conta verificada!");
-        location.reload();
+        if (!rg.value.trim()) {
+            alert("Informe o RG.");
+            return;
+        }
+
+        if (!cep.value.trim()) {
+            alert("Informe o CEP.");
+            return;
+        }
+
+        if (!number.value.trim()) {
+            alert("Informe o número.");
+            return;
+        }
+
+        try {
+
+            const response = await fetch(
+                `${API}/users/verify/${userId}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+
+                        cpf: cpf.value,
+                        rg: rg.value,
+                        cnh: cnh.value,
+
+                        cep: cep.value,
+                        number: number.value,
+                        street: street.value,
+                        district: district.value,
+                        city: city.value,
+                        state: state.value
+
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok)
+                throw new Error(data.error);
+
+            alert("Conta verificada!");
+
+            location.reload();
+
+        } catch (err) {
+
+            alert(err.message);
+
+        }
 
     };
 
-    // ---------------- BOTÕES ----------------
+    // ==========================================
+    // BOTÕES
+    // ==========================================
 
-    document.getElementById("new-ad").onclick = ()=>{
-        location.href="novo-anuncio.html";
+    document.getElementById("new-ad").onclick = () => {
+        location.href = "novo-anuncio.html";
     };
 
-    document.getElementById("empty-new-ad").onclick = ()=>{
-        location.href="novo-anuncio.html";
+    document.getElementById("empty-new-ad").onclick = () => {
+        location.href = "novo-anuncio.html";
     };
 
-    document.getElementById("logout").onclick = ()=>{
+    document.getElementById("logout").onclick = () => {
 
         localStorage.removeItem("token");
         localStorage.removeItem("alugase_user");
 
-        location.href="login.html";
+        location.href = "login.html";
 
     };
 
-    // ---------------- INICIAR ----------------
+    // ==========================================
+    // INICIAR
+    // ==========================================
 
     await loadAds();
     await loadRentals();
