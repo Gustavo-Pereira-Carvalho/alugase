@@ -1,35 +1,22 @@
-// ==========================================
-// ALUGASE — LOGIN (API ONLINE)
-// ==========================================
-
 document.addEventListener("DOMContentLoaded", () => {
 
     const API = "https://alugase-api.onrender.com/api/users/login";
 
     const form = document.querySelector("#login-form");
-
     const email = document.querySelector("#email");
     const password = document.querySelector("#password");
-
     const remember = document.querySelector("#remember");
-    const togglePassword = document.querySelector("#toggle-password");
 
-    // ==========================================
-    // MOSTRAR / ESCONDER SENHA
-    // ==========================================
+    document
+        .querySelector("#toggle-password")
+        ?.addEventListener("click", () => {
 
-    togglePassword?.addEventListener("click", () => {
+            password.type =
+                password.type === "password"
+                    ? "text"
+                    : "password";
 
-        password.type =
-            password.type === "password"
-                ? "text"
-                : "password";
-
-    });
-
-    // ==========================================
-    // LOGIN
-    // ==========================================
+        });
 
     form.addEventListener("submit", async (e) => {
 
@@ -57,21 +44,21 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.error || "Erro ao realizar login.");
+                throw new Error(data.error);
             }
 
-            // Salva sessão
+            localStorage.setItem("token", data.token);
+
             localStorage.setItem(
                 "alugase_user",
-                JSON.stringify(data)
+                JSON.stringify(data.user)
             );
 
-            // Lembrar e-mail
             if (remember.checked) {
 
                 localStorage.setItem(
                     "remember_email",
-                    data.email
+                    email.value
                 );
 
             } else {
@@ -80,43 +67,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
             }
 
-            alert(`Bem-vindo, ${data.name}!`);
+            alert(`Bem-vindo, ${data.user.name}!`);
 
             window.location.href = "perfil.html";
 
-        } catch (error) {
+        } catch (err) {
 
-            alert(error.message);
+            alert(err.message);
 
         }
 
     });
 
-    // ==========================================
-    // LEMBRAR E-MAIL
-    // ==========================================
+    const saved = localStorage.getItem("remember_email");
 
-    const savedEmail = localStorage.getItem("remember_email");
+    if (saved) {
 
-    if (savedEmail) {
-
-        email.value = savedEmail;
+        email.value = saved;
         remember.checked = true;
 
     }
-
-    // ==========================================
-    // GOOGLE
-    // ==========================================
-
-    document
-        .querySelector("#google-login")
-        ?.addEventListener("click", () => {
-
-            alert(
-                "Login com Google será implementado em breve."
-            );
-
-        });
 
 });
