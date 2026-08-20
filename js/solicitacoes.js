@@ -1,24 +1,54 @@
 // ==========================================
-// ALUGASE — SOLICITAÇÕES (BACKEND)
+// ALUGASE — SOLICITAÇÕES
 // ==========================================
 
 document.addEventListener("DOMContentLoaded", async () => {
 
     const API = "https://alugase-api.onrender.com/api";
 
-    const user = JSON.parse(localStorage.getItem("alugase_user"));
+    // ==========================================
+    // USUÁRIO
+    // ==========================================
+
+    const user =
+        JSON.parse(
+            localStorage.getItem("alugase_user")
+        );
 
     if (!user) {
-        window.location.href = "login.html";
+
+        window.location.href =
+            "login.html";
+
         return;
+
     }
 
-    const list = document.querySelector("#requests-list");
-    const empty = document.querySelector("#empty-state");
-    const filters = document.querySelectorAll(".filter-btn");
+
+    // ==========================================
+    // ELEMENTOS
+    // ==========================================
+
+    const list =
+        document.querySelector(
+            "#requests-list"
+        );
+
+    const empty =
+        document.querySelector(
+            "#empty-state"
+        );
+
+    const filters =
+        document.querySelectorAll(
+            ".filter-btn"
+        );
+
 
     let requests = [];
+
     let currentFilter = "all";
+
 
     // ==========================================
     // CARREGAR SOLICITAÇÕES
@@ -28,22 +58,51 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
 
-            const response = await fetch(
-                `${API}/rentals/owner/${user._id}`
-            );
+            const response =
+                await fetch(
+                    `${API}/rentals/owner/${user._id}`
+                );
 
-            requests = await response.json();
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Erro ao buscar solicitações."
+                );
+
+            }
+
+
+            requests =
+                await response.json();
+
 
             render();
 
-        } catch (err) {
 
-            console.error(err);
-            alert("Erro ao carregar solicitações.");
+        } catch (error) {
+
+            console.error(
+                "ERRO:",
+                error
+            );
+
+            list.innerHTML = "";
+
+            empty.style.display =
+                "block";
+
+            empty.querySelector("h2").textContent =
+                "Erro ao carregar solicitações";
+
+            empty.querySelector("p").textContent =
+                "Não foi possível carregar suas solicitações.";
+
 
         }
 
     }
+
 
     // ==========================================
     // FORMATAR DATA
@@ -51,10 +110,36 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function formatDate(date) {
 
+        if (!date) {
+            return "-";
+        }
+
         return new Date(date)
-            .toLocaleDateString("pt-BR");
+            .toLocaleDateString(
+                "pt-BR"
+            );
 
     }
+
+
+    // ==========================================
+    // FORMATAR DINHEIRO
+    // ==========================================
+
+    function formatMoney(value) {
+
+        return Number(
+            value || 0
+        ).toLocaleString(
+            "pt-BR",
+            {
+                style: "currency",
+                currency: "BRL"
+            }
+        );
+
+    }
+
 
     // ==========================================
     // STATUS
@@ -70,18 +155,71 @@ document.addEventListener("DOMContentLoaded", async () => {
             case "approved":
                 return "Aprovada";
 
-            case "rejected":
-                return "Recusada";
+            case "awaiting_payment":
+                return "Aguardando pagamento";
+
+            case "paid":
+                return "Pagamento confirmado";
+
+            case "active":
+                return "Aluguel ativo";
 
             case "finished":
                 return "Finalizada";
 
+            case "rejected":
+                return "Recusada";
+
+            case "cancelled":
+                return "Cancelada";
+
             default:
-                return status;
+                return status || "Desconhecido";
 
         }
 
     }
+
+
+    // ==========================================
+    // TEXTO DO STATUS
+    // ==========================================
+
+    function statusDescription(status) {
+
+        switch (status) {
+
+            case "pending":
+                return "Aguardando sua aprovação.";
+
+            case "approved":
+                return "Solicitação aprovada.";
+
+            case "awaiting_payment":
+                return "Aguardando pagamento do cliente.";
+
+            case "paid":
+                return "Pagamento confirmado.";
+
+            case "active":
+                return "O aluguel está em andamento.";
+
+            case "finished":
+                return "Aluguel finalizado.";
+
+            case "rejected":
+                return "Você recusou esta solicitação.";
+
+            case "cancelled":
+                return "Esta solicitação foi cancelada.";
+
+            default:
+                return "";
+
+        }
+
+    }
+
 
     // ==========================================
     // RENDER
@@ -91,116 +229,112 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         list.innerHTML = "";
 
+
+        // ======================================
+        // FILTRAR
+        // ======================================
+
         const filtered =
             currentFilter === "all"
 
                 ? requests
 
-                : requests.filter(r =>
-                    r.status === currentFilter
+                : requests.filter(
+                    rental =>
+                        rental.status ===
+                        currentFilter
                 );
+
+
+        // ======================================
+        // VAZIO
+        // ======================================
 
         if (!filtered.length) {
 
-            empty.style.display = "block";
+            empty.style.display =
+                "block";
+
             return;
 
         }
 
-        empty.style.display = "none";
 
-        filtered.forEach(rental => {
+        empty.style.display =
+            "none";
 
-            const renter = rental.renterId;
-            const product = rental.productId;
 
-            const initials = renter.name
-                .split(" ")
-                .map(n => n[0])
-                .slice(0,2)
-                .join("")
-                .toUpperCase();
+        // ======================================
+        // CARDS
+        // ======================================
 
-            const card = document.createElement("article");
+        filtered.forEach(
+            rental => {
 
-            card.className = "request-card";
+                const renter =
+                    rental.renterId || {};
 
-            card.innerHTML = `
+                const product =
+                    rental.productId || {};
 
-                <div class="request-top">
 
-                    <div class="request-user">
+                // ==================================
+                // NOME
+                // ==================================
 
-                        <div class="user-avatar">
-                            ${initials}
-                        </div>
+                const renterName =
+                    renter.name ||
+                    "Usuário";
 
-                        <div class="user-info">
 
-                            <h3>${renter.name}</h3>
+                // ==================================
+                // INICIAIS
+                // ==================================
 
-                            <p>Solicitou um aluguel</p>
+                const initials =
+                    renterName
+                        .split(" ")
+                        .filter(Boolean)
+                        .map(
+                            name =>
+                                name[0]
+                        )
+                        .slice(0, 2)
+                        .join("")
+                        .toUpperCase();
 
-                        </div>
 
-                    </div>
+                // ==================================
+                // CARD
+                // ==================================
 
-                    <span class="status ${rental.status}">
-                        ${statusLabel(rental.status)}
-                    </span>
+                const card =
+                    document.createElement(
+                        "article"
+                    );
 
-                </div>
 
-                <div class="product-box">
+                card.className =
+                    "request-card";
 
-                    <div class="product-image">
-                        ${product.image}
-                    </div>
 
-                    <div class="product-details">
+                // ==================================
+                // BOTÕES
+                // ==================================
 
-                        <h4>${product.title}</h4>
+                let actions = "";
 
-                        <p>📍 ${product.city}</p>
 
-                        <div class="price">
-                            R$ ${rental.total}
-                        </div>
+                // ----------------------------------
+                // PENDENTE
+                // ----------------------------------
 
-                    </div>
+                if (
+                    rental.status ===
+                    "pending"
+                ) {
 
-                </div>
-
-                <div class="request-info">
-
-                    <div class="info-item">
-                        <span>Retirada</span>
-                        <strong>${formatDate(rental.startDate)}</strong>
-                    </div>
-
-                    <div class="info-item">
-                        <span>Devolução</span>
-                        <strong>${formatDate(rental.endDate)}</strong>
-                    </div>
-
-                    <div class="info-item">
-                        <span>Dias</span>
-                        <strong>${rental.days} dias</strong>
-                    </div>
-
-                    <div class="info-item">
-                        <span>Total</span>
-                        <strong>R$ ${rental.total}</strong>
-                    </div>
-
-                </div>
-
-                <div class="request-actions">
-
-                    ${
-                        rental.status === "pending"
-
-                        ? `
+                    actions = `
 
                         <button
                             class="btn-accept"
@@ -214,128 +348,483 @@ document.addEventListener("DOMContentLoaded", async () => {
                             Recusar
                         </button>
 
-                        `
+                    `;
 
-                        : ""
+                }
 
+
+                // ----------------------------------
+                // AGUARDANDO PAGAMENTO
+                // ----------------------------------
+
+                else if (
+                    rental.status ===
+                    "awaiting_payment"
+                ) {
+
+                    actions = `
+
+                        <span class="action-info">
+                            💳 Aguardando pagamento do cliente
+                        </span>
+
+                    `;
+
+                }
+
+
+                // ----------------------------------
+                // PAGO
+                // ----------------------------------
+
+                else if (
+                    rental.status ===
+                    "paid"
+                ) {
+
+                    actions = `
+
+                        <span class="action-info">
+                            ✅ Pagamento confirmado
+                        </span>
+
+                    `;
+
+                }
+
+
+                // ----------------------------------
+                // ATIVO
+                // ----------------------------------
+
+                else if (
+                    rental.status ===
+                    "active"
+                ) {
+
+                    actions = `
+
+                        <span class="action-info">
+                            📦 Aluguel em andamento
+                        </span>
+
+                    `;
+
+                }
+
+
+                // ----------------------------------
+                // FINALIZADO
+                // ----------------------------------
+
+                else if (
+                    rental.status ===
+                    "finished"
+                ) {
+
+                    actions = `
+
+                        <span class="action-info">
+                            🏁 Aluguel finalizado
+                        </span>
+
+                    `;
+
+                }
+
+
+                // ==================================
+                // CHAT
+                // ==================================
+                //
+                // Como Rental não possui chatId,
+                // não vamos mandar:
+                //
+                // chat.html?chat=undefined
+                //
+                // O chat poderá ser ligado ao rental
+                // posteriormente.
+                //
+                // ==================================
+
+
+                card.innerHTML = `
+
+                    <div class="request-top">
+
+                        <div class="request-user">
+
+                            <div class="user-avatar">
+                                ${initials}
+                            </div>
+
+                            <div class="user-info">
+
+                                <h3>
+                                    ${renterName}
+                                </h3>
+
+                                <p>
+                                    Solicitou um aluguel
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <span class="status ${rental.status}">
+                            ${statusLabel(
+                                rental.status
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="product-box">
+
+                        <div class="product-image">
+
+                            ${
+                                product.image ||
+                                "📦"
+                            }
+
+                        </div>
+
+
+                        <div class="product-details">
+
+                            <h4>
+                                ${
+                                    product.title ||
+                                    "Produto"
+                                }
+                            </h4>
+
+                            <p>
+                                📍 ${
+                                    product.city ||
+                                    "Local não informado"
+                                }
+                            </p>
+
+                            <div class="price">
+
+                                ${formatMoney(
+                                    rental.total
+                                )}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="request-info">
+
+
+                        <div class="info-item">
+
+                            <span>
+                                Retirada
+                            </span>
+
+                            <strong>
+                                ${formatDate(
+                                    rental.startDate
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span>
+                                Devolução
+                            </span>
+
+                            <strong>
+                                ${formatDate(
+                                    rental.endDate
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span>
+                                Dias
+                            </span>
+
+                            <strong>
+                                ${rental.days} ${
+                                    rental.days === 1
+                                        ? "dia"
+                                        : "dias"
+                                }
+                            </strong>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <span>
+                                Total
+                            </span>
+
+                            <strong>
+                                ${formatMoney(
+                                    rental.total
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                    ${
+                        rental.status !== "pending"
+                            ? `
+                                <div class="status-description">
+                                    ${statusDescription(
+                                        rental.status
+                                    )}
+                                </div>
+                            `
+                            : ""
                     }
 
-                    <button
-                        class="btn-chat"
-                        data-chat="${rental.chatId}">
-                        Chat
-                    </button>
 
-                </div>
+                    <div class="request-actions">
 
-            `;
+                        ${actions}
 
-            list.appendChild(card);
+                    </div>
 
-        });
+                `;
+
+
+                list.appendChild(
+                    card
+                );
+
+            }
+        );
+
 
         addEvents();
 
     }
 
+
     // ==========================================
-    // ACEITAR / RECUSAR
+    // ALTERAR STATUS
+    // ==========================================
+
+    async function updateStatus(
+        rentalId,
+        status
+    ) {
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API}/rentals/${rentalId}/status`,
+                    {
+
+                        method: "PUT",
+
+                        headers: {
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body:
+                            JSON.stringify({
+                                status
+                            })
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.error ||
+                    "Não foi possível atualizar o aluguel."
+                );
+
+            }
+
+
+            await loadRequests();
+
+
+        } catch (error) {
+
+            console.error(
+                error
+            );
+
+            alert(
+                error.message
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // EVENTOS
     // ==========================================
 
     function addEvents() {
 
-        document.querySelectorAll(".btn-accept")
-        .forEach(button => {
 
-            button.onclick = async () => {
+        // ======================================
+        // ACEITAR
+        // ======================================
 
-                await fetch(
-                    `${API}/rentals/${button.dataset.id}/status`,
-                    {
+        document
+            .querySelectorAll(
+                ".btn-accept"
+            )
+            .forEach(
+                button => {
 
-                        method:"PUT",
+                    button.onclick =
+                        async () => {
 
-                        headers:{
-                            "Content-Type":"application/json"
-                        },
+                            const confirmed =
+                                confirm(
+                                    "Deseja aceitar esta solicitação?"
+                                );
 
-                        body:JSON.stringify({
-                            status:"approved"
-                        })
 
-                    }
-                );
+                            if (!confirmed) {
+                                return;
+                            }
 
-                loadRequests();
 
-            };
+                            button.disabled =
+                                true;
 
-        });
+                            button.textContent =
+                                "Aceitando...";
 
-        document.querySelectorAll(".btn-reject")
-        .forEach(button => {
 
-            button.onclick = async () => {
+                            await updateStatus(
+                                button.dataset.id,
+                                "approved"
+                            );
 
-                await fetch(
-                    `${API}/rentals/${button.dataset.id}/status`,
-                    {
+                        };
 
-                        method:"PUT",
+                }
+            );
 
-                        headers:{
-                            "Content-Type":"application/json"
-                        },
 
-                        body:JSON.stringify({
-                            status:"rejected"
-                        })
+        // ======================================
+        // RECUSAR
+        // ======================================
 
-                    }
-                );
+        document
+            .querySelectorAll(
+                ".btn-reject"
+            )
+            .forEach(
+                button => {
 
-                loadRequests();
+                    button.onclick =
+                        async () => {
 
-            };
+                            const confirmed =
+                                confirm(
+                                    "Deseja recusar esta solicitação?"
+                                );
 
-        });
 
-        document.querySelectorAll(".btn-chat")
-        .forEach(button => {
+                            if (!confirmed) {
+                                return;
+                            }
 
-            button.onclick = () => {
 
-                window.location.href =
-                    `chat.html?chat=${button.dataset.chat}`;
+                            button.disabled =
+                                true;
 
-            };
+                            button.textContent =
+                                "Recusando...";
 
-        });
+
+                            await updateStatus(
+                                button.dataset.id,
+                                "rejected"
+                            );
+
+                        };
+
+                }
+            );
 
     }
+
 
     // ==========================================
     // FILTROS
     // ==========================================
 
-    filters.forEach(button => {
+    filters.forEach(
+        button => {
 
-        button.onclick = () => {
+            button.onclick =
+                () => {
 
-            filters.forEach(b =>
-                b.classList.remove("active")
-            );
+                    filters.forEach(
+                        btn =>
+                            btn.classList.remove(
+                                "active"
+                            )
+                    );
 
-            button.classList.add("active");
 
-            currentFilter =
-                button.dataset.status;
+                    button.classList.add(
+                        "active"
+                    );
 
-            render();
 
-        };
+                    currentFilter =
+                        button.dataset.status;
 
-    });
+
+                    render();
+
+                };
+
+        }
+    );
+
+
+    // ==========================================
+    // INICIAR
+    // ==========================================
 
     await loadRequests();
 
