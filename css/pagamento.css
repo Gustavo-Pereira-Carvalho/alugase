@@ -1,0 +1,714 @@
+/* ==========================================
+   ALUGASE — PAGAMENTO
+========================================== */
+
+.payment-page {
+
+    min-height: calc(100vh - 160px);
+
+    padding: 50px 20px 80px;
+
+    background: #f7f8f7;
+
+}
+
+
+.payment-container {
+
+    width: 100%;
+
+    max-width: 850px;
+
+    margin: 0 auto;
+
+}
+
+
+/* ==========================================
+   HEADER
+========================================== */
+
+.payment-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin-bottom: 30px;
+
+}
+
+
+.payment-icon {
+
+    width: 58px;
+
+    height: 58px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #dcfce7;
+
+    border-radius: 16px;
+
+    font-size: 28px;
+
+}
+
+
+.payment-header h1 {
+
+    margin: 0 0 5px;
+
+    font-size: 30px;
+
+    color: #111827;
+
+}
+
+
+.payment-header p {
+
+    margin: 0;
+
+    color: #6b7280;
+
+}
+
+
+/* ==========================================
+   CARDS
+========================================== */
+
+.payment-card {
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    margin-bottom: 18px;
+
+    box-shadow: 0 4px 15px rgba(0,0,0,.04);
+
+}
+
+
+.section-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+
+}
+
+
+.section-title span {
+
+    font-size: 21px;
+
+}
+
+
+.section-title h2 {
+
+    margin: 0;
+
+    font-size: 19px;
+
+    color: #111827;
+
+}
+
+
+/* ==========================================
+   PRODUTO
+========================================== */
+
+.product-summary {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+}
+
+
+.product-image {
+
+    width: 90px;
+
+    height: 90px;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    background: #f0fdf4;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 35px;
+
+    overflow: hidden;
+
+}
+
+
+.product-image img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+}
+
+
+.product-info h3 {
+
+    margin: 0 0 7px;
+
+    font-size: 20px;
+
+    color: #111827;
+
+}
+
+
+.product-info p {
+
+    margin: 4px 0;
+
+    color: #6b7280;
+
+}
+
+
+/* ==========================================
+   PERÍODO
+========================================== */
+
+.rental-period {
+
+    display: grid;
+
+    grid-template-columns: 1fr auto 1fr 1fr;
+
+    gap: 15px;
+
+    align-items: center;
+
+}
+
+
+.period-item {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+}
+
+
+.period-item span {
+
+    font-size: 13px;
+
+    color: #6b7280;
+
+}
+
+
+.period-item strong {
+
+    color: #111827;
+
+    font-size: 16px;
+
+}
+
+
+.period-arrow {
+
+    color: #16a34a;
+
+    font-size: 22px;
+
+}
+
+
+/* ==========================================
+   PREÇOS
+========================================== */
+
+.price-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 14px;
+
+}
+
+
+.price-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+}
+
+
+.price-row span {
+
+    color: #6b7280;
+
+}
+
+
+.price-row strong {
+
+    color: #111827;
+
+}
+
+
+.price-divider {
+
+    width: 100%;
+
+    height: 1px;
+
+    background: #e5e7eb;
+
+    margin: 5px 0;
+
+}
+
+
+.total-row {
+
+    padding-top: 5px;
+
+}
+
+
+.total-row span {
+
+    color: #111827;
+
+    font-weight: 700;
+
+    font-size: 18px;
+
+}
+
+
+.total-row strong {
+
+    color: #16a34a;
+
+    font-size: 24px;
+
+}
+
+
+/* ==========================================
+   STATUS
+========================================== */
+
+.status-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 18px 20px;
+
+    border-radius: 14px;
+
+    background: #fffbeb;
+
+    border: 1px solid #fde68a;
+
+    margin-bottom: 18px;
+
+}
+
+
+.status-icon {
+
+    width: 45px;
+
+    height: 45px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #fef3c7;
+
+    font-size: 21px;
+
+}
+
+
+.status-card strong {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #92400e;
+
+}
+
+
+.status-card p {
+
+    margin: 0;
+
+    color: #92400e;
+
+    font-size: 14px;
+
+}
+
+
+/* ==========================================
+   PAGAMENTO
+========================================== */
+
+.payment-action {
+
+    text-align: center;
+
+    margin-top: 25px;
+
+}
+
+
+.btn-pay {
+
+    width: 100%;
+
+    max-width: 500px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    padding: 17px 25px;
+
+    background: #16a34a;
+
+    color: #ffffff;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.btn-pay:hover {
+
+    background: #15803d;
+
+    transform: translateY(-1px);
+
+}
+
+
+.btn-pay:disabled {
+
+    opacity: .6;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+}
+
+
+.secure-payment {
+
+    margin-top: 12px;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+}
+
+
+/* ==========================================
+   PAGO
+========================================== */
+
+.paid-state {
+
+    text-align: center;
+
+    background: #ffffff;
+
+    border: 1px solid #bbf7d0;
+
+    border-radius: 16px;
+
+    padding: 40px 25px;
+
+    margin-top: 20px;
+
+}
+
+
+.paid-icon {
+
+    width: 65px;
+
+    height: 65px;
+
+    margin: 0 auto 15px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #dcfce7;
+
+    color: #16a34a;
+
+    font-size: 35px;
+
+    font-weight: 700;
+
+}
+
+
+.paid-state h2 {
+
+    margin: 0 0 8px;
+
+    color: #166534;
+
+}
+
+
+.paid-state p {
+
+    color: #6b7280;
+
+    margin-bottom: 25px;
+
+}
+
+
+/* ==========================================
+   LOADING / ERRO
+========================================== */
+
+.payment-message {
+
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    border: 1px solid #e5e7eb;
+
+    padding: 50px 25px;
+
+    text-align: center;
+
+}
+
+
+.loader {
+
+    width: 35px;
+
+    height: 35px;
+
+    margin: 0 auto 15px;
+
+    border: 4px solid #dcfce7;
+
+    border-top-color: #16a34a;
+
+    border-radius: 50%;
+
+    animation: spin .8s linear infinite;
+
+}
+
+
+@keyframes spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+.error-message {
+
+    border-color: #fecaca;
+
+}
+
+
+.message-icon {
+
+    font-size: 35px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.error-message h2 {
+
+    margin: 0 0 8px;
+
+}
+
+
+.error-message p {
+
+    color: #6b7280;
+
+    margin-bottom: 20px;
+
+}
+
+
+/* ==========================================
+   RESPONSIVO
+========================================== */
+
+@media (max-width: 700px) {
+
+    .payment-page {
+
+        padding: 30px 15px 60px;
+
+    }
+
+
+    .payment-header {
+
+        align-items: flex-start;
+
+    }
+
+
+    .payment-header h1 {
+
+        font-size: 24px;
+
+    }
+
+
+    .payment-card {
+
+        padding: 20px;
+
+    }
+
+
+    .rental-period {
+
+        grid-template-columns: 1fr 1fr;
+
+    }
+
+
+    .period-arrow {
+
+        display: none;
+
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .product-summary {
+
+        align-items: flex-start;
+
+    }
+
+
+    .product-image {
+
+        width: 70px;
+
+        height: 70px;
+
+        font-size: 28px;
+
+    }
+
+
+    .product-info h3 {
+
+        font-size: 17px;
+
+    }
+
+
+    .total-row strong {
+
+        font-size: 21px;
+
+    }
+
+}
