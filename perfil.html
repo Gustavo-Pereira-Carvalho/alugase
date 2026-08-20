@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Meu Perfil | Alugase</title>
 
   <link rel="stylesheet" href="./css/global.css">
@@ -13,629 +12,191 @@
 <body>
 
 <header>
+  <nav class="navbar profile-navbar">
 
-    <nav class="navbar profile-navbar">
+    <div class="logo">
+      <a href="index.html">
+        <img src="assets/logo.png" alt="Logo">
+        <h2>ALUGASE</h2>
+      </a>
+    </div>
 
-        <div class="logo">
+    <ul class="nav-links">
+      <li><a href="index.html">Início</a></li>
+      <li><a href="explorar.html">Explorar</a></li>
+    </ul>
 
-            <a href="index.html">
+    <div class="nav-buttons">
 
-                <img
-                    src="assets/logo.png"
-                    alt="Logo Alugase"
-                >
+      <a href="solicitacoes.html" class="notification-nav">
+        <span class="bell-icon">🔔</span>
+        <span id="notification-badge" class="notification-badge">0</span>
+      </a>
 
-                <h2>ALUGASE</h2>
+      <a href="chat.html" class="btn-secondary">
+        Conversas
+      </a>
 
-            </a>
+      <button id="new-ad" class="btn-primary">
+        + Anunciar
+      </button>
 
-        </div>
+      <button id="logout" class="btn-secondary">
+        Sair
+      </button>
 
+    </div>
 
-        <ul class="nav-links">
-
-            <li>
-                <a href="index.html">
-                    Início
-                </a>
-            </li>
-
-            <li>
-                <a href="explorar.html">
-                    Explorar
-                </a>
-            </li>
-
-        </ul>
-
-
-        <div class="nav-buttons">
-
-            <a
-                href="solicitacoes.html"
-                class="notification-nav"
-            >
-
-                <icon
-                    name="bell"
-                    size="xl"
-                    color="#374151"
-                ></icon>
-
-                <span
-                    class="notification-badge"
-                    id="notification-badge"
-                >
-                    0
-                </span>
-
-            </a>
-
-
-            <a
-                href="chat.html"
-                class="btn-secondary"
-            >
-                Conversas
-            </a>
-
-
-            <button
-                class="btn-primary"
-                id="new-ad"
-            >
-                + Anunciar
-            </button>
-
-        </div>
-
-    </nav>
-
+  </nav>
 </header>
 
 
 <main class="profile-page">
 
+  <section class="profile-header">
 
-    <!-- ==========================================
-         PERFIL
-    ========================================== -->
+    <div class="avatar-container">
+      <label id="avatar" for="profile-image-input" class="avatar">
+        GP
+      </label>
 
-    <section class="profile-header">
+      <input
+        type="file"
+        id="profile-image-input"
+        accept="image/*"
+        hidden
+      >
 
+      <span class="avatar-hint">
+        Clique para alterar
+      </span>
+    </div>
 
-        <!-- FOTO DE PERFIL -->
+    <div class="profile-info">
 
-        <div class="avatar-container">
+      <div class="name-row">
+        <h1 id="user-name">Nome</h1>
+        <span id="verified-badge" class="pending">
+          Pendente
+        </span>
+      </div>
 
-            <label
-                for="profile-image-input"
-                class="avatar"
-                id="avatar"
-                title="Alterar foto de perfil"
-            >
-                GP
-            </label>
+      <p id="user-location">
+        Cidade
+      </p>
 
-            <input
-                type="file"
-                id="profile-image-input"
-                accept="image/jpeg,image/png,image/webp"
-                hidden
-            >
+      <div class="rating">
+        ⭐ 5.0 · 0 avaliações
+      </div>
 
-            <span
-                class="avatar-hint"
-            >
-                Clique para alterar
-            </span>
+    </div>
 
-        </div>
-
-
-        <div class="profile-info">
-
-            <div class="name-row">
-
-                <h1 id="user-name">
-                    Nome do usuário
-                </h1>
-
-                <span
-                    id="verified-badge"
-                    class="pending"
-                >
-                    Pendente
-                </span>
-
-            </div>
+  </section>
 
 
-            <p id="user-location">
-                Cidade • Membro desde 2026
-            </p>
+  <section class="stats-grid">
+
+    <div class="stat-card">
+      <h2 id="total-rentals">0</h2>
+      <span>Aluguéis</span>
+    </div>
+
+    <div class="stat-card">
+      <h2 id="total-ads">0</h2>
+      <span>Anúncios</span>
+    </div>
+
+    <div class="stat-card">
+      <h2 id="total-income">R$ 0</h2>
+      <span>Renda</span>
+    </div>
+
+    <div class="stat-card">
+      <h2>5.0</h2>
+      <span>Avaliação</span>
+    </div>
+
+  </section>
 
 
-            <div class="rating">
+  <section class="tabs">
 
-                ⭐
+    <button class="tab active" data-tab="ads">
+      Meus anúncios
+    </button>
 
-                <span id="user-rating">
-                    5.0
-                </span>
+    <button class="tab" data-tab="rentals">
+      Aluguéis
+    </button>
 
-                ·
+    <button class="tab" data-tab="verification">
+      Verificação
+    </button>
 
-                <span id="user-reviews">
-                    0
-                </span>
-
-                avaliações
-
-            </div>
-
-        </div>
-
-    </section>
+  </section>
 
 
+  <section class="tab-content">
 
-    <!-- ==========================================
-         ESTATÍSTICAS
-    ========================================== -->
+    <div id="ads" class="content active">
 
-    <section class="stats-grid">
+      <div id="ads-list"></div>
 
+      <div id="empty-ads" class="empty-state" style="display:none;">
+        <h3>Nenhum anúncio</h3>
+        <button id="empty-new-ad" class="btn-primary">
+          Criar anúncio
+        </button>
+      </div>
 
-        <div class="stat-card">
-
-            <h2 id="total-rentals">
-                0
-            </h2>
-
-            <span>
-                Aluguéis realizados
-            </span>
-
-        </div>
+    </div>
 
 
-        <div class="stat-card">
+    <div id="rentals" class="content">
 
-            <h2 id="total-ads">
-                0
-            </h2>
+      <div id="rentals-list"></div>
 
-            <span>
-                Anúncios ativos
-            </span>
+      <div id="empty-rentals" class="empty-state" style="display:none;">
+        <h3>Nenhum aluguel</h3>
+      </div>
 
-        </div>
+    </div>
 
 
-        <div class="stat-card">
+    <div id="verification" class="content">
 
-            <h2 id="total-income">
-                R$ 0
-            </h2>
+      <div class="verification-card">
 
-            <span>
-                Renda obtida
-            </span>
+        <h2>Verificação</h2>
 
-        </div>
+        <div class="form-grid">
 
+          <input id="cpf" placeholder="CPF">
+          <input id="rg" placeholder="RG">
+          <input id="cnh" placeholder="CNH">
 
-        <div class="stat-card">
+          <input id="cep" placeholder="CEP">
+          <input id="number" placeholder="Número">
 
-            <h2 id="average-rating">
-                5.0
-            </h2>
-
-            <span>
-                Nota média
-            </span>
+          <input id="street" placeholder="Rua" readonly>
+          <input id="district" placeholder="Bairro" readonly>
+          <input id="city" placeholder="Cidade" readonly>
+          <input id="state" placeholder="Estado" readonly>
 
         </div>
 
-    </section>
-
-
-
-    <!-- ==========================================
-         ABAS
-    ========================================== -->
-
-    <section class="tabs">
-
-
-        <button
-            class="tab active"
-            data-tab="ads"
-        >
-            Meus anúncios
+        <button id="verify-account" class="btn-primary">
+          Enviar documentos
         </button>
 
+      </div>
 
-        <button
-            class="tab"
-            data-tab="rentals"
-        >
-            Meus aluguéis
-        </button>
+    </div>
 
-
-        <button
-            class="tab"
-            data-tab="favorites"
-        >
-            Favoritos
-        </button>
-
-
-        <button
-            class="tab"
-            data-tab="verification"
-        >
-            Verificação
-        </button>
-
-    </section>
-
-
-
-    <section class="tab-content">
-
-
-        <!-- ==========================================
-             ANÚNCIOS
-        ========================================== -->
-
-        <div
-            class="content active"
-            id="ads"
-        >
-
-            <div id="ads-list"></div>
-
-
-            <div
-                id="empty-ads"
-                class="empty-state"
-                style="display:none;"
-            >
-
-                <h3>
-                    Você ainda não possui anúncios
-                </h3>
-
-                <p>
-                    Publique seu primeiro produto e comece a gerar renda.
-                </p>
-
-                <button
-                    class="btn-primary"
-                    id="empty-new-ad"
-                >
-                    Criar anúncio
-                </button>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ==========================================
-             ALUGUÉIS
-        ========================================== -->
-
-        <div
-            class="content"
-            id="rentals"
-        >
-
-            <div id="rentals-list"></div>
-
-
-            <div
-                id="empty-rentals"
-                class="empty-state"
-                style="display:none;"
-            >
-
-                <h3>
-                    Você ainda não possui aluguéis
-                </h3>
-
-                <p>
-                    Quando você alugar um produto, ele aparecerá aqui.
-                </p>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ==========================================
-             FAVORITOS
-        ========================================== -->
-
-        <div
-            class="content"
-            id="favorites"
-        >
-
-            <div id="favorites-list"></div>
-
-
-            <div
-                id="empty-favorites"
-                class="empty-state"
-                style="display:none;"
-            >
-
-                <h3>
-                    Nenhum favorito
-                </h3>
-
-                <p>
-                    Salve produtos para encontrá-los rapidamente depois.
-                </p>
-
-            </div>
-
-        </div>
-
-
-
-        <!-- ==========================================
-             VERIFICAÇÃO
-        ========================================== -->
-
-        <div
-            class="content"
-            id="verification"
-        >
-
-            <div class="verification-card">
-
-
-                <div class="verification-header">
-
-                    <h2>
-                        Verificação da conta
-                    </h2>
-
-                </div>
-
-
-                <p class="verification-text">
-
-                    A identidade é obrigatória para qualquer aluguel.
-                    A CNH é necessária apenas para veículos.
-
-                </p>
-
-
-
-                <div class="verify-status-grid">
-
-
-                    <div class="verify-status-card">
-
-                        <h3>
-                            Identidade
-                        </h3>
-
-                        <p>
-                            CPF, RG e endereço
-                        </p>
-
-                        <span
-                            id="identity-status"
-                            class="status pending"
-                        >
-                            Pendente
-                        </span>
-
-                    </div>
-
-
-
-                    <div class="verify-status-card">
-
-                        <h3>
-                            CNH
-                        </h3>
-
-                        <p>
-                            Somente para veículos
-                        </p>
-
-                        <span
-                            id="cnh-status"
-                            class="status"
-                        >
-                            Não enviada
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="form-grid">
-
-
-                    <div class="form-group">
-
-                        <label>
-                            CPF *
-                        </label>
-
-                        <input
-                            type="text"
-                            id="cpf"
-                            maxlength="14"
-                        >
-
-                        <small
-                            id="cpf-status"
-                        ></small>
-
-                    </div>
-
-
-
-                    <div class="form-group">
-
-                        <label>
-                            RG *
-                        </label>
-
-                        <input
-                            type="text"
-                            id="rg"
-                            maxlength="12"
-                        >
-
-                    </div>
-
-
-
-                    <div class="form-group full">
-
-                        <label>
-                            CNH (Opcional)
-                        </label>
-
-                        <input
-                            type="text"
-                            id="cnh"
-                            maxlength="11"
-                        >
-
-                    </div>
-
-
-
-                    <div class="form-group">
-
-                        <label>
-                            CEP *
-                        </label>
-
-                        <input
-                            type="text"
-                            id="cep"
-                            maxlength="9"
-                        >
-
-                    </div>
-
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Número *
-                        </label>
-
-                        <input
-                            type="text"
-                            id="number"
-                        >
-
-                    </div>
-
-
-
-                    <div class="form-group full">
-
-                        <label>
-                            Rua
-                        </label>
-
-                        <input
-                            type="text"
-                            id="street"
-                            readonly
-                        >
-
-                    </div>
-
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Bairro
-                        </label>
-
-                        <input
-                            type="text"
-                            id="district"
-                            readonly
-                        >
-
-                    </div>
-
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Cidade
-                        </label>
-
-                        <input
-                            type="text"
-                            id="city"
-                            readonly
-                        >
-
-                    </div>
-
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Estado
-                        </label>
-
-                        <input
-                            type="text"
-                            id="state"
-                            readonly
-                        >
-
-                    </div>
-
-                </div>
-
-
-
-                <button
-                    class="btn-primary"
-                    id="verify-account"
-                >
-                    Enviar documentos
-                </button>
-
-            </div>
-
-        </div>
-
-    </section>
+  </section>
 
 </main>
 
-
 <script src="./js/perfil.js"></script>
-
 </body>
 </html>
