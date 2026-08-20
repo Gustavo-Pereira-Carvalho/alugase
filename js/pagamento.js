@@ -2,793 +2,710 @@
 // ALUGASE — PAGAMENTO
 // ==========================================
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-    const API =
-        "https://alugase-api.onrender.com/api";
-
-
-    // ==========================================
-    // USUÁRIO
-    // ==========================================
-
-    const user =
-        JSON.parse(
-            localStorage.getItem("alugase_user")
-        );
+        const API =
+            "https://alugase-api.onrender.com/api";
 
 
-    if (!user) {
+        // ======================================
+        // ELEMENTOS
+        // ======================================
 
-        window.location.href =
-            "login.html";
-
-        return;
-
-    }
-
-
-    // ==========================================
-    // ID DO ALUGUEL
-    // ==========================================
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-
-    const rentalId =
-        params.get("id");
-
-
-    if (!rentalId) {
-
-        showError(
-            "O ID do aluguel não foi informado."
-        );
-
-        return;
-
-    }
-
-
-    // ==========================================
-    // ELEMENTOS
-    // ==========================================
-
-    const loading =
-        document.querySelector("#loading");
-
-    const errorState =
-        document.querySelector("#error-state");
-
-    const errorText =
-        document.querySelector("#error-text");
-
-    const content =
-        document.querySelector("#payment-content");
-
-    const payButton =
-        document.querySelector("#pay-button");
-
-    const paymentAction =
-        document.querySelector("#payment-action");
-
-    const paidState =
-        document.querySelector("#paid-state");
-
-
-    // ==========================================
-    // FORMATAR DINHEIRO
-    // ==========================================
-
-    function money(value) {
-
-        return Number(value || 0)
-            .toLocaleString(
-                "pt-BR",
-                {
-                    style: "currency",
-                    currency: "BRL"
-                }
+        const loading =
+            document.querySelector(
+                "#loading"
             );
 
-    }
-
-
-    // ==========================================
-    // FORMATAR DATA
-    // ==========================================
-
-    function formatDate(date) {
-
-        return new Date(date)
-            .toLocaleDateString(
-                "pt-BR",
-                {
-                    timeZone: "UTC"
-                }
+        const checkout =
+            document.querySelector(
+                "#checkout"
             );
 
-    }
-
-
-    // ==========================================
-    // MOSTRAR ERRO
-    // ==========================================
-
-    function showError(message) {
-
-        loading.style.display =
-            "none";
-
-        content.style.display =
-            "none";
-
-        errorState.style.display =
-            "block";
-
-        errorText.textContent =
-            message;
-
-    }
-
-
-    // ==========================================
-    // CARREGAR ALUGUEL
-    // ==========================================
-
-    async function loadRental() {
-
-        try {
-
-            const response =
-                await fetch(
-                    `${API}/rentals/${rentalId}`
-                );
-
-
-            const data =
-                await response.json();
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    data.error ||
-                    "Não foi possível carregar o aluguel."
-                );
-
-            }
-
-
-            // ======================================
-            // SEGURANÇA
-            // ======================================
-
-            if (
-                String(data.renterId?._id) !==
-                String(user._id)
-            ) {
-
-                throw new Error(
-                    "Você não possui acesso a este pagamento."
-                );
-
-            }
-
-
-            renderRental(data);
-
-
-        } catch (error) {
-
-            console.error(
-                "ERRO AO CARREGAR PAGAMENTO:",
-                error
+        const errorState =
+            document.querySelector(
+                "#error-state"
             );
 
+        const errorMessage =
+            document.querySelector(
+                "#error-message"
+            );
+
+        const productSummary =
+            document.querySelector(
+                "#product-summary"
+            );
+
+        const rentTotal =
+            document.querySelector(
+                "#rent-total"
+            );
+
+        const deliveryPrice =
+            document.querySelector(
+                "#delivery-price"
+            );
+
+        const deposit =
+            document.querySelector(
+                "#deposit"
+            );
+
+        const total =
+            document.querySelector(
+                "#total"
+            );
+
+        const startDate =
+            document.querySelector(
+                "#start-date"
+            );
+
+        const endDate =
+            document.querySelector(
+                "#end-date"
+            );
+
+        const days =
+            document.querySelector(
+                "#days"
+            );
+
+        const paymentBrick =
+            document.querySelector(
+                "#paymentBrick_container"
+            );
+
+        const paymentResult =
+            document.querySelector(
+                "#payment-result"
+            );
+
+
+        // ======================================
+        // USUÁRIO
+        // ======================================
+
+        const user =
+            JSON.parse(
+                localStorage.getItem(
+                    "alugase_user"
+                )
+            );
+
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        // ======================================
+        // ID DO ALUGUEL
+        // ======================================
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const rentalId =
+            params.get("id");
+
+
+        if (!rentalId) {
 
             showError(
-                error.message
+                "Aluguel não informado."
             );
 
-        }
-
-    }
-
-
-    // ==========================================
-    // RENDERIZAR ALUGUEL
-    // ==========================================
-
-    function renderRental(rental) {
-
-        loading.style.display =
-            "none";
-
-
-        content.style.display =
-            "block";
-
-
-        const product =
-            rental.productId || {};
-
-
-        // ======================================
-        // PRODUTO
-        // ======================================
-
-        const productTitle =
-            document.querySelector(
-                "#product-title"
-            );
-
-
-        const productCity =
-            document.querySelector(
-                "#product-city"
-            );
-
-
-        const ownerName =
-            document.querySelector(
-                "#owner-name"
-            );
-
-
-        const productImage =
-            document.querySelector(
-                "#product-image"
-            );
-
-
-        productTitle.textContent =
-            product.title ||
-            "Produto";
-
-
-        productCity.textContent =
-            `📍 ${product.city || "Localização não informada"}`;
-
-
-        ownerName.textContent =
-            `Proprietário: ${
-                rental.ownerId?.name ||
-                "Não informado"
-            }`;
-
-
-        // ======================================
-        // IMAGEM
-        // ======================================
-
-        if (product.image) {
-
-            productImage.innerHTML = `
-
-                <img
-                    src="${product.image}"
-                    alt="${escapeHTML(
-                        product.title || "Produto"
-                    )}"
-                >
-
-            `;
-
-        } else {
-
-            productImage.textContent =
-                "📦";
+            return;
 
         }
 
 
         // ======================================
-        // DATAS
+        // FORMATAR DINHEIRO
         // ======================================
 
-        document.querySelector(
-            "#start-date"
-        ).textContent =
-            formatDate(
-                rental.startDate
+        function money(value) {
+
+            return Number(
+                value || 0
+            ).toLocaleString(
+                "pt-BR",
+                {
+                    style:
+                        "currency",
+
+                    currency:
+                        "BRL"
+                }
             );
 
-
-        document.querySelector(
-            "#end-date"
-        ).textContent =
-            formatDate(
-                rental.endDate
-            );
-
-
-        document.querySelector(
-            "#days"
-        ).textContent =
-            `${rental.days} ${
-                rental.days === 1
-                    ? "dia"
-                    : "dias"
-            }`;
+        }
 
 
         // ======================================
-        // VALORES
+        // FORMATAR DATA
         // ======================================
 
-        document.querySelector(
-            "#rent-total"
-        ).textContent =
-            money(
-                rental.rentTotal
+        function formatDate(date) {
+
+            return new Date(
+                date
+            ).toLocaleDateString(
+                "pt-BR"
             );
 
-
-        document.querySelector(
-            "#delivery-price"
-        ).textContent =
-            money(
-                rental.deliveryPrice
-            );
-
-
-        document.querySelector(
-            "#deposit"
-        ).textContent =
-            money(
-                rental.deposit
-            );
-
-
-        document.querySelector(
-            "#total"
-        ).textContent =
-            money(
-                rental.total
-            );
+        }
 
 
         // ======================================
-        // STATUS
+        // MOSTRAR ERRO
         // ======================================
 
-        updatePaymentStatus(
-            rental
-        );
+        function showError(message) {
 
-    }
-
-
-    // ==========================================
-    // STATUS DO PAGAMENTO
-    // ==========================================
-
-    function updatePaymentStatus(rental) {
-
-        const statusIcon =
-            document.querySelector(
-                "#status-icon"
-            );
-
-        const statusTitle =
-            document.querySelector(
-                "#status-title"
-            );
-
-        const statusMessage =
-            document.querySelector(
-                "#status-message"
-            );
-
-
-        // ======================================
-        // JÁ PAGO
-        // ======================================
-
-        if (
-            rental.status === "paid" ||
-            rental.paymentStatus === "approved"
-        ) {
-
-            statusIcon.textContent =
-                "✅";
-
-            statusTitle.textContent =
-                "Pagamento confirmado";
-
-            statusMessage.textContent =
-                "Este aluguel já foi pago e está confirmado.";
-
-
-            paymentAction.style.display =
+            loading.style.display =
                 "none";
 
-
-            paidState.style.display =
-                "block";
-
-
-            return;
-
-        }
-
-
-        // ======================================
-        // CANCELADO
-        // ======================================
-
-        if (
-            rental.status === "cancelled" ||
-            rental.status === "rejected"
-        ) {
-
-            statusIcon.textContent =
-                "❌";
-
-            statusTitle.textContent =
-                "Aluguel indisponível";
-
-            statusMessage.textContent =
-                "Este aluguel não pode mais ser pago.";
-
-
-            paymentAction.style.display =
+            checkout.style.display =
                 "none";
 
-
-            return;
-
-        }
-
-
-        // ======================================
-        // PENDENTE
-        // ======================================
-
-        if (
-            rental.status === "pending"
-        ) {
-
-            statusIcon.textContent =
-                "⏳";
-
-            statusTitle.textContent =
-                "Aguardando aprovação";
-
-            statusMessage.textContent =
-                "O proprietário ainda precisa aprovar esta solicitação.";
-
-
-            paymentAction.style.display =
-                "none";
-
-
-            return;
-
-        }
-
-
-        // ======================================
-        // APROVADO
-        // ======================================
-
-        if (
-            rental.status === "approved"
-        ) {
-
-            statusIcon.textContent =
-                "💳";
-
-            statusTitle.textContent =
-                "Pagamento necessário";
-
-            statusMessage.textContent =
-                "O proprietário aprovou sua solicitação. Realize o pagamento para confirmar o aluguel.";
-
-
-            paymentAction.style.display =
+            errorState.style.display =
                 "block";
 
-
-            return;
-
-        }
-
-
-        // ======================================
-        // AGUARDANDO PAGAMENTO
-        // ======================================
-
-        if (
-            rental.status ===
-            "awaiting_payment"
-        ) {
-
-            statusIcon.textContent =
-                "💳";
-
-            statusTitle.textContent =
-                "Pagamento necessário";
-
-            statusMessage.textContent =
-                "Realize o pagamento para confirmar o aluguel.";
-
-
-            paymentAction.style.display =
-                "block";
-
-
-            return;
+            errorMessage.textContent =
+                message;
 
         }
 
 
         // ======================================
-        // OUTROS STATUS
+        // CARREGAR CHECKOUT
         // ======================================
 
-        paymentAction.style.display =
-            "none";
-
-    }
-
-
-    // ==========================================
-    // PAGAR
-    // ==========================================
-
-    payButton.addEventListener(
-        "click",
-        async () => {
+        async function loadCheckout() {
 
             try {
 
-                payButton.disabled =
-                    true;
-
-
-                payButton.innerHTML =
-                    "Processando pagamento...";
-
-
-                /*
-                 * IMPORTANTE:
-                 *
-                 * Aqui estamos usando o fluxo
-                 * atual de desenvolvimento.
-                 *
-                 * O backend altera:
-                 *
-                 * approved
-                 * ↓
-                 * awaiting_payment
-                 * ↓
-                 * paid
-                 *
-                 * Quando o Mercado Pago for
-                 * integrado, este botão deverá
-                 * criar o pagamento real.
-                 */
-
-
-                // ==================================
-                // PRIMEIRO:
-                // APPROVED → AWAITING_PAYMENT
-                // ==================================
-
-                const rentalResponse =
+                const response =
                     await fetch(
-                        `${API}/rentals/${rentalId}/status`,
-                        {
-
-                            method:
-                                "PUT",
-
-                            headers: {
-
-                                "Content-Type":
-                                    "application/json"
-
-                            },
-
-                            body:
-                                JSON.stringify({
-
-                                    status:
-                                        "awaiting_payment"
-
-                                })
-
-                        }
+                        `${API}/payments/checkout/${rentalId}`
                     );
 
 
-                const rentalData =
-                    await rentalResponse.json();
+                const data =
+                    await response.json();
 
 
-                if (
-                    !rentalResponse.ok &&
-                    rentalData.error !==
-                    "O aluguel já possui este status."
-                ) {
+                if (!response.ok) {
 
                     throw new Error(
-                        rentalData.error ||
-                        "Não foi possível iniciar o pagamento."
+                        data.error ||
+                        "Não foi possível carregar o pagamento."
                     );
 
                 }
 
 
                 // ==================================
-                // SEGUNDO:
-                // AWAITING_PAYMENT → PAID
+                // RESUMO
                 // ==================================
 
-                const paymentResponse =
-                    await fetch(
-                        `${API}/rentals/${rentalId}/status`,
-                        {
+                const rental =
+                    data.rental;
 
-                            method:
-                                "PUT",
 
-                            headers: {
+                const product =
+                    data.product;
 
-                                "Content-Type":
-                                    "application/json"
 
-                            },
+                productSummary.innerHTML = `
 
-                            body:
-                                JSON.stringify({
+                    ${
+                        product?.image
 
-                                    status:
-                                        "paid"
+                        ? `
+                            <img
+                                src="${product.image}"
+                                alt="${escapeHtml(
+                                    product.title
+                                )}"
+                            >
+                        `
 
-                                })
+                        : `
+                            <div class="product-placeholder">
+                                📦
+                            </div>
+                        `
+                    }
 
-                        }
+                    <div class="product-summary-info">
+
+                        <h3>
+                            ${escapeHtml(
+                                product?.title ||
+                                "Produto"
+                            )}
+                        </h3>
+
+                        <p>
+                            📍 ${
+                                escapeHtml(
+                                    product?.city ||
+                                    "Local não informado"
+                                )
+                            }
+                        </p>
+
+                    </div>
+
+                `;
+
+
+                rentTotal.textContent =
+                    money(
+                        rental.rentTotal
                     );
 
 
-                const paymentData =
-                    await paymentResponse.json();
-
-
-                if (!paymentResponse.ok) {
-
-                    throw new Error(
-                        paymentData.error ||
-                        "Não foi possível confirmar o pagamento."
+                deliveryPrice.textContent =
+                    money(
+                        rental.deliveryPrice
                     );
 
-                }
+
+                deposit.textContent =
+                    money(
+                        rental.deposit
+                    );
+
+
+                total.textContent =
+                    money(
+                        rental.total
+                    );
+
+
+                startDate.textContent =
+                    formatDate(
+                        rental.startDate
+                    );
+
+
+                endDate.textContent =
+                    formatDate(
+                        rental.endDate
+                    );
+
+
+                days.textContent =
+                    `${rental.days} dia${
+                        rental.days === 1
+                            ? ""
+                            : "s"
+                    }`;
 
 
                 // ==================================
-                // SUCESSO
+                // MOSTRAR CHECKOUT
                 // ==================================
 
-                statusSuccess();
+                loading.style.display =
+                    "none";
+
+                checkout.style.display =
+                    "block";
+
+
+                // ==================================
+                // MERCADO PAGO
+                // ==================================
+
+                await renderPaymentBrick(
+                    data.publicKey,
+                    rental,
+                    data.renter
+                );
 
 
             } catch (error) {
 
                 console.error(
-                    "ERRO AO PAGAR:",
+                    "ERRO:",
                     error
                 );
 
-
-                alert(
+                showError(
                     error.message ||
-                    "Erro ao processar pagamento."
+                    "Erro ao carregar pagamento."
                 );
-
-
-                payButton.disabled =
-                    false;
-
-
-                payButton.innerHTML =
-                    `
-                        <span>💳</span>
-                        Pagar aluguel
-                    `;
 
             }
 
         }
-    );
 
 
-    // ==========================================
-    // PAGAMENTO CONFIRMADO
-    // ==========================================
+        // ======================================
+        // ESCAPAR HTML
+        // ======================================
 
-    function statusSuccess() {
+        function escapeHtml(value) {
 
-        paymentAction.style.display =
-            "none";
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+            div.textContent =
+                value || "";
+
+            return div.innerHTML;
+
+        }
 
 
-        paidState.style.display =
-            "block";
+        // ======================================
+        // RENDERIZAR BRICK
+        // ======================================
+
+        async function renderPaymentBrick(
+            publicKey,
+            rental,
+            renter
+        ) {
+
+            if (
+                !publicKey
+            ) {
+
+                throw new Error(
+                    "Public Key do Mercado Pago não configurada."
+                );
+
+            }
 
 
-        const statusIcon =
+            if (
+                typeof MercadoPago ===
+                "undefined"
+            ) {
+
+                throw new Error(
+                    "Mercado Pago não foi carregado."
+                );
+
+            }
+
+
+            const mp =
+                new MercadoPago(
+                    publicKey
+                );
+
+
+            const bricksBuilder =
+                mp.bricks();
+
+
+            const settings = {
+
+                initialization: {
+
+                    amount:
+                        Number(
+                            rental.total
+                        ),
+
+                    payer: {
+
+                        email:
+                            renter?.email ||
+                            ""
+
+                    }
+
+                },
+
+
+                customization: {
+
+                    paymentMethods: {
+
+                        creditCard:
+                            "all",
+
+                        debitCard:
+                            "all",
+
+                        prepaidCard:
+                            "all",
+
+                        ticket:
+                            "all",
+
+                        bankTransfer:
+                            "all",
+
+                        mercadoPago:
+                            "all"
+
+                    }
+
+                },
+
+
+                callbacks: {
+
+                    onReady: () => {
+
+                        console.log(
+                            "✅ Mercado Pago Brick pronto."
+                        );
+
+                    },
+
+
+                    onSubmit: async ({
+                        selectedPaymentMethod,
+                        formData
+                    }) => {
+
+                        return new Promise(
+                            async (
+                                resolve,
+                                reject
+                            ) => {
+
+                                try {
+
+                                    console.log(
+                                        "Método:",
+                                        selectedPaymentMethod
+                                    );
+
+
+                                    const response =
+                                        await fetch(
+                                            `${API}/payments/process`,
+                                            {
+
+                                                method:
+                                                    "POST",
+
+                                                headers: {
+
+                                                    "Content-Type":
+                                                        "application/json"
+
+                                                },
+
+                                                body:
+                                                    JSON.stringify({
+
+                                                        rentalId:
+                                                            rental.id,
+
+                                                        ...formData
+
+                                                    })
+
+                                            }
+                                        );
+
+
+                                    const result =
+                                        await response.json();
+
+
+                                    if (
+                                        !response.ok
+                                    ) {
+
+                                        throw new Error(
+                                            result.error ||
+                                            "Pagamento recusado."
+                                        );
+
+                                    }
+
+
+                                    console.log(
+                                        "Pagamento:",
+                                        result
+                                    );
+
+
+                                    // ==========================
+                                    // APROVADO
+                                    // ==========================
+
+                                    if (
+                                        result.payment?.status ===
+                                        "approved"
+                                    ) {
+
+                                        showPaymentResult({
+
+                                            title:
+                                                "Pagamento confirmado!",
+
+                                            message:
+                                                "Seu pagamento foi aprovado. O aluguel foi confirmado."
+
+                                        });
+
+                                    }
+
+
+                                    // ==========================
+                                    // PENDENTE
+                                    // ==========================
+
+                                    else {
+
+                                        showPaymentResult({
+
+                                            title:
+                                                "Pagamento em análise",
+
+                                            message:
+                                                getPaymentMessage(
+                                                    result.payment?.status
+                                                )
+
+                                        });
+
+                                    }
+
+
+                                    resolve();
+
+                                } catch (error) {
+
+                                    console.error(
+                                        "ERRO NO PAGAMENTO:",
+                                        error
+                                    );
+
+
+                                    alert(
+                                        error.message ||
+                                        "Não foi possível processar o pagamento."
+                                    );
+
+
+                                    reject();
+
+                                }
+
+                            }
+                        );
+
+                    },
+
+
+                    onError: (error) => {
+
+                        console.error(
+                            "ERRO MERCADO PAGO:",
+                            error
+                        );
+
+                    }
+
+                }
+
+            };
+
+
+            window.paymentBrickController =
+                await bricksBuilder.create(
+
+                    "payment",
+
+                    "paymentBrick_container",
+
+                    settings
+
+                );
+
+        }
+
+
+        // ======================================
+        // MENSAGEM DO PAGAMENTO
+        // ======================================
+
+        function getPaymentMessage(status) {
+
+            switch (status) {
+
+                case "pending":
+                    return "Seu pagamento está pendente. Aguarde a confirmação.";
+
+                case "in_process":
+                    return "Seu pagamento está sendo analisado pelo Mercado Pago.";
+
+                case "rejected":
+                    return "O pagamento foi recusado. Você pode tentar novamente.";
+
+                default:
+                    return "O pagamento foi recebido e está sendo processado.";
+
+            }
+
+        }
+
+
+        // ======================================
+        // RESULTADO
+        // ======================================
+
+        function showPaymentResult({
+
+            title,
+            message
+
+        }) {
+
+            paymentBrick.style.display =
+                "none";
+
+            paymentResult.style.display =
+                "block";
+
+
             document.querySelector(
-                "#status-icon"
-            );
+                "#result-title"
+            ).textContent =
+                title;
 
 
-        const statusTitle =
             document.querySelector(
-                "#status-title"
-            );
+                "#result-message"
+            ).textContent =
+                message;
+
+        }
 
 
-        const statusMessage =
-            document.querySelector(
-                "#status-message"
-            );
+        // ======================================
+        // INICIAR
+        // ======================================
 
-
-        statusIcon.textContent =
-            "✅";
-
-
-        statusTitle.textContent =
-            "Pagamento confirmado";
-
-
-        statusMessage.textContent =
-            "Seu aluguel foi confirmado com sucesso.";
+        await loadCheckout();
 
     }
-
-
-    // ==========================================
-    // ESCAPAR HTML
-    // ==========================================
-
-    function escapeHTML(value) {
-
-        return String(value)
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-            .replace(
-                /</g,
-                "&lt;"
-            )
-            .replace(
-                />/g,
-                "&gt;"
-            )
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-            .replace(
-                /'/g,
-                "&#039;"
-            );
-
-    }
-
-
-    // ==========================================
-    // INICIAR
-    // ==========================================
-
-    await loadRental();
-
-});
+);
