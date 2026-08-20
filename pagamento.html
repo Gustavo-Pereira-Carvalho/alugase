@@ -10,7 +10,10 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Pagamento | Alugase</title>
+    <title>
+        Pagamento | Alugase
+    </title>
+
 
     <link
         rel="stylesheet"
@@ -24,7 +27,9 @@
 
 </head>
 
+
 <body>
+
 
 <header>
 
@@ -39,7 +44,9 @@
                     alt="Logo Alugase"
                 >
 
-                <h2>ALUGASE</h2>
+                <h2>
+                    ALUGASE
+                </h2>
 
             </a>
 
@@ -94,232 +101,123 @@
 
 <main class="payment-page">
 
-    <section class="payment-container">
+
+    <!-- ======================================
+         LOADING
+    ======================================= -->
+
+    <section
+        id="loading"
+        class="payment-loading"
+    >
+
+        <div class="loader"></div>
+
+        <p>
+            Carregando pagamento...
+        </p>
+
+    </section>
 
 
-        <!-- ======================================
-             CABEÇALHO
-        ======================================= -->
+    <!-- ======================================
+         ERRO
+    ======================================= -->
 
-        <div class="payment-header">
+    <section
+        id="error-state"
+        class="payment-error"
+        style="display:none;"
+    >
 
-            <span class="payment-icon">
-                💳
-            </span>
-
-            <div>
-
-                <h1>
-                    Pagamento do aluguel
-                </h1>
-
-                <p>
-                    Confira os detalhes antes de realizar o pagamento.
-                </p>
-
-            </div>
-
+        <div class="error-icon">
+            ⚠️
         </div>
 
+        <h1>
+            Não foi possível carregar o pagamento
+        </h1>
 
-        <!-- ======================================
-             LOADING
-        ======================================= -->
+        <p id="error-message">
+            Ocorreu um erro.
+        </p>
 
-        <div
-            id="loading"
-            class="payment-message"
+        <a
+            href="perfil.html"
+            class="btn-primary"
         >
+            Voltar para o perfil
+        </a>
 
-            <div class="loader"></div>
-
-            <p>
-                Carregando informações do aluguel...
-            </p>
-
-        </div>
+    </section>
 
 
-        <!-- ======================================
-             ERRO
-        ======================================= -->
+    <!-- ======================================
+         CHECKOUT
+    ======================================= -->
 
-        <div
-            id="error-state"
-            class="payment-message error-message"
-            style="display:none;"
-        >
+    <section
+        id="checkout"
+        class="checkout-container"
+        style="display:none;"
+    >
 
-            <div class="message-icon">
-                ⚠️
-            </div>
 
-            <h2>
-                Não foi possível carregar o pagamento
-            </h2>
-
-            <p id="error-text">
-                Ocorreu um erro.
-            </p>
+        <div class="checkout-header">
 
             <a
                 href="perfil.html"
-                class="btn-primary"
+                class="back-link"
             >
-                Voltar para o perfil
+                ← Voltar
             </a>
+
+            <h1>
+                Finalizar pagamento
+            </h1>
+
+            <p>
+                Pague com segurança pelo Mercado Pago.
+            </p>
 
         </div>
 
 
-        <!-- ======================================
-             CONTEÚDO
-        ======================================= -->
-
-        <div
-            id="payment-content"
-            style="display:none;"
-        >
-
-
-            <!-- ==================================
-                 PRODUTO
-            =================================== -->
-
-            <section class="payment-card">
-
-                <div class="section-title">
-
-                    <span>📦</span>
-
-                    <h2>
-                        Produto
-                    </h2>
-
-                </div>
-
-
-                <div class="product-summary">
-
-                    <div
-                        id="product-image"
-                        class="product-image"
-                    >
-                        📦
-                    </div>
-
-
-                    <div class="product-info">
-
-                        <h3 id="product-title">
-                            Produto
-                        </h3>
-
-                        <p id="product-city">
-                            📍 —
-                        </p>
-
-                        <p id="owner-name">
-                            Proprietário: —
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- ==================================
-                 PERÍODO
-            =================================== -->
-
-            <section class="payment-card">
-
-                <div class="section-title">
-
-                    <span>📅</span>
-
-                    <h2>
-                        Período do aluguel
-                    </h2>
-
-                </div>
-
-
-                <div class="rental-period">
-
-                    <div class="period-item">
-
-                        <span>
-                            Retirada
-                        </span>
-
-                        <strong id="start-date">
-                            —
-                        </strong>
-
-                    </div>
-
-
-                    <div class="period-arrow">
-                        →
-                    </div>
-
-
-                    <div class="period-item">
-
-                        <span>
-                            Devolução
-                        </span>
-
-                        <strong id="end-date">
-                            —
-                        </strong>
-
-                    </div>
-
-
-                    <div class="period-item">
-
-                        <span>
-                            Duração
-                        </span>
-
-                        <strong id="days">
-                            — dias
-                        </strong>
-
-                    </div>
-
-                </div>
-
-            </section>
+        <div class="checkout-grid">
 
 
             <!-- ==================================
                  RESUMO
             =================================== -->
 
-            <section class="payment-card">
+            <aside class="order-summary">
 
-                <div class="section-title">
 
-                    <span>🧾</span>
+                <div class="summary-card">
+
 
                     <h2>
-                        Resumo do pagamento
+                        Resumo do aluguel
                     </h2>
 
-                </div>
+
+                    <div
+                        id="product-summary"
+                        class="product-summary"
+                    >
+
+                        <!-- JS -->
+
+                    </div>
 
 
-                <div class="price-list">
+                    <div class="summary-divider"></div>
 
-                    <div class="price-row">
+
+                    <div class="summary-row">
 
                         <span>
-                            Aluguel
+                            Diárias
                         </span>
 
                         <strong id="rent-total">
@@ -329,7 +227,7 @@
                     </div>
 
 
-                    <div class="price-row">
+                    <div class="summary-row">
 
                         <span>
                             Entrega
@@ -342,7 +240,7 @@
                     </div>
 
 
-                    <div class="price-row">
+                    <div class="summary-row">
 
                         <span>
                             Caução
@@ -355,10 +253,10 @@
                     </div>
 
 
-                    <div class="price-divider"></div>
+                    <div class="summary-divider"></div>
 
 
-                    <div class="price-row total-row">
+                    <div class="summary-total">
 
                         <span>
                             Total
@@ -370,107 +268,138 @@
 
                     </div>
 
+
+                    <div class="rental-dates">
+
+                        <div>
+
+                            <span>
+                                Retirada
+                            </span>
+
+                            <strong id="start-date">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Devolução
+                            </span>
+
+                            <strong id="end-date">
+                                -
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Período
+                            </span>
+
+                            <strong id="days">
+                                -
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
                 </div>
 
-            </section>
 
+                <div class="security-box">
 
-            <!-- ==================================
-                 STATUS
-            =================================== -->
+                    <span>
+                        🔒
+                    </span>
 
-            <section
-                id="status-card"
-                class="status-card"
-            >
+                    <div>
 
-                <div
-                    id="status-icon"
-                    class="status-icon"
-                >
-                    💳
-                </div>
+                        <strong>
+                            Pagamento seguro
+                        </strong>
 
-                <div>
+                        <p>
+                            Seus dados de pagamento
+                            são processados com
+                            segurança pelo Mercado Pago.
+                        </p>
 
-                    <strong id="status-title">
-                        Pagamento necessário
-                    </strong>
-
-                    <p id="status-message">
-                        Realize o pagamento para confirmar seu aluguel.
-                    </p>
+                    </div>
 
                 </div>
 
-            </section>
+
+            </aside>
 
 
             <!-- ==================================
                  PAGAMENTO
             =================================== -->
 
-            <section
-                id="payment-action"
-                class="payment-action"
-            >
-
-                <button
-                    id="pay-button"
-                    class="btn-pay"
-                    type="button"
-                >
-
-                    <span>
-                        💳
-                    </span>
-
-                    Pagar aluguel
-
-                </button>
+            <section class="payment-card">
 
 
-                <p class="secure-payment">
+                <div class="payment-card-header">
 
-                    🔒
-                    Seus dados são tratados com segurança.
+                    <h2>
+                        Forma de pagamento
+                    </h2>
 
-                </p>
+                    <p>
+                        Escolha como deseja pagar.
+                    </p>
 
-            </section>
-
-
-            <!-- ==================================
-                 PAGAMENTO CONCLUÍDO
-            =================================== -->
-
-            <section
-                id="paid-state"
-                class="paid-state"
-                style="display:none;"
-            >
-
-                <div class="paid-icon">
-                    ✓
                 </div>
 
-                <h2>
-                    Pagamento confirmado!
-                </h2>
 
-                <p>
-                    Seu aluguel foi confirmado com sucesso.
-                </p>
-
-                <a
-                    href="perfil.html"
-                    class="btn-primary"
+                <div
+                    id="paymentBrick_container"
+                    class="payment-brick"
                 >
-                    Ver meus aluguéis
-                </a>
+
+                    <!-- Mercado Pago Brick -->
+
+                </div>
+
+
+                <div
+                    id="payment-result"
+                    class="payment-result"
+                    style="display:none;"
+                >
+
+                    <div class="result-icon">
+                        ✓
+                    </div>
+
+                    <h2 id="result-title">
+                        Pagamento processado
+                    </h2>
+
+                    <p id="result-message">
+                        -
+                    </p>
+
+                    <a
+                        href="perfil.html"
+                        class="btn-primary"
+                    >
+                        Ir para meu perfil
+                    </a>
+
+                </div>
+
 
             </section>
-
 
         </div>
 
@@ -488,7 +417,8 @@
         </h2>
 
         <p>
-            Alugue o que precisa. Monetize o que já possui.
+            Alugue o que precisa.
+            Monetize o que já possui.
         </p>
 
         <p class="copyright">
@@ -500,7 +430,21 @@
 </footer>
 
 
-<script src="./js/pagamento.js"></script>
+<!-- ==========================================
+     MERCADO PAGO SDK
+=========================================== -->
+
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+
+
+<!-- ==========================================
+     ALUGASE
+=========================================== -->
+
+<script
+    src="./js/pagamento.js"
+></script>
+
 
 </body>
 
