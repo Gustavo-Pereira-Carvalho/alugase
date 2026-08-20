@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Pagamento | Alugase</title>
+
+    <link
+        rel="stylesheet"
+        href="./css/global.css"
+    >
+
+    <style>
+
+        /* ==========================================
+           PAGAMENTO
+        ========================================== */
+
+        .payment-page {
+
+            max-width: 1100px;
+
+            margin: 0 auto;
+
+            padding: 50px 20px 80px;
+
+        }
+
+
+        .page-title {
+
+            text-align: center;
+
+            margin-bottom: 40px;
+
+        }
+
+
+        .page-title h1 {
+
+            font-size: 36px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .page-title p {
+
+            color: #666;
+
+        }
+
+
+        .payment-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1fr)
+                380px;
+
+            gap: 30px;
+
+            align-items: start;
+
+        }
+
+
+        /* ==========================================
+           CARDS
+        ========================================== */
+
+        .payment-card {
+
+            background: #fff;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 16px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.05);
+
+        }
+
+
+        .payment-card + .payment-card {
+
+            margin-top: 20px;
+
+        }
+
+
+        .payment-card h2 {
+
+            font-size: 20px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        /* ==========================================
+           PRODUTO
+        ========================================== */
+
+        .product-info {
+
+            display: flex;
+
+            gap: 18px;
+
+            align-items: center;
+
+        }
+
+
+        .product-image {
+
+            width: 90px;
+
+            height: 90px;
+
+            border-radius: 12px;
+
+            background: #f3f4f6;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 40px;
+
+            overflow: hidden;
+
+            flex-shrink: 0;
+
+        }
+
+
+        .product-image img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+        }
+
+
+        .product-info h3 {
+
+            margin-bottom: 7px;
+
+            font-size: 19px;
+
+        }
+
+
+        .product-info p {
+
+            margin: 4px 0;
+
+            color: #666;
+
+        }
+
+
+        /* ==========================================
+           DETALHES
+        ========================================== */
+
+        .details-list {
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 15px;
+
+        }
+
+
+        .detail-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding-bottom: 12px;
+
+            border-bottom: 1px solid #eee;
+
+        }
+
+
+        .detail-row:last-child {
+
+            border-bottom: none;
+
+            padding-bottom: 0;
+
+        }
+
+
+        .detail-row span {
+
+            color: #666;
+
+        }
+
+
+        .detail-row strong {
+
+            text-align: right;
+
+        }
+
+
+        /* ==========================================
+           RESUMO
+        ========================================== */
+
+        .summary-card {
+
+            position: sticky;
+
+            top: 25px;
+
+        }
+
+
+        .summary-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .summary-row span {
+
+            color: #666;
+
+        }
+
+
+        .summary-row strong {
+
+            text-align: right;
+
+        }
+
+
+        .summary-card hr {
+
+            border: 0;
+
+            border-top: 1px solid #eee;
+
+            margin: 20px 0;
+
+        }
+
+
+        .summary-total {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            font-size: 22px;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .summary-total strong {
+
+            color: #16a34a;
+
+        }
+
+
+        /* ==========================================
+           PAGAMENTO
+        ========================================== */
+
+        .payment-method {
+
+            border: 2px solid #16a34a;
+
+            background: #f0fdf4;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .payment-method-header {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+
+        .payment-icon {
+
+            width: 45px;
+
+            height: 45px;
+
+            border-radius: 10px;
+
+            background: #16a34a;
+
+            color: #fff;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 22px;
+
+        }
+
+
+        .payment-method strong {
+
+            display: block;
+
+            margin-bottom: 4px;
+
+        }
+
+
+        .payment-method p {
+
+            margin: 0;
+
+            color: #666;
+
+            font-size: 14px;
+
+        }
+
+
+        .payment-btn {
+
+            width: 100%;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 16px;
+
+            padding: 15px;
+
+        }
+
+
+        .payment-btn:disabled {
+
+            opacity: .6;
+
+            cursor: not-allowed;
+
+        }
+
+
+        .security-info {
+
+            margin-top: 18px;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+            color: #666;
+
+            text-align: center;
+
+        }
+
+
+        /* ==========================================
+           AVISOS
+        ========================================== */
+
+        .alert {
+
+            padding: 15px 18px;
+
+            border-radius: 10px;
+
+            margin-bottom: 20px;
+
+            display: none;
+
+        }
+
+
+        .alert.error {
+
+            background: #fef2f2;
+
+            color: #b91c1c;
+
+            border: 1px solid #fecaca;
+
+        }
+
+
+        .alert.warning {
+
+            background: #fffbeb;
+
+            color: #92400e;
+
+            border: 1px solid #fde68a;
+
+        }
+
+
+        .loading {
+
+            text-align: center;
+
+            padding: 60px 20px;
+
+            color: #666;
+
+        }
+
+
+        /* ==========================================
+           RESPONSIVO
+        ========================================== */
+
+        @media (max-width: 800px) {
+
+            .payment-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .summary-card {
+
+                position: static;
+
+            }
+
+
+            .page-title h1 {
+
+                font-size: 28px;
+
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .payment-page {
+
+                padding: 30px 15px 60px;
+
+            }
+
+
+            .payment-card {
+
+                padding: 20px;
+
+            }
+
+
+            .product-info {
+
+                align-items: flex-start;
+
+            }
+
+
+            .product-image {
+
+                width: 70px;
+
+                height: 70px;
+
+                font-size: 30px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     HEADER
+========================================== -->
+
+<header>
+
+    <nav class="navbar">
+
+        <div class="logo">
+
+            <a href="index.html">
+
+                <img
+                    src="assets/logo.png"
+                    alt="Logo Alugase"
+                >
+
+                <h2>ALUGASE</h2>
+
+            </a>
+
+        </div>
+
+
+        <div class="nav-buttons">
+
+            <a
+                href="perfil.html"
+                class="btn-secondary"
+            >
+                Voltar
+            </a>
+
+        </div>
+
+    </nav>
+
+</header>
+
+
+
+<!-- ==========================================
+     CONTEÚDO
+========================================== -->
+
+<main class="payment-page">
+
+
+    <div class="page-title">
+
+        <h1>Finalizar pagamento</h1>
+
+        <p>
+            Sua solicitação foi aprovada pelo proprietário.
+            Agora confirme o pagamento para garantir o aluguel.
+        </p>
+
+    </div>
+
+
+
+    <!-- LOADING -->
+
+    <div
+        id="loading"
+        class="loading"
+    >
+
+        Carregando informações do aluguel...
+
+    </div>
+
+
+
+    <!-- ERRO -->
+
+    <div
+        id="error-alert"
+        class="alert error"
+    ></div>
+
+
+
+    <!-- AVISO -->
+
+    <div
+        id="warning-alert"
+        class="alert warning"
+    ></div>
+
+
+
+    <div
+        id="payment-content"
+        class="payment-grid"
+        style="display:none;"
+    >
+
+
+        <!-- ======================================
+             ESQUERDA
+        ======================================= -->
+
+        <section>
+
+
+            <!-- PRODUTO -->
+
+            <div class="payment-card">
+
+                <h2>Produto</h2>
+
+
+                <div class="product-info">
+
+                    <div
+                        id="product-image"
+                        class="product-image"
+                    >
+                        📦
+                    </div>
+
+
+                    <div>
+
+                        <h3 id="product-title">
+                            Produto
+                        </h3>
+
+                        <p id="product-category">
+                            Categoria
+                        </p>
+
+                        <p id="product-city">
+                            📍 Cidade
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PERÍODO -->
+
+            <div class="payment-card">
+
+                <h2>Período do aluguel</h2>
+
+
+                <div class="details-list">
+
+
+                    <div class="detail-row">
+
+                        <span>
+                            Retirada
+                        </span>
+
+                        <strong id="start-date">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>
+                            Devolução
+                        </span>
+
+                        <strong id="end-date">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>
+                            Quantidade de dias
+                        </span>
+
+                        <strong id="days">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                    <div class="detail-row">
+
+                        <span>
+                            Forma de recebimento
+                        </span>
+
+                        <strong id="delivery">
+                            -
+                        </strong>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- PAGAMENTO -->
+
+            <div class="payment-card">
+
+                <h2>Forma de pagamento</h2>
+
+
+                <div class="payment-method">
+
+                    <div class="payment-method-header">
+
+                        <div class="payment-icon">
+                            💳
+                        </div>
+
+
+                        <div>
+
+                            <strong>
+                                Pagamento online
+                            </strong>
+
+                            <p>
+                                Você será direcionado para o pagamento seguro.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <p class="security-info">
+
+                    🔒 O pagamento é processado de forma segura.
+                    Os dados do seu cartão não são armazenados pelo Alugase.
+
+                </p>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- ======================================
+             DIREITA — RESUMO
+        ======================================= -->
+
+        <aside
+            class="payment-card summary-card"
+        >
+
+            <h2>
+                Resumo do pagamento
+            </h2>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Diárias
+                </span>
+
+                <strong id="rent-total">
+                    R$ 0,00
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Entrega
+                </span>
+
+                <strong id="delivery-total">
+                    R$ 0,00
+                </strong>
+
+            </div>
+
+
+            <div class="summary-row">
+
+                <span>
+                    Caução
+                </span>
+
+                <strong id="deposit-total">
+                    R$ 0,00
+                </strong>
+
+            </div>
+
+
+            <hr>
+
+
+            <div class="summary-total">
+
+                <span>
+                    Total
+                </span>
+
+                <strong id="grand-total">
+                    R$ 0,00
+                </strong>
+
+            </div>
+
+
+            <button
+                id="pay-button"
+                class="btn-primary payment-btn"
+            >
+                Ir para pagamento
+            </button>
+
+
+            <p class="security-info">
+
+                A caução faz parte do valor apresentado como
+                garantia do aluguel e será tratada conforme
+                as condições da locação.
+
+            </p>
+
+        </aside>
+
+
+    </div>
+
+</main>
+
+
+
+<!-- ==========================================
+     JAVASCRIPT
+========================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
+
+
+        const API =
+            "https://alugase-api.onrender.com/api";
+
+
+        // ======================================
+        // USUÁRIO
+        // ======================================
+
+        const user =
+            JSON.parse(
+                localStorage.getItem(
+                    "alugase_user"
+                )
+            );
+
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        // ======================================
+        // ID DO ALUGUEL
+        // ======================================
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const rentalId =
+            params.get("id");
+
+
+        if (!rentalId) {
+
+            showError(
+                "Aluguel não informado."
+            );
+
+            return;
+
+        }
+
+
+        // ======================================
+        // ELEMENTOS
+        // ======================================
+
+        const loading =
+            document.querySelector(
+                "#loading"
+            );
+
+        const content =
+            document.querySelector(
+                "#payment-content"
+            );
+
+        const payButton =
+            document.querySelector(
+                "#pay-button"
+            );
+
+
+        let rental = null;
+
+
+
+        // ======================================
+        // FORMATAÇÃO
+        // ======================================
+
+        function money(value) {
+
+            return Number(
+                value || 0
+            ).toLocaleString(
+                "pt-BR",
+                {
+                    style: "currency",
+                    currency: "BRL"
+                }
+            );
+
+        }
+
+
+        function formatDate(date) {
+
+            return new Date(date)
+                .toLocaleDateString(
+                    "pt-BR"
+                );
+
+        }
+
+
+
+        // ======================================
+        // ERRO
+        // ======================================
+
+        function showError(message) {
+
+            loading.style.display =
+                "none";
+
+            content.style.display =
+                "none";
+
+
+            const error =
+                document.querySelector(
+                    "#error-alert"
+                );
+
+
+            error.textContent =
+                message;
+
+
+            error.style.display =
+                "block";
+
+        }
+
+
+
+        // ======================================
+        // AVISO
+        // ======================================
+
+        function showWarning(message) {
+
+            const warning =
+                document.querySelector(
+                    "#warning-alert"
+                );
+
+
+            warning.textContent =
+                message;
+
+
+            warning.style.display =
+                "block";
+
+        }
+
+
+
+        // ======================================
+        // CARREGAR ALUGUEL
+        // ======================================
+
+        async function loadRental() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API}/rentals/${rentalId}`
+                    );
+
+
+                if (!response.ok) {
+
+                    let errorMessage =
+                        "Não foi possível carregar o aluguel.";
+
+                    try {
+
+                        const data =
+                            await response.json();
+
+                        if (data.error) {
+
+                            errorMessage =
+                                data.error;
+
+                        }
+
+                    } catch {}
+
+                    throw new Error(
+                        errorMessage
+                    );
+
+                }
+
+
+                rental =
+                    await response.json();
+
+
+                // ==================================
+                // SEGURANÇA
+                // ==================================
+
+                if (
+                    String(
+                        rental.renterId?._id
+                    ) !==
+                    String(
+                        user._id
+                    )
+                ) {
+
+                    throw new Error(
+                        "Você não possui acesso a este pagamento."
+                    );
+
+                }
+
+
+                // ==================================
+                // STATUS
+                // ==================================
+
+                if (
+                    rental.status !==
+                    "awaiting_payment"
+                ) {
+
+                    if (
+                        rental.status ===
+                        "paid"
+                    ) {
+
+                        showWarning(
+                            "Este aluguel já possui o pagamento confirmado."
+                        );
+
+                        payButton.disabled =
+                            true;
+
+                        payButton.textContent =
+                            "Pagamento já confirmado";
+
+                    }
+
+                    else if (
+                        rental.status ===
+                        "pending"
+                    ) {
+
+                        throw new Error(
+                            "O proprietário ainda não aprovou esta solicitação."
+                        );
+
+                    }
+
+                    else if (
+                        rental.status ===
+                        "rejected"
+                    ) {
+
+                        throw new Error(
+                            "Esta solicitação foi recusada pelo proprietário."
+                        );
+
+                    }
+
+                    else if (
+                        rental.status ===
+                        "cancelled"
+                    ) {
+
+                        throw new Error(
+                            "Este aluguel foi cancelado."
+                        );
+
+                    }
+
+                    else {
+
+                        showWarning(
+                            "Este aluguel não está aguardando pagamento."
+                        );
+
+                    }
+
+                }
+
+
+                // ==================================
+                // PRODUTO
+                // ==================================
+
+                const product =
+                    rental.productId;
+
+
+                document.querySelector(
+                    "#product-title"
+                ).textContent =
+                    product?.title ||
+                    "Produto";
+
+
+                document.querySelector(
+                    "#product-category"
+                ).textContent =
+                    product?.category ||
+                    "Categoria";
+
+
+                document.querySelector(
+                    "#product-city"
+                ).textContent =
+                    product?.city
+                        ? `📍 ${product.city}`
+                        : "📍 Local não informado";
+
+
+                const imageElement =
+                    document.querySelector(
+                        "#product-image"
+                    );
+
+
+                if (
+                    product?.image
+                ) {
+
+                    if (
+                        typeof product.image ===
+                        "string" &&
+                        (
+                            product.image.startsWith(
+                                "http"
+                            ) ||
+                            product.image.startsWith(
+                                "data:"
+                            ) ||
+                            product.image.includes(
+                                "/"
+                            )
+                        )
+                    ) {
+
+                        imageElement.innerHTML = `
+                            <img
+                                src="${product.image}"
+                                alt="${product.title || "Produto"}"
+                            >
+                        `;
+
+                    }
+
+                    else {
+
+                        imageElement.textContent =
+                            product.image;
+
+                    }
+
+                }
+
+
+
+                // ==================================
+                // PERÍODO
+                // ==================================
+
+                document.querySelector(
+                    "#start-date"
+                ).textContent =
+                    formatDate(
+                        rental.startDate
+                    );
+
+
+                document.querySelector(
+                    "#end-date"
+                ).textContent =
+                    formatDate(
+                        rental.endDate
+                    );
+
+
+                document.querySelector(
+                    "#days"
+                ).textContent =
+                    `${rental.days} ${
+                        rental.days === 1
+                            ? "dia"
+                            : "dias"
+                    }`;
+
+
+                document.querySelector(
+                    "#delivery"
+                ).textContent =
+                    rental.delivery
+                        ? `Entrega — ${money(
+                            rental.deliveryPrice
+                        )}`
+                        : "Retirada com o proprietário";
+
+
+
+                // ==================================
+                // VALORES
+                // ==================================
+
+                document.querySelector(
+                    "#rent-total"
+                ).textContent =
+                    money(
+                        rental.rentTotal
+                    );
+
+
+                document.querySelector(
+                    "#delivery-total"
+                ).textContent =
+                    money(
+                        rental.deliveryPrice
+                    );
+
+
+                document.querySelector(
+                    "#deposit-total"
+                ).textContent =
+                    money(
+                        rental.deposit
+                    );
+
+
+                document.querySelector(
+                    "#grand-total"
+                ).textContent =
+                    money(
+                        rental.total
+                    );
+
+
+
+                // ==================================
+                // MOSTRAR
+                // ==================================
+
+                loading.style.display =
+                    "none";
+
+                content.style.display =
+                    "grid";
+
+
+            } catch (error) {
+
+                console.error(
+                    "ERRO:",
+                    error
+                );
+
+
+                showError(
+                    error.message
+                );
+
+            }
+
+        }
+
+
+
+        // ======================================
+        // PAGAMENTO
+        // ======================================
+
+        payButton.onclick =
+            async () => {
+
+                if (!rental) {
+
+                    return;
+
+                }
+
+
+                if (
+                    rental.status !==
+                    "awaiting_payment"
+                ) {
+
+                    alert(
+                        "Este aluguel não está disponível para pagamento."
+                    );
+
+                    return;
+
+                }
+
+
+                payButton.disabled =
+                    true;
+
+
+                payButton.textContent =
+                    "Preparando pagamento...";
+
+
+                try {
+
+                    /*
+                     * ==================================
+                     * ATENÇÃO
+                     * ==================================
+                     *
+                     * Esta rota será criada no backend:
+                     *
+                     * POST /api/payments/create
+                     *
+                     * Ela deverá:
+                     *
+                     * 1. Receber o rentalId
+                     * 2. Validar o aluguel
+                     * 3. Criar a cobrança
+                     * 4. Salvar paymentId
+                     * 5. Retornar a URL do pagamento
+                     *
+                     * ==================================
+                     */
+
+
+                    const response =
+                        await fetch(
+                            `${API}/payments/create`,
+                            {
+
+                                method: "POST",
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/json"
+
+                                },
+
+                                body:
+                                    JSON.stringify({
+
+                                        rentalId:
+                                            rental._id,
+
+                                        userId:
+                                            user._id
+
+                                    })
+
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.error ||
+                            "Não foi possível iniciar o pagamento."
+                        );
+
+                    }
+
+
+                    /*
+                     * O backend deverá retornar:
+                     *
+                     * {
+                     *     checkoutUrl: "..."
+                     * }
+                     */
+
+
+                    if (
+                        !data.checkoutUrl
+                    ) {
+
+                        throw new Error(
+                            "O servidor não retornou o endereço do pagamento."
+                        );
+
+                    }
+
+
+                    window.location.href =
+                        data.checkoutUrl;
+
+
+                } catch (error) {
+
+                    console.error(
+                        "ERRO NO PAGAMENTO:",
+                        error
+                    );
+
+
+                    alert(
+                        error.message
+                    );
+
+
+                    payButton.disabled =
+                        false;
+
+
+                    payButton.textContent =
+                        "Ir para pagamento";
+
+                }
+
+            };
+
+
+
+        // ======================================
+        // INICIAR
+        // ======================================
+
+        await loadRental();
+
+    }
+
+);
+
+</script>
+
+
+</body>
+
+</html>
