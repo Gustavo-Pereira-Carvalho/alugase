@@ -423,70 +423,91 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-    // ==========================================
-    // CPF
-    // ==========================================
+  // ==========================================
+// CPF
+// ==========================================
 
-    function validateCPF(number) {
+function validateCPF(cpfValue) {
 
-        number = number.replace(/\D/g, "");
+    const cpf = cpfValue.replace(/\D/g, "");
 
-        if (number.length !== 11) return false;
-        if (/^(\d)\1+$/.test(number)) return false;
+    if (cpf.length !== 11) return false;
+    if (/^(\d)\1+$/.test(cpf)) return false;
 
-        let sum = 0;
+    let sum = 0;
 
-        for (let i = 0; i < 9; i++) {
-            sum += Number(number[i]) * (10 - i);
-        }
+    for (let i = 0; i < 9; i++) {
+        sum += Number(cpf[i]) * (10 - i);
+    }
 
-        let digit = (sum * 10) % 11;
-        if (digit === 10) digit = 0;
+    let digit = (sum * 10) % 11;
+    if (digit === 10) digit = 0;
 
-        if (digit !== Number(number[9])) return false;
+    if (digit !== Number(cpf[9])) return false;
 
-        sum = 0;
+    sum = 0;
 
-        for (let i = 0; i < 10; i++) {
-            sum += Number(number[i]) * (11 - i);
-        }
+    for (let i = 0; i < 10; i++) {
+        sum += Number(cpf[i]) * (11 - i);
+    }
 
-        digit = (sum * 10) % 11;
-        if (digit === 10) digit = 0;
+    digit = (sum * 10) % 11;
+    if (digit === 10) digit = 0;
 
-        return digit === Number(number[10]);
+    return digit === Number(cpf[10]);
+
+}
+
+cpf.addEventListener("input", () => {
+
+    let value = cpf.value.replace(/\D/g, "").slice(0, 11);
+
+    value = value.replace(/^(\d{3})(\d)/, "$1.$2");
+    value = value.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+    value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
+
+    cpf.value = value;
+
+    if (value.length < 14) {
+        cpfStatus.textContent = "";
+        cpfStatus.className = "";
+    }
+
+});
+
+cpf.addEventListener("blur", () => {
+
+    if (!cpf.value) return;
+
+    if (validateCPF(cpf.value)) {
+
+        cpfStatus.textContent = "✓ CPF válido";
+        cpfStatus.className = "valid";
+
+    } else {
+
+        cpfStatus.textContent = "✕ CPF inválido";
+        cpfStatus.className = "invalid";
 
     }
 
-    cpf.addEventListener("input", () => {
+});
 
-        let value = cpf.value
-            .replace(/\D/g, "")
-            .slice(0, 11);
+    // ==========================================
+// RG
+// ==========================================
 
-        value = value.replace(/(\d{3})(\d)/, "$1.$2");
-        value = value.replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
-        value = value.replace(/(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
+rg.addEventListener("input", () => {
 
-        cpf.value = value;
+    let value = rg.value.replace(/\D/g, "").slice(0, 9);
 
-    });
+    value = value.replace(/^(\d{2})(\d)/, "$1.$2");
+    value = value.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
+    value = value.replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
 
-    cpf.addEventListener("blur", () => {
+    rg.value = value;
 
-        if (validateCPF(cpf.value)) {
-
-            cpfStatus.textContent = "CPF válido";
-            cpfStatus.className = "valid";
-
-        } else {
-
-            cpfStatus.textContent = "CPF inválido";
-            cpfStatus.className = "invalid";
-
-        }
-
-    });
+});
 
     // ==========================================
     // CEP
@@ -612,3 +633,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadRentals();
 
 });
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+const logoutBtn = document.getElementById("logout");
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener("click", () => {
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("alugase_user");
+
+        window.location.replace("login.html");
+
+    });
+
+}
