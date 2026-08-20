@@ -1,7 +1,3 @@
-// ==========================================
-// ALUGASE — CADASTRO (API ONLINE)
-// ==========================================
-
 document.addEventListener("DOMContentLoaded", () => {
 
     const API = "https://alugase-api.onrender.com/api/users";
@@ -12,39 +8,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.querySelector("#email");
     const phone = document.querySelector("#phone");
     const city = document.querySelector("#city");
-
     const password = document.querySelector("#password");
-    const confirmPassword = document.querySelector("#confirmPassword");
-
+    const confirm = document.querySelector("#confirmPassword");
     const terms = document.querySelector("#terms");
 
-    const togglePassword = document.querySelector("#toggle-password");
-    const toggleConfirm = document.querySelector("#toggle-confirm");
-
-    // ==========================================
-    // MOSTRAR / ESCONDER SENHA
-    // ==========================================
-
-    function toggleVisibility(input) {
-
+    const toggle = (input) => {
         input.type =
             input.type === "password"
                 ? "text"
                 : "password";
+    };
 
-    }
+    document
+        .querySelector("#toggle-password")
+        ?.addEventListener("click", () => toggle(password));
 
-    togglePassword?.addEventListener("click", () => {
-        toggleVisibility(password);
-    });
-
-    toggleConfirm?.addEventListener("click", () => {
-        toggleVisibility(confirmPassword);
-    });
-
-    // ==========================================
-    // MÁSCARA TELEFONE
-    // ==========================================
+    document
+        .querySelector("#toggle-confirm")
+        ?.addEventListener("click", () => toggle(confirm));
 
     phone.addEventListener("input", () => {
 
@@ -70,51 +51,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
-    // ==========================================
-    // CADASTRO
-    // ==========================================
-
     form.addEventListener("submit", async (e) => {
 
         e.preventDefault();
 
-        if (name.value.trim().length < 3) {
+        if (password.value !== confirm.value)
+            return alert("As senhas não coincidem.");
 
-            alert("Digite seu nome completo.");
-            return;
+        if (password.value.length < 8)
+            return alert("A senha precisa ter 8 caracteres.");
 
-        }
-
-        if (password.value.length < 8) {
-
-            alert("A senha deve possuir pelo menos 8 caracteres.");
-            return;
-
-        }
-
-        if (password.value !== confirmPassword.value) {
-
-            alert("As senhas não coincidem.");
-            return;
-
-        }
-
-        if (!terms.checked) {
-
-            alert("Aceite os Termos de Uso.");
-            return;
-
-        }
-
-        const newUser = {
-
-            name: name.value.trim(),
-            email: email.value.trim().toLowerCase(),
-            phone: phone.value.trim(),
-            city: city.value.trim(),
-            password: password.value
-
-        };
+        if (!terms.checked)
+            return alert("Aceite os Termos de Uso.");
 
         try {
 
@@ -126,27 +74,37 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Content-Type": "application/json"
                 },
 
-                body: JSON.stringify(newUser)
+                body: JSON.stringify({
+
+                    name: name.value.trim(),
+                    email: email.value.trim().toLowerCase(),
+                    phone: phone.value.trim(),
+                    city: city.value.trim(),
+                    password: password.value
+
+                })
 
             });
 
             const data = await response.json();
 
-            if (!response.ok) {
+            if (!response.ok)
+                throw new Error(data.error);
 
-                throw new Error(
-                    data.error || "Erro ao criar conta."
-                );
+            localStorage.setItem("token", data.token);
 
-            }
+            localStorage.setItem(
+                "alugase_user",
+                JSON.stringify(data.user)
+            );
 
             alert("Conta criada com sucesso!");
 
-            window.location.href = "login.html";
+            window.location.href = "perfil.html";
 
-        } catch (error) {
+        } catch (err) {
 
-            alert(error.message);
+            alert(err.message);
 
         }
 
