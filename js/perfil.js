@@ -1,4 +1,3 @@
-```javascript
 // ==========================================
 // ALUGASE — PERFIL (JWT)
 // ==========================================
@@ -1281,4 +1280,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadRentals();
 
 });
-```
