@@ -20,9 +20,7 @@ document.addEventListener(
 
         const user =
             JSON.parse(
-                localStorage.getItem(
-                    "alugase_user"
-                )
+                localStorage.getItem("alugase_user")
             );
 
 
@@ -41,7 +39,7 @@ document.addEventListener(
 
 
         // ==========================================
-        // PARÂMETROS
+        // URL
         // ==========================================
 
         const params =
@@ -221,9 +219,11 @@ document.addEventListener(
         let calendarDate =
             new Date();
 
-        let selectingStart = true;
+        let selectingStart =
+            true;
 
-        let unavailableDates = [];
+        let unavailableDates =
+            [];
 
 
         // ==========================================
@@ -306,7 +306,70 @@ document.addEventListener(
 
 
         // ==========================================
-        // INDISPONÍVEL
+        // ADICIONAR PERÍODO À LISTA
+        // ==========================================
+
+        function addDateRange(
+            startString,
+            endString
+        ) {
+
+            if (
+                !startString ||
+                !endString
+            ) {
+
+                return;
+
+            }
+
+
+            const current =
+                new Date(
+                    `${startString}T00:00:00`
+                );
+
+
+            const finish =
+                new Date(
+                    `${endString}T00:00:00`
+                );
+
+
+            while (
+                current <= finish
+            ) {
+
+                const dateString =
+                    dateToString(
+                        current
+                    );
+
+
+                if (
+                    !unavailableDates.includes(
+                        dateString
+                    )
+                ) {
+
+                    unavailableDates.push(
+                        dateString
+                    );
+
+                }
+
+
+                current.setDate(
+                    current.getDate() + 1
+                );
+
+            }
+
+        }
+
+
+        // ==========================================
+        // VERIFICAR INDISPONÍVEL
         // ==========================================
 
         function isUnavailable(
@@ -321,7 +384,131 @@ document.addEventListener(
 
 
         // ==========================================
-        // INTERVALO INDISPONÍVEL
+        // BUSCAR DATAS ALUGADAS
+        // ==========================================
+
+        async function loadUnavailableDates() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API}/rentals/product/${productId}/unavailable`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Não foi possível carregar as datas ocupadas."
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                unavailableDates =
+                    [];
+
+
+                const rentals =
+                    Array.isArray(
+                        data.rentals
+                    )
+                        ? data.rentals
+                        : [];
+
+
+                rentals.forEach(
+                    rental => {
+
+                        if (
+                            !rental.startDate ||
+                            !rental.endDate
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        // ==================================
+                        // CONVERTER DATA DO MONGODB
+                        // ==================================
+
+                        const start =
+                            new Date(
+                                rental.startDate
+                            );
+
+
+                        const end =
+                            new Date(
+                                rental.endDate
+                            );
+
+
+                        if (
+                            Number.isNaN(
+                                start.getTime()
+                            ) ||
+                            Number.isNaN(
+                                end.getTime()
+                            )
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        const startString =
+                            dateToString(
+                                start
+                            );
+
+
+                        const endString =
+                            dateToString(
+                                end
+                            );
+
+
+                        addDateRange(
+                            startString,
+                            endString
+                        );
+
+                    }
+                );
+
+
+                console.log(
+                    "Datas indisponíveis:",
+                    unavailableDates
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Erro ao carregar datas indisponíveis:",
+                    error
+                );
+
+                unavailableDates =
+                    [];
+
+            }
+
+        }
+
+
+        // ==========================================
+        // INTERVALO CONTÉM INDISPONÍVEL
         // ==========================================
 
         function rangeContainsUnavailable(
@@ -329,7 +516,10 @@ document.addEventListener(
             end
         ) {
 
-            if (!start || !end) {
+            if (
+                !start ||
+                !end
+            ) {
 
                 return false;
 
@@ -382,62 +572,6 @@ document.addEventListener(
 
 
         // ==========================================
-        // CARREGAR DATAS ALUGADAS
-        // ==========================================
-
-        async function loadUnavailableDates() {
-
-            try {
-
-                const response =
-                    await fetch(
-                        `${API}/rentals/product/${productId}/unavailable-dates`
-                    );
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Não foi possível carregar as datas alugadas."
-                    );
-
-                }
-
-
-                const data =
-                    await response.json();
-
-
-                unavailableDates =
-                    Array.isArray(
-                        data.unavailableDates
-                    )
-                        ? data.unavailableDates
-                        : [];
-
-
-                console.log(
-                    "Datas indisponíveis:",
-                    unavailableDates
-                );
-
-
-            } catch (error) {
-
-                console.error(
-                    "Erro ao carregar datas indisponíveis:",
-                    error
-                );
-
-
-                unavailableDates = [];
-
-            }
-
-        }
-
-
-        // ==========================================
         // CARREGAR PRODUTO
         // ==========================================
 
@@ -467,9 +601,9 @@ document.addEventListener(
                 fillProduct();
 
 
-                // IMPORTANTE:
-                // primeiro buscamos os aluguéis
-                // e só depois desenhamos o calendário.
+                // ==================================
+                // PRIMEIRO CARREGA DATAS OCUPADAS
+                // ==================================
 
                 await loadUnavailableDates();
 
@@ -547,41 +681,47 @@ document.addEventListener(
             // IMAGEM
             // ======================================
 
-            if (
-                productImage &&
-                Array.isArray(
-                    product.images
-                ) &&
-                product.images.length > 0
-            ) {
+            if (productImage) {
 
-                productImage.innerHTML = `
+                if (
+                    Array.isArray(
+                        product.images
+                    ) &&
+                    product.images.length > 0
+                ) {
 
-                    <img
-                        src="${product.images[0]}"
-                        alt="${product.title || "Produto"}"
-                    >
+                    productImage.innerHTML = `
 
-                `;
+                        <img
+                            src="${product.images[0]}"
+                            alt="${product.title || "Produto"}"
+                        >
 
-            } else if (
-                productImage &&
-                product.image
-            ) {
+                    `;
 
-                productImage.innerHTML = `
+                }
 
-                    <img
-                        src="${product.image}"
-                        alt="${product.title || "Produto"}"
-                    >
+                else if (
+                    product.image
+                ) {
 
-                `;
+                    productImage.innerHTML = `
 
-            } else if (productImage) {
+                        <img
+                            src="${product.image}"
+                            alt="${product.title || "Produto"}"
+                        >
 
-                productImage.textContent =
-                    "📦";
+                    `;
+
+                }
+
+                else {
+
+                    productImage.textContent =
+                        "📦";
+
+                }
 
             }
 
@@ -621,7 +761,9 @@ document.addEventListener(
 
                 }
 
-            } else {
+            }
+
+            else {
 
                 if (deliveryText) {
 
@@ -690,9 +832,7 @@ document.addEventListener(
             let start =
                 selectedStart &&
                 selectedStart >= todayString &&
-                !isUnavailable(
-                    selectedStart
-                )
+                !isUnavailable(selectedStart)
                     ? selectedStart
                     : todayString;
 
@@ -705,33 +845,7 @@ document.addEventListener(
                     selectedEnd
                 )
                     ? selectedEnd
-                    : start;
-
-
-            // Se hoje estiver indisponível,
-            // encontrar o próximo dia disponível.
-
-            if (
-                isUnavailable(start)
-            ) {
-
-                const nextAvailable =
-                    findNextAvailableDate(
-                        start
-                    );
-
-
-                if (nextAvailable) {
-
-                    start =
-                        nextAvailable;
-
-                    end =
-                        nextAvailable;
-
-                }
-
-            }
+                    : "";
 
 
             startDate.value =
@@ -768,7 +882,11 @@ document.addEventListener(
                 deliveryDelivery.checked =
                     true;
 
-            } else if (deliveryPickup) {
+            }
+
+            else if (
+                deliveryPickup
+            ) {
 
                 deliveryPickup.checked =
                     true;
@@ -777,7 +895,7 @@ document.addEventListener(
 
 
             // ======================================
-            // DATAS
+            // EXIBIÇÃO
             // ======================================
 
             if (selectedStartDisplay) {
@@ -793,15 +911,15 @@ document.addEventListener(
             if (selectedEndDisplay) {
 
                 selectedEndDisplay.textContent =
-                    formatDateBR(
-                        end
-                    );
+                    end
+                        ? formatDateBR(end)
+                        : "Selecione a devolução";
 
             }
 
 
             selectingStart =
-                true;
+                !end;
 
 
             calendarDate =
@@ -811,55 +929,6 @@ document.addEventListener(
 
 
             renderCalendar();
-
-        }
-
-
-        // ==========================================
-        // PRÓXIMA DATA DISPONÍVEL
-        // ==========================================
-
-        function findNextAvailableDate(
-            initialDate
-        ) {
-
-            const date =
-                new Date(
-                    `${initialDate}T00:00:00`
-                );
-
-
-            for (
-                let i = 0;
-                i < 365;
-                i++
-            ) {
-
-                const string =
-                    dateToString(
-                        date
-                    );
-
-
-                if (
-                    !isUnavailable(
-                        string
-                    )
-                ) {
-
-                    return string;
-
-                }
-
-
-                date.setDate(
-                    date.getDate() + 1
-                );
-
-            }
-
-
-            return null;
 
         }
 
@@ -1014,15 +1083,14 @@ document.addEventListener(
                 // PASSADO
                 // ==================================
 
-                const isPast =
+                if (
                     dateString <
-                    today;
-
-
-                if (isPast) {
+                    today
+                ) {
 
                     button.disabled =
                         true;
+
 
                     button.classList.add(
                         "unavailable"
@@ -1035,24 +1103,19 @@ document.addEventListener(
                 // ALUGADO
                 // ==================================
 
-                const rented =
+                if (
                     isUnavailable(
                         dateString
-                    );
-
-
-                if (rented) {
+                    )
+                ) {
 
                     button.disabled =
                         true;
 
-                    button.classList.add(
-                        "unavailable",
-                        "rented"
-                    );
 
-                    button.title =
-                        "Este dia já está alugado.";
+                    button.classList.add(
+                        "unavailable"
+                    );
 
                 }
 
@@ -1153,7 +1216,7 @@ document.addEventListener(
         ) {
 
             // ======================================
-            // NÃO PERMITIR DATA ALUGADA
+            // NÃO PERMITIR ALUGADO
             // ======================================
 
             if (
@@ -1163,7 +1226,7 @@ document.addEventListener(
             ) {
 
                 alert(
-                    "Este dia já está alugado. Escolha outra data."
+                    "Esta data já está alugada."
                 );
 
                 return;
@@ -1244,7 +1307,7 @@ document.addEventListener(
 
 
             // ======================================
-            // INTERVALO BLOQUEADO
+            // PERÍODO INDISPONÍVEL
             // ======================================
 
             if (
@@ -1303,36 +1366,9 @@ document.addEventListener(
                 "click",
                 () => {
 
-                    const currentMonth =
-                        new Date(
-                            new Date().getFullYear(),
-                            new Date().getMonth(),
-                            1
-                        );
-
-
-                    const previousMonth =
-                        new Date(
-                            calendarDate.getFullYear(),
-                            calendarDate.getMonth() - 1,
-                            1
-                        );
-
-
-                    // Não voltar antes do mês atual.
-
-                    if (
-                        previousMonth <
-                        currentMonth
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    calendarDate =
-                        previousMonth;
+                    calendarDate.setMonth(
+                        calendarDate.getMonth() - 1
+                    );
 
 
                     renderCalendar();
@@ -1367,7 +1403,7 @@ document.addEventListener(
 
 
         // ==========================================
-        // DIAS
+        // CALCULAR DIAS
         // ==========================================
 
         function getDays() {
@@ -1527,9 +1563,13 @@ document.addEventListener(
             return {
 
                 days,
+
                 rent,
+
                 delivery,
+
                 deposit,
+
                 total
 
             };
@@ -1649,10 +1689,8 @@ document.addEventListener(
                                         "POST",
 
                                     headers: {
-
                                         "Content-Type":
                                             "application/json"
-
                                     },
 
                                     body:
@@ -1671,17 +1709,8 @@ document.addEventListener(
                                             endDate:
                                                 endDate.value,
 
-                                            days:
-                                                values.days,
-
                                             delivery:
                                                 values.delivery > 0,
-
-                                            deliveryPrice:
-                                                values.delivery,
-
-                                            total:
-                                                values.total,
 
                                             notes:
                                                 notes
@@ -1698,7 +1727,9 @@ document.addEventListener(
                             await rentalResponse.json();
 
 
-                        if (!rentalResponse.ok) {
+                        if (
+                            !rentalResponse.ok
+                        ) {
 
                             throw new Error(
                                 rentalData.error ||
@@ -1709,24 +1740,32 @@ document.addEventListener(
 
 
                         // ==================================
-                        // IMPORTANTE
+                        // CORREÇÃO IMPORTANTE
                         // ==================================
                         //
                         // A API retorna:
-                        // { message, rental, notification }
                         //
-                        // Portanto precisamos pegar
-                        // rentalData.rental.
+                        // {
+                        //   message,
+                        //   rental,
+                        //   notification
+                        // }
+                        //
+                        // Então precisamos pegar:
+                        // rentalData.rental
                         //
 
                         const rental =
                             rentalData.rental;
 
 
-                        if (!rental) {
+                        if (
+                            !rental ||
+                            !rental._id
+                        ) {
 
                             throw new Error(
-                                "O aluguel foi criado, mas a resposta da API está inválida."
+                                "O aluguel foi criado, mas a API não retornou o ID."
                             );
 
                         }
@@ -1739,9 +1778,7 @@ document.addEventListener(
                         const ownerId =
                             typeof product.ownerId ===
                             "object"
-
                                 ? product.ownerId._id
-
                                 : product.ownerId;
 
 
@@ -1754,10 +1791,8 @@ document.addEventListener(
                                         "POST",
 
                                     headers: {
-
                                         "Content-Type":
                                             "application/json"
-
                                     },
 
                                     body:
@@ -1789,7 +1824,9 @@ document.addEventListener(
                             await chatResponse.json();
 
 
-                        if (!chatResponse.ok) {
+                        if (
+                            !chatResponse.ok
+                        ) {
 
                             console.warn(
                                 "Aluguel criado, mas o chat não foi criado.",
@@ -1804,7 +1841,6 @@ document.addEventListener(
 
                             window.location.href =
                                 "solicitacoes.html";
-
 
                             return;
 
