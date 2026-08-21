@@ -4,9 +4,14 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const API = "https://alugase-api.onrender.com/api";
+    const API =
+        "https://alugase-api.onrender.com/api";
 
-    const token = localStorage.getItem("token");
+    const NOTIFICATIONS_API =
+        "https://alugase-api.onrender.com/api/notifications";
+
+    const token =
+        localStorage.getItem("token");
 
 
     // ==========================================
@@ -31,22 +36,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
-        const response = await fetch(
-            `${API}/users/me`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
+        const response =
+            await fetch(
+                `${API}/users/me`,
+                {
+                    headers: {
+                        Authorization:
+                            `Bearer ${token}`
+                    }
                 }
-            }
-        );
+            );
 
 
-        if (!response.ok) {
-            throw new Error("Sessão inválida");
-        }
+        if (!response.ok)
+            throw new Error();
 
 
-        user = await response.json();
+        user =
+            await response.json();
 
 
         localStorage.setItem(
@@ -55,23 +62,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
 
-    } catch (err) {
+    } catch {
 
-        console.log("Erro ao carregar usuário:", err);
+        localStorage.clear();
 
-
-        localStorage.removeItem("token");
-        localStorage.removeItem("alugase_user");
-
-
-        location.href = "login.html";
+        location.href =
+            "login.html";
 
         return;
 
     }
 
 
-    const userId = user._id || user.id;
+    const userId =
+        user._id || user.id;
 
 
     // ==========================================
@@ -82,68 +86,209 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("avatar");
 
     const profileImageInput =
-        document.getElementById("profile-image-input");
-
+        document.getElementById(
+            "profile-image-input"
+        );
 
     const userName =
-        document.getElementById("user-name");
+        document.getElementById(
+            "user-name"
+        );
 
     const userLocation =
-        document.getElementById("user-location");
-
+        document.getElementById(
+            "user-location"
+        );
 
     const verifiedBadge =
-        document.getElementById("verified-badge");
+        document.getElementById(
+            "verified-badge"
+        );
 
     const identityStatus =
-        document.getElementById("identity-status");
+        document.getElementById(
+            "identity-status"
+        );
 
     const cnhStatus =
-        document.getElementById("cnh-status");
-
+        document.getElementById(
+            "cnh-status"
+        );
 
     const adsList =
-        document.getElementById("ads-list");
+        document.getElementById(
+            "ads-list"
+        );
 
     const rentalsList =
-        document.getElementById("rentals-list");
+        document.getElementById(
+            "rentals-list"
+        );
 
+    const notificationButton =
+        document.getElementById(
+            "notification-button"
+        );
 
     const notificationBadge =
-        document.getElementById("notification-badge");
-
+        document.getElementById(
+            "notification-badge"
+        );
 
     const cpf =
-        document.getElementById("cpf");
+        document.getElementById(
+            "cpf"
+        );
 
     const rg =
-        document.getElementById("rg");
+        document.getElementById(
+            "rg"
+        );
 
     const cnh =
-        document.getElementById("cnh");
-
+        document.getElementById(
+            "cnh"
+        );
 
     const cep =
-        document.getElementById("cep");
+        document.getElementById(
+            "cep"
+        );
 
     const number =
-        document.getElementById("number");
+        document.getElementById(
+            "number"
+        );
 
     const street =
-        document.getElementById("street");
+        document.getElementById(
+            "street"
+        );
 
     const district =
-        document.getElementById("district");
+        document.getElementById(
+            "district"
+        );
 
     const city =
-        document.getElementById("city");
+        document.getElementById(
+            "city"
+        );
 
     const state =
-        document.getElementById("state");
-
+        document.getElementById(
+            "state"
+        );
 
     const cpfStatus =
-        document.getElementById("cpf-status");
+        document.getElementById(
+            "cpf-status"
+        );
+
+
+    // ==========================================
+    // NOTIFICAÇÕES
+    // ==========================================
+
+    async function updateNotificationCount() {
+
+        if (
+            !notificationButton ||
+            !notificationBadge ||
+            !userId
+        ) {
+
+            return;
+
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${NOTIFICATIONS_API}/user/${userId}/unread-count`
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Erro ao buscar contador de notificações."
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            const count =
+                Number(data.count) || 0;
+
+
+            if (count > 0) {
+
+                notificationBadge.textContent =
+                    count > 99
+                        ? "99+"
+                        : count;
+
+                notificationBadge.style.display =
+                    "flex";
+
+            } else {
+
+                notificationBadge.textContent =
+                    "0";
+
+                notificationBadge.style.display =
+                    "none";
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "ERRO AO ATUALIZAR NOTIFICAÇÕES:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // CLIQUE NAS NOTIFICAÇÕES
+    // ==========================================
+
+    if (notificationButton) {
+
+        notificationButton.addEventListener(
+            "click",
+            () => {
+
+                window.location.href =
+                    "notificacoes.html";
+
+            }
+        );
+
+    }
+
+
+    // Buscar imediatamente
+    await updateNotificationCount();
+
+
+    // Atualizar a cada 5 segundos
+    setInterval(
+        updateNotificationCount,
+        5000
+    );
 
 
     // ==========================================
@@ -152,9 +297,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function initials(name) {
 
-        if (!name) {
+        if (!name)
             return "U";
-        }
 
 
         return name
@@ -174,9 +318,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function renderAvatar() {
 
-        if (!avatar) {
+        if (!avatar)
             return;
-        }
 
 
         avatar.innerHTML = "";
@@ -188,10 +331,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 document.createElement("img");
 
 
-            img.src = user.profileImage;
+            img.src =
+                user.profileImage;
+
 
             img.alt =
-                user.name || "Foto de perfil";
+                user.name || "Usuário";
 
 
             avatar.appendChild(img);
@@ -222,9 +367,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    const year = user.createdAt
-        ? new Date(user.createdAt).getFullYear()
-        : new Date().getFullYear();
+    const year =
+        user.createdAt
+            ? new Date(
+                user.createdAt
+            ).getFullYear()
+            : 2026;
 
 
     if (userLocation) {
@@ -234,10 +382,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-
-    // ==========================================
-    // VERIFICAÇÃO
-    // ==========================================
 
     if (user.identityVerified) {
 
@@ -272,35 +416,48 @@ document.addEventListener("DOMContentLoaded", async () => {
     // PREENCHER FORMULÁRIO
     // ==========================================
 
-    cpf.value =
-        user.cpf || "";
+    if (cpf)
+        cpf.value = user.cpf || "";
 
-    rg.value =
-        user.rg || "";
 
-    cnh.value =
-        user.cnh || "";
+    if (rg)
+        rg.value = user.rg || "";
+
+
+    if (cnh)
+        cnh.value = user.cnh || "";
 
 
     if (user.address) {
 
-        cep.value =
-            user.address.cep || "";
+        if (cep)
+            cep.value =
+                user.address.cep || "";
 
-        number.value =
-            user.address.number || "";
 
-        street.value =
-            user.address.street || "";
+        if (number)
+            number.value =
+                user.address.number || "";
 
-        district.value =
-            user.address.district || "";
 
-        city.value =
-            user.address.city || "";
+        if (street)
+            street.value =
+                user.address.street || "";
 
-        state.value =
-            user.address.state || "";
+
+        if (district)
+            district.value =
+                user.address.district || "";
+
+
+        if (city)
+            city.value =
+                user.address.city || "";
+
+
+        if (state)
+            state.value =
+                user.address.state || "";
 
     }
 
@@ -309,89 +466,89 @@ document.addEventListener("DOMContentLoaded", async () => {
     // FOTO DE PERFIL
     // ==========================================
 
-    profileImageInput.addEventListener(
-        "change",
-        async e => {
+    if (profileImageInput) {
 
-            const file =
-                e.target.files[0];
+        profileImageInput.addEventListener(
+            "change",
+            async e => {
 
-
-            if (!file) {
-                return;
-            }
+                const file =
+                    e.target.files[0];
 
 
-            const form =
-                new FormData();
+                if (!file)
+                    return;
 
 
-            form.append(
-                "image",
-                file
-            );
+                const form =
+                    new FormData();
 
 
-            try {
+                form.append(
+                    "image",
+                    file
+                );
 
-                const response =
-                    await fetch(
-                        `${API}/users/profile-image/${userId}`,
-                        {
-                            method: "PUT",
 
-                            headers: {
-                                Authorization:
-                                    `Bearer ${token}`
-                            },
+                try {
 
-                            body: form
-                        }
+                    const response =
+                        await fetch(
+                            `${API}/users/profile-image/${userId}`,
+                            {
+                                method: "PUT",
+
+                                headers: {
+                                    Authorization:
+                                        `Bearer ${token}`
+                                },
+
+                                body: form
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok)
+                        throw new Error(
+                            data.error ||
+                            "Erro ao atualizar foto."
+                        );
+
+
+                    user =
+                        data;
+
+
+                    localStorage.setItem(
+                        "alugase_user",
+                        JSON.stringify(user)
                     );
 
 
-                const data =
-                    await response.json();
+                    renderAvatar();
 
 
-                if (!response.ok) {
+                    alert(
+                        "Foto atualizada!"
+                    );
 
-                    throw new Error(
-                        data.error ||
-                        "Erro ao atualizar foto."
+
+                } catch (err) {
+
+                    alert(
+                        err.message
                     );
 
                 }
 
-
-                user = data;
-
-
-                localStorage.setItem(
-                    "alugase_user",
-                    JSON.stringify(user)
-                );
-
-
-                renderAvatar();
-
-
-                alert(
-                    "Foto atualizada!"
-                );
-
-
-            } catch (err) {
-
-                alert(
-                    err.message ||
-                    "Erro ao atualizar foto."
-                );
-
             }
+        );
 
-        }
-    );
+    }
 
 
     // ==========================================
@@ -402,43 +559,46 @@ document.addEventListener("DOMContentLoaded", async () => {
         .querySelectorAll(".tab")
         .forEach(tab => {
 
-            tab.addEventListener(
-                "click",
-                () => {
+            tab.onclick = () => {
 
-                    document
-                        .querySelectorAll(".tab")
-                        .forEach(t =>
-                            t.classList.remove("active")
-                        );
-
-
-                    document
-                        .querySelectorAll(".content")
-                        .forEach(c =>
-                            c.classList.remove("active")
-                        );
-
-
-                    tab.classList.add("active");
-
-
-                    const content =
-                        document.getElementById(
-                            tab.dataset.tab
-                        );
-
-
-                    if (content) {
-
-                        content.classList.add(
+                document
+                    .querySelectorAll(".tab")
+                    .forEach(t =>
+                        t.classList.remove(
                             "active"
-                        );
+                        )
+                    );
 
-                    }
+
+                document
+                    .querySelectorAll(".content")
+                    .forEach(c =>
+                        c.classList.remove(
+                            "active"
+                        )
+                    );
+
+
+                tab.classList.add(
+                    "active"
+                );
+
+
+                const target =
+                    document.getElementById(
+                        tab.dataset.tab
+                    );
+
+
+                if (target) {
+
+                    target.classList.add(
+                        "active"
+                    );
 
                 }
-            );
+
+            };
 
         });
 
@@ -457,11 +617,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
 
 
-            if (!response.ok) {
-                throw new Error(
-                    "Erro ao carregar anúncios."
-                );
-            }
+            if (!response.ok)
+                throw new Error();
 
 
             const products =
@@ -477,11 +634,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             adsList.innerHTML = "";
 
 
-            if (products.length === 0) {
+            if (!products.length) {
 
                 document.getElementById(
                     "empty-ads"
-                ).style.display = "block";
+                ).style.display =
+                    "block";
 
                 return;
 
@@ -490,7 +648,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             document.getElementById(
                 "empty-ads"
-            ).style.display = "none";
+            ).style.display =
+                "none";
 
 
             products.forEach(p => {
@@ -522,11 +681,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                             </p>
 
 
-                            <span class="status ${
-                                p.status === "available"
-                                    ? "available"
-                                    : "rented"
-                            }">
+                            <span
+                                class="status ${
+                                    p.status === "available"
+                                        ? "available"
+                                        : "rented"
+                                }"
+                            >
 
                                 ${
                                     p.status === "available"
@@ -540,9 +701,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                         <button
-                            type="button"
                             class="btn-secondary"
-                            onclick="location.href='editar-anuncio.html?id=${p._id}'"
+                            onclick="
+                                location.href =
+                                'editar-anuncio.html?id=${p._id}'
+                            "
                         >
                             Editar
                         </button>
@@ -580,11 +743,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
 
 
-            if (!response.ok) {
-                throw new Error(
-                    "Erro ao carregar aluguéis."
-                );
-            }
+            if (!response.ok)
+                throw new Error();
 
 
             const rentals =
@@ -594,9 +754,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             rentalsList.innerHTML = "";
 
 
-            // ------------------------------------------
-            // ALUGUÉIS REALIZADOS PELO USUÁRIO
-            // ------------------------------------------
+            // ======================================
+            // ALUGUÉIS FEITOS PELO USUÁRIO
+            // ======================================
 
             const mine =
                 rentals.filter(r =>
@@ -613,9 +773,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 mine.length;
 
 
-            // ------------------------------------------
-            // RENDA
-            // ------------------------------------------
+            // ======================================
+            // RENDA DO PROPRIETÁRIO
+            // ======================================
 
             const income =
                 rentals
@@ -630,7 +790,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     .reduce(
                         (acc, r) =>
                             acc +
-                            Number(r.total || 0),
+                            Number(
+                                r.total || 0
+                            ),
                         0
                     );
 
@@ -643,15 +805,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                     .replace(".", ",")}`;
 
 
-            // ------------------------------------------
-            // LISTA DE ALUGUÉIS
-            // ------------------------------------------
+            // ======================================
+            // RENDERIZAR ALUGUÉIS
+            // ======================================
 
-            if (mine.length === 0) {
+            if (!mine.length) {
 
                 document.getElementById(
                     "empty-rentals"
-                ).style.display = "block";
+                ).style.display =
+                    "block";
 
                 return;
 
@@ -660,7 +823,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             document.getElementById(
                 "empty-rentals"
-            ).style.display = "none";
+            ).style.display =
+                "none";
 
 
             mine.forEach(r => {
@@ -668,7 +832,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 rentalsList.innerHTML += `
 
                     <div class="item-card">
-
 
                         <div class="item-image">
 
@@ -736,7 +899,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                         </strong>
 
-
                     </div>
 
                 `;
@@ -763,17 +925,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     function validateCPF(cpfValue) {
 
         const value =
-            cpfValue.replace(/\D/g, "");
+            cpfValue.replace(
+                /\D/g,
+                ""
+            );
 
 
-        if (value.length !== 11) {
+        if (value.length !== 11)
             return false;
-        }
 
 
-        if (/^(\d)\1+$/.test(value)) {
+        if (/^(\d)\1+$/.test(value))
             return false;
-        }
 
 
         let sum = 0;
@@ -792,13 +955,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             (sum * 10) % 11;
 
 
-        if (digit === 10) {
+        if (digit === 10)
             digit = 0;
-        }
 
 
-        if (digit !== Number(value[9])) {
+        if (
+            digit !==
+            Number(value[9])
+        ) {
+
             return false;
+
         }
 
 
@@ -818,13 +985,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             (sum * 10) % 11;
 
 
-        if (digit === 10) {
+        if (digit === 10)
             digit = 0;
-        }
 
 
         return (
-            digit === Number(value[10])
+            digit ===
+            Number(value[10])
         );
 
     }
@@ -834,153 +1001,181 @@ document.addEventListener("DOMContentLoaded", async () => {
     // MÁSCARA CPF
     // ==========================================
 
-    cpf.addEventListener(
-        "input",
-        () => {
+    if (cpf) {
 
-            let value =
-                cpf.value
-                    .replace(/\D/g, "")
-                    .slice(0, 11);
+        cpf.addEventListener(
+            "input",
+            () => {
 
-
-            value =
-                value.replace(
-                    /^(\d{3})(\d)/,
-                    "$1.$2"
-                );
-
-
-            value =
-                value.replace(
-                    /^(\d{3})\.(\d{3})(\d)/,
-                    "$1.$2.$3"
-                );
+                let value =
+                    cpf.value
+                        .replace(
+                            /\D/g,
+                            ""
+                        )
+                        .slice(
+                            0,
+                            11
+                        );
 
 
-            value =
-                value.replace(
-                    /^(\d{3})\.(\d{3})\.(\d{3})(\d)/,
-                    "$1.$2.$3-$4"
-                );
+                value =
+                    value.replace(
+                        /^(\d{3})(\d)/,
+                        "$1.$2"
+                    );
 
 
-            cpf.value =
-                value;
+                value =
+                    value.replace(
+                        /^(\d{3})\.(\d{3})(\d)/,
+                        "$1.$2.$3"
+                    );
 
 
-            if (value.length < 14) {
-
-                cpfStatus.textContent =
-                    "";
-
-                cpfStatus.className =
-                    "";
-
-            }
-
-        }
-    );
+                value =
+                    value.replace(
+                        /^(\d{3})\.(\d{3})\.(\d{3})(\d)/,
+                        "$1.$2.$3-$4"
+                    );
 
 
-    // ==========================================
-    // VALIDAR CPF
-    // ==========================================
+                cpf.value =
+                    value;
 
-    cpf.addEventListener(
-        "blur",
-        () => {
 
-            if (!cpf.value) {
+                if (
+                    value.length <
+                    14
+                ) {
 
-                cpfStatus.textContent =
-                    "";
+                    cpfStatus.textContent =
+                        "";
 
-                return;
+                    cpfStatus.className =
+                        "";
+
+                }
 
             }
+        );
 
 
-            if (validateCPF(cpf.value)) {
+        cpf.addEventListener(
+            "blur",
+            () => {
 
-                cpfStatus.textContent =
-                    "✓ CPF válido";
+                if (!cpf.value) {
 
-                cpfStatus.className =
-                    "valid";
+                    cpfStatus.textContent =
+                        "";
+
+                    return;
+
+                }
 
 
-            } else {
+                if (
+                    validateCPF(
+                        cpf.value
+                    )
+                ) {
 
-                cpfStatus.textContent =
-                    "✕ CPF inválido";
+                    cpfStatus.textContent =
+                        "✓ CPF válido";
 
-                cpfStatus.className =
-                    "invalid";
+                    cpfStatus.className =
+                        "valid";
+
+                } else {
+
+                    cpfStatus.textContent =
+                        "✕ CPF inválido";
+
+                    cpfStatus.className =
+                        "invalid";
+
+                }
 
             }
+        );
 
-        }
-    );
-
-
-    // ==========================================
-    // MÁSCARA RG
-    // ==========================================
-
-    rg.addEventListener(
-        "input",
-        () => {
-
-            let value =
-                rg.value
-                    .replace(/\D/g, "")
-                    .slice(0, 9);
-
-
-            value =
-                value.replace(
-                    /^(\d{2})(\d)/,
-                    "$1.$2"
-                );
-
-
-            value =
-                value.replace(
-                    /^(\d{2})\.(\d{3})(\d)/,
-                    "$1.$2.$3"
-                );
-
-
-            value =
-                value.replace(
-                    /^(\d{2})\.(\d{3})\.(\d{3})(\d)/,
-                    "$1.$2.$3-$4"
-                );
-
-
-            rg.value =
-                value;
-
-        }
-    );
+    }
 
 
     // ==========================================
-    // MÁSCARA CEP
+    // RG
     // ==========================================
 
-    cep.addEventListener(
-        "input",
-        () => {
+    if (rg) {
 
-            let value =
-                cep.value
-                    .replace(/\D/g, "")
-                    .slice(0, 8);
+        rg.addEventListener(
+            "input",
+            () => {
+
+                let value =
+                    rg.value
+                        .replace(
+                            /\D/g,
+                            ""
+                        )
+                        .slice(
+                            0,
+                            9
+                        );
 
 
-            if (value.length > 5) {
+                value =
+                    value.replace(
+                        /^(\d{2})(\d)/,
+                        "$1.$2"
+                    );
+
+
+                value =
+                    value.replace(
+                        /^(\d{2})\.(\d{3})(\d)/,
+                        "$1.$2.$3"
+                    );
+
+
+                value =
+                    value.replace(
+                        /^(\d{2})\.(\d{3})\.(\d{3})(\d)/,
+                        "$1.$2.$3-$4"
+                    );
+
+
+                rg.value =
+                    value;
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // CEP
+    // ==========================================
+
+    if (cep) {
+
+        cep.addEventListener(
+            "input",
+            () => {
+
+                let value =
+                    cep.value
+                        .replace(
+                            /\D/g,
+                            ""
+                        )
+                        .slice(
+                            0,
+                            8
+                        );
+
 
                 value =
                     value.replace(
@@ -988,104 +1183,110 @@ document.addEventListener("DOMContentLoaded", async () => {
                         "$1-$2"
                     );
 
+
+                cep.value =
+                    value;
+
             }
+        );
 
 
-            cep.value =
-                value;
+        cep.addEventListener(
+            "blur",
+            async () => {
 
-        }
-    );
-
-
-    // ==========================================
-    // BUSCAR CEP
-    // ==========================================
-
-    cep.addEventListener(
-        "blur",
-        async () => {
-
-            const value =
-                cep.value.replace(
-                    /\D/g,
-                    ""
-                );
-
-
-            if (value.length !== 8) {
-                return;
-            }
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        `https://viacep.com.br/ws/${value}/json/`
+                const value =
+                    cep.value.replace(
+                        /\D/g,
+                        ""
                     );
 
 
-                if (!response.ok) {
-                    throw new Error(
-                        "Erro ao consultar CEP."
-                    );
-                }
-
-
-                const data =
-                    await response.json();
-
-
-                if (data.erro) {
-
-                    alert(
-                        "CEP não encontrado."
-                    );
+                if (
+                    value.length !==
+                    8
+                ) {
 
                     return;
 
                 }
 
 
-                street.value =
-                    data.logradouro || "";
+                try {
 
-                district.value =
-                    data.bairro || "";
-
-                city.value =
-                    data.localidade || "";
-
-                state.value =
-                    data.uf || "";
+                    const response =
+                        await fetch(
+                            `https://viacep.com.br/ws/${value}/json/`
+                        );
 
 
-            } catch (err) {
+                    const data =
+                        await response.json();
 
-                console.log(
-                    "Erro ao consultar CEP:",
-                    err
-                );
+
+                    if (data.erro) {
+
+                        alert(
+                            "CEP não encontrado."
+                        );
+
+                        return;
+
+                    }
+
+
+                    street.value =
+                        data.logradouro || "";
+
+
+                    district.value =
+                        data.bairro || "";
+
+
+                    city.value =
+                        data.localidade || "";
+
+
+                    state.value =
+                        data.uf || "";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Erro ao buscar CEP:",
+                        error
+                    );
+
+                }
 
             }
+        );
 
-        }
-    );
+    }
 
 
     // ==========================================
     // VERIFICAR CONTA
     // ==========================================
 
-    document
-        .getElementById("verify-account")
-        .addEventListener(
-            "click",
+    const verifyButton =
+        document.getElementById(
+            "verify-account"
+        );
+
+
+    if (verifyButton) {
+
+        verifyButton.onclick =
             async () => {
 
 
-                if (!validateCPF(cpf.value)) {
+                if (
+                    !validateCPF(
+                        cpf.value
+                    )
+                ) {
 
                     alert(
                         "CPF inválido."
@@ -1096,7 +1297,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
 
-                if (!rg.value.trim()) {
+                if (
+                    !rg.value.trim()
+                ) {
 
                     alert(
                         "Informe o RG."
@@ -1107,7 +1310,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
 
-                if (!cep.value.trim()) {
+                if (
+                    !cep.value.trim()
+                ) {
 
                     alert(
                         "Informe o CEP."
@@ -1118,7 +1323,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
 
-                if (!number.value.trim()) {
+                if (
+                    !number.value.trim()
+                ) {
 
                     alert(
                         "Informe o número."
@@ -1135,42 +1342,51 @@ document.addEventListener("DOMContentLoaded", async () => {
                         await fetch(
                             `${API}/users/verify/${userId}`,
                             {
-                                method: "PUT",
+                                method:
+                                    "PUT",
 
                                 headers: {
+
                                     "Content-Type":
                                         "application/json",
 
                                     Authorization:
                                         `Bearer ${token}`
+
                                 },
 
-                                body: JSON.stringify({
+                                body:
+                                    JSON.stringify({
 
-                                    cpf: cpf.value,
+                                        cpf:
+                                            cpf.value,
 
-                                    rg: rg.value,
+                                        rg:
+                                            rg.value,
 
-                                    cnh: cnh.value,
+                                        cnh:
+                                            cnh.value,
 
-                                    cep: cep.value,
+                                        cep:
+                                            cep.value,
 
-                                    number:
-                                        number.value,
+                                        number:
+                                            number.value,
 
-                                    street:
-                                        street.value,
+                                        street:
+                                            street.value,
 
-                                    district:
-                                        district.value,
+                                        district:
+                                            district.value,
 
-                                    city:
-                                        city.value,
+                                        city:
+                                            city.value,
 
-                                    state:
-                                        state.value
+                                        state:
+                                            state.value
 
-                                })
+                                    })
+
                             }
                         );
 
@@ -1179,14 +1395,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         await response.json();
 
 
-                    if (!response.ok) {
-
+                    if (!response.ok)
                         throw new Error(
                             data.error ||
                             "Erro ao verificar conta."
                         );
-
-                    }
 
 
                     alert(
@@ -1200,58 +1413,71 @@ document.addEventListener("DOMContentLoaded", async () => {
                 } catch (err) {
 
                     alert(
-                        err.message ||
-                        "Erro ao verificar conta."
+                        err.message
                     );
 
                 }
 
-            }
-        );
+            };
+
+    }
 
 
     // ==========================================
     // NOVO ANÚNCIO
     // ==========================================
 
-    document
-        .getElementById("new-ad")
-        .addEventListener(
-            "click",
+    const newAd =
+        document.getElementById(
+            "new-ad"
+        );
+
+
+    if (newAd) {
+
+        newAd.onclick =
             () => {
 
                 location.href =
                     "novo-anuncio.html";
 
-            }
+            };
+
+    }
+
+
+    const emptyNewAd =
+        document.getElementById(
+            "empty-new-ad"
         );
 
 
-    // ==========================================
-    // NOVO ANÚNCIO — ESTADO VAZIO
-    // ==========================================
+    if (emptyNewAd) {
 
-    document
-        .getElementById("empty-new-ad")
-        .addEventListener(
-            "click",
+        emptyNewAd.onclick =
             () => {
 
                 location.href =
                     "novo-anuncio.html";
 
-            }
-        );
+            };
+
+    }
 
 
     // ==========================================
     // LOGOUT
     // ==========================================
 
-    document
-        .getElementById("logout")
-        .addEventListener(
-            "click",
+    const logout =
+        document.getElementById(
+            "logout"
+        );
+
+
+    if (logout) {
+
+        logout.onclick =
             () => {
 
                 localStorage.removeItem(
@@ -1267,12 +1493,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "login.html"
                 );
 
-            }
-        );
+            };
+
+    }
 
 
     // ==========================================
-    // INICIAR PÁGINA
+    // INICIAR
     // ==========================================
 
     await loadAds();
