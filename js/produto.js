@@ -1033,60 +1033,96 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    // ==========================================
-    // SOLICITAR ALUGUEL
-    // ==========================================
+   // ==========================================
+// SOLICITAR ALUGUEL
+// ==========================================
 
-    rentalButton.addEventListener(
-        "click",
-        () => {
+rentalButton.addEventListener(
+    "click",
+    () => {
 
-            if (!user) {
-
-                window.location.href =
-                    "login.html";
-
-                return;
-
-            }
-
-
-            if (
-                !startDate.value ||
-                !endDate.value
-            ) {
-
-                alert(
-                    "Escolha o período do aluguel."
-                );
-
-                return;
-
-            }
-
-
-            if (
-                endDate.value <
-                startDate.value
-            ) {
-
-                alert(
-                    "A data de devolução não pode ser anterior à retirada."
-                );
-
-                return;
-
-            }
-
+        if (!user) {
 
             window.location.href =
-                `reserva.html?id=${product._id}` +
-                `&start=${startDate.value}` +
-                `&end=${endDate.value}`;
+                "login.html";
+
+            return;
 
         }
-    );
 
+
+        if (
+            !startDate.value ||
+            !endDate.value
+        ) {
+
+            alert(
+                "Escolha o período do aluguel."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            endDate.value <
+            startDate.value
+        ) {
+
+            alert(
+                "A data de devolução não pode ser anterior à retirada."
+            );
+
+            return;
+
+        }
+
+
+        // ======================================
+        // ENTREGA SELECIONADA
+        // ======================================
+
+        const selectedDelivery =
+            document.querySelector(
+                'input[name="delivery"]:checked'
+            );
+
+
+        const delivery =
+            selectedDelivery?.value ===
+            "delivery";
+
+
+        // ======================================
+        // IR PARA CONFIRMAÇÃO
+        // ======================================
+
+        const params =
+            new URLSearchParams({
+
+                id:
+                    product._id,
+
+                start:
+                    startDate.value,
+
+                end:
+                    endDate.value,
+
+                delivery:
+                    delivery
+                        ? "delivery"
+                        : "pickup"
+
+            });
+
+
+        window.location.href =
+            `reserva.html?${params.toString()}`;
+
+    }
+);
 
     // ==========================================
     // INICIAR
