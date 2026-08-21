@@ -1,5 +1,6 @@
 /* ==========================================
    ALUGASE — PAGAMENTO
+   Visual moderno / identidade ALUGASE
 ========================================== */
 
 .payment-page {
@@ -7,12 +8,16 @@
     min-height: 80vh;
 
     padding:
-        50px
+        45px
         20px
         80px;
 
     background:
-        #f8fafc;
+        linear-gradient(
+            180deg,
+            #f0fdf4 0%,
+            #f8fafc 220px
+        );
 
 }
 
@@ -39,7 +44,10 @@
         center;
 
     gap:
-        20px;
+        18px;
+
+    color:
+        #64748b;
 
 }
 
@@ -47,10 +55,10 @@
 .loader {
 
     width:
-        42px;
+        46px;
 
     height:
-        42px;
+        46px;
 
     border:
         4px solid #dcfce7;
@@ -94,35 +102,76 @@
 }
 
 
+.back-link {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    color:
+        #15803d;
+
+    text-decoration:
+        none;
+
+    font-weight:
+        700;
+
+    font-size:
+        14px;
+
+    transition:
+        0.2s;
+
+}
+
+
+.back-link:hover {
+
+    color:
+        #166534;
+
+    transform:
+        translateX(-3px);
+
+}
+
+
 .checkout-header h1 {
 
     margin:
-        15px 0 8px;
+        16px 0 8px;
 
     font-size:
-        34px;
+        36px;
+
+    line-height:
+        1.15;
+
+    color:
+        #0f172a;
+
+    letter-spacing:
+        -0.8px;
 
 }
 
 
 .checkout-header p {
 
+    margin:
+        0;
+
     color:
         #64748b;
 
-}
-
-
-.back-link {
-
-    color:
-        #16a34a;
-
-    text-decoration:
-        none;
-
-    font-weight:
-        600;
+    font-size:
+        16px;
 
 }
 
@@ -146,7 +195,7 @@
         380px 1fr;
 
     gap:
-        30px;
+        28px;
 
     align-items:
         start;
@@ -158,44 +207,122 @@
    RESUMO
 ========================================== */
 
+.order-summary {
+
+    position:
+        sticky;
+
+    top:
+        20px;
+
+}
+
+
 .summary-card {
 
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
     background:
-        white;
+        #ffffff;
 
     border:
-        1px solid #e2e8f0;
+        1px solid #dcfce7;
 
     border-radius:
-        16px;
+        20px;
 
     padding:
-        25px;
+        26px;
 
     box-shadow:
-        0 8px 25px rgba(15, 23, 42, 0.05);
+        0 12px 35px rgba(
+            22,
+            163,
+            74,
+            0.08
+        );
+
+}
+
+
+.summary-card::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    top:
+        0;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    height:
+        4px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #16a34a,
+            #22c55e,
+            #4ade80
+        );
 
 }
 
 
 .summary-card h2 {
 
-    margin-top:
+    margin:
         0;
+
+    font-size:
+        20px;
+
+    color:
+        #0f172a;
 
 }
 
+
+/* ==========================================
+   PRODUTO
+========================================== */
 
 .product-summary {
 
     display:
         flex;
 
+    align-items:
+        center;
+
     gap:
         15px;
 
     margin:
-        20px 0;
+        22px 0;
+
+    padding:
+        14px;
+
+    background:
+        #f8fafc;
+
+    border:
+        1px solid #e2e8f0;
+
+    border-radius:
+        14px;
 
 }
 
@@ -203,16 +330,30 @@
 .product-summary img {
 
     width:
-        75px;
+        76px;
 
     height:
-        75px;
+        76px;
+
+    flex-shrink:
+        0;
 
     object-fit:
         cover;
 
     border-radius:
-        10px;
+        12px;
+
+    border:
+        1px solid #e2e8f0;
+
+}
+
+
+.product-summary-info {
+
+    min-width:
+        0;
 
 }
 
@@ -224,6 +365,18 @@
 
     font-size:
         17px;
+
+    color:
+        #0f172a;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
 
 }
 
@@ -237,13 +390,13 @@
         #64748b;
 
     font-size:
-        14px;
+        13px;
 
 }
 
 
 /* ==========================================
-   LINHAS
+   DIVISOR
 ========================================== */
 
 .summary-divider {
@@ -260,6 +413,10 @@
 }
 
 
+/* ==========================================
+   LINHAS DO RESUMO
+========================================== */
+
 .summary-row {
 
     display:
@@ -268,14 +425,20 @@
     justify-content:
         space-between;
 
+    align-items:
+        center;
+
     gap:
         15px;
 
     margin:
-        13px 0;
+        14px 0;
 
     color:
         #64748b;
+
+    font-size:
+        14px;
 
 }
 
@@ -285,8 +448,15 @@
     color:
         #0f172a;
 
+    font-weight:
+        700;
+
 }
 
+
+/* ==========================================
+   TOTAL
+========================================== */
 
 .summary-total {
 
@@ -299,8 +469,22 @@
     align-items:
         center;
 
+    gap:
+        15px;
+
     font-size:
-        21px;
+        22px;
+
+}
+
+
+.summary-total span {
+
+    font-weight:
+        700;
+
+    color:
+        #0f172a;
 
 }
 
@@ -309,6 +493,9 @@
 
     color:
         #16a34a;
+
+    font-size:
+        24px;
 
 }
 
@@ -320,7 +507,7 @@
 .rental-dates {
 
     margin-top:
-        25px;
+        24px;
 
     padding-top:
         20px;
@@ -332,7 +519,7 @@
         grid;
 
     gap:
-        13px;
+        12px;
 
 }
 
@@ -345,6 +532,12 @@
     justify-content:
         space-between;
 
+    align-items:
+        center;
+
+    gap:
+        15px;
+
 }
 
 
@@ -352,6 +545,23 @@
 
     color:
         #64748b;
+
+    font-size:
+        13px;
+
+}
+
+
+.rental-dates strong {
+
+    color:
+        #0f172a;
+
+    font-size:
+        14px;
+
+    text-align:
+        right;
 
 }
 
@@ -363,22 +573,29 @@
 .security-box {
 
     margin-top:
-        15px;
+        14px;
 
     padding:
-        18px;
+        17px;
 
     background:
-        #f0fdf4;
+        linear-gradient(
+            135deg,
+            #f0fdf4,
+            #ecfdf5
+        );
 
     border:
         1px solid #bbf7d0;
 
     border-radius:
-        14px;
+        15px;
 
     display:
         flex;
+
+    align-items:
+        flex-start;
 
     gap:
         12px;
@@ -388,8 +605,32 @@
 
 .security-box > span {
 
+    width:
+        38px;
+
+    height:
+        38px;
+
+    flex-shrink:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    background:
+        #dcfce7;
+
+    border-radius:
+        10px;
+
     font-size:
-        24px;
+        19px;
 
 }
 
@@ -400,7 +641,13 @@
         block;
 
     margin-bottom:
-        5px;
+        4px;
+
+    color:
+        #166534;
+
+    font-size:
+        14px;
 
 }
 
@@ -411,7 +658,7 @@
         0;
 
     font-size:
-        13px;
+        12px;
 
     color:
         #64748b;
@@ -423,33 +670,48 @@
 
 
 /* ==========================================
-   PAGAMENTO
+   CARD DE PAGAMENTO
 ========================================== */
 
 .payment-card {
 
     background:
-        white;
+        #ffffff;
 
     border:
         1px solid #e2e8f0;
 
     border-radius:
-        16px;
+        20px;
 
     padding:
         30px;
 
     box-shadow:
-        0 8px 25px rgba(15, 23, 42, 0.05);
+        0 12px 35px rgba(
+            15,
+            23,
+            42,
+            0.06
+        );
 
 }
 
 
+/* ==========================================
+   CABEÇALHO DO PAGAMENTO
+========================================== */
+
 .payment-card-header {
 
     margin-bottom:
-        20px;
+        24px;
+
+    padding-bottom:
+        18px;
+
+    border-bottom:
+        1px solid #f1f5f9;
 
 }
 
@@ -457,7 +719,13 @@
 .payment-card-header h2 {
 
     margin:
-        0 0 6px;
+        0 0 7px;
+
+    font-size:
+        21px;
+
+    color:
+        #0f172a;
 
 }
 
@@ -470,10 +738,30 @@
     color:
         #64748b;
 
+    font-size:
+        14px;
+
 }
 
 
+/* ==========================================
+   MERCADO PAGO BRICK
+========================================== */
+
 .payment-brick {
+
+    width:
+        100%;
+
+}
+
+
+/*
+   Pequenos ajustes visuais para elementos
+   internos do Brick, sem alterar a lógica.
+*/
+
+#paymentBrick_container {
 
     width:
         100%;
@@ -491,7 +779,7 @@
         center;
 
     padding:
-        50px 20px;
+        55px 20px;
 
 }
 
@@ -499,19 +787,22 @@
 .result-icon {
 
     width:
-        70px;
+        78px;
 
     height:
-        70px;
+        78px;
 
     margin:
-        0 auto 20px;
+        0 auto 22px;
 
     border-radius:
         50%;
 
     background:
         #dcfce7;
+
+    border:
+        6px solid #f0fdf4;
 
     color:
         #16a34a;
@@ -526,10 +817,18 @@
         center;
 
     font-size:
-        38px;
+        40px;
 
     font-weight:
-        bold;
+        800;
+
+    box-shadow:
+        0 8px 25px rgba(
+            22,
+            163,
+            74,
+            0.12
+        );
 
 }
 
@@ -539,16 +838,28 @@
     margin:
         0 0 10px;
 
+    color:
+        #0f172a;
+
+    font-size:
+        25px;
+
 }
 
 
 .payment-result p {
 
+    max-width:
+        500px;
+
+    margin:
+        0 auto 26px;
+
     color:
         #64748b;
 
-    margin-bottom:
-        25px;
+    line-height:
+        1.6;
 
 }
 
@@ -566,30 +877,73 @@
         80px auto;
 
     padding:
-        40px;
+        45px 35px;
 
     text-align:
         center;
 
     background:
-        white;
-
-    border-radius:
-        16px;
+        #ffffff;
 
     border:
-        1px solid #e2e8f0;
+        1px solid #fee2e2;
+
+    border-radius:
+        20px;
+
+    box-shadow:
+        0 12px 35px rgba(
+            15,
+            23,
+            42,
+            0.06
+        );
 
 }
 
 
 .error-icon {
 
-    font-size:
-        45px;
+    width:
+        70px;
 
-    margin-bottom:
-        15px;
+    height:
+        70px;
+
+    margin:
+        0 auto 18px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        #fef2f2;
+
+    font-size:
+        34px;
+
+}
+
+
+.payment-error h1 {
+
+    margin:
+        0 0 10px;
+
+    color:
+        #0f172a;
+
+    font-size:
+        25px;
 
 }
 
@@ -599,8 +953,40 @@
     color:
         #64748b;
 
-    margin-bottom:
-        25px;
+    margin:
+        0 0 25px;
+
+    line-height:
+        1.6;
+
+}
+
+
+/* ==========================================
+   BOTÕES
+========================================== */
+
+.payment-page .btn-primary {
+
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+
+}
+
+
+.payment-page .btn-primary:hover {
+
+    transform:
+        translateY(-1px);
+
+    box-shadow:
+        0 8px 20px rgba(
+            22,
+            163,
+            74,
+            0.22
+        );
 
 }
 
@@ -621,10 +1007,10 @@
     }
 
 
-    .checkout-grid {
+    .checkout-header {
 
-        grid-template-columns:
-            1fr;
+        margin-bottom:
+            25px;
 
     }
 
@@ -632,12 +1018,26 @@
     .checkout-header h1 {
 
         font-size:
-            28px;
+            29px;
+
+    }
+
+
+    .checkout-grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            20px;
 
     }
 
 
     .order-summary {
+
+        position:
+            static;
 
         order:
             1;
@@ -651,7 +1051,7 @@
             2;
 
         padding:
-            20px;
+            22px;
 
     }
 
@@ -660,10 +1060,39 @@
 
 @media (max-width: 500px) {
 
+    .payment-page {
+
+        padding:
+            25px
+            12px
+            50px;
+
+    }
+
+
+    .checkout-header h1 {
+
+        font-size:
+            25px;
+
+    }
+
+
+    .checkout-header p {
+
+        font-size:
+            14px;
+
+    }
+
+
     .summary-card {
 
         padding:
-            18px;
+            19px;
+
+        border-radius:
+            16px;
 
     }
 
@@ -671,7 +1100,53 @@
     .payment-card {
 
         padding:
+            17px;
+
+        border-radius:
+            16px;
+
+    }
+
+
+    .product-summary {
+
+        padding:
+            11px;
+
+    }
+
+
+    .product-summary img {
+
+        width:
+            65px;
+
+        height:
+            65px;
+
+    }
+
+
+    .product-summary-info h3 {
+
+        font-size:
             15px;
+
+    }
+
+
+    .summary-total {
+
+        font-size:
+            19px;
+
+    }
+
+
+    .summary-total strong {
+
+        font-size:
+            21px;
 
     }
 
@@ -681,8 +1156,35 @@
         flex-direction:
             column;
 
+        align-items:
+            flex-start;
+
         gap:
             3px;
+
+    }
+
+
+    .rental-dates strong {
+
+        text-align:
+            left;
+
+    }
+
+
+    .security-box {
+
+        padding:
+            14px;
+
+    }
+
+
+    .payment-result {
+
+        padding:
+            40px 10px;
 
     }
 
