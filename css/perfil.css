@@ -37,7 +37,7 @@
 
 
 /* ==========================================
-   FOTO DE PERFIL
+   FOTO
 ========================================== */
 
 .avatar-container {
@@ -65,7 +65,6 @@
     font-weight: 700;
 
     overflow: hidden;
-
     cursor: pointer;
 
     border: 4px solid #fff;
@@ -93,9 +92,7 @@
 .avatar img {
     width: 100%;
     height: 100%;
-
     object-fit: cover;
-
     display: block;
 }
 
@@ -111,38 +108,35 @@
 
 .profile-info {
     min-width: 0;
+    max-width: 100%;
 }
 
 .name-row {
     display: flex;
     align-items: center;
     gap: 12px;
-
     margin-bottom: 8px;
+    flex-wrap: wrap;
 }
 
 .name-row h1 {
     margin: 0;
-
     font-size: 32px;
-
     overflow-wrap: anywhere;
 }
 
 .name-row span {
     padding: 4px 10px;
-
     border-radius: 20px;
-
     font-size: 12px;
     font-weight: 600;
-
     white-space: nowrap;
 }
 
 .profile-info > p {
     color: #6B7280;
     margin: 0;
+    overflow-wrap: anywhere;
 }
 
 .rating {
@@ -176,17 +170,17 @@
     padding: 22px;
 
     text-align: center;
+
+    min-width: 0;
 }
 
 .stat-card h2 {
     color: #16A34A;
-
     margin: 0 0 8px;
 }
 
 .stat-card span {
     color: #6B7280;
-
     font-size: 14px;
 }
 
@@ -205,6 +199,8 @@
     overflow-x: auto;
 
     padding-bottom: 4px;
+
+    scrollbar-width: thin;
 }
 
 .tab {
@@ -221,6 +217,8 @@
     font-weight: 600;
 
     white-space: nowrap;
+
+    flex-shrink: 0;
 
     transition:
         background 0.2s ease,
@@ -272,6 +270,8 @@
     margin-bottom: 16px;
 
     min-width: 0;
+
+    overflow: hidden;
 }
 
 .item-image {
@@ -309,13 +309,18 @@
 
 .item-info h3 {
     margin: 0 0 6px;
-
     overflow-wrap: anywhere;
 }
 
 .item-info p {
     color: #6B7280;
     margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.item-card > strong {
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 
@@ -367,6 +372,8 @@
     padding: 40px;
 
     text-align: center;
+
+    overflow-wrap: anywhere;
 }
 
 .empty-state h3 {
@@ -375,7 +382,6 @@
 
 .empty-state p {
     color: #6B7280;
-
     margin-bottom: 18px;
 }
 
@@ -392,6 +398,8 @@
     border-radius: 16px;
 
     padding: 24px;
+
+    min-width: 0;
 }
 
 .verification-header {
@@ -440,6 +448,8 @@
     border-radius: 12px;
 
     padding: 18px;
+
+    min-width: 0;
 }
 
 .verify-status-card h3 {
@@ -452,6 +462,8 @@
     font-size: 13px;
 
     margin: 0 0 10px;
+
+    overflow-wrap: anywhere;
 }
 
 
@@ -482,7 +494,6 @@
 
 .form-group label {
     font-weight: 600;
-
     font-size: 14px;
 }
 
@@ -501,6 +512,8 @@
     font-size: 15px;
 
     background: #fff;
+
+    min-width: 0;
 }
 
 .form-group input:focus,
@@ -519,7 +532,6 @@
 
 input[readonly] {
     background: #F9FAFB;
-
     cursor: not-allowed;
 }
 
@@ -530,41 +542,42 @@ input[readonly] {
 
 .form-group small {
     font-size: 12px;
-
     min-height: 18px;
 }
 
 .valid {
     color: #15803D;
-
     font-weight: 600;
 }
 
 .invalid {
     color: #DC2626;
-
     font-weight: 600;
 }
 
 
 /* ==========================================
-   HEADER
+   NAVBAR DO PERFIL
 ========================================== */
 
 .profile-navbar {
     min-height: 72px;
 }
 
+.profile-navbar .nav-buttons {
+    min-width: 0;
+}
+
+.profile-navbar .nav-buttons > * {
+    flex-shrink: 0;
+}
+
 
 /* ==========================================
-   RESPONSIVIDADE — 800px
+   900px
 ========================================== */
 
-@media (max-width: 800px) {
-
-    .profile-header {
-        gap: 18px;
-    }
+@media (max-width: 900px) {
 
     .stats-grid {
         grid-template-columns:
@@ -575,21 +588,19 @@ input[readonly] {
 
 
 /* ==========================================
-   RESPONSIVIDADE — 768px
+   768px
 ========================================== */
 
 @media (max-width: 768px) {
 
     .profile-header {
         flex-direction: column;
-
         text-align: center;
+        gap: 18px;
     }
 
     .name-row {
         justify-content: center;
-
-        flex-wrap: wrap;
     }
 
     .form-grid {
@@ -604,8 +615,15 @@ input[readonly] {
         grid-template-columns: 1fr;
     }
 
+    /*
+       Navbar:
+       esconde os links e deixa os botões
+       quebrarem corretamente.
+    */
+
     .profile-navbar {
         min-height: 64px;
+        flex-wrap: wrap;
     }
 
     .profile-navbar .nav-links {
@@ -613,23 +631,23 @@ input[readonly] {
     }
 
     .profile-navbar .nav-buttons {
-        gap: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        min-width: 0;
+        flex: 1;
+    }
+
+    .profile-navbar .nav-buttons > * {
+        max-width: 100%;
     }
 
     .profile-navbar .btn-secondary,
     .profile-navbar .btn-primary {
-        padding: 8px 12px;
-
+        padding: 8px 11px;
         font-size: 13px;
-    }
-
-    .profile-navbar .btn-secondary {
-        min-width: 92px;
-
-        text-align: center;
-    }
-
-    .profile-navbar .btn-primary {
         white-space: nowrap;
     }
 
@@ -646,22 +664,19 @@ input[readonly] {
 
 
 /* ==========================================
-   RESPONSIVIDADE — 600px
+   600px
 ========================================== */
 
 @media (max-width: 600px) {
 
     .profile-page {
         width: 94%;
-
-        padding:
-            25px 0 50px;
+        padding: 25px 0 50px;
     }
 
     .avatar {
         width: 100px;
         height: 100px;
-
         font-size: 30px;
     }
 
@@ -671,7 +686,6 @@ input[readonly] {
 
     .stats-grid {
         grid-template-columns: 1fr 1fr;
-
         gap: 10px;
     }
 
@@ -693,7 +707,6 @@ input[readonly] {
 
     .tab {
         padding: 10px 13px;
-
         font-size: 13px;
     }
 
@@ -705,25 +718,62 @@ input[readonly] {
         padding: 18px;
     }
 
+
+    /*
+       Navbar em celular:
+       deixa a logo em uma linha e
+       os botões em outra.
+    */
+
+    .profile-navbar {
+        padding: 10px 15px;
+        gap: 10px;
+    }
+
+    .profile-navbar .logo {
+        width: 100%;
+    }
+
+    .profile-navbar .nav-buttons {
+        width: 100%;
+        flex: none;
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 8px;
+    }
+
+    .profile-navbar .nav-buttons > * {
+        width: 100%;
+        box-sizing: border-box;
+        text-align: center;
+        min-width: 0;
+    }
+
+    .profile-navbar .notification-nav {
+        width: 100%;
+    }
+
 }
 
 
 /* ==========================================
-   RESPONSIVIDADE — 430px
+   430px
 ========================================== */
 
 @media (max-width: 430px) {
 
     .profile-page {
         width: calc(100% - 24px);
-
         padding-top: 20px;
     }
 
     .avatar {
         width: 90px;
         height: 90px;
-
         font-size: 28px;
     }
 
@@ -747,22 +797,53 @@ input[readonly] {
         width: 100%;
     }
 
-    .profile-navbar .btn-secondary {
-        padding: 8px 10px;
-
-        min-width: 84px;
-
-        font-size: 12px;
-    }
-
-    .profile-navbar .btn-primary {
-        padding: 8px 10px;
-
-        font-size: 12px;
-    }
+    /*
+       Navbar pequeno:
+       2 colunas continuam cabendo,
+       mas os botões não estouram.
+    */
 
     .profile-navbar .nav-buttons {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
         gap: 6px;
+    }
+
+    .profile-navbar .btn-secondary,
+    .profile-navbar .btn-primary {
+        padding: 9px 6px;
+        font-size: 12px;
+        min-width: 0;
+    }
+
+}
+
+
+/* ==========================================
+   360px
+========================================== */
+
+@media (max-width: 360px) {
+
+    .profile-navbar .nav-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-navbar .nav-buttons > * {
+        width: 100%;
+    }
+
+    .profile-navbar .logo {
+        justify-content: center;
+    }
+
+    .profile-page {
+        width: calc(100% - 20px);
+    }
+
+    .verification-card {
+        padding: 14px;
     }
 
 }
