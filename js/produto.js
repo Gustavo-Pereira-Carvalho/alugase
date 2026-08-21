@@ -62,60 +62,50 @@ document.addEventListener("DOMContentLoaded", async () => {
             "#breadcrumb-title"
         );
 
-
     const title =
         document.querySelector(
             "#product-title"
         );
-
 
     const mainImage =
         document.querySelector(
             "#main-image"
         );
 
-
     const thumbnails =
         document.querySelector(
             "#product-thumbnails"
         );
-
 
     const locationText =
         document.querySelector(
             "#product-location"
         );
 
-
     const description =
         document.querySelector(
             "#product-description"
         );
-
 
     const productRating =
         document.querySelector(
             "#product-rating"
         );
 
-
     const productReviews =
         document.querySelector(
             "#product-reviews"
         );
-
 
     const price =
         document.querySelector(
             ".pricing strong"
         );
 
-
     const deliveryLabel =
         document.querySelector(
             "#delivery-label"
         );
-
 
     const depositTotal =
         document.querySelector(
@@ -132,24 +122,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             "#owner-avatar"
         );
 
-
     const ownerName =
         document.querySelector(
             "#owner-name"
         );
-
 
     const ownerVerification =
         document.querySelector(
             "#owner-verification"
         );
 
-
     const ownerRating =
         document.querySelector(
             "#owner-rating"
         );
-
 
     const ownerReviews =
         document.querySelector(
@@ -158,7 +144,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // DATAS
+    // DATAS / CALENDÁRIO
     // ==========================================
 
     const startDate =
@@ -166,10 +152,39 @@ document.addEventListener("DOMContentLoaded", async () => {
             "#start-date"
         );
 
-
     const endDate =
         document.querySelector(
             "#end-date"
+        );
+
+    const calendarDays =
+        document.querySelector(
+            "#calendar-days"
+        );
+
+    const calendarMonth =
+        document.querySelector(
+            "#calendar-month"
+        );
+
+    const calendarPrev =
+        document.querySelector(
+            "#calendar-prev"
+        );
+
+    const calendarNext =
+        document.querySelector(
+            "#calendar-next"
+        );
+
+    const selectedStartDisplay =
+        document.querySelector(
+            "#selected-start-display"
+        );
+
+    const selectedEndDisplay =
+        document.querySelector(
+            "#selected-end-display"
         );
 
 
@@ -182,18 +197,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             "#daily-total"
         );
 
-
     const deliveryTotal =
         document.querySelector(
             "#delivery-total"
         );
 
-
     const rentalTotal =
         document.querySelector(
             "#rental-total"
         );
-
 
     const rentalButton =
         document.querySelector(
@@ -206,7 +218,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ==========================================
 
     let product = null;
+
     let owner = null;
+
+    let calendarDate =
+        new Date();
+
+    let selectingStart = true;
+
+
+    // ==========================================
+    // DATAS INDISPONÍVEIS
+    // ==========================================
+    //
+    // Por enquanto fica vazio.
+    //
+    // Depois podemos preencher automaticamente
+    // com as reservas aprovadas pela API.
+    //
+    // Exemplo:
+    //
+    // unavailableDates = [
+    //     "2026-08-25",
+    //     "2026-08-26",
+    //     "2026-08-27"
+    // ];
+    //
+    // ==========================================
+
+    let unavailableDates = [];
 
 
     // ==========================================
@@ -223,6 +263,72 @@ document.addEventListener("DOMContentLoaded", async () => {
                     maximumFractionDigits: 2
                 }
             );
+
+    }
+
+
+    // ==========================================
+    // FORMATAR DATA PARA BR
+    // ==========================================
+
+    function formatDateBR(dateString) {
+
+        if (!dateString) {
+
+            return "Selecione uma data";
+
+        }
+
+
+        const [
+            year,
+            month,
+            day
+        ] =
+            dateString.split("-");
+
+
+        return `${day}/${month}/${year}`;
+
+    }
+
+
+    // ==========================================
+    // CONVERTER DATE PARA YYYY-MM-DD
+    // ==========================================
+
+    function dateToString(date) {
+
+        const year =
+            date.getFullYear();
+
+
+        const month =
+            String(
+                date.getMonth() + 1
+            ).padStart(2, "0");
+
+
+        const day =
+            String(
+                date.getDate()
+            ).padStart(2, "0");
+
+
+        return `${year}-${month}-${day}`;
+
+    }
+
+
+    // ==========================================
+    // VERIFICAR DATA INDISPONÍVEL
+    // ==========================================
+
+    function isUnavailable(dateString) {
+
+        return unavailableDates.includes(
+            dateString
+        );
 
     }
 
@@ -506,10 +612,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function renderOwner() {
 
-        // --------------------------------------
-        // SEM PROPRIETÁRIO
-        // --------------------------------------
-
         if (!owner) {
 
             ownerAvatar.innerHTML =
@@ -538,9 +640,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // --------------------------------------
+        // ======================================
         // NOME
-        // --------------------------------------
+        // ======================================
 
         ownerName.textContent =
             owner.name ||
@@ -548,9 +650,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             "Usuário";
 
 
-        // --------------------------------------
+        // ======================================
         // FOTO
-        // --------------------------------------
+        // ======================================
 
         if (owner.profileImage) {
 
@@ -566,10 +668,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } else {
 
-            // ----------------------------------
-            // INICIAIS
-            // ----------------------------------
-
             const initials =
                 (owner.name || "U")
                     .split(" ")
@@ -583,22 +681,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             ownerAvatar.innerHTML = `
+
                 <span class="owner-initials">
                     ${initials}
                 </span>
+
             `;
 
         }
 
 
-        // --------------------------------------
+        // ======================================
         // VERIFICAÇÃO
-        // --------------------------------------
+        // ======================================
 
         if (owner.identityVerified) {
 
             ownerVerification.textContent =
                 "✓ Identidade verificada";
+
 
             ownerVerification.className =
                 "owner-verified";
@@ -608,14 +709,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             ownerVerification.textContent =
                 "Usuário";
 
+
             ownerVerification.className = "";
 
         }
 
 
-        // --------------------------------------
+        // ======================================
         // AVALIAÇÃO
-        // --------------------------------------
+        // ======================================
 
         ownerRating.textContent =
             owner.rating ||
@@ -627,6 +729,584 @@ document.addEventListener("DOMContentLoaded", async () => {
             owner.reviews ||
             product.reviews ||
             "0";
+
+    }
+
+
+    // ==========================================
+    // RENDERIZAR CALENDÁRIO
+    // ==========================================
+
+    function renderCalendar() {
+
+        if (!calendarDays) {
+
+            return;
+
+        }
+
+
+        calendarDays.innerHTML = "";
+
+
+        const year =
+            calendarDate.getFullYear();
+
+
+        const month =
+            calendarDate.getMonth();
+
+
+        const firstDay =
+            new Date(
+                year,
+                month,
+                1
+            ).getDay();
+
+
+        const daysInMonth =
+            new Date(
+                year,
+                month + 1,
+                0
+            ).getDate();
+
+
+        // ======================================
+        // NOME DO MÊS
+        // ======================================
+
+        if (calendarMonth) {
+
+            calendarMonth.textContent =
+                calendarDate.toLocaleDateString(
+                    "pt-BR",
+                    {
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+
+        }
+
+
+        // ======================================
+        // ESPAÇOS ANTES DO PRIMEIRO DIA
+        // ======================================
+
+        for (
+            let i = 0;
+            i < firstDay;
+            i++
+        ) {
+
+            const empty =
+                document.createElement(
+                    "div"
+                );
+
+
+            empty.className =
+                "calendar-day empty";
+
+
+            calendarDays.appendChild(
+                empty
+            );
+
+        }
+
+
+        // ======================================
+        // HOJE
+        // ======================================
+
+        const today =
+            new Date();
+
+
+        const todayString =
+            dateToString(today);
+
+
+        // ======================================
+        // DIAS
+        // ======================================
+
+        for (
+            let day = 1;
+            day <= daysInMonth;
+            day++
+        ) {
+
+            const date =
+                new Date(
+                    year,
+                    month,
+                    day
+                );
+
+
+            const dateString =
+                dateToString(date);
+
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.type =
+                "button";
+
+
+            button.className =
+                "calendar-day";
+
+
+            button.textContent =
+                day;
+
+
+            // ==================================
+            // HOJE
+            // ==================================
+
+            if (
+                dateString ===
+                todayString
+            ) {
+
+                button.classList.add(
+                    "today"
+                );
+
+            }
+
+
+            // ==================================
+            // DATA PASSADA
+            // ==================================
+
+            if (
+                dateString <
+                todayString
+            ) {
+
+                button.disabled =
+                    true;
+
+
+                button.classList.add(
+                    "unavailable"
+                );
+
+            }
+
+
+            // ==================================
+            // DATA ALUGADA
+            // ==================================
+
+            if (
+                isUnavailable(
+                    dateString
+                )
+            ) {
+
+                button.disabled =
+                    true;
+
+
+                button.classList.add(
+                    "unavailable"
+                );
+
+            }
+
+
+            // ==================================
+            // RETIRADA
+            // ==================================
+
+            if (
+                dateString ===
+                startDate.value
+            ) {
+
+                button.classList.add(
+                    "selected",
+                    "range-start"
+                );
+
+            }
+
+
+            // ==================================
+            // DEVOLUÇÃO
+            // ==================================
+
+            if (
+                dateString ===
+                endDate.value &&
+                endDate.value !==
+                    startDate.value
+            ) {
+
+                button.classList.add(
+                    "selected",
+                    "range-end"
+                );
+
+            }
+
+
+            // ==================================
+            // INTERVALO
+            // ==================================
+
+            if (
+                startDate.value &&
+                endDate.value &&
+                dateString >
+                    startDate.value &&
+                dateString <
+                    endDate.value
+            ) {
+
+                button.classList.add(
+                    "in-range"
+                );
+
+            }
+
+
+            // ==================================
+            // CLIQUE
+            // ==================================
+
+            if (!button.disabled) {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        selectCalendarDate(
+                            dateString
+                        );
+
+                    }
+                );
+
+            }
+
+
+            calendarDays.appendChild(
+                button
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // SELECIONAR DATA
+    // ==========================================
+
+    function selectCalendarDate(
+        dateString
+    ) {
+
+        // ======================================
+        // PRIMEIRA DATA
+        // ======================================
+
+        if (
+            selectingStart ||
+            !startDate.value ||
+            (
+                startDate.value &&
+                endDate.value
+            )
+        ) {
+
+            startDate.value =
+                dateString;
+
+
+            endDate.value =
+                "";
+
+
+            selectingStart =
+                false;
+
+
+            if (selectedStartDisplay) {
+
+                selectedStartDisplay.textContent =
+                    formatDateBR(
+                        dateString
+                    );
+
+            }
+
+
+            if (selectedEndDisplay) {
+
+                selectedEndDisplay.textContent =
+                    "Selecione a devolução";
+
+            }
+
+
+            renderCalendar();
+
+
+            updateTotals();
+
+
+            return;
+
+        }
+
+
+        // ======================================
+        // SEGUNDA DATA ANTES DA PRIMEIRA
+        // ======================================
+
+        if (
+            dateString <
+            startDate.value
+        ) {
+
+            alert(
+                "A devolução não pode ser anterior à retirada."
+            );
+
+
+            return;
+
+        }
+
+
+        // ======================================
+        // VERIFICAR PERÍODO
+        // ======================================
+
+        if (
+            rangeContainsUnavailable(
+                startDate.value,
+                dateString
+            )
+        ) {
+
+            alert(
+                "Esse período contém dias já alugados. Escolha outro período."
+            );
+
+
+            return;
+
+        }
+
+
+        // ======================================
+        // DEFINIR DEVOLUÇÃO
+        // ======================================
+
+        endDate.value =
+            dateString;
+
+
+        if (selectedEndDisplay) {
+
+            selectedEndDisplay.textContent =
+                formatDateBR(
+                    dateString
+                );
+
+        }
+
+
+        selectingStart =
+            true;
+
+
+        renderCalendar();
+
+
+        updateTotals();
+
+    }
+
+
+    // ==========================================
+    // VERIFICAR SE INTERVALO POSSUI
+    // DATA INDISPONÍVEL
+    // ==========================================
+
+    function rangeContainsUnavailable(
+        start,
+        end
+    ) {
+
+        const startDateObj =
+            new Date(
+                `${start}T00:00:00`
+            );
+
+
+        const endDateObj =
+            new Date(
+                `${end}T00:00:00`
+            );
+
+
+        const current =
+            new Date(
+                startDateObj
+            );
+
+
+        while (
+            current <=
+            endDateObj
+        ) {
+
+            const currentString =
+                dateToString(
+                    current
+                );
+
+
+            if (
+                isUnavailable(
+                    currentString
+                )
+            ) {
+
+                return true;
+
+            }
+
+
+            current.setDate(
+                current.getDate() + 1
+            );
+
+        }
+
+
+        return false;
+
+    }
+
+
+    // ==========================================
+    // MÊS ANTERIOR
+    // ==========================================
+
+    if (calendarPrev) {
+
+        calendarPrev.addEventListener(
+            "click",
+            () => {
+
+                calendarDate.setMonth(
+                    calendarDate.getMonth() - 1
+                );
+
+
+                renderCalendar();
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // PRÓXIMO MÊS
+    // ==========================================
+
+    if (calendarNext) {
+
+        calendarNext.addEventListener(
+            "click",
+            () => {
+
+                calendarDate.setMonth(
+                    calendarDate.getMonth() + 1
+                );
+
+
+                renderCalendar();
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // INICIALIZAR CALENDÁRIO
+    // ==========================================
+
+    function initializeCalendar() {
+
+        const today =
+            new Date();
+
+
+        const todayString =
+            dateToString(
+                today
+            );
+
+
+        startDate.value =
+            todayString;
+
+
+        endDate.value =
+            todayString;
+
+
+        if (selectedStartDisplay) {
+
+            selectedStartDisplay.textContent =
+                formatDateBR(
+                    todayString
+                );
+
+        }
+
+
+        if (selectedEndDisplay) {
+
+            selectedEndDisplay.textContent =
+                formatDateBR(
+                    todayString
+                );
+
+        }
+
+
+        selectingStart =
+            true;
+
+
+        calendarDate =
+            new Date(
+                today
+            );
+
+
+        renderCalendar();
 
     }
 
@@ -758,27 +1438,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         // --------------------------------------
-        // DATAS
+        // CALENDÁRIO
         // --------------------------------------
 
-        const today =
-            new Date()
-                .toISOString()
-                .split("T")[0];
-
-
-        startDate.min =
-            today;
-
-        endDate.min =
-            today;
-
-
-        startDate.value =
-            today;
-
-        endDate.value =
-            today;
+        initializeCalendar();
 
 
         updateTotals();
@@ -888,7 +1551,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         dailyTotal.textContent =
-            `R$ ${formatMoney(daily)}`;
+            `R$ ${formatMoney(
+                daily
+            )}`;
 
 
         deliveryTotal.textContent =
@@ -904,44 +1569,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         rentalTotal.textContent =
-            `R$ ${formatMoney(total)}`;
+            `R$ ${formatMoney(
+                total
+            )}`;
 
     }
-
-
-    // ==========================================
-    // DATAS
-    // ==========================================
-
-    startDate.addEventListener(
-        "change",
-        () => {
-
-            endDate.min =
-                startDate.value;
-
-
-            if (
-                endDate.value <
-                startDate.value
-            ) {
-
-                endDate.value =
-                    startDate.value;
-
-            }
-
-
-            updateTotals();
-
-        }
-    );
-
-
-    endDate.addEventListener(
-        "change",
-        updateTotals
-    );
 
 
     // ==========================================
@@ -1033,96 +1665,121 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-   // ==========================================
-// SOLICITAR ALUGUEL
-// ==========================================
+    // ==========================================
+    // SOLICITAR ALUGUEL
+    // ==========================================
 
-rentalButton.addEventListener(
-    "click",
-    () => {
+    if (rentalButton) {
 
-        if (!user) {
+        rentalButton.addEventListener(
+            "click",
+            () => {
 
-            window.location.href =
-                "login.html";
+                if (!user) {
 
-            return;
+                    window.location.href =
+                        "login.html";
 
-        }
+                    return;
 
-
-        if (
-            !startDate.value ||
-            !endDate.value
-        ) {
-
-            alert(
-                "Escolha o período do aluguel."
-            );
-
-            return;
-
-        }
+                }
 
 
-        if (
-            endDate.value <
-            startDate.value
-        ) {
+                if (
+                    !startDate.value ||
+                    !endDate.value
+                ) {
 
-            alert(
-                "A data de devolução não pode ser anterior à retirada."
-            );
+                    alert(
+                        "Escolha o período do aluguel."
+                    );
 
-            return;
+                    return;
 
-        }
-
-
-        // ======================================
-        // ENTREGA SELECIONADA
-        // ======================================
-
-        const selectedDelivery =
-            document.querySelector(
-                'input[name="delivery"]:checked'
-            );
+                }
 
 
-        const delivery =
-            selectedDelivery?.value ===
-            "delivery";
+                if (
+                    endDate.value <
+                    startDate.value
+                ) {
+
+                    alert(
+                        "A data de devolução não pode ser anterior à retirada."
+                    );
+
+                    return;
+
+                }
 
 
-        // ======================================
-        // IR PARA CONFIRMAÇÃO
-        // ======================================
+                // ==================================
+                // VERIFICAR DATAS INDISPONÍVEIS
+                // ==================================
 
-        const params =
-            new URLSearchParams({
+                if (
+                    rangeContainsUnavailable(
+                        startDate.value,
+                        endDate.value
+                    )
+                ) {
 
-                id:
-                    product._id,
+                    alert(
+                        "O período escolhido possui dias indisponíveis."
+                    );
 
-                start:
-                    startDate.value,
+                    return;
 
-                end:
-                    endDate.value,
-
-                delivery:
-                    delivery
-                        ? "delivery"
-                        : "pickup"
-
-            });
+                }
 
 
-        window.location.href =
-            `reserva.html?${params.toString()}`;
+                // ==================================
+                // ENTREGA
+                // ==================================
+
+                const selectedDelivery =
+                    document.querySelector(
+                        'input[name="delivery"]:checked'
+                    );
+
+
+                const delivery =
+                    selectedDelivery?.value ===
+                    "delivery";
+
+
+                // ==================================
+                // PARÂMETROS
+                // ==================================
+
+                const params =
+                    new URLSearchParams({
+
+                        id:
+                            product._id,
+
+                        start:
+                            startDate.value,
+
+                        end:
+                            endDate.value,
+
+                        delivery:
+                            delivery
+                                ? "delivery"
+                                : "pickup"
+
+                    });
+
+
+                window.location.href =
+                    `reserva.html?${params.toString()}`;
+
+            }
+        );
 
     }
-);
+
 
     // ==========================================
     // INICIAR
