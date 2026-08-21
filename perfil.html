@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -11,7 +10,9 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Meu Perfil | Alugase</title>
+    <title>
+        Meu Perfil | Alugase
+    </title>
 
     <link
         rel="stylesheet"
@@ -34,7 +35,9 @@
     <nav class="navbar profile-navbar">
 
 
-        <!-- LOGO -->
+        <!-- ==========================================
+             LOGO
+        =========================================== -->
 
         <div class="logo">
 
@@ -45,14 +48,18 @@
                     alt="Logo Alugase"
                 >
 
-                <h2>ALUGASE</h2>
+                <h2>
+                    ALUGASE
+                </h2>
 
             </a>
 
         </div>
 
 
-        <!-- NAVEGAÇÃO -->
+        <!-- ==========================================
+             NAVEGAÇÃO
+        =========================================== -->
 
         <ul class="nav-links">
 
@@ -71,12 +78,17 @@
         </ul>
 
 
-        <!-- BOTÕES -->
+        <!-- ==========================================
+             BOTÕES
+        =========================================== -->
 
         <div class="nav-buttons">
 
 
-            <!-- SOLICITAÇÕES -->
+            <!-- ======================================
+                 SOLICITAÇÕES
+                 É SEPARADO DAS NOTIFICAÇÕES
+            ======================================= -->
 
             <a
                 href="solicitacoes.html"
@@ -86,12 +98,16 @@
             </a>
 
 
-            <!-- NOTIFICAÇÕES -->
+            <!-- ======================================
+                 NOTIFICAÇÕES
+            ======================================= -->
 
             <a
                 href="notificacoes.html"
                 class="notification-nav"
+                id="notification-button"
                 title="Notificações"
+                aria-label="Notificações"
             >
 
                 🔔
@@ -107,7 +123,9 @@
             </a>
 
 
-            <!-- CONVERSAS -->
+            <!-- ======================================
+                 CONVERSAS
+            ======================================= -->
 
             <a
                 href="chat.html"
@@ -117,10 +135,11 @@
             </a>
 
 
-            <!-- NOVO ANÚNCIO -->
+            <!-- ======================================
+                 NOVO ANÚNCIO
+            ======================================= -->
 
             <button
-                type="button"
                 class="btn-primary"
                 id="new-ad"
             >
@@ -128,10 +147,11 @@
             </button>
 
 
-            <!-- LOGOUT -->
+            <!-- ======================================
+                 LOGOUT
+            ======================================= -->
 
             <button
-                type="button"
                 class="btn-secondary"
                 id="logout"
             >
@@ -301,7 +321,6 @@
 
 
         <button
-            type="button"
             class="tab active"
             data-tab="ads"
         >
@@ -310,7 +329,6 @@
 
 
         <button
-            type="button"
             class="tab"
             data-tab="rentals"
         >
@@ -319,7 +337,6 @@
 
 
         <button
-            type="button"
             class="tab"
             data-tab="favorites"
         >
@@ -328,7 +345,6 @@
 
 
         <button
-            type="button"
             class="tab"
             data-tab="verification"
         >
@@ -371,7 +387,6 @@
 
 
                 <button
-                    type="button"
                     class="btn-primary"
                     id="empty-new-ad"
                 >
@@ -479,7 +494,6 @@
                 </p>
 
 
-
                 <!-- STATUS -->
 
                 <div class="verify-status-grid">
@@ -527,7 +541,6 @@
                 </div>
 
 
-
                 <!-- FORMULÁRIO -->
 
                 <div class="form-grid">
@@ -545,7 +558,6 @@
                             type="text"
                             id="cpf"
                             maxlength="14"
-                            autocomplete="off"
                         >
 
                         <small
@@ -553,7 +565,6 @@
                         ></small>
 
                     </div>
-
 
 
                     <!-- RG -->
@@ -568,11 +579,9 @@
                             type="text"
                             id="rg"
                             maxlength="12"
-                            autocomplete="off"
                         >
 
                     </div>
-
 
 
                     <!-- CNH -->
@@ -587,11 +596,9 @@
                             type="text"
                             id="cnh"
                             maxlength="11"
-                            autocomplete="off"
                         >
 
                     </div>
-
 
 
                     <!-- CEP -->
@@ -606,11 +613,9 @@
                             type="text"
                             id="cep"
                             maxlength="9"
-                            autocomplete="postal-code"
                         >
 
                     </div>
-
 
 
                     <!-- NÚMERO -->
@@ -624,11 +629,9 @@
                         <input
                             type="text"
                             id="number"
-                            autocomplete="off"
                         >
 
                     </div>
-
 
 
                     <!-- RUA -->
@@ -648,7 +651,6 @@
                     </div>
 
 
-
                     <!-- BAIRRO -->
 
                     <div class="form-group">
@@ -666,7 +668,6 @@
                     </div>
 
 
-
                     <!-- CIDADE -->
 
                     <div class="form-group">
@@ -682,7 +683,6 @@
                         >
 
                     </div>
-
 
 
                     <!-- ESTADO -->
@@ -704,11 +704,9 @@
                 </div>
 
 
-
                 <!-- BOTÃO -->
 
                 <button
-                    type="button"
                     class="btn-primary"
                     id="verify-account"
                 >
@@ -725,9 +723,11 @@
 
 
 
-<script src="./js/perfil.js"></script>
+<script
+    src="./js/perfil.js"
+></script>
+
 
 </body>
 
 </html>
-```
