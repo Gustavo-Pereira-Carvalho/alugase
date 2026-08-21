@@ -574,21 +574,37 @@ input[readonly] {
 
 
 /* ==========================================
-   900px
+   RESPONSIVIDADE
 ========================================== */
 
 @media (max-width: 900px) {
 
-    .stats-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
+    .profile-navbar {
+        min-height: 64px;
+    }
+
+    .profile-navbar .nav-links {
+        display: none;
+    }
+
+    .profile-navbar .nav-buttons {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .profile-navbar .btn-secondary,
+    .profile-navbar .btn-primary {
+        padding: 8px 12px;
+        font-size: 13px;
+        white-space: nowrap;
     }
 
 }
 
 
 /* ==========================================
-   768px
+   TABLET / CELULAR
 ========================================== */
 
 @media (max-width: 768px) {
@@ -601,6 +617,7 @@ input[readonly] {
 
     .name-row {
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     .form-grid {
@@ -615,44 +632,32 @@ input[readonly] {
         grid-template-columns: 1fr;
     }
 
-    /*
-       Navbar:
-       esconde os links e deixa os botões
-       quebrarem corretamente.
-    */
+}
+
+
+/* ==========================================
+   CELULAR
+========================================== */
+
+@media (max-width: 600px) {
+
+    .profile-page {
+        width: calc(100% - 24px);
+        padding: 25px 0 50px;
+    }
+
+
+    /* ------------------------------
+       NAVBAR
+    ------------------------------ */
 
     .profile-navbar {
-        min-height: 64px;
-        flex-wrap: wrap;
+        padding: 10px 12px;
     }
 
-    .profile-navbar .nav-links {
-        display: none;
-    }
-
-    .profile-navbar .nav-buttons {
+    .profile-navbar .logo a {
         display: flex;
         align-items: center;
-        gap: 6px;
-        flex-wrap: wrap;
-        justify-content: flex-end;
-        min-width: 0;
-        flex: 1;
-    }
-
-    .profile-navbar .nav-buttons > * {
-        max-width: 100%;
-    }
-
-    .profile-navbar .btn-secondary,
-    .profile-navbar .btn-primary {
-        padding: 8px 11px;
-        font-size: 13px;
-        white-space: nowrap;
-    }
-
-    .profile-navbar .logo h2 {
-        font-size: 20px;
     }
 
     .profile-navbar .logo img {
@@ -660,19 +665,26 @@ input[readonly] {
         height: 34px;
     }
 
-}
-
-
-/* ==========================================
-   600px
-========================================== */
-
-@media (max-width: 600px) {
-
-    .profile-page {
-        width: 94%;
-        padding: 25px 0 50px;
+    .profile-navbar .logo h2 {
+        font-size: 18px;
     }
+
+    .profile-navbar .nav-buttons {
+        gap: 6px;
+        margin-left: auto;
+    }
+
+    .profile-navbar .btn-secondary,
+    .profile-navbar .btn-primary {
+        padding: 8px 10px;
+        font-size: 12px;
+        min-width: 0;
+    }
+
+
+    /* ------------------------------
+       PERFIL
+    ------------------------------ */
 
     .avatar {
         width: 100px;
@@ -683,6 +695,11 @@ input[readonly] {
     .name-row h1 {
         font-size: 27px;
     }
+
+
+    /* ------------------------------
+       ESTATÍSTICAS
+    ------------------------------ */
 
     .stats-grid {
         grid-template-columns: 1fr 1fr;
@@ -701,75 +718,87 @@ input[readonly] {
         font-size: 12px;
     }
 
+
+    /* ------------------------------
+       ABAS
+    ------------------------------ */
+
     .tabs {
         gap: 7px;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar {
+        display: none;
     }
 
     .tab {
         padding: 10px 13px;
         font-size: 13px;
+        flex-shrink: 0;
     }
+
+
+    /* ------------------------------
+       CARDS
+    ------------------------------ */
 
     .item-card {
         align-items: flex-start;
     }
 
+
+    /* ------------------------------
+       VERIFICAÇÃO
+    ------------------------------ */
+
     .verification-card {
         padding: 18px;
-    }
-
-
-    /*
-       Navbar em celular:
-       deixa a logo em uma linha e
-       os botões em outra.
-    */
-
-    .profile-navbar {
-        padding: 10px 15px;
-        gap: 10px;
-    }
-
-    .profile-navbar .logo {
-        width: 100%;
-    }
-
-    .profile-navbar .nav-buttons {
-        width: 100%;
-        flex: none;
-
-        display: grid;
-
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
-        gap: 8px;
-    }
-
-    .profile-navbar .nav-buttons > * {
-        width: 100%;
-        box-sizing: border-box;
-        text-align: center;
-        min-width: 0;
-    }
-
-    .profile-navbar .notification-nav {
-        width: 100%;
     }
 
 }
 
 
 /* ==========================================
-   430px
+   CELULAR PEQUENO
 ========================================== */
 
 @media (max-width: 430px) {
 
     .profile-page {
-        width: calc(100% - 24px);
+        width: calc(100% - 20px);
         padding-top: 20px;
     }
+
+
+    /* NAVBAR */
+
+    .profile-navbar {
+        padding: 8px 10px;
+    }
+
+    .profile-navbar .logo h2 {
+        display: none;
+    }
+
+    .profile-navbar .logo img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .profile-navbar .nav-buttons {
+        gap: 5px;
+    }
+
+    .profile-navbar .nav-buttons .btn-secondary,
+    .profile-navbar .nav-buttons .btn-primary {
+        padding: 7px 8px;
+        font-size: 11px;
+    }
+
+
+    /* PERFIL */
 
     .avatar {
         width: 90px;
@@ -785,9 +814,15 @@ input[readonly] {
         font-size: 24px;
     }
 
+
+    /* ESTATÍSTICAS */
+
     .stats-grid {
         grid-template-columns: 1fr;
     }
+
+
+    /* CARDS */
 
     .item-card {
         flex-wrap: wrap;
@@ -795,55 +830,6 @@ input[readonly] {
 
     .item-card .btn-secondary {
         width: 100%;
-    }
-
-    /*
-       Navbar pequeno:
-       2 colunas continuam cabendo,
-       mas os botões não estouram.
-    */
-
-    .profile-navbar .nav-buttons {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
-        gap: 6px;
-    }
-
-    .profile-navbar .btn-secondary,
-    .profile-navbar .btn-primary {
-        padding: 9px 6px;
-        font-size: 12px;
-        min-width: 0;
-    }
-
-}
-
-
-/* ==========================================
-   360px
-========================================== */
-
-@media (max-width: 360px) {
-
-    .profile-navbar .nav-buttons {
-        grid-template-columns: 1fr;
-    }
-
-    .profile-navbar .nav-buttons > * {
-        width: 100%;
-    }
-
-    .profile-navbar .logo {
-        justify-content: center;
-    }
-
-    .profile-page {
-        width: calc(100% - 20px);
-    }
-
-    .verification-card {
-        padding: 14px;
     }
 
 }
