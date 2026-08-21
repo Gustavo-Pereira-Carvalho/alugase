@@ -8,20 +8,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     // API
     // ==========================================
 
-    const API = "https://alugase-api.onrender.com/api";
+    const API =
+        "https://alugase-api.onrender.com/api";
 
-    const PRODUCTS_API = `${API}/products`;
-    const USERS_API = `${API}/users`;
+    const PRODUCTS_API =
+        `${API}/products`;
+
+    const USERS_API =
+        `${API}/users`;
+
+    const RENTALS_API =
+        `${API}/rentals`;
 
 
     // ==========================================
     // USUÁRIO LOGADO
     // ==========================================
 
-    const user =
-        JSON.parse(
-            localStorage.getItem("alugase_user")
+    let user = null;
+
+    try {
+
+        user =
+            JSON.parse(
+                localStorage.getItem(
+                    "alugase_user"
+                )
+            );
+
+    } catch (error) {
+
+        console.warn(
+            "Usuário salvo no localStorage inválido."
         );
+
+        user = null;
+
+    }
 
 
     // ==========================================
@@ -36,7 +59,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!productId) {
 
-        window.location.href = "index.html";
+        window.location.href =
+            "index.html";
 
         return;
 
@@ -144,7 +168,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // DATAS / CALENDÁRIO
+    // CALENDÁRIO
     // ==========================================
 
     const startDate =
@@ -226,26 +250,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let selectingStart = true;
 
-
-    // ==========================================
-    // DATAS INDISPONÍVEIS
-    // ==========================================
-    //
-    // Por enquanto fica vazio.
-    //
-    // Depois podemos preencher automaticamente
-    // com as reservas aprovadas pela API.
-    //
-    // Exemplo:
-    //
-    // unavailableDates = [
-    //     "2026-08-25",
-    //     "2026-08-26",
-    //     "2026-08-27"
-    // ];
-    //
-    // ==========================================
-
     let unavailableDates = [];
 
 
@@ -268,7 +272,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // FORMATAR DATA PARA BR
+    // FORMATAR DATA
     // ==========================================
 
     function formatDateBR(dateString) {
@@ -278,7 +282,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             return "Selecione uma data";
 
         }
-
 
         const [
             year,
@@ -294,7 +297,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // CONVERTER DATE PARA YYYY-MM-DD
+    // DATE → YYYY-MM-DD
     // ==========================================
 
     function dateToString(date) {
@@ -321,6 +324,35 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
+    // NORMALIZAR DATA
+    // ==========================================
+
+    function normalizeDate(dateValue) {
+
+        if (!dateValue) {
+
+            return null;
+
+        }
+
+
+        const date =
+            new Date(dateValue);
+
+
+        if (Number.isNaN(date.getTime())) {
+
+            return null;
+
+        }
+
+
+        return dateToString(date);
+
+    }
+
+
+    // ==========================================
     // VERIFICAR DATA INDISPONÍVEL
     // ==========================================
 
@@ -329,6 +361,205 @@ document.addEventListener("DOMContentLoaded", async () => {
         return unavailableDates.includes(
             dateString
         );
+
+    }
+
+
+    // ==========================================
+    // ADICIONAR INTERVALO DE DATAS
+    // ==========================================
+
+    function addDateRange(
+        start,
+        end
+    ) {
+
+        const startObj =
+            new Date(
+                `${start}T00:00:00`
+            );
+
+
+        const endObj =
+            new Date(
+                `${end}T00:00:00`
+            );
+
+
+        if (
+            Number.isNaN(
+                startObj.getTime()
+            ) ||
+            Number.isNaN(
+                endObj.getTime()
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const current =
+            new Date(startObj);
+
+
+        while (
+            current <= endObj
+        ) {
+
+            const dateString =
+                dateToString(
+                    current
+                );
+
+
+            if (
+                !unavailableDates.includes(
+                    dateString
+                )
+            ) {
+
+                unavailableDates.push(
+                    dateString
+                );
+
+            }
+
+
+            current.setDate(
+                current.getDate() + 1
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // CARREGAR DATAS ALUGADAS
+    // ==========================================
+
+    async function loadUnavailableDates() {
+
+        unavailableDates = [];
+
+
+        try {
+
+            /*
+             * Tentamos buscar as reservas do produto.
+             *
+             * O endpoint esperado é:
+             *
+             * GET /api/rentals/product/:productId
+             *
+             * Caso seu backend utilize outro endpoint,
+             * ajustamos apenas esta URL.
+             */
+
+            const response =
+                await fetch(
+                    `${RENTALS_API}/product/${productId}`
+                );
+
+
+            if (!response.ok) {
+
+                console.warn(
+                    "Não foi possível carregar as reservas do produto."
+                );
+
+                return;
+
+            }
+
+
+            const rentals =
+                await response.json();
+
+
+            if (
+                !Array.isArray(rentals)
+            ) {
+
+                return;
+
+            }
+
+
+            rentals.forEach(
+                rental => {
+
+                    /*
+                     * Somente reservas que realmente
+                     * bloqueiam o calendário.
+                     */
+
+                    const status =
+                        String(
+                            rental.status || ""
+                        ).toLowerCase();
+
+
+                    const blockedStatuses = [
+                        "pending",
+                        "approved",
+                        "confirmed",
+                        "active",
+                        "accepted"
+                    ];
+
+
+                    if (
+                        !blockedStatuses.includes(
+                            status
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const start =
+                        normalizeDate(
+                            rental.startDate ||
+                            rental.start
+                        );
+
+
+                    const end =
+                        normalizeDate(
+                            rental.endDate ||
+                            rental.end
+                        );
+
+
+                    if (
+                        start &&
+                        end
+                    ) {
+
+                        addDateRange(
+                            start,
+                            end
+                        );
+
+                    }
+
+                }
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao carregar datas indisponíveis:",
+                error
+            );
+
+        }
 
     }
 
@@ -361,6 +592,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             await loadOwner();
+
+
+            await loadUnavailableDates();
 
 
             fillScreen();
@@ -512,7 +746,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         );
 
 
-                    button.type = "button";
+                    button.type =
+                        "button";
 
 
                     button.className =
@@ -538,7 +773,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         "click",
                         () => {
 
-                            changeImage(image);
+                            changeImage(
+                                image
+                            );
 
 
                             document
@@ -587,7 +824,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
 
 
-            button.type = "button";
+            button.type =
+                "button";
+
 
             button.className =
                 "thumbnail emoji active";
@@ -607,7 +846,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // FOTO DO PROPRIETÁRIO
+    // PROPRIETÁRIO
     // ==========================================
 
     function renderOwner() {
@@ -628,11 +867,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             ownerRating.textContent =
-                product.rating || "5.0";
+                product.rating ||
+                "5.0";
 
 
             ownerReviews.textContent =
-                product.reviews || "0";
+                product.reviews ||
+                "0";
 
 
             return;
@@ -710,7 +951,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "Usuário";
 
 
-            ownerVerification.className = "";
+            ownerVerification.className =
+                "";
 
         }
 
@@ -774,7 +1016,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         // ======================================
-        // NOME DO MÊS
+        // MÊS
         // ======================================
 
         if (calendarMonth) {
@@ -792,7 +1034,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         // ======================================
-        // ESPAÇOS ANTES DO PRIMEIRO DIA
+        // ESPAÇOS
         // ======================================
 
         for (
@@ -827,7 +1069,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         const todayString =
-            dateToString(today);
+            dateToString(
+                today
+            );
 
 
         // ======================================
@@ -849,7 +1093,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             const dateString =
-                dateToString(date);
+                dateToString(
+                    date
+                );
 
 
             const button =
@@ -1021,7 +1267,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ) {
 
         // ======================================
-        // PRIMEIRA DATA
+        // NOVA RETIRADA
         // ======================================
 
         if (
@@ -1032,6 +1278,21 @@ document.addEventListener("DOMContentLoaded", async () => {
                 endDate.value
             )
         ) {
+
+            if (
+                isUnavailable(
+                    dateString
+                )
+            ) {
+
+                alert(
+                    "Essa data já está alugada."
+                );
+
+                return;
+
+            }
+
 
             startDate.value =
                 dateString;
@@ -1075,7 +1336,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         // ======================================
-        // SEGUNDA DATA ANTES DA PRIMEIRA
+        // DEVOLUÇÃO ANTES DA RETIRADA
         // ======================================
 
         if (
@@ -1094,7 +1355,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         // ======================================
-        // VERIFICAR PERÍODO
+        // MESMA DATA
+        // ======================================
+
+        if (
+            dateString ===
+            startDate.value
+        ) {
+
+            alert(
+                "Escolha uma data de devolução posterior à retirada."
+            );
+
+
+            return;
+
+        }
+
+
+        // ======================================
+        // PERÍODO INDISPONÍVEL
         // ======================================
 
         if (
@@ -1145,8 +1425,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // VERIFICAR SE INTERVALO POSSUI
-    // DATA INDISPONÍVEL
+    // VERIFICAR INTERVALO
     // ==========================================
 
     function rangeContainsUnavailable(
@@ -1273,7 +1552,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         endDate.value =
-            todayString;
+            "";
 
 
         if (selectedStartDisplay) {
@@ -1289,15 +1568,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (selectedEndDisplay) {
 
             selectedEndDisplay.textContent =
-                formatDateBR(
-                    todayString
-                );
+                "Selecione a devolução";
 
         }
 
 
         selectingStart =
-            true;
+            false;
 
 
         calendarDate =
@@ -1321,9 +1598,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             `${product.title} | ALUGASE`;
 
 
-        // --------------------------------------
+        // ======================================
         // CATEGORIA
-        // --------------------------------------
+        // ======================================
 
         categoryLabel.textContent =
             (
@@ -1343,9 +1620,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             )}`;
 
 
-        // --------------------------------------
+        // ======================================
         // TÍTULO
-        // --------------------------------------
+        // ======================================
 
         breadcrumbTitle.textContent =
             product.title;
@@ -1355,45 +1632,50 @@ document.addEventListener("DOMContentLoaded", async () => {
             product.title;
 
 
-        // --------------------------------------
+        // ======================================
         // GALERIA
-        // --------------------------------------
+        // ======================================
 
         renderGallery();
 
 
-        // --------------------------------------
+        // ======================================
         // LOCALIZAÇÃO
-        // --------------------------------------
+        // ======================================
 
         locationText.textContent =
-            `📍 ${product.city || "Não informado"}`;
+            `📍 ${
+                product.city ||
+                "Não informado"
+            }`;
 
 
-        // --------------------------------------
+        // ======================================
         // DESCRIÇÃO
-        // --------------------------------------
+        // ======================================
 
         description.textContent =
             product.description ||
             "Este produto não possui descrição.";
 
 
-        // --------------------------------------
+        // ======================================
         // AVALIAÇÃO
-        // --------------------------------------
+        // ======================================
 
         productRating.textContent =
-            product.rating || "5.0";
+            product.rating ||
+            "5.0";
 
 
         productReviews.textContent =
-            product.reviews || "0";
+            product.reviews ||
+            "0";
 
 
-        // --------------------------------------
+        // ======================================
         // PREÇO
-        // --------------------------------------
+        // ======================================
 
         price.textContent =
             `R$ ${formatMoney(
@@ -1401,11 +1683,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             )}`;
 
 
-        // --------------------------------------
+        // ======================================
         // ENTREGA
-        // --------------------------------------
+        // ======================================
 
-        if (product.delivery) {
+        const hasDelivery =
+            product.delivery === true ||
+            product.delivery === "true";
+
+
+        if (hasDelivery) {
 
             deliveryLabel.textContent =
                 `+ R$ ${formatMoney(
@@ -1420,9 +1707,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // --------------------------------------
+        // ======================================
         // CAUÇÃO
-        // --------------------------------------
+        // ======================================
 
         depositTotal.textContent =
             `R$ ${formatMoney(
@@ -1430,21 +1717,41 @@ document.addEventListener("DOMContentLoaded", async () => {
             )}`;
 
 
-        // --------------------------------------
+        // ======================================
         // PROPRIETÁRIO
-        // --------------------------------------
+        // ======================================
 
         renderOwner();
 
 
-        // --------------------------------------
+        // ======================================
         // CALENDÁRIO
-        // --------------------------------------
+        // ======================================
 
         initializeCalendar();
 
 
+        // ======================================
+        // TOTAIS
+        // ======================================
+
         updateTotals();
+
+
+        // ======================================
+        // BOTÃO
+        // ======================================
+
+        if (rentalButton) {
+
+            rentalButton.disabled =
+                false;
+
+
+            rentalButton.textContent =
+                "Solicitar aluguel";
+
+        }
 
     }
 
@@ -1460,7 +1767,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             !endDate.value
         ) {
 
-            return 1;
+            return 0;
 
         }
 
@@ -1481,14 +1788,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             Math.ceil(
                 (
                     end - start
-                ) /
-                86400000
+                ) / 86400000
             );
 
 
-        return difference >= 0
-            ? difference + 1
-            : 1;
+        return difference > 0
+            ? difference
+            : 0;
 
     }
 
@@ -1522,9 +1828,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "delivery";
 
 
+        const hasDelivery =
+            product.delivery === true ||
+            product.delivery === "true";
+
+
         const deliveryValue =
             deliverySelected &&
-            product.delivery
+            hasDelivery
                 ? Number(
                     product.deliveryPrice || 0
                 )
@@ -1685,6 +1996,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
 
+                if (!product) {
+
+                    alert(
+                        "Produto ainda não carregado."
+                    );
+
+                    return;
+
+                }
+
+
                 if (
                     !startDate.value ||
                     !endDate.value
@@ -1700,12 +2022,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                 if (
-                    endDate.value <
+                    endDate.value <=
                     startDate.value
                 ) {
 
                     alert(
-                        "A data de devolução não pode ser anterior à retirada."
+                        "A data de devolução deve ser posterior à retirada."
                     );
 
                     return;
@@ -1714,7 +2036,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                 // ==================================
-                // VERIFICAR DATAS INDISPONÍVEIS
+                // VERIFICAR DISPONIBILIDADE
                 // ==================================
 
                 if (
