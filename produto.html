@@ -242,39 +242,133 @@
                 </h2>
 
 
-                <!-- DATAS -->
+             <!-- ==================================
+     CALENDÁRIO
+=================================== -->
 
-                <div class="date-fields">
+<div class="custom-calendar-wrapper">
 
-                    <div class="date-field">
+    <div class="calendar-selection">
 
-                        <label for="start-date">
-                            Retirada
-                        </label>
+        <div class="selected-date-box">
 
-                        <input
-                            type="date"
-                            id="start-date"
-                        >
+            <span>
+                Retirada
+            </span>
 
-                    </div>
+            <strong id="selected-start-display">
+                Selecione uma data
+            </strong>
+
+        </div>
 
 
-                    <div class="date-field">
+        <div class="date-arrow">
+            →
+        </div>
 
-                        <label for="end-date">
-                            Devolução
-                        </label>
 
-                        <input
-                            type="date"
-                            id="end-date"
-                        >
+        <div class="selected-date-box">
 
-                    </div>
+            <span>
+                Devolução
+            </span>
 
-                </div>
+            <strong id="selected-end-display">
+                Selecione uma data
+            </strong>
 
+        </div>
+
+    </div>
+
+
+    <div class="calendar">
+
+        <div class="calendar-header">
+
+            <button
+                type="button"
+                id="calendar-prev"
+                class="calendar-nav"
+            >
+                ‹
+            </button>
+
+
+            <strong id="calendar-month">
+                Agosto 2026
+            </strong>
+
+
+            <button
+                type="button"
+                id="calendar-next"
+                class="calendar-nav"
+            >
+                ›
+            </button>
+
+        </div>
+
+
+        <div class="calendar-weekdays">
+
+            <span>Dom</span>
+            <span>Seg</span>
+            <span>Ter</span>
+            <span>Qua</span>
+            <span>Qui</span>
+            <span>Sex</span>
+            <span>Sáb</span>
+
+        </div>
+
+
+        <div
+            class="calendar-days"
+            id="calendar-days"
+        ></div>
+
+
+        <div class="calendar-legend">
+
+            <span>
+                <i class="legend-dot available"></i>
+                Disponível
+            </span>
+
+            <span>
+                <i class="legend-dot selected"></i>
+                Selecionado
+            </span>
+
+            <span>
+                <i class="legend-dot unavailable"></i>
+                Alugado
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!--
+        Mantemos os inputs escondidos.
+        O restante do JS continuará usando eles.
+    -->
+
+    <input
+        type="hidden"
+        id="start-date"
+    >
+
+    <input
+        type="hidden"
+        id="end-date"
+    >
+
+</div>
 
                 <!-- ENTREGA -->
 
