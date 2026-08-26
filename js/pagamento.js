@@ -4,29 +4,58 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const API = "https://alugase-api.onrender.com/api";
+    const API =
+        "https://alugase-api.onrender.com/api";
 
     // ======================================
     // ELEMENTOS
     // ======================================
 
-    const loading = document.querySelector("#loading");
-    const checkout = document.querySelector("#checkout");
-    const errorState = document.querySelector("#error-state");
-    const errorMessage = document.querySelector("#error-message");
+    const loading =
+        document.querySelector("#loading");
 
-    const productSummary = document.querySelector("#product-summary");
-    const rentTotal = document.querySelector("#rent-total");
-    const deliveryPrice = document.querySelector("#delivery-price");
-    const deposit = document.querySelector("#deposit");
-    const total = document.querySelector("#total");
+    const checkout =
+        document.querySelector("#checkout");
 
-    const startDate = document.querySelector("#start-date");
-    const endDate = document.querySelector("#end-date");
-    const days = document.querySelector("#days");
+    const errorState =
+        document.querySelector("#error-state");
 
-    const paymentBrick = document.querySelector("#paymentBrick_container");
-    const paymentResult = document.querySelector("#payment-result");
+    const errorMessage =
+        document.querySelector("#error-message");
+
+    const productSummary =
+        document.querySelector("#product-summary");
+
+    const rentTotal =
+        document.querySelector("#rent-total");
+
+    const deliveryPrice =
+        document.querySelector("#delivery-price");
+
+    const deposit =
+        document.querySelector("#deposit");
+
+    const total =
+        document.querySelector("#total");
+
+    const startDate =
+        document.querySelector("#start-date");
+
+    const endDate =
+        document.querySelector("#end-date");
+
+    const days =
+        document.querySelector("#days");
+
+    const paymentBrick =
+        document.querySelector(
+            "#paymentBrick_container"
+        );
+
+    const paymentResult =
+        document.querySelector(
+            "#payment-result"
+        );
 
     // ======================================
     // USUÁRIO
@@ -35,15 +64,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     let user = null;
 
     try {
-        user = JSON.parse(
-            localStorage.getItem("alugase_user")
-        );
+
+        user =
+            JSON.parse(
+                localStorage.getItem(
+                    "alugase_user"
+                )
+            );
+
     } catch (error) {
-        console.error("Erro ao ler usuário:", error);
+
+        console.error(
+            "Erro ao ler usuário:",
+            error
+        );
     }
 
     if (!user) {
-        location.href = "login.html";
+
+        location.href =
+            "login.html";
+
         return;
     }
 
@@ -52,81 +93,113 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ======================================
 
     const rentalId =
-        new URLSearchParams(location.search).get("id");
+        new URLSearchParams(
+            location.search
+        ).get("id");
 
     if (!rentalId) {
-        showError("Aluguel não informado.");
+
+        showError(
+            "Aluguel não informado."
+        );
+
         return;
     }
 
     // ======================================
-    // DINHEIRO
+    // FORMATAR DINHEIRO
     // ======================================
 
     function money(value) {
 
-        return Number(value || 0).toLocaleString(
+        return Number(
+            value || 0
+        ).toLocaleString(
             "pt-BR",
             {
-                style: "currency",
-                currency: "BRL"
+                style:
+                    "currency",
+
+                currency:
+                    "BRL"
             }
         );
     }
 
     // ======================================
-    // DATA
+    // FORMATAR DATA
     // ======================================
 
     function formatDate(date) {
 
         if (!date) {
+
             return "-";
         }
 
-        const parsed = new Date(date);
+        const parsed =
+            new Date(date);
 
-        if (Number.isNaN(parsed.getTime())) {
+        if (
+            Number.isNaN(
+                parsed.getTime()
+            )
+        ) {
+
             return "-";
         }
 
-        return parsed.toLocaleDateString("pt-BR");
+        return parsed.toLocaleDateString(
+            "pt-BR"
+        );
     }
 
     // ======================================
-    // ESCAPE HTML
+    // ESCAPAR HTML
     // ======================================
 
     function escapeHtml(text) {
 
-        const div = document.createElement("div");
+        const div =
+            document.createElement(
+                "div"
+            );
 
-        div.textContent = text || "";
+        div.textContent =
+            text || "";
 
         return div.innerHTML;
     }
 
     // ======================================
-    // ERRO
+    // MOSTRAR ERRO
     // ======================================
 
     function showError(message) {
 
         if (loading) {
-            loading.style.display = "none";
+
+            loading.style.display =
+                "none";
         }
 
         if (checkout) {
-            checkout.style.display = "none";
+
+            checkout.style.display =
+                "none";
         }
 
         if (errorState) {
-            errorState.style.display = "block";
+
+            errorState.style.display =
+                "block";
         }
 
         if (errorMessage) {
+
             errorMessage.textContent =
-                message || "Ocorreu um erro.";
+                message ||
+                "Ocorreu um erro.";
         }
     }
 
@@ -138,22 +211,32 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
 
-            console.log("🔄 Carregando checkout...");
-
-            const response = await fetch(
-                `${API}/payments/checkout/${rentalId}`
+            console.log(
+                "🔄 Carregando checkout..."
             );
 
-            const text = await response.text();
+            const response =
+                await fetch(
+                    `${API}/payments/checkout/${rentalId}`
+                );
+
+            const responseText =
+                await response.text();
 
             let data;
 
             try {
-                data = JSON.parse(text);
+
+                data =
+                    JSON.parse(
+                        responseText
+                    );
+
             } catch {
+
                 console.error(
                     "Resposta inválida do backend:",
-                    text
+                    responseText
                 );
 
                 throw new Error(
@@ -161,20 +244,30 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
             }
 
-            console.log("📥 Checkout:", data);
+            console.log(
+                "📥 Checkout:",
+                data
+            );
 
             if (!response.ok) {
+
                 throw new Error(
                     data.error ||
                     "Erro ao carregar checkout."
                 );
             }
 
-            const rental = data.rental;
-            const product = data.product;
-            const renter = data.renter;
+            const rental =
+                data.rental;
+
+            const product =
+                data.product;
+
+            const renter =
+                data.renter;
 
             if (!rental) {
+
                 throw new Error(
                     "Dados do aluguel não encontrados."
                 );
@@ -191,7 +284,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                         product?.image
                             ? `
                                 <img
-                                    src="${escapeHtml(product.image)}"
+                                    src="${escapeHtml(
+                                        product.image
+                                    )}"
                                     alt="${escapeHtml(
                                         product.title
                                     )}"
@@ -208,7 +303,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                         <h3>
                             ${escapeHtml(
-                                product?.title || "Produto"
+                                product?.title ||
+                                "Produto"
                             )}
                         </h3>
 
@@ -229,23 +325,35 @@ document.addEventListener("DOMContentLoaded", async () => {
             // ==================================
 
             if (rentTotal) {
+
                 rentTotal.textContent =
-                    money(rental.rentTotal);
+                    money(
+                        rental.rentTotal
+                    );
             }
 
             if (deliveryPrice) {
+
                 deliveryPrice.textContent =
-                    money(rental.deliveryPrice);
+                    money(
+                        rental.deliveryPrice
+                    );
             }
 
             if (deposit) {
+
                 deposit.textContent =
-                    money(rental.deposit);
+                    money(
+                        rental.deposit
+                    );
             }
 
             if (total) {
+
                 total.textContent =
-                    money(rental.total);
+                    money(
+                        rental.total
+                    );
             }
 
             // ==================================
@@ -253,40 +361,54 @@ document.addEventListener("DOMContentLoaded", async () => {
             // ==================================
 
             if (startDate) {
+
                 startDate.textContent =
-                    formatDate(rental.startDate);
+                    formatDate(
+                        rental.startDate
+                    );
             }
 
             if (endDate) {
+
                 endDate.textContent =
-                    formatDate(rental.endDate);
+                    formatDate(
+                        rental.endDate
+                    );
             }
 
             if (days) {
 
                 const rentalDays =
-                    Number(rental.days || 0);
+                    Number(
+                        rental.days || 0
+                    );
 
                 days.textContent =
                     `${rentalDays} dia${
-                        rentalDays !== 1 ? "s" : ""
+                        rentalDays !== 1
+                            ? "s"
+                            : ""
                     }`;
             }
 
             // ==================================
-            // EXIBIR
+            // EXIBIR CHECKOUT
             // ==================================
 
             if (loading) {
-                loading.style.display = "none";
+
+                loading.style.display =
+                    "none";
             }
 
             if (checkout) {
-                checkout.style.display = "block";
+
+                checkout.style.display =
+                    "block";
             }
 
             // ==================================
-            // BRICK
+            // RENDERIZAR BRICK
             // ==================================
 
             await renderBrick(
@@ -310,7 +432,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // RENDERIZAR BRICK
+    // RENDERIZAR PAYMENT BRICK
     // ======================================
 
     async function renderBrick(
@@ -326,14 +448,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
 
             if (!publicKey) {
+
                 throw new Error(
                     "Chave pública do Mercado Pago não recebida."
                 );
             }
 
             if (
-                typeof MercadoPago === "undefined"
+                typeof MercadoPago ===
+                "undefined"
             ) {
+
                 throw new Error(
                     "SDK do Mercado Pago não foi carregado."
                 );
@@ -343,12 +468,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             // VALOR
             // ==================================
 
-            const amount = Number(
-                Number(rental.total || 0).toFixed(2)
-            );
+            const amount =
+                Number(
+                    Number(
+                        rental.total || 0
+                    ).toFixed(2)
+                );
 
             console.log(
-                "💰 Valor original:",
+                "💰 Valor do aluguel:",
                 rental.total
             );
 
@@ -361,6 +489,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 !Number.isFinite(amount) ||
                 amount <= 0
             ) {
+
                 throw new Error(
                     "Valor do aluguel inválido."
                 );
@@ -370,9 +499,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             // MERCADO PAGO
             // ==================================
 
-            const mp = new MercadoPago(publicKey);
+            const mp =
+                new MercadoPago(
+                    publicKey
+                );
 
-            const bricks = mp.bricks();
+            const bricks =
+                mp.bricks();
 
             // ==================================
             // CRIAR BRICK
@@ -385,7 +518,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     initialization: {
 
-                        amount: amount,
+                        amount:
+                            amount,
 
                         payer: {
 
@@ -402,18 +536,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                         visual: {
 
-                            hideFormTitle: false
+                            hideFormTitle:
+                                false
 
                         },
 
                         paymentMethods: {
 
-                            // Cartões
-                            creditCard: "all",
+                            creditCard:
+                                "all",
 
-                            debitCard: "all",
+                            debitCard:
+                                "all",
 
-                            prepaidCard: "all"
+                            prepaidCard:
+                                "all"
 
                         }
 
@@ -437,7 +574,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         // ==========================
 
                         onSubmit:
-                            ({ selectedPaymentMethod, formData }) => {
+                            ({ formData }) => {
 
                                 return new Promise(
                                     async (
@@ -461,12 +598,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                             );
 
                                             console.log(
-                                                "Método selecionado:",
-                                                selectedPaymentMethod
-                                            );
-
-                                            console.log(
-                                                "Payment method:",
+                                                "Método:",
                                                 formData?.payment_method_id
                                             );
 
@@ -478,38 +610,31 @@ document.addEventListener("DOMContentLoaded", async () => {
                                             );
 
                                             console.log(
-                                                "Issuer recebido:",
-                                                formData?.issuer_id
-                                            );
-
-                                            console.log(
-                                                "Payer:",
-                                                formData?.payer
-                                            );
-
-                                            console.log(
                                                 "======================================"
                                             );
 
-                                            // ==================================
+                                            // ==============================
                                             // TOKEN
-                                            // ==================================
+                                            // ==============================
 
-                                            if (!formData?.token) {
+                                            if (
+                                                !formData?.token
+                                            ) {
 
                                                 throw new Error(
-                                                    "Token do cartão não recebido. Verifique os dados do cartão e tente novamente."
+                                                    "Token do cartão não recebido."
                                                 );
                                             }
 
-                                            // ==================================
+                                            // ==============================
                                             // VALOR
-                                            // ==================================
+                                            // ==============================
 
                                             const transactionAmount =
                                                 Number(
                                                     Number(
-                                                        rental.total || 0
+                                                        rental.total ||
+                                                        0
                                                     ).toFixed(2)
                                                 );
 
@@ -517,7 +642,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                 !Number.isFinite(
                                                     transactionAmount
                                                 ) ||
-                                                transactionAmount <= 0
+                                                transactionAmount <=
+                                                    0
                                             ) {
 
                                                 throw new Error(
@@ -525,9 +651,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                 );
                                             }
 
-                                            // ==================================
-                                            // PAYER
-                                            // ==================================
+                                            // ==============================
+                                            // E-MAIL
+                                            // ==============================
 
                                             const payerEmail =
                                                 formData?.payer?.email ||
@@ -542,9 +668,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                 );
                                             }
 
-                                            // ==================================
+                                            // ==============================
                                             // PAYLOAD
-                                            // ==================================
+                                            // ==============================
 
                                             const payload = {
 
@@ -577,85 +703,42 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                                             };
 
-                                            // ==================================
+                                            // ==============================
                                             // IDENTIFICAÇÃO
-                                            // ==================================
+                                            // ==============================
 
                                             if (
-                                                formData?.payer?.identification?.type &&
-                                                formData?.payer?.identification?.number
+                                                formData?.payer
+                                                    ?.identification
+                                                    ?.type &&
+                                                formData?.payer
+                                                    ?.identification
+                                                    ?.number
                                             ) {
 
-                                                payload.payer.identification = {
+                                                payload.payer.identification =
+                                                {
 
                                                     type:
-                                                        formData.payer
-                                                            .identification.type,
+                                                        formData
+                                                            .payer
+                                                            .identification
+                                                            .type,
 
                                                     number:
                                                         String(
-                                                            formData.payer
-                                                                .identification.number
+                                                            formData
+                                                                .payer
+                                                                .identification
+                                                                .number
                                                         )
 
                                                 };
                                             }
 
-                                            // ==================================
-                                            // ISSUER
-                                            // ==================================
-
-                                            /*
-                                             * IMPORTANTE:
-                                             *
-                                             * Só enviar issuer_id se:
-                                             *
-                                             * 1. Existe
-                                             * 2. É numérico
-                                             * 3. É um número válido
-                                             *
-                                             * Isso evita o erro forced_issuer.
-                                             */
-
-                                            const issuer =
-                                                formData?.issuer_id;
-
-                                            if (
-                                                issuer !== undefined &&
-                                                issuer !== null &&
-                                                issuer !== ""
-                                            ) {
-
-                                                const numericIssuer =
-                                                    Number(issuer);
-
-                                                if (
-                                                    Number.isInteger(
-                                                        numericIssuer
-                                                    ) &&
-                                                    numericIssuer > 0
-                                                ) {
-
-                                                    payload.issuer_id =
-                                                        numericIssuer;
-
-                                                    console.log(
-                                                        "🏦 Issuer enviado:",
-                                                        numericIssuer
-                                                    );
-
-                                                } else {
-
-                                                    console.warn(
-                                                        "⚠️ issuer_id inválido recebido pelo Brick. Não será enviado:",
-                                                        issuer
-                                                    );
-                                                }
-                                            }
-
-                                            // ==================================
+                                            // ==============================
                                             // LOG
-                                            // ==================================
+                                            // ==============================
 
                                             console.log(
                                                 "📤 Payload enviado ao backend:",
@@ -669,9 +752,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                 }
                                             );
 
-                                            // ==================================
+                                            // ==============================
                                             // REQUEST
-                                            // ==================================
+                                            // ==============================
 
                                             const response =
                                                 await fetch(
@@ -696,9 +779,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                     }
                                                 );
 
-                                            // ==================================
+                                            // ==============================
                                             // RESPOSTA
-                                            // ==================================
+                                            // ==============================
 
                                             const responseText =
                                                 await response.text();
@@ -729,33 +812,28 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                 result
                                             );
 
-                                            // ==================================
+                                            // ==============================
                                             // ERRO
-                                            // ==================================
+                                            // ==============================
 
-                                            if (!response.ok) {
+                                            if (
+                                                !response.ok
+                                            ) {
 
                                                 let message =
                                                     result.error ||
                                                     "Erro ao processar pagamento.";
 
-                                                // ==============================
-                                                // ERRO 4037
-                                                // ==============================
-
                                                 if (
-                                                    String(result.code) ===
+                                                    String(
+                                                        result.code
+                                                    ) ===
                                                     "4037"
                                                 ) {
 
                                                     message =
                                                         "O Mercado Pago recusou o valor da transação. Verifique o valor do aluguel.";
-
                                                 }
-
-                                                // ==============================
-                                                // FORCED ISSUER
-                                                // ==============================
 
                                                 if (
                                                     message ===
@@ -763,20 +841,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                 ) {
 
                                                     message =
-                                                        "O Mercado Pago identificou um emissor inválido para este cartão. Tente novamente com outro cartão de teste.";
+                                                        "O Mercado Pago recusou este cartão de teste. Tente outro cartão de teste compatível.";
                                                 }
 
-                                                // ==============================
-                                                // 10111
-                                                // ==============================
-
                                                 if (
-                                                    String(result.code) ===
+                                                    String(
+                                                        result.code
+                                                    ) ===
                                                     "10111"
                                                 ) {
 
                                                     message =
-                                                        "O cartão informado não corresponde ao emissor selecionado. Tente outro cartão de teste.";
+                                                        "O cartão informado não corresponde ao método de pagamento selecionado. Tente outro cartão de teste.";
                                                 }
 
                                                 throw new Error(
@@ -784,9 +860,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                 );
                                             }
 
-                                            // ==================================
-                                            // PAYMENT
-                                            // ==================================
+                                            // ==============================
+                                            // PAGAMENTO
+                                            // ==============================
 
                                             if (
                                                 !result.payment
@@ -805,9 +881,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                 paymentStatus
                                             );
 
-                                            // ==================================
+                                            // ==============================
                                             // APROVADO
-                                            // ==================================
+                                            // ==============================
 
                                             if (
                                                 paymentStatus ===
@@ -815,29 +891,37 @@ document.addEventListener("DOMContentLoaded", async () => {
                                             ) {
 
                                                 showResult(
+
                                                     "Pagamento confirmado!",
+
                                                     "Seu aluguel foi pago com sucesso."
+
                                                 );
 
                                             }
 
-                                            // ==================================
+                                            // ==============================
                                             // OUTROS
-                                            // ==================================
+                                            // ==============================
 
                                             else {
 
                                                 showResult(
+
                                                     "Pagamento em análise",
+
                                                     getMessage(
                                                         paymentStatus
                                                     )
+
                                                 );
                                             }
 
                                             resolve();
 
-                                        } catch (error) {
+                                        } catch (
+                                            error
+                                        ) {
 
                                             console.error(
                                                 "❌ ERRO AO PROCESSAR PAGAMENTO:",
@@ -849,9 +933,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                 "Erro ao processar pagamento."
                                             );
 
-                                            reject(error);
+                                            reject(
+                                                error
+                                            );
                                         }
-
                                     }
                                 );
                             },
@@ -860,13 +945,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                         // ERRO BRICK
                         // ==========================
 
-                        onError: (error) => {
+                        onError:
+                            (error) => {
 
-                            console.error(
-                                "❌ ERRO DO PAYMENT BRICK:",
-                                error
-                            );
-                        }
+                                console.error(
+                                    "❌ ERRO DO PAYMENT BRICK:",
+                                    error
+                                );
+                            }
 
                     }
 
@@ -888,7 +974,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ======================================
-    // STATUS
+    // MENSAGENS
     // ======================================
 
     function getMessage(status) {
@@ -896,24 +982,31 @@ document.addEventListener("DOMContentLoaded", async () => {
         switch (status) {
 
             case "pending":
+
                 return "Pagamento pendente.";
 
             case "in_process":
+
                 return "Pagamento em análise.";
 
             case "rejected":
+
                 return "Pagamento recusado.";
 
             case "cancelled":
+
                 return "Pagamento cancelado.";
 
             case "refunded":
+
                 return "Pagamento estornado.";
 
             case "charged_back":
+
                 return "Pagamento contestado.";
 
             default:
+
                 return "Pagamento processado.";
         }
     }
@@ -922,28 +1015,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     // RESULTADO
     // ======================================
 
-    function showResult(title, message) {
+    function showResult(
+        title,
+        message
+    ) {
 
         if (paymentBrick) {
-            paymentBrick.style.display = "none";
+
+            paymentBrick.style.display =
+                "none";
         }
 
         if (paymentResult) {
-            paymentResult.style.display = "block";
+
+            paymentResult.style.display =
+                "block";
         }
 
         const resultTitle =
-            document.querySelector("#result-title");
+            document.querySelector(
+                "#result-title"
+            );
 
         const resultMessage =
-            document.querySelector("#result-message");
+            document.querySelector(
+                "#result-message"
+            );
 
         if (resultTitle) {
-            resultTitle.textContent = title;
+
+            resultTitle.textContent =
+                title;
         }
 
         if (resultMessage) {
-            resultMessage.textContent = message;
+
+            resultMessage.textContent =
+                message;
         }
     }
 
