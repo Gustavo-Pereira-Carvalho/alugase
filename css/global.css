@@ -10,7 +10,6 @@
     box-sizing: border-box;
 }
 
-
 html {
     scroll-behavior: smooth;
 }
@@ -36,6 +35,7 @@ a {
     text-decoration: none;
 }
 
+
 /* ---------- CORES ---------- */
 
 :root {
@@ -54,6 +54,7 @@ a {
     --shadow: 0 10px 30px rgba(20, 40, 25, 0.08);
 }
 
+
 /* ---------- CONTAINER ---------- */
 
 .navbar,
@@ -65,6 +66,7 @@ a {
     width: min(1200px, 92%);
     margin: 0 auto;
 }
+
 
 /* ---------- NAVBAR ---------- */
 
@@ -84,31 +86,35 @@ header {
     gap: 30px;
 }
 
+
 /* ==========================
    LOGO
 ========================== */
 
-.logo a{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    text-decoration:none;
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
 }
 
-.logo img{
-    width:46px;
-    height:46px;
-    object-fit:contain;
+.logo img {
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
 }
 
-.logo h2{
-    color:#16A34A;
-    font-size:28px;
-    font-weight:800;
-    letter-spacing:1px;
-    margin:0;
-    font-family:Arial, Helvetica, sans-serif;
+.logo h2 {
+    color: #16A34A;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
+
+
+/* ---------- LINKS ---------- */
 
 .nav-links {
     display: flex;
@@ -130,11 +136,100 @@ header {
     color: var(--primary);
 }
 
+
+/* ---------- BOTÕES DA NAVBAR ---------- */
+
 .nav-buttons {
     display: flex;
     align-items: center;
     gap: 12px;
 }
+
+
+/* ==========================================
+   NOTIFICAÇÕES
+========================================== */
+
+.notification-nav {
+    position: relative;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.notification-nav:hover {
+    background: #F0FDF4;
+}
+
+.notification-nav:active {
+    transform: scale(0.95);
+}
+
+
+/* ---------- IMAGEM DO SINO ---------- */
+
+.notification-icon {
+    width: 24px;
+    height: 24px;
+
+    display: block;
+
+    object-fit: contain;
+
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.notification-nav:hover .notification-icon {
+    transform: scale(1.08);
+}
+
+
+/* ---------- BADGE ---------- */
+
+.notification-badge {
+    position: absolute;
+
+    top: -4px;
+    right: -4px;
+
+    min-width: 18px;
+    height: 18px;
+
+    padding: 0 5px;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #DC2626;
+    color: #FFFFFF;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+
+    border: 2px solid #FFFFFF;
+
+    z-index: 2;
+}
+
 
 /* ---------- BOTÕES ---------- */
 
@@ -161,12 +256,15 @@ header {
 .btn-primary:hover {
     background: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(22, 163, 74, 0.2);
+
+    box-shadow:
+        0 8px 20px rgba(22, 163, 74, 0.2);
 }
 
 .btn-secondary {
     background: transparent;
     color: var(--text);
+
     border: 1px solid var(--border);
 }
 
@@ -174,6 +272,7 @@ header {
     border-color: var(--primary);
     color: var(--primary);
 }
+
 
 /* ---------- HERO ---------- */
 
@@ -221,6 +320,7 @@ header {
     margin-bottom: 35px;
 }
 
+
 /* ---------- BUSCA ---------- */
 
 .search-box {
@@ -260,6 +360,7 @@ header {
     padding: 13px 25px;
 }
 
+
 /* ---------- SEÇÕES ---------- */
 
 .categories,
@@ -277,6 +378,7 @@ header {
 
     margin-bottom: 35px;
 }
+
 
 /* ---------- CATEGORIAS ---------- */
 
@@ -326,6 +428,7 @@ header {
     background: #ffffff;
 }
 
+
 /* ---------- PRODUTOS ---------- */
 
 .products {
@@ -361,7 +464,11 @@ header {
 }
 
 .product-image {
+    position: relative;
+
     height: 220px;
+
+    overflow: hidden;
 
     background:
         linear-gradient(
@@ -369,6 +476,26 @@ header {
             #dff7e6,
             #f3faf5
         );
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+.emoji-image {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 64px;
 }
 
 .product-card h3 {
@@ -392,6 +519,7 @@ header {
 
     margin-left: 20px;
 }
+
 
 /* ---------- BANNER ---------- */
 
@@ -438,6 +566,7 @@ header {
     background: #f0fdf4;
 }
 
+
 /* ---------- COMO FUNCIONA ---------- */
 
 .steps {
@@ -478,56 +607,73 @@ header {
     font-size: 14px;
 }
 
+
 /* ==========================================
    FOOTER
 ========================================== */
 
-footer{
-    margin-top:70px;
-    background:#14532d;
-    color:#fff;
+footer {
+    margin-top: 70px;
+
+    background: #14532d;
+
+    color: #fff;
 }
 
-.footer-content{
-    width:min(1200px,92%);
-    margin:auto;
-    padding:45px 0;
-    text-align:center;
+.footer-content {
+    width: min(1200px, 92%);
+
+    margin: auto;
+
+    padding: 45px 0;
+
+    text-align: center;
 }
 
-.footer-content h2{
-    margin-bottom:12px;
-    letter-spacing:1px;
+.footer-content h2 {
+    margin-bottom: 12px;
+
+    letter-spacing: 1px;
 }
 
-.footer-content p{
-    color:#d1fae5;
+.footer-content p {
+    color: #d1fae5;
 }
 
-.footer-links{
-    display:flex;
-    justify-content:center;
-    gap:22px;
-    flex-wrap:wrap;
-    margin:24px 0;
+.footer-links {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 22px;
+
+    flex-wrap: wrap;
+
+    margin: 24px 0;
 }
 
-.footer-links a{
-    color:#fff;
-    text-decoration:none;
-    transition:.2s;
+.footer-links a {
+    color: #fff;
+
+    text-decoration: none;
+
+    transition: 0.2s;
 }
 
-.footer-links a:hover{
-    color:#86efac;
+.footer-links a:hover {
+    color: #86efac;
 }
 
-.copyright{
-    font-size:14px;
-    opacity:.8;
+.copyright {
+    font-size: 14px;
+
+    opacity: 0.8;
 }
 
-/* ---------- RESPONSIVIDADE ---------- */
+
+/* ==========================================
+   RESPONSIVIDADE
+========================================== */
 
 @media (max-width: 900px) {
 
@@ -548,128 +694,131 @@ footer{
     }
 }
 
+
+/* ==========================================
+   TABLET / CELULAR
+========================================== */
+
 @media (max-width: 600px) {
 
-    .navbar{
+    .navbar {
         min-height: 68px;
+
         gap: 10px;
     }
 
-    .logo h2{
+    .logo h2 {
         font-size: 22px;
     }
 
-    .logo img{
+    .logo img {
         width: 36px;
         height: 36px;
     }
 
-    /* Mantém os dois botões visíveis */
-    .nav-buttons{
+
+    /* ---------- NAV BUTTONS ---------- */
+
+    .nav-buttons {
         display: flex;
+
         gap: 8px;
     }
 
+
     .nav-buttons .btn-primary,
-    .nav-buttons .btn-secondary{
+    .nav-buttons .btn-secondary {
         padding: 8px 12px;
+
         font-size: 13px;
     }
 
-    .hero{
+
+    /* ---------- NOTIFICAÇÃO ---------- */
+
+    .notification-nav {
+        width: 38px;
+        height: 38px;
+    }
+
+    .notification-icon {
+        width: 22px;
+        height: 22px;
+    }
+
+    .notification-badge {
+        top: -3px;
+        right: -3px;
+
+        min-width: 17px;
+        height: 17px;
+
+        font-size: 9px;
+    }
+
+
+    /* ---------- HERO ---------- */
+
+    .hero {
         min-height: auto;
     }
 
-    .hero-content{
+    .hero-content {
         padding: 70px 0;
     }
 
-    .hero h1{
+    .hero h1 {
         font-size: 40px;
     }
 
-    .hero p{
+    .hero p {
         font-size: 16px;
     }
 
-    .search-box{
+
+    /* ---------- BUSCA ---------- */
+
+    .search-box {
         flex-direction: column;
+
         align-items: stretch;
+
         padding: 8px;
     }
 
-    .search-box .btn-primary{
+    .search-box .btn-primary {
         width: 100%;
     }
 
-    .category-grid{
-        grid-template-columns: repeat(2,1fr);
+
+    /* ---------- CATEGORIAS ---------- */
+
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    .products-grid{
+
+    /* ---------- PRODUTOS ---------- */
+
+    .products-grid {
         grid-template-columns: 1fr;
     }
 
-    .steps-grid{
+
+    /* ---------- ETAPAS ---------- */
+
+    .steps-grid {
         grid-template-columns: 1fr;
     }
 
-    .banner{
+
+    /* ---------- BANNER ---------- */
+
+    .banner {
         padding: 45px 25px;
     }
 
-    .banner h2{
+    .banner h2 {
         font-size: 28px;
     }
-}
-.notification-nav{
-    position: relative;
-    width: 42px;
-    height: 42px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.notification-badge{
-    position: absolute;
-    top: -4px;
-    right: -4px;
-
-    min-width: 18px;
-    height: 18px;
-    padding: 0 5px;
-
-    display: none;
-    align-items: center;
-    justify-content: center;
-
-    background: #dc2626;
-    color: #fff;
-    border-radius: 999px;
-    font-size: 10px;
-    font-weight: 700;
-    border: 2px solid #fff;
-}
-
-
-.product-image{
-    position:relative;
-    overflow:hidden;
-}
-
-.product-image img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-}
-
-.emoji-image{
-    width:100%;
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:64px;
 }
