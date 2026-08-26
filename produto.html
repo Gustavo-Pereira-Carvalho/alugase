@@ -43,6 +43,7 @@
 
         </div>
 
+
         <ul class="nav-links">
 
             <li>
@@ -65,11 +66,13 @@
 
         </ul>
 
+
         <div class="nav-buttons">
 
             <button
                 id="login-button"
                 class="btn-secondary"
+                type="button"
             >
                 Entrar
             </button>
@@ -77,6 +80,7 @@
             <button
                 id="announce-button"
                 class="btn-primary"
+                type="button"
             >
                 Anunciar
             </button>
@@ -86,6 +90,7 @@
     </nav>
 
 </header>
+
 
 <main class="product-page">
 
@@ -123,6 +128,7 @@
 
     <section class="product-details">
 
+
         <!-- ======================================
              GALERIA
         ======================================= -->
@@ -133,8 +139,13 @@
                 class="main-product-image"
                 id="main-image"
             >
-                <span>📦</span>
+
+                <span>
+                    📦
+                </span>
+
             </div>
+
 
             <div
                 class="product-thumbnails"
@@ -154,14 +165,17 @@
                 CATEGORIA
             </span>
 
+
             <h1 id="product-title">
                 Carregando...
             </h1>
+
 
             <div class="product-rating">
 
                 <strong>
                     ⭐
+
                     <span id="product-rating">
                         5.0
                     </span>
@@ -179,6 +193,7 @@
 
             </div>
 
+
             <p
                 class="product-location"
                 id="product-location"
@@ -187,7 +202,9 @@
             </p>
 
 
-            <!-- DESCRIÇÃO -->
+            <!-- ==================================
+                 DESCRIÇÃO
+            =================================== -->
 
             <div class="product-description">
 
@@ -202,7 +219,9 @@
             </div>
 
 
-            <!-- PREÇO -->
+            <!-- ==================================
+                 PREÇO
+            =================================== -->
 
             <div class="pricing">
 
@@ -240,13 +259,16 @@
 
                     <div class="calendar-selection">
 
+
                         <div class="selected-date-box">
 
                             <span>
                                 Retirada
                             </span>
 
-                            <strong id="selected-start-display">
+                            <strong
+                                id="selected-start-display"
+                            >
                                 Selecione uma data
                             </strong>
 
@@ -264,7 +286,9 @@
                                 Devolução
                             </span>
 
-                            <strong id="selected-end-display">
+                            <strong
+                                id="selected-end-display"
+                            >
                                 Selecione uma data
                             </strong>
 
@@ -286,9 +310,11 @@
                                 ‹
                             </button>
 
+
                             <strong id="calendar-month">
                                 Carregando...
                             </strong>
+
 
                             <button
                                 type="button"
@@ -324,18 +350,35 @@
                         <div class="calendar-legend">
 
                             <span>
-                                <i class="legend-dot available"></i>
+
+                                <i
+                                    class="legend-dot available"
+                                ></i>
+
                                 Disponível
+
                             </span>
 
+
                             <span>
-                                <i class="legend-dot selected"></i>
+
+                                <i
+                                    class="legend-dot selected"
+                                ></i>
+
                                 Selecionado
+
                             </span>
 
+
                             <span>
-                                <i class="legend-dot unavailable"></i>
+
+                                <i
+                                    class="legend-dot unavailable"
+                                ></i>
+
                                 Alugado
+
                             </span>
 
                         </div>
@@ -363,9 +406,11 @@
                 <div class="delivery-options">
 
                     <h3>
-                        Entrega
+                        Como deseja receber?
                     </h3>
 
+
+                    <!-- RETIRADA -->
 
                     <label class="delivery-option">
 
@@ -377,7 +422,7 @@
                         >
 
                         <span>
-                            📍 Retirar
+                            📍 Retirar no local
                         </span>
 
                         <strong>
@@ -387,7 +432,12 @@
                     </label>
 
 
-                    <label class="delivery-option">
+                    <!-- ENTREGA -->
+
+                    <label
+                        class="delivery-option"
+                        id="delivery-option-label"
+                    >
 
                         <input
                             type="radio"
@@ -400,10 +450,54 @@
                         </span>
 
                         <strong id="delivery-label">
-                            + R$ 0,00
+                            Calcular
                         </strong>
 
                     </label>
+
+
+                    <!-- DISTÂNCIA -->
+
+                    <div
+                        id="delivery-distance-box"
+                        style="display: none;"
+                    >
+
+                        <div class="form-group">
+
+                            <label for="delivery-distance">
+                                Distância da entrega
+                            </label>
+
+                            <div
+                                style="
+                                    display:flex;
+                                    align-items:center;
+                                    gap:8px;
+                                "
+                            >
+
+                                <input
+                                    type="number"
+                                    id="delivery-distance"
+                                    min="0"
+                                    step="0.1"
+                                    placeholder="Ex.: 8"
+                                >
+
+                                <span>
+                                    km
+                                </span>
+
+                            </div>
+
+                            <small id="delivery-distance-info">
+                                Informe a distância para calcular o valor da entrega.
+                            </small>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -413,6 +507,7 @@
                 =================================== -->
 
                 <div class="rental-summary">
+
 
                     <div>
 
@@ -471,6 +566,7 @@
                 <button
                     id="rental-button"
                     class="btn-primary rental-button"
+                    type="button"
                 >
                     Solicitar aluguel
                 </button>
@@ -518,11 +614,15 @@
                 <div class="owner-extra">
 
                     <span>
+
                         ⭐
+
                         <strong id="owner-rating">
                             5.0
                         </strong>
+
                     </span>
+
 
                     <span>
 
@@ -543,6 +643,7 @@
     </section>
 
 </main>
+
 
 <script src="./js/produto.js"></script>
 
