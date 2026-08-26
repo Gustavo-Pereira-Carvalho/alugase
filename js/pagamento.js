@@ -127,10 +127,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             return "-";
         }
 
-        const parsed = new Date(date);
+        const parsed =
+            new Date(date);
 
-        if (Number.isNaN(parsed.getTime())) {
+        if (
+            Number.isNaN(
+                parsed.getTime()
+            )
+        ) {
+
             return "-";
+
         }
 
         return parsed.toLocaleDateString(
@@ -162,20 +169,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     function showError(message) {
 
         if (loading) {
-            loading.style.display = "none";
+
+            loading.style.display =
+                "none";
+
         }
 
         if (checkout) {
-            checkout.style.display = "none";
+
+            checkout.style.display =
+                "none";
+
         }
 
         if (errorState) {
-            errorState.style.display = "block";
+
+            errorState.style.display =
+                "block";
+
         }
 
         if (errorMessage) {
+
             errorMessage.textContent =
-                message || "Ocorreu um erro.";
+                message ||
+                "Ocorreu um erro.";
+
         }
 
     }
@@ -238,6 +257,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (productSummary) {
 
                 productSummary.innerHTML = `
+
                     ${
                         product?.image
                             ? `
@@ -273,6 +293,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         </p>
 
                     </div>
+
                 `;
 
             }
@@ -284,28 +305,36 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (rentTotal) {
 
                 rentTotal.textContent =
-                    money(rental.rentTotal);
+                    money(
+                        rental.rentTotal
+                    );
 
             }
 
             if (deliveryPrice) {
 
                 deliveryPrice.textContent =
-                    money(rental.deliveryPrice);
+                    money(
+                        rental.deliveryPrice
+                    );
 
             }
 
             if (deposit) {
 
                 deposit.textContent =
-                    money(rental.deposit);
+                    money(
+                        rental.deposit
+                    );
 
             }
 
             if (total) {
 
                 total.textContent =
-                    money(rental.total);
+                    money(
+                        rental.total
+                    );
 
             }
 
@@ -316,21 +345,27 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (startDate) {
 
                 startDate.textContent =
-                    formatDate(rental.startDate);
+                    formatDate(
+                        rental.startDate
+                    );
 
             }
 
             if (endDate) {
 
                 endDate.textContent =
-                    formatDate(rental.endDate);
+                    formatDate(
+                        rental.endDate
+                    );
 
             }
 
             if (days) {
 
                 const rentalDays =
-                    Number(rental.days || 0);
+                    Number(
+                        rental.days || 0
+                    );
 
                 days.textContent =
                     `${rentalDays} dia${
@@ -346,11 +381,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             // ==================================
 
             if (loading) {
-                loading.style.display = "none";
+
+                loading.style.display =
+                    "none";
+
             }
 
             if (checkout) {
-                checkout.style.display = "block";
+
+                checkout.style.display =
+                    "block";
+
             }
 
             // ==================================
@@ -467,6 +508,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "paymentBrick_container",
                 {
 
+                    // ==================================
+                    // INITIALIZATION
+                    // ==================================
+
                     initialization: {
 
                         amount: amount,
@@ -482,55 +527,72 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     },
 
+                    // ==================================
+                    // CUSTOMIZATION
+                    // ==================================
+
                     customization: {
 
                         visual: {
 
-                            hideFormTitle: false
+                            hideFormTitle:
+                                false
 
                         },
 
                         paymentMethods: {
 
-                            // ==========================
-                            // CARTÕES
-                            // ==========================
+                            // ==============================
+                            // CARTÃO DE CRÉDITO
+                            // ==============================
 
-                            creditCard: "all",
+                            creditCard:
+                                "all",
 
-                            debitCard: "all",
+                            // ==============================
+                            // CARTÃO DE DÉBITO
+                            // ==============================
 
-                            prepaidCard: "all",
+                            debitCard:
+                                "all",
 
-                            // ==========================
+                            // ==============================
                             // PIX
-                            // ==========================
+                            // ==============================
 
-                            bankTransfer: "all",
+                            bankTransfer:
+                                "pix",
 
-                            // ==========================
-                            // BOLETO
-                            // ==========================
+                            // ==============================
+                            // SEM BOLETO
+                            // ==============================
 
-                            ticket: "all",
+                            ticket:
+                                false,
 
-                            // ==========================
-                            // EXATAMENTE 1 PARCELA
-                            // ==========================
+                            // ==============================
+                            // SOMENTE 1 PARCELA
+                            // ==============================
 
-                            minInstallments: 1,
+                            minInstallments:
+                                1,
 
-                            maxInstallments: 1
+                            maxInstallments:
+                                1
 
                         }
 
                     },
 
+                    // ==================================
+                    // CALLBACKS
+                    // ==================================
+
                     callbacks: {
 
-                        // ==========================
+                        // ==================================
                         // READY
-                        // ==========================
+                        // ==================================
 
                         onReady: () => {
 
@@ -540,9 +602,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                         },
 
-                        // ==========================
+                        // ==================================
                         // SUBMIT
-                        // ==========================
+                        // ==================================
 
                         onSubmit:
                             ({ formData }) => {
@@ -584,9 +646,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                 "======================================"
                                             );
 
-                                            // ==============================
+                                            // ==================================
                                             // MÉTODO
-                                            // ==============================
+                                            // ==================================
 
                                             const paymentMethod =
                                                 formData.payment_method_id;
@@ -600,19 +662,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                                             }
 
                                             const isPix =
-                                                paymentMethod === "pix";
+                                                paymentMethod ===
+                                                "pix";
 
-                                            // ==============================
+                                            console.log(
+                                                "🧾 É PIX:",
+                                                isPix
+                                            );
+
+                                            // ==================================
                                             // TOKEN
-                                            // ==============================
-
-                                            /*
-                                             * CARTÃO:
-                                             * precisa de token.
-                                             *
-                                             * PIX:
-                                             * NÃO possui token.
-                                             */
+                                            // ==================================
 
                                             if (
                                                 !isPix &&
@@ -625,9 +685,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                                             }
 
-                                            // ==============================
+                                            // ==================================
                                             // VALOR
-                                            // ==============================
+                                            // ==================================
 
                                             const transactionAmount =
                                                 Number(
@@ -649,9 +709,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                                             }
 
-                                            // ==============================
+                                            // ==================================
                                             // PAYER
-                                            // ==============================
+                                            // ==================================
 
                                             const payerEmail =
                                                 formData?.payer?.email ||
@@ -667,9 +727,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                                             }
 
-                                            // ==============================
-                                            // PAYLOAD
-                                            // ==============================
+                                            // ==================================
+                                            // PAYLOAD BASE
+                                            // ==================================
 
                                             const payload = {
 
@@ -680,9 +740,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                                                 payment_method_id:
                                                     paymentMethod,
-
-                                                installments:
-                                                    1,
 
                                                 transaction_amount:
                                                     transactionAmount,
@@ -696,39 +753,61 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                                             };
 
-                                            // ==============================
-                                            // TOKEN SOMENTE CARTÃO
-                                            // ==============================
+                                            // ==================================
+                                            // CARTÃO
+                                            // ==================================
 
-                                            if (
-                                                !isPix
-                                            ) {
+                                            if (!isPix) {
 
                                                 payload.token =
                                                     formData.token;
 
+                                                // SOMENTE 1X
+                                                payload.installments =
+                                                    1;
+
                                             }
 
-                                            // ==============================
+                                            // ==================================
+                                            // PIX
+                                            // ==================================
+
+                                            if (isPix) {
+
+                                                console.log(
+                                                    "🟢 PIX — sem token e sem parcelas"
+                                                );
+
+                                            }
+
+                                            // ==================================
                                             // IDENTIFICAÇÃO
-                                            // ==============================
+                                            // ==================================
 
                                             if (
                                                 formData?.payer?.identification
                                             ) {
 
                                                 payload.payer.identification =
-                                                    formData.payer.identification;
+                                                    formData
+                                                        .payer
+                                                        .identification;
 
                                             }
 
+                                            // ==================================
+                                            // GARANTIA
+                                            // ==================================
+
                                             /*
-                                             * NÃO ENVIAR:
-                                             *
-                                             * issuer_id
-                                             *
-                                             * Nunca.
+                                             * NUNCA enviar issuer_id.
                                              */
+
+                                            delete payload.issuer_id;
+
+                                            // ==================================
+                                            // LOG
+                                            // ==================================
 
                                             console.log(
                                                 "📤 Payload enviado ao backend:",
@@ -741,13 +820,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                             : "NÃO ENVIADO",
 
                                                     issuer_id:
-                                                        "NÃO ENVIADO"
+                                                        "NÃO ENVIADO",
+
+                                                    installments:
+                                                        isPix
+                                                            ? "NÃO ENVIADO — PIX"
+                                                            : 1
+
                                                 }
                                             );
 
-                                            // ==============================
+                                            // ==================================
                                             // REQUEST
-                                            // ==============================
+                                            // ==================================
 
                                             const response =
                                                 await fetch(
@@ -772,9 +857,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                     }
                                                 );
 
-                                            // ==============================
+                                            // ==================================
                                             // RESPOSTA
-                                            // ==============================
+                                            // ==================================
 
                                             let result;
 
@@ -798,9 +883,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                                                 result
                                             );
 
-                                            // ==============================
+                                            // ==================================
                                             // ERRO
-                                            // ==============================
+                                            // ==================================
 
                                             if (
                                                 !response.ok
@@ -839,9 +924,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                                             }
 
-                                            // ==============================
+                                            // ==================================
                                             // PAGAMENTO
-                                            // ==============================
+                                            // ==================================
 
                                             if (
                                                 !result.payment
@@ -854,16 +939,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                                             }
 
                                             const paymentStatus =
-                                                result.payment.status;
+                                                result
+                                                    .payment
+                                                    .status;
 
                                             console.log(
                                                 "💳 Status:",
                                                 paymentStatus
                                             );
 
-                                            // ==============================
+                                            // ==================================
                                             // APROVADO
-                                            // ==============================
+                                            // ==================================
 
                                             if (
                                                 paymentStatus ===
@@ -877,9 +964,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                                             }
 
-                                            // ==============================
-                                            // PIX / PENDENTE
-                                            // ==============================
+                                            // ==================================
+                                            // PENDENTE
+                                            // ==================================
 
                                             else {
 
@@ -919,9 +1006,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                             },
 
-                        // ==========================
+                        // ==================================
                         // ERRO BRICK
-                        // ==========================
+                        // ==================================
 
                         onError:
                             (error) => {
