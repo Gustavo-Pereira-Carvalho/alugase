@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const errorMessage =
         document.querySelector("#error-message");
 
+
     const productSummary =
         document.querySelector("#product-summary");
 
@@ -47,6 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const days =
         document.querySelector("#days");
+
 
     const paymentBrick =
         document.querySelector(
@@ -82,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // ID DO ALUGUEL
+    // RENTAL ID
     // ==========================================
 
     const rentalId =
@@ -113,11 +115,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         ).toLocaleString(
             "pt-BR",
             {
-                style:
-                    "currency",
-
-                currency:
-                    "BRL"
+                style: "currency",
+                currency: "BRL"
             }
         );
 
@@ -129,6 +128,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ==========================================
 
     function formatDate(date) {
+
+        if (!date) {
+
+            return "-";
+
+        }
+
 
         return new Date(
             date
@@ -150,8 +156,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "div"
             );
 
+
         div.textContent =
             text || "";
+
 
         return div.innerHTML;
 
@@ -164,21 +172,36 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function showError(message) {
 
-        if (loading)
+        if (loading) {
+
             loading.style.display =
                 "none";
 
-        if (checkout)
+        }
+
+
+        if (checkout) {
+
             checkout.style.display =
                 "none";
 
-        if (errorState)
+        }
+
+
+        if (errorState) {
+
             errorState.style.display =
                 "block";
 
-        if (errorMessage)
+        }
+
+
+        if (errorMessage) {
+
             errorMessage.textContent =
                 message;
+
+        }
 
     }
 
@@ -201,11 +224,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 await response.json();
 
 
+            console.log(
+                "📥 Checkout:",
+                data
+            );
+
+
             if (!response.ok) {
 
                 throw new Error(
                     data.error ||
-                    "Não foi possível carregar o checkout."
+                    "Erro ao carregar checkout."
                 );
 
             }
@@ -213,6 +242,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const rental =
                 data.rental;
+
 
             const product =
                 data.product;
@@ -222,122 +252,154 @@ document.addEventListener("DOMContentLoaded", async () => {
             // PRODUTO
             // ======================================
 
-            productSummary.innerHTML = `
+            if (productSummary) {
 
-                ${
-                    product?.image
+                productSummary.innerHTML = `
 
-                        ? `
+                    ${
+                        product?.image
 
-                            <img
-                                src="${product.image}"
-                                alt="${escapeHtml(
-                                    product.title
-                                )}"
-                            >
+                            ? `
+                                <img
+                                    src="${product.image}"
+                                    alt="${escapeHtml(
+                                        product.title
+                                    )}"
+                                >
+                            `
 
-                        `
+                            : `
+                                <div class="product-placeholder">
+                                    📦
+                                </div>
+                            `
+                    }
 
-                        : `
+                    <div class="product-summary-info">
 
-                            <div
-                                class="product-placeholder"
-                            >
-                                📦
-                            </div>
+                        <h3>
+                            ${escapeHtml(
+                                product?.title ||
+                                "Produto"
+                            )}
+                        </h3>
 
-                        `
-                }
+                        <p>
+                            📍 ${escapeHtml(
+                                product?.city ||
+                                "Local não informado"
+                            )}
+                        </p>
 
-                <div
-                    class="product-summary-info"
-                >
+                    </div>
 
-                    <h3>
-                        ${escapeHtml(
-                            product?.title ||
-                            "Produto"
-                        )}
-                    </h3>
+                `;
 
-                    <p>
-                        📍
-                        ${escapeHtml(
-                            product?.city ||
-                            "Cidade não informada"
-                        )}
-                    </p>
-
-                </div>
-
-            `;
+            }
 
 
             // ======================================
             // VALORES
             // ======================================
 
-            rentTotal.textContent =
-                money(
-                    rental.rentTotal
-                );
+            if (rentTotal) {
+
+                rentTotal.textContent =
+                    money(
+                        rental.rentTotal
+                    );
+
+            }
 
 
-            deliveryPrice.textContent =
-                money(
-                    rental.deliveryPrice
-                );
+            if (deliveryPrice) {
+
+                deliveryPrice.textContent =
+                    money(
+                        rental.deliveryPrice
+                    );
+
+            }
 
 
-            deposit.textContent =
-                money(
-                    rental.deposit
-                );
+            if (deposit) {
+
+                deposit.textContent =
+                    money(
+                        rental.deposit
+                    );
+
+            }
 
 
-            total.textContent =
-                money(
-                    rental.total
-                );
+            if (total) {
+
+                total.textContent =
+                    money(
+                        rental.total
+                    );
+
+            }
 
 
             // ======================================
             // DATAS
             // ======================================
 
-            startDate.textContent =
-                formatDate(
-                    rental.startDate
-                );
+            if (startDate) {
+
+                startDate.textContent =
+                    formatDate(
+                        rental.startDate
+                    );
+
+            }
 
 
-            endDate.textContent =
-                formatDate(
-                    rental.endDate
-                );
+            if (endDate) {
+
+                endDate.textContent =
+                    formatDate(
+                        rental.endDate
+                    );
+
+            }
 
 
-            days.textContent =
-                `${rental.days} dia${
-                    rental.days > 1
-                        ? "s"
-                        : ""
-                }`;
+            if (days) {
+
+                days.textContent =
+                    `${rental.days} dia${
+                        Number(rental.days) > 1
+                            ? "s"
+                            : ""
+                    }`;
+
+            }
 
 
             // ======================================
-            // EXIBIR CHECKOUT
+            // MOSTRAR CHECKOUT
             // ======================================
 
-            loading.style.display =
-                "none";
+            if (loading) {
 
-            checkout.style.display =
-                "block";
+                loading.style.display =
+                    "none";
+
+            }
+
+
+            if (checkout) {
+
+                checkout.style.display =
+                    "block";
+
+            }
 
 
             // ======================================
-            // MERCADO PAGO
+            // PAYMENT BRICK
             // ======================================
 
             await renderBrick(
@@ -346,355 +408,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 data.renter
             );
 
-
         } catch (err) {
 
             console.error(
-                "❌ ERRO CHECKOUT:",
+                "❌ ERRO AO CARREGAR CHECKOUT:",
                 err
             );
 
+
             showError(
                 err.message ||
-                "Erro ao carregar checkout."
-            );
-
-        }
-
-    }
-
-
-    // ==========================================
-    // MERCADO PAGO BRICK
-    // ==========================================
-
-    async function renderBrick(
-        publicKey,
-        rental,
-        renter
-    ) {
-
-        try {
-
-            const mp =
-                new MercadoPago(
-                    publicKey
-                );
-
-
-            const bricks =
-                mp.bricks();
-
-
-            await bricks.create(
-                "payment",
-                "paymentBrick_container",
-                {
-
-                    // ==================================
-                    // INICIALIZAÇÃO
-                    // ==================================
-
-                    initialization: {
-
-                        amount:
-                            Number(
-                                Number(
-                                    rental.total ||
-                                    0
-                                ).toFixed(2)
-                            ),
-
-                        payer: {
-
-                            email:
-                                renter?.email ||
-                                user.email ||
-                                ""
-
-                        }
-
-                    },
-
-
-                    // ==================================
-                    // CUSTOMIZAÇÃO
-                    // ==================================
-
-                    customization: {
-
-                        visual: {
-
-                            hideFormTitle:
-                                false
-
-                        },
-
-                        paymentMethods: {
-
-                            maxInstallments:
-                                1,
-
-                            creditCard:
-                                "all",
-
-                            debitCard:
-                                "all",
-
-                            prepaidCard:
-                                "all",
-
-                            bankTransfer:
-                                "all",
-
-                            mercadoPago:
-                                "all",
-
-                            ticket:
-                                "all"
-
-                        }
-
-                    },
-
-
-                    // ==================================
-                    // CALLBACKS
-                    // ==================================
-
-                    callbacks: {
-
-                        onReady: () => {
-
-                            console.log(
-                                "✅ Mercado Pago Brick carregado."
-                            );
-
-                        },
-
-
-                        onSubmit:
-                            ({ formData }) => {
-
-                                return new Promise(
-                                    async (
-                                        resolve,
-                                        reject
-                                    ) => {
-
-                                        try {
-
-                                            // ==============================
-                                            // VALOR COM 2 CASAS
-                                            // ==============================
-
-                                            const amount =
-                                                Number(
-                                                    Number(
-                                                        rental.total ||
-                                                        0
-                                                    ).toFixed(2)
-                                                );
-
-
-                                            // ==============================
-                                            // DADOS DO PAGAMENTO
-                                            // ==============================
-
-                                            const paymentData = {
-
-                                                rentalId:
-                                                    rental.id,
-
-                                                ...formData,
-
-                                                transaction_amount:
-                                                    amount,
-
-                                                installments:
-                                                    1
-
-                                            };
-
-
-                                            console.log(
-                                                "📤 Enviando pagamento:",
-                                                {
-                                                    rentalId:
-                                                        paymentData.rentalId,
-
-                                                    amount:
-                                                        paymentData.transaction_amount,
-
-                                                    payment_method_id:
-                                                        paymentData.payment_method_id,
-
-                                                    issuer_id:
-                                                        paymentData.issuer_id,
-
-                                                    hasToken:
-                                                        Boolean(
-                                                            paymentData.token
-                                                        ),
-
-                                                    payer:
-                                                        paymentData.payer
-                                                }
-                                            );
-
-
-                                            // ==============================
-                                            // REQUEST
-                                            // ==============================
-
-                                            const response =
-                                                await fetch(
-                                                    `${API}/payments/process`,
-                                                    {
-
-                                                        method:
-                                                            "POST",
-
-                                                        headers: {
-
-                                                            "Content-Type":
-                                                                "application/json"
-
-                                                        },
-
-                                                        body:
-                                                            JSON.stringify(
-                                                                paymentData
-                                                            )
-
-                                                    }
-                                                );
-
-
-                                            // ==============================
-                                            // RESPOSTA
-                                            // ==============================
-
-                                            let result;
-
-                                            try {
-
-                                                result =
-                                                    await response.json();
-
-                                            } catch {
-
-                                                throw new Error(
-                                                    `Servidor respondeu com HTTP ${response.status}.`
-                                                );
-
-                                            }
-
-
-                                            console.log(
-                                                "📥 Resposta do backend:",
-                                                result
-                                            );
-
-
-                                            if (
-                                                !response.ok
-                                            ) {
-
-                                                throw new Error(
-                                                    result.error ||
-                                                    result.message ||
-                                                    `Erro HTTP ${response.status}.`
-                                                );
-
-                                            }
-
-
-                                            // ==============================
-                                            // PAGAMENTO
-                                            // ==============================
-
-                                            if (
-                                                result.payment &&
-                                                result.payment.status ===
-                                                    "approved"
-                                            ) {
-
-                                                showResult(
-
-                                                    "Pagamento confirmado!",
-
-                                                    "Seu aluguel foi pago com sucesso."
-
-                                                );
-
-                                            } else {
-
-                                                showResult(
-
-                                                    "Pagamento em análise",
-
-                                                    getMessage(
-                                                        result.payment?.status
-                                                    )
-
-                                                );
-
-                                            }
-
-
-                                            resolve();
-
-
-                                        } catch (err) {
-
-                                            console.error(
-                                                "❌ ERRO AO PROCESSAR PAGAMENTO:",
-                                                err
-                                            );
-
-
-                                            alert(
-                                                err.message ||
-                                                "Erro ao processar pagamento."
-                                            );
-
-
-                                            reject(err);
-
-                                        }
-
-                                    }
-                                );
-
-                            },
-
-
-                        onError:
-                            (err) => {
-
-                                console.error(
-                                    "❌ ERRO DO PAYMENT BRICK:",
-                                    err
-                                );
-
-                            }
-
-                    }
-
-                }
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "❌ ERRO AO CRIAR PAYMENT BRICK:",
-                error
-            );
-
-            showError(
-                error.message ||
                 "Não foi possível carregar o pagamento."
             );
 
@@ -704,7 +427,624 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ==========================================
-    // MENSAGEM DE STATUS
+    // RENDERIZAR PAYMENT BRICK
+    // ==========================================
+
+    async function renderBrick(
+        publicKey,
+        rental,
+        renter
+    ) {
+
+        if (!publicKey) {
+
+            showError(
+                "Chave pública do Mercado Pago não configurada."
+            );
+
+            return;
+
+        }
+
+
+        if (!window.MercadoPago) {
+
+            showError(
+                "Mercado Pago não foi carregado."
+            );
+
+            return;
+
+        }
+
+
+        const mp =
+            new MercadoPago(
+                publicKey
+            );
+
+
+        const bricks =
+            mp.bricks();
+
+
+        await bricks.create(
+            "payment",
+            "paymentBrick_container",
+            {
+
+                // ==================================
+                // INICIALIZAÇÃO
+                // ==================================
+
+                initialization: {
+
+                    amount:
+                        Math.round(
+                            Number(
+                                rental.total
+                            ) * 100
+                        ) / 100,
+
+                    payer: {
+
+                        email:
+                            renter?.email ||
+                            user?.email ||
+                            ""
+
+                    }
+
+                },
+
+
+                // ==================================
+                // CUSTOMIZAÇÃO
+                // ==================================
+
+                customization: {
+
+                    visual: {
+
+                        hideFormTitle:
+                            false
+
+                    },
+
+
+                    paymentMethods: {
+
+                        maxInstallments:
+                            1,
+
+                        creditCard:
+                            "all",
+
+                        debitCard:
+                            "all",
+
+                        prepaidCard:
+                            "all",
+
+                        bankTransfer:
+                            "all",
+
+                        mercadoPago:
+                            "all",
+
+                        ticket:
+                            "all"
+
+                    }
+
+                },
+
+
+                // ==================================
+                // CALLBACKS
+                // ==================================
+
+                callbacks: {
+
+                    onReady: () => {
+
+                        console.log(
+                            "✅ Payment Brick carregado."
+                        );
+
+                    },
+
+
+                    // ==================================
+                    // SUBMIT
+                    // ==================================
+
+                    onSubmit: ({
+                        formData
+                    }) => {
+
+                        return new Promise(
+                            async (
+                                resolve,
+                                reject
+                            ) => {
+
+                                try {
+
+                                    console.log(
+                                        "======================================"
+                                    );
+
+                                    console.log(
+                                        "💳 FORM DATA DO MERCADO PAGO"
+                                    );
+
+                                    console.log(
+                                        formData
+                                    );
+
+                                    console.log(
+                                        "======================================"
+                                    );
+
+
+                                    // ==================================
+                                    // DADOS DO PAGADOR
+                                    // ==================================
+
+                                    const payerData =
+                                        formData?.payer ||
+                                        {};
+
+
+                                    const payerEmail =
+                                        payerData.email ||
+                                        renter?.email ||
+                                        user?.email ||
+                                        "";
+
+
+                                    // ==================================
+                                    // IDENTIFICAÇÃO
+                                    // ==================================
+
+                                    let identification =
+                                        null;
+
+
+                                    if (
+                                        payerData?.identification
+                                    ) {
+
+                                        identification = {
+
+                                            type:
+                                                payerData
+                                                    .identification
+                                                    .type,
+
+                                            number:
+                                                String(
+                                                    payerData
+                                                        .identification
+                                                        .number ||
+                                                    ""
+                                                ).replace(
+                                                    /\D/g,
+                                                    ""
+                                                )
+
+                                        };
+
+                                    }
+
+
+                                    // ==================================
+                                    // ISSUER
+                                    // ==================================
+
+                                    let issuerId =
+                                        formData?.issuer_id;
+
+
+                                    if (
+                                        issuerId !==
+                                            undefined &&
+                                        issuerId !==
+                                            null &&
+                                        issuerId !==
+                                            ""
+                                    ) {
+
+                                        issuerId =
+                                            Number(
+                                                issuerId
+                                            );
+
+
+                                        if (
+                                            !Number.isInteger(
+                                                issuerId
+                                            ) ||
+                                            issuerId <= 0
+                                        ) {
+
+                                            issuerId =
+                                                null;
+
+                                        }
+
+                                    } else {
+
+                                        issuerId =
+                                            null;
+
+                                    }
+
+
+                                    // ==================================
+                                    // PARCELAS
+                                    // ==================================
+
+                                    const installments =
+                                        Number(
+                                            formData?.installments
+                                        ) > 0
+
+                                            ? Number(
+                                                formData.installments
+                                            )
+
+                                            : 1;
+
+
+                                    // ==================================
+                                    // PAYLOAD
+                                    // ==================================
+
+                                    const payload = {
+
+                                        rentalId:
+                                            rental.id ||
+                                            rental._id ||
+                                            rentalId,
+
+                                        token:
+                                            formData?.token,
+
+                                        payment_method_id:
+                                            formData?.payment_method_id,
+
+                                        installments:
+                                            installments,
+
+                                        payer: {
+
+                                            email:
+                                                payerEmail
+
+                                        }
+
+                                    };
+
+
+                                    // ==================================
+                                    // IDENTIFICAÇÃO
+                                    // ==================================
+
+                                    if (
+                                        identification &&
+                                        identification.number
+                                    ) {
+
+                                        payload.payer.identification =
+                                            identification;
+
+                                    }
+
+
+                                    // ==================================
+                                    // ISSUER
+                                    // ==================================
+
+                                    if (
+                                        issuerId
+                                    ) {
+
+                                        payload.issuer_id =
+                                            issuerId;
+
+                                    }
+
+
+                                    console.log(
+                                        "📤 ENVIANDO AO BACKEND:"
+                                    );
+
+
+                                    console.log({
+
+                                        ...payload,
+
+                                        token:
+                                            payload.token
+                                                ? "***"
+                                                : null
+
+                                    });
+
+
+                                    // ==================================
+                                    // VALIDAÇÕES
+                                    // ==================================
+
+                                    if (
+                                        !payload.rentalId
+                                    ) {
+
+                                        throw new Error(
+                                            "Aluguel não informado."
+                                        );
+
+                                    }
+
+
+                                    if (
+                                        !payload.token
+                                    ) {
+
+                                        throw new Error(
+                                            "Token do cartão não foi gerado pelo Mercado Pago."
+                                        );
+
+                                    }
+
+
+                                    if (
+                                        !payload.payment_method_id
+                                    ) {
+
+                                        throw new Error(
+                                            "Método de pagamento não informado."
+                                        );
+
+                                    }
+
+
+                                    if (
+                                        !payload.payer.email
+                                    ) {
+
+                                        throw new Error(
+                                            "E-mail do pagador não informado."
+                                        );
+
+                                    }
+
+
+                                    // ==================================
+                                    // REQUEST
+                                    // ==================================
+
+                                    const response =
+                                        await fetch(
+                                            `${API}/payments/process`,
+                                            {
+
+                                                method:
+                                                    "POST",
+
+                                                headers: {
+
+                                                    "Content-Type":
+                                                        "application/json"
+
+                                                },
+
+                                                body:
+                                                    JSON.stringify(
+                                                        payload
+                                                    )
+
+                                            }
+                                        );
+
+
+                                    // ==================================
+                                    // RESPOSTA
+                                    // ==================================
+
+                                    let result;
+
+
+                                    try {
+
+                                        result =
+                                            await response.json();
+
+                                    } catch {
+
+                                        result = {
+
+                                            error:
+                                                "O servidor retornou uma resposta inválida."
+
+                                        };
+
+                                    }
+
+
+                                    console.log(
+                                        "📥 Resposta do backend:",
+                                        result
+                                    );
+
+
+                                    // ==================================
+                                    // ERRO
+                                    // ==================================
+
+                                    if (
+                                        !response.ok
+                                    ) {
+
+                                        const errorText =
+                                            result.error ||
+                                            result.message ||
+                                            "Erro ao processar pagamento.";
+
+
+                                        console.error(
+                                            "❌ ERRO AO PROCESSAR PAGAMENTO:",
+                                            errorText
+                                        );
+
+
+                                        // Mostra informações
+                                        // adicionais do Mercado Pago
+                                        if (
+                                            result.code
+                                        ) {
+
+                                            console.error(
+                                                "Código MP:",
+                                                result.code
+                                            );
+
+                                        }
+
+
+                                        if (
+                                            result.cause
+                                        ) {
+
+                                            console.error(
+                                                "Detalhes MP:",
+                                                result.cause
+                                            );
+
+                                        }
+
+
+                                        throw new Error(
+                                            errorText
+                                        );
+
+                                    }
+
+
+                                    // ==================================
+                                    // PAGAMENTO
+                                    // ==================================
+
+                                    if (
+                                        !result.payment
+                                    ) {
+
+                                        throw new Error(
+                                            "O backend não retornou os dados do pagamento."
+                                        );
+
+                                    }
+
+
+                                    const status =
+                                        result
+                                            .payment
+                                            .status;
+
+
+                                    console.log(
+                                        "💳 STATUS:",
+                                        status
+                                    );
+
+
+                                    // ==================================
+                                    // APROVADO
+                                    // ==================================
+
+                                    if (
+                                        status ===
+                                        "approved"
+                                    ) {
+
+                                        showResult(
+
+                                            "Pagamento confirmado!",
+
+                                            "Seu aluguel foi pago com sucesso."
+
+                                        );
+
+                                    } else {
+
+                                        // ==================================
+                                        // PENDENTE / ANÁLISE
+                                        // ==================================
+
+                                        showResult(
+
+                                            "Pagamento em análise",
+
+                                            getMessage(
+                                                status
+                                            )
+
+                                        );
+
+                                    }
+
+
+                                    resolve();
+
+                                } catch (err) {
+
+                                    console.error(
+                                        "❌ ERRO AO PROCESSAR PAGAMENTO:",
+                                        err
+                                    );
+
+
+                                    alert(
+                                        err.message ||
+                                        "Não foi possível processar o pagamento."
+                                    );
+
+
+                                    reject(err);
+
+                                }
+
+                            }
+                        );
+
+                    },
+
+
+                    // ==================================
+                    // ERRO DO BRICK
+                    // ==================================
+
+                    onError: (err) => {
+
+                        console.error(
+                            "❌ ERRO DO PAYMENT BRICK:",
+                            err
+                        );
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // MENSAGENS
     // ==========================================
 
     function getMessage(status) {
@@ -713,23 +1053,44 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             case "pending":
 
-                return "Pagamento pendente.";
+                return (
+                    "Pagamento pendente."
+                );
+
 
             case "in_process":
 
-                return "Pagamento em análise.";
+                return (
+                    "Pagamento em análise."
+                );
+
 
             case "rejected":
 
-                return "Pagamento recusado.";
+                return (
+                    "Pagamento recusado."
+                );
 
-            case "approved":
 
-                return "Pagamento aprovado.";
+            case "cancelled":
+
+                return (
+                    "Pagamento cancelado."
+                );
+
+
+            case "refunded":
+
+                return (
+                    "Pagamento estornado."
+                );
+
 
             default:
 
-                return "Pagamento processado.";
+                return (
+                    `Pagamento processado com status: ${status || "desconhecido"}.`
+                );
 
         }
 
@@ -745,14 +1106,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         message
     ) {
 
-        if (paymentBrick)
+        if (paymentBrick) {
+
             paymentBrick.style.display =
                 "none";
 
+        }
 
-        if (paymentResult)
+
+        if (paymentResult) {
+
             paymentResult.style.display =
                 "block";
+
+        }
 
 
         const resultTitle =
@@ -760,20 +1127,27 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "#result-title"
             );
 
+
         const resultMessage =
             document.querySelector(
                 "#result-message"
             );
 
 
-        if (resultTitle)
+        if (resultTitle) {
+
             resultTitle.textContent =
                 title;
 
+        }
 
-        if (resultMessage)
+
+        if (resultMessage) {
+
             resultMessage.textContent =
                 message;
+
+        }
 
     }
 
