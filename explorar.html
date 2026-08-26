@@ -11,28 +11,158 @@
 <body>
 
 <header>
-  <nav class="navbar">
 
-    <div class="logo">
-      <a href="index.html">
-        <img src="assets/logo.png" alt="Logo Alugase">
-        <h2>ALUGASE</h2>
-      </a>
-    </div>
+    <nav class="navbar explore-navbar">
 
-    <ul class="nav-links">
-      <li><a href="index.html">Início</a></li>
-      <li><a href="explorar.html">Explorar</a></li>
-      <li><a href="index.html#categorias">Categorias</a></li>
-    </ul>
+        <!-- ==========================================
+             LOGO
+        =========================================== -->
 
-    <div class="nav-buttons">
-      <button class="btn-secondary" id="login-btn">Entrar</button>
-      <button class="btn-primary" id="announce-btn">Anunciar</button>
-    </div>
+        <div class="logo">
 
-  </nav>
+            <a href="index.html">
+
+                <img
+                    src="assets/logo.png"
+                    alt="Logo Alugase"
+                >
+
+                <h2>
+                    ALUGASE
+                </h2>
+
+            </a>
+
+        </div>
+
+
+        <!-- ==========================================
+             NAVEGAÇÃO
+        =========================================== -->
+
+        <ul class="nav-links">
+
+            <li>
+                <a href="index.html">
+                    Início
+                </a>
+            </li>
+
+            <li>
+                <a href="explorar.html">
+                    Explorar
+                </a>
+            </li>
+
+            <li>
+                <a href="index.html#categorias">
+                    Categorias
+                </a>
+            </li>
+
+        </ul>
+
+
+        <!-- ==========================================
+             BOTÕES
+        =========================================== -->
+
+        <div class="nav-buttons">
+
+            <!-- ======================================
+                 NOTIFICAÇÕES
+            ======================================= -->
+
+            <a
+                href="notificacoes.html"
+                class="notification-nav"
+                id="notification-button"
+                title="Notificações"
+                aria-label="Notificações"
+            >
+
+                <img
+                    src="assets/notificao.png"
+                    alt="Notificações"
+                    class="notification-icon"
+                >
+
+                <span
+                    class="notification-badge"
+                    id="notification-badge"
+                    style="display:none;"
+                >
+                    0
+                </span>
+
+            </a>
+
+
+            <!-- ======================================
+                 SOLICITAÇÕES
+            ======================================= -->
+
+            <a
+                href="solicitacoes.html"
+                class="btn-secondary logged-only"
+            >
+                Solicitações
+            </a>
+
+
+            <!-- ======================================
+                 CONVERSAS
+            ======================================= -->
+
+            <a
+                href="chat.html"
+                class="btn-secondary logged-only"
+            >
+                Conversas
+            </a>
+
+
+            <!-- ======================================
+                 LOGIN / PERFIL
+            ======================================= -->
+
+            <button
+                class="btn-secondary"
+                id="login-btn"
+            >
+                Entrar
+            </button>
+
+
+            <!-- ======================================
+                 ANUNCIAR
+            ======================================= -->
+
+            <button
+                class="btn-primary"
+                id="announce-btn"
+            >
+                Anunciar
+            </button>
+
+
+            <!-- ======================================
+                 LOGOUT
+            ======================================= -->
+
+            <button
+                class="btn-secondary logged-only"
+                id="logout"
+            >
+                Sair
+            </button>
+
+        </div>
+
+    </nav>
+
 </header>
+
 
 <main class="explore-page">
 
