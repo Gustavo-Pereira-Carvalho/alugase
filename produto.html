@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -20,13 +21,17 @@
         rel="stylesheet"
         href="./css/produto.css"
     >
+
 </head>
+
 
 <body>
 
 <header>
 
     <nav class="navbar">
+
+        <!-- LOGO -->
 
         <div class="logo">
 
@@ -43,6 +48,8 @@
 
         </div>
 
+
+        <!-- MENU -->
 
         <ul class="nav-links">
 
@@ -66,6 +73,8 @@
 
         </ul>
 
+
+        <!-- BOTÕES -->
 
         <div class="nav-buttons">
 
@@ -93,6 +102,7 @@
 
 
 <main class="product-page">
+
 
     <!-- ==========================================
          BREADCRUMB
@@ -161,24 +171,33 @@
 
         <div class="product-info">
 
+
+            <!-- CATEGORIA -->
+
             <span class="product-category">
                 CATEGORIA
             </span>
 
+
+            <!-- TÍTULO -->
 
             <h1 id="product-title">
                 Carregando...
             </h1>
 
 
+            <!-- AVALIAÇÃO -->
+
             <div class="product-rating">
 
                 <strong>
+
                     ⭐
 
                     <span id="product-rating">
                         5.0
                     </span>
+
                 </strong>
 
                 <span>
@@ -193,6 +212,8 @@
 
             </div>
 
+
+            <!-- LOCALIZAÇÃO -->
 
             <p
                 class="product-location"
@@ -241,7 +262,7 @@
 
 
             <!-- ==================================
-                 CAIXA DE ALUGUEL
+                 ALUGUEL
             =================================== -->
 
             <div class="rental-box">
@@ -256,6 +277,9 @@
                 =================================== -->
 
                 <div class="custom-calendar-wrapper">
+
+
+                    <!-- DATAS SELECIONADAS -->
 
                     <div class="calendar-selection">
 
@@ -289,7 +313,7 @@
                             <strong
                                 id="selected-end-display"
                             >
-                                Selecione uma data
+                                Selecione a devolução
                             </strong>
 
                         </div>
@@ -297,7 +321,12 @@
                     </div>
 
 
+                    <!-- CALENDÁRIO -->
+
                     <div class="calendar">
+
+
+                        <!-- CABEÇALHO -->
 
                         <div class="calendar-header">
 
@@ -328,24 +357,50 @@
                         </div>
 
 
+                        <!-- DIAS DA SEMANA -->
+
                         <div class="calendar-weekdays">
 
-                            <span>Dom</span>
-                            <span>Seg</span>
-                            <span>Ter</span>
-                            <span>Qua</span>
-                            <span>Qui</span>
-                            <span>Sex</span>
-                            <span>Sáb</span>
+                            <span>
+                                Dom
+                            </span>
+
+                            <span>
+                                Seg
+                            </span>
+
+                            <span>
+                                Ter
+                            </span>
+
+                            <span>
+                                Qua
+                            </span>
+
+                            <span>
+                                Qui
+                            </span>
+
+                            <span>
+                                Sex
+                            </span>
+
+                            <span>
+                                Sáb
+                            </span>
 
                         </div>
 
+
+                        <!-- DIAS -->
 
                         <div
                             class="calendar-days"
                             id="calendar-days"
                         ></div>
 
+
+                        <!-- LEGENDA -->
 
                         <div class="calendar-legend">
 
@@ -385,6 +440,8 @@
 
                     </div>
 
+
+                    <!-- VALORES INTERNOS -->
 
                     <input
                         type="hidden"
@@ -460,7 +517,7 @@
 
                     <div
                         id="delivery-distance-box"
-                        style="display: none;"
+                        style="display:none;"
                     >
 
                         <div class="form-group">
@@ -468,6 +525,7 @@
                             <label for="delivery-distance">
                                 Distância da entrega
                             </label>
+
 
                             <div
                                 style="
@@ -483,6 +541,7 @@
                                     min="0"
                                     step="0.1"
                                     placeholder="Ex.: 8"
+                                    inputmode="decimal"
                                 >
 
                                 <span>
@@ -490,6 +549,7 @@
                                 </span>
 
                             </div>
+
 
                             <small id="delivery-distance-info">
                                 Informe a distância para calcular o valor da entrega.
@@ -509,6 +569,8 @@
                 <div class="rental-summary">
 
 
+                    <!-- DIÁRIAS -->
+
                     <div>
 
                         <span>
@@ -521,6 +583,8 @@
 
                     </div>
 
+
+                    <!-- ENTREGA -->
 
                     <div>
 
@@ -535,6 +599,8 @@
                     </div>
 
 
+                    <!-- CAUÇÃO -->
+
                     <div>
 
                         <span>
@@ -547,6 +613,8 @@
 
                     </div>
 
+
+                    <!-- TOTAL -->
 
                     <div class="summary-total">
 
@@ -562,6 +630,10 @@
 
                 </div>
 
+
+                <!-- ==================================
+                     BOTÃO
+                =================================== -->
 
                 <button
                     id="rental-button"
@@ -591,6 +663,9 @@
 
         <div class="owner-card">
 
+
+            <!-- AVATAR -->
+
             <div
                 class="owner-avatar"
                 id="owner-avatar"
@@ -598,6 +673,8 @@
                 👤
             </div>
 
+
+            <!-- INFORMAÇÕES -->
 
             <div class="owner-info">
 
@@ -607,11 +684,12 @@
 
 
                 <p id="owner-verification">
-                    ✓ Usuário verificado
+                    Usuário
                 </p>
 
 
                 <div class="owner-extra">
+
 
                     <span>
 
@@ -644,6 +722,10 @@
 
 </main>
 
+
+<!-- ==========================================
+     JAVASCRIPT
+=========================================== -->
 
 <script src="./js/produto.js"></script>
 
