@@ -4,28 +4,46 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    const API = "https://alugase-api.onrender.com/api/products";
+    const API =
+        "https://alugase-api.onrender.com/api/products";
 
     let products = [];
+
+
 
     // ==========================================
     // ELEMENTOS
     // ==========================================
 
-    const grid = document.querySelector("#products-grid");
-    const count = document.querySelector("#results-count");
+    const grid =
+        document.querySelector("#products-grid");
 
-    const search = document.querySelector("#search");
-    const category = document.querySelector("#filter-category");
-    const city = document.querySelector("#filter-city");
+    const count =
+        document.querySelector("#results-count");
 
-    const maxPrice = document.querySelector("#max-price");
-    const priceValue = document.querySelector("#price-value");
+    const search =
+        document.querySelector("#search");
 
-    const sort = document.querySelector("#sort");
+    const category =
+        document.querySelector("#filter-category");
 
-    const verifiedOnly = document.querySelector("#verified-only");
-    const deliveryOnly = document.querySelector("#delivery-only");
+    const city =
+        document.querySelector("#filter-city");
+
+    const maxPrice =
+        document.querySelector("#max-price");
+
+    const priceValue =
+        document.querySelector("#price-value");
+
+    const sort =
+        document.querySelector("#sort");
+
+    const verifiedOnly =
+        document.querySelector("#verified-only");
+
+    const deliveryOnly =
+        document.querySelector("#delivery-only");
 
     const applyFiltersButton =
         document.querySelector("#apply-filters");
@@ -46,6 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector("#notification-badge");
 
 
+
     // ==========================================
     // USUÁRIO
     // ==========================================
@@ -54,15 +73,168 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
-        user = JSON.parse(
-            localStorage.getItem("alugase_user")
-        );
+        const storedUser =
+            localStorage.getItem("alugase_user");
+
+        if (storedUser) {
+
+            user =
+                JSON.parse(storedUser);
+
+        }
 
     } catch (error) {
+
+        console.error(
+            "Erro ao ler usuário:",
+            error
+        );
 
         user = null;
 
     }
+
+
+
+    // ==========================================
+    // ELEMENTOS SOMENTE PARA LOGADOS
+    // ==========================================
+
+    const loggedOnly =
+        document.querySelectorAll(".logged-only");
+
+
+    if (user) {
+
+        // ======================================
+        // USUÁRIO LOGADO
+        // ======================================
+
+        loggedOnly.forEach(element => {
+
+            element.style.display = "";
+
+        });
+
+
+        if (loginBtn) {
+
+            loginBtn.textContent =
+                "Perfil";
+
+            loginBtn.onclick = () => {
+
+                window.location.href =
+                    "perfil.html";
+
+            };
+
+        }
+
+    } else {
+
+        // ======================================
+        // USUÁRIO NÃO LOGADO
+        // ======================================
+
+        loggedOnly.forEach(element => {
+
+            element.style.display =
+                "none";
+
+        });
+
+
+        if (loginBtn) {
+
+            loginBtn.textContent =
+                "Entrar";
+
+            loginBtn.onclick = () => {
+
+                window.location.href =
+                    "login.html";
+
+            };
+
+        }
+
+    }
+
+
+
+    // ==========================================
+    // ANUNCIAR
+    // ==========================================
+
+    if (announceBtn) {
+
+        announceBtn.addEventListener(
+            "click",
+            () => {
+
+                if (user) {
+
+                    window.location.href =
+                        "novo-anuncio.html";
+
+                } else {
+
+                    window.location.href =
+                        "login.html";
+
+                }
+
+            }
+        );
+
+    }
+
+
+
+    // ==========================================
+    // LOGOUT
+    // ==========================================
+
+    if (logoutBtn) {
+
+        logoutBtn.addEventListener(
+            "click",
+            () => {
+
+                localStorage.removeItem(
+                    "token"
+                );
+
+                localStorage.removeItem(
+                    "alugase_user"
+                );
+
+                localStorage.removeItem(
+                    "alugase_token"
+                );
+
+                window.location.href =
+                    "index.html";
+
+            }
+        );
+
+    }
+
+
+
+    // ==========================================
+    // NOTIFICAÇÕES
+    // ==========================================
+
+    if (notificationBadge) {
+
+        notificationBadge.style.display =
+            "none";
+
+    }
+
 
 
     // ==========================================
@@ -75,7 +247,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         favorites =
             JSON.parse(
-                localStorage.getItem("alugase_favorites")
+                localStorage.getItem(
+                    "alugase_favorites"
+                )
             ) || [];
 
     } catch (error) {
@@ -83,6 +257,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         favorites = [];
 
     }
+
 
 
     function saveFavorites() {
@@ -94,119 +269,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
-
-    // ==========================================
-    // NAVEGAÇÃO
-    // ==========================================
-
-    const loggedOnly =
-        document.querySelectorAll(".logged-only");
-
-
-    if (user) {
-
-        // Usuário logado
-
-        loggedOnly.forEach(element => {
-
-            element.style.display = "";
-
-        });
-
-
-        if (loginBtn) {
-
-            loginBtn.textContent = "Perfil";
-
-            loginBtn.addEventListener("click", () => {
-
-                window.location.href =
-                    "perfil.html";
-
-            });
-
-        }
-
-    } else {
-
-        // Usuário não logado
-
-        loggedOnly.forEach(element => {
-
-            element.style.display = "none";
-
-        });
-
-
-        if (loginBtn) {
-
-            loginBtn.textContent = "Entrar";
-
-            loginBtn.addEventListener("click", () => {
-
-                window.location.href =
-                    "login.html";
-
-            });
-
-        }
-
-    }
-
-
-    // ==========================================
-    // ANUNCIAR
-    // ==========================================
-
-    if (announceBtn) {
-
-        announceBtn.addEventListener("click", () => {
-
-            window.location.href =
-                user
-                    ? "novo-anuncio.html"
-                    : "login.html";
-
-        });
-
-    }
-
-
-    // ==========================================
-    // LOGOUT
-    // ==========================================
-
-    if (logoutBtn) {
-
-        logoutBtn.addEventListener("click", () => {
-
-            localStorage.removeItem("token");
-            localStorage.removeItem("alugase_user");
-
-            window.location.href = "index.html";
-
-        });
-
-    }
-
-
-    // ==========================================
-    // NOTIFICAÇÕES
-    // ==========================================
-
-    /*
-        O contador será atualizado aqui quando
-        o sistema de notificações estiver ligado
-        à API.
-
-        Por enquanto, não mostramos número.
-    */
-
-    if (notificationBadge) {
-
-        notificationBadge.style.display = "none";
-
-    }
 
 
     // ==========================================
@@ -235,6 +297,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
+
     // ==========================================
     // SLIDER DE PREÇO
     // ==========================================
@@ -242,7 +305,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (maxPrice && priceValue) {
 
         priceValue.textContent =
-            `Até R$ ${maxPrice.value}`;
+            `Até R$ ${Number(
+                maxPrice.value
+            ).toLocaleString("pt-BR")}`;
 
 
         maxPrice.addEventListener(
@@ -250,12 +315,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             () => {
 
                 priceValue.textContent =
-                    `Até R$ ${maxPrice.value}`;
+                    `Até R$ ${Number(
+                        maxPrice.value
+                    ).toLocaleString("pt-BR")}`;
 
             }
         );
 
     }
+
 
 
     // ==========================================
@@ -268,7 +336,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             grid.innerHTML = `
                 <div class="empty-state">
-                    <h3>Carregando anúncios...</h3>
+                    <h3>
+                        Carregando anúncios...
+                    </h3>
                 </div>
             `;
 
@@ -302,11 +372,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             products = data;
 
 
-            // Ajusta o máximo do slider
-            // conforme os anúncios existentes
-
             updatePriceRange();
-
 
             applyFilters();
 
@@ -342,8 +408,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
+
     // ==========================================
-    // AJUSTAR PREÇO DINAMICAMENTE
+    // AJUSTAR PREÇO
     // ==========================================
 
     function updatePriceRange() {
@@ -356,7 +423,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const prices =
             products
                 .map(product =>
-                    Number(product.pricePerDay)
+                    Number(
+                        product.pricePerDay
+                    )
                 )
                 .filter(price =>
                     Number.isFinite(price) &&
@@ -366,8 +435,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (!prices.length) {
 
-            maxPrice.max = 500;
-            maxPrice.value = 500;
+            maxPrice.max =
+                500;
+
+            maxPrice.value =
+                500;
 
             priceValue.textContent =
                 "Até R$ 500";
@@ -390,25 +462,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
 
 
-        maxPrice.max = maximum;
+        maxPrice.max =
+            maximum;
 
-
-        // Só define o valor automaticamente
-        // se não veio um valor pela URL.
 
         if (!params.get("maxPrice")) {
 
-            maxPrice.value = maximum;
+            maxPrice.value =
+                maximum;
 
         }
 
 
         priceValue.textContent =
-            `Até R$ ${Number(maxPrice.value).toLocaleString(
-                "pt-BR"
-            )}`;
+            `Até R$ ${Number(
+                maxPrice.value
+            ).toLocaleString("pt-BR")}`;
 
     }
+
 
 
     // ==========================================
@@ -446,6 +518,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
+
         list.forEach(product => {
 
             const isFavorite =
@@ -455,11 +528,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             const card =
-                document.createElement("article");
+                document.createElement(
+                    "article"
+                );
 
 
             card.className =
                 "product-card";
+
 
 
             // ==================================
@@ -474,7 +550,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             if (
-                product.images &&
                 Array.isArray(product.images) &&
                 product.images.length > 0
             ) {
@@ -485,7 +560,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                             product.images[0]
                         )}"
                         alt="${escapeHTML(
-                            product.title || "Produto"
+                            product.title ||
+                            "Produto"
                         )}"
                         loading="lazy"
                     >
@@ -494,12 +570,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
+
             // ==================================
             // VERIFICAÇÃO
             // ==================================
 
             const verifiedHTML =
-                product.verified
+                product.verified === true
                     ? `
                         <span class="verified">
                             ✓ Verificado
@@ -508,18 +585,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                     : "";
 
 
+
             // ==================================
             // ENTREGA
             // ==================================
 
             const deliveryText =
-                product.delivery
+                product.delivery === true
                     ? "🚚 Entrega"
                     : "📍 Retirada";
 
 
+
             // ==================================
-            // PREÇOS
+            // PREÇO
             // ==================================
 
             const price =
@@ -552,6 +631,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         maximumFractionDigits: 2
                     }
                 );
+
 
 
             // ==================================
@@ -668,6 +748,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             `;
 
 
+
             // ==================================
             // FAVORITO
             // ==================================
@@ -678,42 +759,46 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
 
 
-            favoriteButton.addEventListener(
-                "click",
-                event => {
+            if (favoriteButton) {
 
-                    event.stopPropagation();
+                favoriteButton.addEventListener(
+                    "click",
+                    event => {
 
-
-                    const index =
-                        favorites.indexOf(
-                            product._id
-                        );
+                        event.stopPropagation();
 
 
-                    if (index !== -1) {
+                        const index =
+                            favorites.indexOf(
+                                product._id
+                            );
 
-                        favorites.splice(
-                            index,
-                            1
-                        );
 
-                    } else {
+                        if (index !== -1) {
 
-                        favorites.push(
-                            product._id
-                        );
+                            favorites.splice(
+                                index,
+                                1
+                            );
+
+                        } else {
+
+                            favorites.push(
+                                product._id
+                            );
+
+                        }
+
+
+                        saveFavorites();
+
+                        applyFilters();
 
                     }
+                );
 
+            }
 
-                    saveFavorites();
-
-
-                    applyFilters();
-
-                }
-            );
 
 
             // ==================================
@@ -745,6 +830,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
+
     // ==========================================
     // FILTROS
     // ==========================================
@@ -755,9 +841,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             [...products];
 
 
-        // ==================================
-        // BUSCA
-        // ==================================
+
+        // ======================================
+        // PESQUISA
+        // ======================================
 
         const searchTerm =
             search
@@ -801,9 +888,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ==================================
+
+        // ======================================
         // CATEGORIA
-        // ==================================
+        // ======================================
 
         if (
             category &&
@@ -820,9 +908,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ==================================
+
+        // ======================================
         // CIDADE
-        // ==================================
+        // ======================================
 
         const cityTerm =
             city
@@ -852,9 +941,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ==================================
+
+        // ======================================
         // PREÇO
-        // ==================================
+        // ======================================
 
         if (maxPrice) {
 
@@ -882,9 +972,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ==================================
-        // VERIFICADO
-        // ==================================
+
+        // ======================================
+        // VERIFICADOS
+        // ======================================
 
         if (
             verifiedOnly &&
@@ -899,9 +990,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ==================================
+
+        // ======================================
         // ENTREGA
-        // ==================================
+        // ======================================
 
         if (
             deliveryOnly &&
@@ -916,9 +1008,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ==================================
+
+        // ======================================
         // ORDENAÇÃO
-        // ==================================
+        // ======================================
 
         if (sort) {
 
@@ -985,13 +1078,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
+
         render(list);
 
     }
 
 
+
     // ==========================================
-    // APLICAR FILTROS
+    // BOTÃO APLICAR FILTROS
     // ==========================================
 
     if (applyFiltersButton) {
@@ -1004,8 +1099,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
+
     // ==========================================
-    // BUSCAR
+    // BOTÃO BUSCAR
     // ==========================================
 
     if (searchButton) {
@@ -1017,6 +1113,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 
+
+
+    // ==========================================
+    // ENTER NA BUSCA
+    // ==========================================
 
     if (search) {
 
@@ -1036,6 +1137,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
     }
+
 
 
     // ==========================================
@@ -1082,6 +1184,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
+
+    // ==========================================
+    // CIDADE
+    // ==========================================
+
     if (city) {
 
         city.addEventListener(
@@ -1102,23 +1209,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
+
     // ==========================================
-    // ESCAPE HTML
+    // ESCAPAR HTML
     // ==========================================
 
     function escapeHTML(value) {
 
         const div =
-            document.createElement("div");
+            document.createElement(
+                "div"
+            );
 
 
         div.textContent =
-            String(value ?? "");
+            String(
+                value ?? ""
+            );
 
 
         return div.innerHTML;
 
     }
+
 
 
     // ==========================================
