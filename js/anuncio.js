@@ -21,7 +21,10 @@ document.addEventListener(
         // ======================================
 
         const token =
-            localStorage.getItem("token");
+            localStorage.getItem(
+                "token"
+            );
+
 
         let user =
             JSON.parse(
@@ -31,7 +34,10 @@ document.addEventListener(
             );
 
 
-        if (!token || !user) {
+        if (
+            !token ||
+            !user
+        ) {
 
             alert(
                 "Faça login para anunciar."
@@ -41,7 +47,6 @@ document.addEventListener(
                 "login.html";
 
             return;
-
         }
 
 
@@ -60,20 +65,24 @@ document.addEventListener(
                 "#title"
             );
 
+
         const category =
             document.querySelector(
                 "#category"
             );
+
 
         const icon =
             document.querySelector(
                 "#icon"
             );
 
+
         const description =
             document.querySelector(
                 "#description"
             );
+
 
         const city =
             document.querySelector(
@@ -86,6 +95,7 @@ document.addEventListener(
                 "#price"
             );
 
+
         const deposit =
             document.querySelector(
                 "#deposit"
@@ -97,37 +107,10 @@ document.addEventListener(
                 "#pickup"
             );
 
+
         const delivery =
             document.querySelector(
                 "#delivery"
-            );
-
-
-        const deliveryBasePrice =
-            document.querySelector(
-                "#deliveryBasePrice"
-            );
-
-        const deliveryPricePerKm =
-            document.querySelector(
-                "#deliveryPricePerKm"
-            );
-
-        const deliveryMaxDistance =
-            document.querySelector(
-                "#deliveryMaxDistance"
-            );
-
-
-        const deliverySettings =
-            document.querySelector(
-                "#delivery-settings"
-            );
-
-
-        const deliveryExample =
-            document.querySelector(
-                "#delivery-example"
             );
 
 
@@ -135,6 +118,7 @@ document.addEventListener(
             document.querySelector(
                 "#images"
             );
+
 
         const previewGrid =
             document.querySelector(
@@ -153,35 +137,42 @@ document.addEventListener(
                 "#brand"
             );
 
+
         const model =
             document.querySelector(
                 "#model"
             );
+
 
         const year =
             document.querySelector(
                 "#year"
             );
 
+
         const color =
             document.querySelector(
                 "#color"
             );
+
 
         const plate =
             document.querySelector(
                 "#plate"
             );
 
+
         const renavam =
             document.querySelector(
                 "#renavam"
             );
 
+
         const mileage =
             document.querySelector(
                 "#mileage"
             );
+
 
         const crlv =
             document.querySelector(
@@ -194,10 +185,12 @@ document.addEventListener(
                 "#sum-price"
             );
 
+
         const sumDeposit =
             document.querySelector(
                 "#sum-deposit"
             );
+
 
         const sumDelivery =
             document.querySelector(
@@ -237,10 +230,33 @@ document.addEventListener(
 
                 localStorage.setItem(
                     "alugase_user",
-                    JSON.stringify(user)
+                    JSON.stringify(
+                        user
+                    )
                 );
 
+            } else if (
+                response.status === 401
+            ) {
+
+                localStorage.removeItem(
+                    "token"
+                );
+
+                localStorage.removeItem(
+                    "alugase_user"
+                );
+
+                alert(
+                    "Sua sessão expirou. Faça login novamente."
+                );
+
+                location.href =
+                    "login.html";
+
+                return;
             }
+
 
         } catch (error) {
 
@@ -248,7 +264,6 @@ document.addEventListener(
                 "Não foi possível atualizar os dados do usuário:",
                 error
             );
-
         }
 
 
@@ -266,7 +281,9 @@ document.addEventListener(
             "";
 
 
-        if (accountCity) {
+        if (
+            accountCity
+        ) {
 
             city.value =
                 accountCity;
@@ -278,12 +295,11 @@ document.addEventListener(
 
             city.readOnly =
                 false;
-
         }
 
 
         // ======================================
-        // CIDADE SEMPRE DO ENDEREÇO DA CONTA
+        // CIDADE SEMPRE DO ENDEREÇO
         // ======================================
 
         city.addEventListener(
@@ -296,7 +312,6 @@ document.addEventListener(
 
                     city.value =
                         accountCity;
-
                 }
 
             }
@@ -321,82 +336,15 @@ document.addEventListener(
                 );
 
 
-                if (isVehicle) {
+                if (
+                    isVehicle
+                ) {
 
                     icon.value =
                         "🚗";
-
                 }
 
             };
-
-
-        // ======================================
-        // ENTREGA VISUAL
-        // ======================================
-
-        function updateDeliveryVisibility() {
-
-            if (
-                delivery.checked
-            ) {
-
-                deliverySettings.style.display =
-                    "block";
-
-            } else {
-
-                deliverySettings.style.display =
-                    "none";
-
-            }
-
-        }
-
-
-        // ======================================
-        // EXEMPLO DO FRETE
-        // ======================================
-
-        function updateDeliveryExample() {
-
-            const base =
-                Number(
-                    deliveryBasePrice.value
-                ) || 0;
-
-
-            const perKm =
-                Number(
-                    deliveryPricePerKm.value
-                ) || 0;
-
-
-            const maxDistance =
-                Number(
-                    deliveryMaxDistance.value
-                ) || 0;
-
-
-            const exampleDistance =
-                maxDistance > 0 &&
-                maxDistance < 10
-                    ? maxDistance
-                    : 10;
-
-
-            const total =
-                base +
-                (
-                    exampleDistance *
-                    perKm
-                );
-
-
-            deliveryExample.textContent =
-                `Exemplo: R$ ${base.toFixed(2)} + (${exampleDistance} km × R$ ${perKm.toFixed(2)}) = R$ ${total.toFixed(2)}`;
-
-        }
 
 
         // ======================================
@@ -429,65 +377,34 @@ document.addEventListener(
                 delivery.checked
             ) {
 
-                const base =
-                    Number(
-                        deliveryBasePrice.value
-                    ) || 0;
-
-
-                const perKm =
-                    Number(
-                        deliveryPricePerKm.value
-                    ) || 0;
-
-
                 sumDelivery.textContent =
-                    `A partir de R$ ${base.toFixed(2)} + km`;
+                    "Calculada automaticamente";
 
             } else {
 
                 sumDelivery.textContent =
                     "Não disponível";
-
             }
-
-
-            updateDeliveryExample();
-
         }
 
 
-        [
-            price,
-            deposit,
-            deliveryBasePrice,
-            deliveryPricePerKm,
-            deliveryMaxDistance
-        ].forEach(
-            input => {
+        price.addEventListener(
+            "input",
+            updateSummary
+        );
 
-                input.addEventListener(
-                    "input",
-                    updateSummary
-                );
 
-            }
+        deposit.addEventListener(
+            "input",
+            updateSummary
         );
 
 
         delivery.addEventListener(
             "change",
-            () => {
-
-                updateDeliveryVisibility();
-
-                updateSummary();
-
-            }
+            updateSummary
         );
 
-
-        updateDeliveryVisibility();
 
         updateSummary();
 
@@ -496,11 +413,17 @@ document.addEventListener(
         // PREVIEW DAS IMAGENS
         // ======================================
 
-        document
-            .querySelector(
+        const selectImages =
+            document.querySelector(
                 "#select-images"
-            )
-            .onclick =
+            );
+
+
+        if (
+            selectImages
+        ) {
+
+            selectImages.onclick =
                 event => {
 
                     event.stopPropagation();
@@ -508,18 +431,35 @@ document.addEventListener(
                     images.click();
 
                 };
+        }
 
 
-        document
-            .querySelector(
+        const uploadArea =
+            document.querySelector(
                 "#upload-area"
-            )
-            .onclick =
-                () => {
+            );
+
+
+        if (
+            uploadArea
+        ) {
+
+            uploadArea.onclick =
+                event => {
+
+                    if (
+                        event.target.closest(
+                            "#select-images"
+                        )
+                    ) {
+
+                        return;
+                    }
 
                     images.click();
 
                 };
+        }
 
 
         images.onchange =
@@ -541,17 +481,38 @@ document.addEventListener(
                         reader.onload =
                             e => {
 
-                                previewGrid.innerHTML += `
+                                const item =
+                                    document.createElement(
+                                        "div"
+                                    );
 
-                                    <div class="preview-item">
 
-                                        <img
-                                            src="${e.target.result}"
-                                        >
+                                item.className =
+                                    "preview-item";
 
-                                    </div>
 
-                                `;
+                                const image =
+                                    document.createElement(
+                                        "img"
+                                    );
+
+
+                                image.src =
+                                    e.target.result;
+
+
+                                image.alt =
+                                    "Prévia do produto";
+
+
+                                item.appendChild(
+                                    image
+                                );
+
+
+                                previewGrid.appendChild(
+                                    item
+                                );
 
                             };
 
@@ -570,16 +531,10 @@ document.addEventListener(
         // CRLV
         // ======================================
 
-        document
-            .querySelector(
+        const selectCrlv =
+            document.querySelector(
                 "#select-crlv"
-            )
-            .onclick =
-                () => {
-
-                    crlv.click();
-
-                };
+            );
 
 
         const crlvName =
@@ -588,17 +543,40 @@ document.addEventListener(
             );
 
 
-        crlvName.textContent =
-            "Nenhum arquivo";
+        if (
+            crlvName
+        ) {
+
+            crlvName.textContent =
+                "Nenhum arquivo";
+        }
+
+
+        if (
+            selectCrlv
+        ) {
+
+            selectCrlv.onclick =
+                () => {
+
+                    crlv.click();
+
+                };
+        }
 
 
         crlv.onchange =
             () => {
 
-                crlvName.textContent =
-                    crlv.files.length
-                        ? crlv.files[0].name
-                        : "Nenhum arquivo";
+                if (
+                    crlvName
+                ) {
+
+                    crlvName.textContent =
+                        crlv.files.length
+                            ? crlv.files[0].name
+                            : "Nenhum arquivo";
+                }
 
             };
 
@@ -629,58 +607,58 @@ document.addEventListener(
                         "Seu endereço está incompleto. Atualize seus dados no perfil antes de criar um anúncio."
                     );
 
+
                     location.href =
                         "perfil.html";
 
-                    return;
 
+                    return;
                 }
 
 
                 // ==================================
-                // VALIDAÇÃO DA ENTREGA
+                // VALIDAÇÃO DO PREÇO
                 // ==================================
 
-                const deliveryEnabled =
-                    delivery.checked;
-
-
-                const base =
+                const priceValue =
                     Number(
-                        deliveryBasePrice.value
-                    ) || 0;
+                        price.value
+                    );
 
 
-                const perKm =
+                const depositValue =
                     Number(
-                        deliveryPricePerKm.value
-                    ) || 0;
-
-
-                const maxDistance =
-                    Number(
-                        deliveryMaxDistance.value
-                    ) || 0;
+                        deposit.value
+                    );
 
 
                 if (
-                    deliveryEnabled
+                    !Number.isFinite(
+                        priceValue
+                    ) ||
+                    priceValue <= 0
                 ) {
 
-                    if (
-                        base < 0 ||
-                        perKm < 0 ||
-                        maxDistance < 0
-                    ) {
+                    alert(
+                        "Informe um preço por dia válido."
+                    );
 
-                        alert(
-                            "Os valores da entrega são inválidos."
-                        );
+                    return;
+                }
 
-                        return;
 
-                    }
+                if (
+                    !Number.isFinite(
+                        depositValue
+                    ) ||
+                    depositValue < 0
+                ) {
 
+                    alert(
+                        "Informe uma caução válida."
+                    );
+
+                    return;
                 }
 
 
@@ -701,7 +679,7 @@ document.addEventListener(
 
                 formData.append(
                     "ownerName",
-                    user.name
+                    user.name || ""
                 );
 
 
@@ -723,6 +701,7 @@ document.addEventListener(
                 );
 
 
+                // A cidade vem da conta
                 formData.append(
                     "city",
                     accountCity
@@ -731,15 +710,19 @@ document.addEventListener(
 
                 formData.append(
                     "pricePerDay",
-                    price.value
+                    priceValue
                 );
 
 
                 formData.append(
                     "deposit",
-                    deposit.value
+                    depositValue
                 );
 
+
+                // ==================================
+                // RETIRADA
+                // ==================================
 
                 formData.append(
                     "pickup",
@@ -747,42 +730,20 @@ document.addEventListener(
                 );
 
 
+                // ==================================
+                // ENTREGA
+                // ==================================
+                //
+                // Apenas informa se o proprietário
+                // oferece entrega.
+                //
+                // O preço é calculado pelo backend.
+                //
+                // ==================================
+
                 formData.append(
                     "delivery",
-                    deliveryEnabled
-                );
-
-
-                formData.append(
-                    "deliveryBasePrice",
-                    deliveryEnabled
-                        ? base
-                        : 0
-                );
-
-
-                formData.append(
-                    "deliveryPricePerKm",
-                    deliveryEnabled
-                        ? perKm
-                        : 0
-                );
-
-
-                formData.append(
-                    "deliveryMaxDistance",
-                    deliveryEnabled
-                        ? maxDistance
-                        : 0
-                );
-
-
-                // Compatibilidade
-                formData.append(
-                    "deliveryPrice",
-                    deliveryEnabled
-                        ? base
-                        : 0
+                    delivery.checked
                 );
 
 
@@ -830,7 +791,8 @@ document.addEventListener(
                             color.value.trim(),
 
                         plate:
-                            plate.value.trim()
+                            plate.value
+                                .trim()
                                 .toUpperCase(),
 
                         renavam:
@@ -860,9 +822,29 @@ document.addEventListener(
                             "crlv",
                             crlv.files[0]
                         );
-
                     }
+                }
 
+
+                // ==================================
+                // DESABILITAR BOTÃO
+                // ==================================
+
+                const submitButton =
+                    form.querySelector(
+                        'button[type="submit"]'
+                    );
+
+
+                if (
+                    submitButton
+                ) {
+
+                    submitButton.disabled =
+                        true;
+
+                    submitButton.textContent =
+                        "Publicando...";
                 }
 
 
@@ -911,11 +893,12 @@ document.addEventListener(
                     } catch {
 
                         data = {
+
                             error:
                                 text ||
                                 "Erro desconhecido."
-                        };
 
+                        };
                     }
 
 
@@ -927,7 +910,6 @@ document.addEventListener(
                             data.error ||
                             "Erro ao publicar anúncio."
                         );
-
                     }
 
 
@@ -953,6 +935,17 @@ document.addEventListener(
                         "Erro ao publicar anúncio."
                     );
 
+
+                    if (
+                        submitButton
+                    ) {
+
+                        submitButton.disabled =
+                            false;
+
+                        submitButton.textContent =
+                            "Publicar anúncio";
+                    }
                 }
 
             };
