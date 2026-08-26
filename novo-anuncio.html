@@ -12,6 +12,7 @@
 
 <header>
   <nav class="navbar">
+
     <div class="logo">
       <a href="index.html">
         <h2>ALUGASE</h2>
@@ -19,128 +20,325 @@
     </div>
 
     <div class="nav-buttons">
-      <a href="perfil.html" class="btn-secondary">Meu Perfil</a>
+      <a href="perfil.html" class="btn-secondary">
+        Meu Perfil
+      </a>
     </div>
+
   </nav>
 </header>
+
 
 <main class="ad-page">
 
   <div class="page-title">
+
     <h1>Criar novo anúncio</h1>
-    <p>Preencha as informações do produto que deseja disponibilizar para aluguel.</p>
+
+    <p>
+      Preencha as informações do produto que deseja
+      disponibilizar para aluguel.
+    </p>
+
   </div>
 
-  <form id="new-product-form" class="ad-form">
 
-    <!-- INFORMAÇÕES -->
+  <form
+    id="new-product-form"
+    class="ad-form"
+  >
+
+
+    <!-- ==========================================
+         INFORMAÇÕES
+    =========================================== -->
+
     <section class="form-section">
 
       <h2>Informações básicas</h2>
 
+
       <div class="form-group">
-        <label>Nome do produto</label>
-        <input type="text" id="title" required>
+
+        <label>
+          Nome do produto
+        </label>
+
+        <input
+          type="text"
+          id="title"
+          required
+        >
+
       </div>
+
 
       <div class="grid-2">
 
-        <div class="form-group">
-          <label>Categoria</label>
 
-          <select id="category" required>
-            <option value="">Selecione</option>
-            <option>Eletrônicos</option>
-            <option>Ferramentas</option>
-            <option>Casa</option>
-            <option>Veículos</option>
-            <option>Eventos</option>
-            <option>Serviços</option>
+        <div class="form-group">
+
+          <label>
+            Categoria
+          </label>
+
+          <select
+            id="category"
+            required
+          >
+
+            <option value="">
+              Selecione
+            </option>
+
+            <option>
+              Eletrônicos
+            </option>
+
+            <option>
+              Ferramentas
+            </option>
+
+            <option>
+              Casa
+            </option>
+
+            <option>
+              Veículos
+            </option>
+
+            <option>
+              Eventos
+            </option>
+
+            <option>
+              Serviços
+            </option>
+
           </select>
 
         </div>
 
+
         <div class="form-group">
-          <label>Ícone</label>
+
+          <label>
+            Ícone
+          </label>
 
           <select id="icon">
-            <option value="📦">📦 Padrão</option>
-            <option value="📷">📷 Câmera</option>
-            <option value="💻">💻 Notebook</option>
-            <option value="🔊">🔊 Caixa</option>
-            <option value="🚲">🚲 Bicicleta</option>
-            <option value="🚗">🚗 Carro</option>
-            <option value="🔧">🔧 Ferramenta</option>
-            <option value="🏠">🏠 Casa</option>
+
+            <option value="📦">
+              📦 Padrão
+            </option>
+
+            <option value="📷">
+              📷 Câmera
+            </option>
+
+            <option value="💻">
+              💻 Notebook
+            </option>
+
+            <option value="🔊">
+              🔊 Caixa
+            </option>
+
+            <option value="🚲">
+              🚲 Bicicleta
+            </option>
+
+            <option value="🚗">
+              🚗 Carro
+            </option>
+
+            <option value="🔧">
+              🔧 Ferramenta
+            </option>
+
+            <option value="🏠">
+              🏠 Casa
+            </option>
+
           </select>
 
         </div>
 
       </div>
 
-      <div class="form-group">
-        <label>Descrição</label>
-        <textarea id="description" rows="5" required></textarea>
-      </div>
 
       <div class="form-group">
-        <label>Cidade</label>
-        <input type="text" id="city" required>
+
+        <label>
+          Descrição
+        </label>
+
+        <textarea
+          id="description"
+          rows="5"
+          required
+        ></textarea>
+
+      </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Cidade do anúncio
+        </label>
+
+        <input
+          type="text"
+          id="city"
+          required
+        >
+
+        <small id="address-info">
+          O endereço será obtido da sua conta.
+        </small>
+
       </div>
 
     </section>
 
-    <!-- VEÍCULOS -->
-    <section class="form-section vehicle-section" id="vehicle-section">
 
-      <h2>Documentação do veículo</h2>
+    <!-- ==========================================
+         VEÍCULO
+    =========================================== -->
+
+    <section
+      class="form-section vehicle-section"
+      id="vehicle-section"
+    >
+
+      <h2>
+        Documentação do veículo
+      </h2>
+
 
       <p class="vehicle-info">
-        Esta etapa é obrigatória apenas para anúncios de veículos.
+        Esta etapa é obrigatória apenas para
+        anúncios de veículos.
       </p>
+
 
       <div class="grid-2">
 
-        <div class="form-group">
-          <label>Marca</label>
-          <input type="text" id="brand" placeholder="Toyota">
-        </div>
 
         <div class="form-group">
-          <label>Modelo</label>
-          <input type="text" id="model" placeholder="Corolla">
+
+          <label>
+            Marca
+          </label>
+
+          <input
+            type="text"
+            id="brand"
+            placeholder="Toyota"
+          >
+
         </div>
 
-        <div class="form-group">
-          <label>Ano</label>
-          <input type="number" id="year" placeholder="2022">
-        </div>
 
         <div class="form-group">
-          <label>Cor</label>
-          <input type="text" id="color" placeholder="Prata">
+
+          <label>
+            Modelo
+          </label>
+
+          <input
+            type="text"
+            id="model"
+            placeholder="Corolla"
+          >
+
         </div>
 
-        <div class="form-group">
-          <label>Placa</label>
-          <input type="text" id="plate" placeholder="ABC1D23">
-        </div>
 
         <div class="form-group">
-          <label>Renavam</label>
-          <input type="text" id="renavam" maxlength="11">
+
+          <label>
+            Ano
+          </label>
+
+          <input
+            type="number"
+            id="year"
+            placeholder="2022"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Cor
+          </label>
+
+          <input
+            type="text"
+            id="color"
+            placeholder="Prata"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Placa
+          </label>
+
+          <input
+            type="text"
+            id="plate"
+            placeholder="ABC1D23"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Renavam
+          </label>
+
+          <input
+            type="text"
+            id="renavam"
+            maxlength="11"
+          >
+
         </div>
 
       </div>
 
+
       <div class="form-group">
-        <label>Quilometragem</label>
-        <input type="number" id="mileage" placeholder="45000">
+
+        <label>
+          Quilometragem
+        </label>
+
+        <input
+          type="number"
+          id="mileage"
+          placeholder="45000"
+        >
+
       </div>
 
+
       <div class="form-group">
 
-        <label>CRLV-e</label>
+        <label>
+          CRLV-e
+        </label>
+
 
         <div class="document-upload">
 
@@ -151,6 +349,7 @@
             hidden
           >
 
+
           <button
             type="button"
             class="btn-secondary"
@@ -158,6 +357,7 @@
           >
             Selecionar CRLV
           </button>
+
 
           <span id="crlv-name">
             Nenhum arquivo selecionado
@@ -169,59 +369,214 @@
 
     </section>
 
-    <!-- PREÇO -->
+
+    <!-- ==========================================
+         PREÇO
+    =========================================== -->
+
     <section class="form-section">
 
-      <h2>Preço e caução</h2>
+      <h2>
+        Preço e caução
+      </h2>
+
 
       <div class="grid-2">
 
-        <div class="form-group">
-          <label>Preço por dia</label>
-          <input type="number" id="price" min="1" required>
-        </div>
 
         <div class="form-group">
-          <label>Caução</label>
-          <input type="number" id="deposit" min="0" required>
+
+          <label>
+            Preço por dia
+          </label>
+
+          <input
+            type="number"
+            id="price"
+            min="1"
+            step="0.01"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Caução
+          </label>
+
+          <input
+            type="number"
+            id="deposit"
+            min="0"
+            step="0.01"
+            required
+          >
+
         </div>
 
       </div>
 
     </section>
 
-    <!-- ENTREGA -->
+
+    <!-- ==========================================
+         ENTREGA
+    =========================================== -->
+
     <section class="form-section">
 
-      <h2>Entrega</h2>
+      <h2>
+        Entrega
+      </h2>
+
 
       <label class="option">
-        <input type="checkbox" id="pickup" checked>
+
+        <input
+          type="checkbox"
+          id="pickup"
+          checked
+        >
+
         Retirada no local
+
       </label>
+
 
       <label class="option">
-        <input type="checkbox" id="delivery">
+
+        <input
+          type="checkbox"
+          id="delivery"
+        >
+
         Entrega disponível
+
       </label>
 
-      <div class="form-group">
-        <label>Taxa de entrega</label>
-        <input type="number" id="deliveryPrice" value="20">
+
+      <div id="delivery-settings">
+
+
+        <div class="grid-2">
+
+
+          <div class="form-group">
+
+            <label>
+              Taxa base da entrega
+            </label>
+
+            <input
+              type="number"
+              id="deliveryBasePrice"
+              value="10"
+              min="0"
+              step="0.01"
+            >
+
+            <small>
+              Valor inicial cobrado pela entrega.
+            </small>
+
+          </div>
+
+
+          <div class="form-group">
+
+            <label>
+              Valor por km
+            </label>
+
+            <input
+              type="number"
+              id="deliveryPricePerKm"
+              value="2"
+              min="0"
+              step="0.01"
+            >
+
+            <small>
+              Valor acrescentado para cada quilômetro.
+            </small>
+
+          </div>
+
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Distância máxima de entrega
+          </label>
+
+          <input
+            type="number"
+            id="deliveryMaxDistance"
+            value="30"
+            min="0"
+            step="0.1"
+          >
+
+          <small>
+            Informe 0 para não limitar a distância.
+          </small>
+
+        </div>
+
+
+        <div class="delivery-preview">
+
+          <strong>
+            Como será calculado:
+          </strong>
+
+          <p>
+            Taxa base + distância × valor por km
+          </p>
+
+          <p id="delivery-example">
+            Exemplo: R$ 10 + (10 km × R$ 2)
+            = R$ 30
+          </p>
+
+        </div>
+
       </div>
 
     </section>
 
-    <!-- FOTOS -->
+
+    <!-- ==========================================
+         FOTOS
+    =========================================== -->
+
     <section class="form-section">
 
-      <h2>Fotos</h2>
+      <h2>
+        Fotos
+      </h2>
 
-      <div class="upload-area" id="upload-area">
 
-        <div>📷</div>
+      <div
+        class="upload-area"
+        id="upload-area"
+      >
 
-        <p>Selecione imagens do produto</p>
+        <div>
+          📷
+        </div>
+
+
+        <p>
+          Selecione imagens do produto
+        </p>
+
 
         <input
           type="file"
@@ -230,6 +585,7 @@
           accept="image/*"
           hidden
         >
+
 
         <button
           type="button"
@@ -241,44 +597,87 @@
 
       </div>
 
-      <div class="preview-grid" id="preview-grid"></div>
+
+      <div
+        class="preview-grid"
+        id="preview-grid"
+      ></div>
 
     </section>
 
-    <!-- RESUMO -->
+
+    <!-- ==========================================
+         RESUMO
+    =========================================== -->
+
     <section class="form-section">
 
-      <h2>Resumo</h2>
+      <h2>
+        Resumo
+      </h2>
+
 
       <div class="summary">
 
-        <div>
-          <span>Preço</span>
-          <strong id="sum-price">R$ 0</strong>
-        </div>
 
         <div>
-          <span>Caução</span>
-          <strong id="sum-deposit">R$ 0</strong>
+
+          <span>
+            Preço
+          </span>
+
+          <strong id="sum-price">
+            R$ 0
+          </strong>
+
         </div>
 
+
         <div>
-          <span>Entrega</span>
-          <strong id="sum-delivery">Não disponível</strong>
+
+          <span>
+            Caução
+          </span>
+
+          <strong id="sum-deposit">
+            R$ 0
+          </strong>
+
         </div>
+
+
+        <div>
+
+          <span>
+            Entrega
+          </span>
+
+          <strong id="sum-delivery">
+            Não disponível
+          </strong>
+
+        </div>
+
 
       </div>
 
     </section>
 
-    <button class="btn-primary submit-btn" type="submit">
+
+    <button
+      class="btn-primary submit-btn"
+      type="submit"
+    >
       Publicar anúncio
     </button>
+
 
   </form>
 
 </main>
 
+
 <script src="./js/anuncio.js"></script>
+
 </body>
 </html>
