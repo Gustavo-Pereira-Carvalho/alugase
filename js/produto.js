@@ -1,1856 +1,1593 @@
 document.addEventListener("DOMContentLoaded", async () => {
-// ==========================================
-// API
-// ==========================================
 
-const API =
-    "https://alugase-api.onrender.com/api";
+    // ==========================================
+    // API
+    // ==========================================
 
-const PRODUCTS_API =
-    `${API}/products`;
+    const API =
+        "https://alugase-api.onrender.com/api";
 
-const USERS_API =
-    `${API}/users`;
+    const PRODUCTS_API =
+        `${API}/products`;
 
-const RENTALS_API =
-    `${API}/rentals`;
+    const USERS_API =
+        `${API}/users`;
 
+    const RENTALS_API =
+        `${API}/rentals`;
 
-// ==========================================
-// USUÁRIO LOGADO
-// ==========================================
 
-const user =
-    JSON.parse(
-        localStorage.getItem("alugase_user")
-    );
+    // ==========================================
+    // USUÁRIO LOGADO
+    // ==========================================
 
-
-// ==========================================
-// ID DO PRODUTO
-// ==========================================
-
-const productId =
-    new URLSearchParams(
-        window.location.search
-    ).get("id");
-
-
-if (!productId) {
-
-    window.location.href =
-        "index.html";
-
-    return;
-
-}
-
-
-// ==========================================
-// ELEMENTOS
-// ==========================================
-
-const categoryLabel =
-    document.querySelector(
-        ".product-category"
-    );
-
-const categoryLink =
-    document.querySelector(
-        ".product-category-link"
-    );
-
-const breadcrumbTitle =
-    document.querySelector(
-        "#breadcrumb-title"
-    );
-
-const title =
-    document.querySelector(
-        "#product-title"
-    );
-
-const mainImage =
-    document.querySelector(
-        "#main-image"
-    );
-
-const thumbnails =
-    document.querySelector(
-        "#product-thumbnails"
-    );
-
-const locationText =
-    document.querySelector(
-        "#product-location"
-    );
-
-const description =
-    document.querySelector(
-        "#product-description"
-    );
-
-const productRating =
-    document.querySelector(
-        "#product-rating"
-    );
-
-const productReviews =
-    document.querySelector(
-        "#product-reviews"
-    );
-
-const price =
-    document.querySelector(
-        ".pricing strong"
-    );
-
-const deliveryLabel =
-    document.querySelector(
-        "#delivery-label"
-    );
-
-const depositTotal =
-    document.querySelector(
-        "#deposit-total"
-    );
-
-
-// ==========================================
-// PROPRIETÁRIO
-// ==========================================
-
-const ownerAvatar =
-    document.querySelector(
-        "#owner-avatar"
-    );
-
-const ownerName =
-    document.querySelector(
-        "#owner-name"
-    );
-
-const ownerVerification =
-    document.querySelector(
-        "#owner-verification"
-    );
-
-const ownerRating =
-    document.querySelector(
-        "#owner-rating"
-    );
-
-const ownerReviews =
-    document.querySelector(
-        "#owner-reviews"
-    );
-
-
-// ==========================================
-// CALENDÁRIO
-// ==========================================
-
-const startDate =
-    document.querySelector(
-        "#start-date"
-    );
-
-const endDate =
-    document.querySelector(
-        "#end-date"
-    );
-
-const calendarDays =
-    document.querySelector(
-        "#calendar-days"
-    );
-
-const calendarMonth =
-    document.querySelector(
-        "#calendar-month"
-    );
-
-const calendarPrev =
-    document.querySelector(
-        "#calendar-prev"
-    );
-
-const calendarNext =
-    document.querySelector(
-        "#calendar-next"
-    );
-
-const selectedStartDisplay =
-    document.querySelector(
-        "#selected-start-display"
-    );
-
-const selectedEndDisplay =
-    document.querySelector(
-        "#selected-end-display"
-    );
-
-
-// ==========================================
-// RESUMO
-// ==========================================
-
-const dailyTotal =
-    document.querySelector(
-        "#daily-total"
-    );
-
-const deliveryTotal =
-    document.querySelector(
-        "#delivery-total"
-    );
-
-const rentalTotal =
-    document.querySelector(
-        "#rental-total"
-    );
-
-const rentalButton =
-    document.querySelector(
-        "#rental-button"
-    );
-
-
-// ==========================================
-// VARIÁVEIS
-// ==========================================
-
-let product = null;
-
-let owner = null;
-
-let calendarDate =
-    new Date();
-
-let selectingStart = true;
-
-let unavailableDates = [];
-
-
-// ==========================================
-// FORMATAR DINHEIRO
-// ==========================================
-
-function formatMoney(value) {
-
-    return Number(value || 0)
-        .toLocaleString(
-            "pt-BR",
-            {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }
+    const user =
+        JSON.parse(
+            localStorage.getItem("alugase_user")
         );
 
-}
+
+    // ==========================================
+    // ID DO PRODUTO
+    // ==========================================
+
+    const productId =
+        new URLSearchParams(
+            window.location.search
+        ).get("id");
 
 
-// ==========================================
-// FORMATAR DATA
-// ==========================================
-
-function formatDateBR(dateString) {
-
-    if (!dateString) {
-
-        return "Selecione uma data";
-
-    }
-
-    const [
-        year,
-        month,
-        day
-    ] =
-        dateString.split("-");
-
-    return `${day}/${month}/${year}`;
-
-}
-
-
-// ==========================================
-// DATE → YYYY-MM-DD
-// ==========================================
-
-function dateToString(date) {
-
-    const year =
-        date.getFullYear();
-
-    const month =
-        String(
-            date.getMonth() + 1
-        ).padStart(2, "0");
-
-    const day =
-        String(
-            date.getDate()
-        ).padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-
-}
-
-
-// ==========================================
-// NORMALIZAR DATA
-// ==========================================
-
-function normalizeDate(date) {
-
-    const d =
-        new Date(date);
-
-    if (
-        Number.isNaN(
-            d.getTime()
-        )
-    ) {
-
-        return null;
-
-    }
-
-    d.setHours(
-        0,
-        0,
-        0,
-        0
-    );
-
-    return dateToString(d);
-
-}
-
-
-// ==========================================
-// VERIFICAR DATA INDISPONÍVEL
-// ==========================================
-
-function isUnavailable(dateString) {
-
-    return unavailableDates.includes(
-        dateString
-    );
-
-}
-
-
-// ==========================================
-// CARREGAR PRODUTO
-// ==========================================
-
-async function loadProduct() {
-
-    try {
-
-        const response =
-            await fetch(
-                `${PRODUCTS_API}/${productId}`
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Produto não encontrado."
-            );
-
-        }
-
-
-        product =
-            await response.json();
-
-
-        await Promise.all([
-            loadOwner(),
-            loadUnavailableDates()
-        ]);
-
-
-        fillScreen();
-
-
-    } catch (error) {
-
-        console.error(
-            "Erro ao carregar produto:",
-            error
-        );
-
-        alert(
-            "Não foi possível carregar o produto."
-        );
+    if (!productId) {
 
         window.location.href =
-            "explorar.html";
-
-    }
-
-}
-
-
-// ==========================================
-// CARREGAR DATAS INDISPONÍVEIS
-// ==========================================
-
-async function loadUnavailableDates() {
-
-    try {
-
-        const response =
-            await fetch(
-                `${RENTALS_API}/product/${productId}/unavailable`
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Erro ao buscar datas."
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        unavailableDates = [];
-
-
-        if (
-            Array.isArray(data.rentals)
-        ) {
-
-            data.rentals.forEach(
-                rental => {
-
-                    addUnavailableRange(
-                        rental.startDate,
-                        rental.endDate
-                    );
-
-                }
-            );
-
-        }
-
-
-        console.log(
-            "Datas indisponíveis:",
-            unavailableDates
-        );
-
-
-    } catch (error) {
-
-        console.error(
-            "Erro ao carregar datas indisponíveis:",
-            error
-        );
-
-        unavailableDates = [];
-
-    }
-
-}
-
-
-// ==========================================
-// ADICIONAR INTERVALO BLOQUEADO
-// ==========================================
-
-function addUnavailableRange(
-    start,
-    end
-) {
-
-    const startString =
-        normalizeDate(start);
-
-    const endString =
-        normalizeDate(end);
-
-
-    if (
-        !startString ||
-        !endString
-    ) {
+            "index.html";
 
         return;
 
     }
 
 
-    const current =
-        new Date(
-            `${startString}T00:00:00`
+    // ==========================================
+    // ELEMENTOS
+    // ==========================================
+
+    const categoryLabel =
+        document.querySelector(".product-category");
+
+    const categoryLink =
+        document.querySelector(".product-category-link");
+
+    const breadcrumbTitle =
+        document.querySelector("#breadcrumb-title");
+
+    const title =
+        document.querySelector("#product-title");
+
+    const mainImage =
+        document.querySelector("#main-image");
+
+    const thumbnails =
+        document.querySelector("#product-thumbnails");
+
+    const locationText =
+        document.querySelector("#product-location");
+
+    const description =
+        document.querySelector("#product-description");
+
+    const productRating =
+        document.querySelector("#product-rating");
+
+    const productReviews =
+        document.querySelector("#product-reviews");
+
+    const price =
+        document.querySelector(".pricing strong");
+
+    const deliveryLabel =
+        document.querySelector("#delivery-label");
+
+    const depositTotal =
+        document.querySelector("#deposit-total");
+
+
+    // ==========================================
+    // PROPRIETÁRIO
+    // ==========================================
+
+    const ownerAvatar =
+        document.querySelector("#owner-avatar");
+
+    const ownerName =
+        document.querySelector("#owner-name");
+
+    const ownerVerification =
+        document.querySelector("#owner-verification");
+
+    const ownerRating =
+        document.querySelector("#owner-rating");
+
+    const ownerReviews =
+        document.querySelector("#owner-reviews");
+
+
+    // ==========================================
+    // CALENDÁRIO
+    // ==========================================
+
+    const startDate =
+        document.querySelector("#start-date");
+
+    const endDate =
+        document.querySelector("#end-date");
+
+    const calendarDays =
+        document.querySelector("#calendar-days");
+
+    const calendarMonth =
+        document.querySelector("#calendar-month");
+
+    const calendarPrev =
+        document.querySelector("#calendar-prev");
+
+    const calendarNext =
+        document.querySelector("#calendar-next");
+
+    const selectedStartDisplay =
+        document.querySelector("#selected-start-display");
+
+    const selectedEndDisplay =
+        document.querySelector("#selected-end-display");
+
+
+    // ==========================================
+    // RESUMO
+    // ==========================================
+
+    const dailyTotal =
+        document.querySelector("#daily-total");
+
+    const deliveryTotal =
+        document.querySelector("#delivery-total");
+
+    const rentalTotal =
+        document.querySelector("#rental-total");
+
+    const rentalButton =
+        document.querySelector("#rental-button");
+
+
+    // ==========================================
+    // VARIÁVEIS
+    // ==========================================
+
+    let product = null;
+
+    let owner = null;
+
+    let calendarDate = new Date();
+
+    let selectingStart = true;
+
+    let unavailableDates = [];
+
+
+    // ==========================================
+    // FORMATAR DINHEIRO
+    // ==========================================
+
+    function formatMoney(value) {
+
+        return Number(value || 0)
+            .toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+    }
+
+
+    // ==========================================
+    // FORMATAR DATA
+    // ==========================================
+
+    function formatDateBR(dateString) {
+
+        if (!dateString) {
+            return "Selecione uma data";
+        }
+
+        const [
+            year,
+            month,
+            day
+        ] = dateString.split("-");
+
+        return `${day}/${month}/${year}`;
+
+    }
+
+
+    // ==========================================
+    // DATE → YYYY-MM-DD
+    // ==========================================
+
+    function dateToString(date) {
+
+        const year =
+            date.getFullYear();
+
+        const month =
+            String(date.getMonth() + 1)
+                .padStart(2, "0");
+
+        const day =
+            String(date.getDate())
+                .padStart(2, "0");
+
+        return `${year}-${month}-${day}`;
+
+    }
+
+
+    // ==========================================
+    // NORMALIZAR DATA
+    // ==========================================
+
+    function normalizeDate(date) {
+
+        const d =
+            new Date(date);
+
+        if (Number.isNaN(d.getTime())) {
+            return null;
+        }
+
+        d.setHours(
+            0,
+            0,
+            0,
+            0
         );
 
-    const endDateObject =
-        new Date(
-            `${endString}T00:00:00`
+        return dateToString(d);
+
+    }
+
+
+    // ==========================================
+    // VERIFICAR DATA INDISPONÍVEL
+    // ==========================================
+
+    function isUnavailable(dateString) {
+
+        return unavailableDates.includes(
+            dateString
         );
 
-
-    while (
-        current <=
-        endDateObject
-    ) {
-
-        const currentString =
-            dateToString(current);
+    }
 
 
-        if (
-            !unavailableDates.includes(
-                currentString
-            )
-        ) {
+    // ==========================================
+    // CARREGAR PRODUTO
+    // ==========================================
 
-            unavailableDates.push(
-                currentString
+    async function loadProduct() {
+
+        try {
+
+            const response =
+                await fetch(
+                    `${PRODUCTS_API}/${productId}`
+                );
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Produto não encontrado."
+                );
+
+            }
+
+            product =
+                await response.json();
+
+            await Promise.all([
+                loadOwner(),
+                loadUnavailableDates()
+            ]);
+
+            fillScreen();
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao carregar produto:",
+                error
             );
+
+            alert(
+                "Não foi possível carregar o produto."
+            );
+
+            window.location.href =
+                "explorar.html";
 
         }
 
-
-        current.setDate(
-            current.getDate() + 1
-        );
-
-    }
-
-}
-
-
-// ==========================================
-// CARREGAR PROPRIETÁRIO
-// ==========================================
-
-async function loadOwner() {
-
-    if (!product.ownerId) {
-
-        return;
-
     }
 
 
-    try {
+    // ==========================================
+    // CARREGAR DATAS INDISPONÍVEIS
+    // ==========================================
 
-        const ownerId =
-            typeof product.ownerId === "object"
-                ? product.ownerId._id
-                : product.ownerId;
+    async function loadUnavailableDates() {
 
+        try {
 
-        if (!ownerId) {
+            const response =
+                await fetch(
+                    `${RENTALS_API}/product/${productId}/unavailable`
+                );
 
-            return;
+            if (!response.ok) {
 
-        }
+                throw new Error(
+                    "Erro ao buscar datas."
+                );
 
+            }
 
-        const response =
-            await fetch(
-                `${USERS_API}/${ownerId}`
-            );
+            const data =
+                await response.json();
 
+            unavailableDates = [];
 
-        if (!response.ok) {
+            if (Array.isArray(data.rentals)) {
 
-            console.warn(
-                "Não foi possível carregar proprietário."
-            );
+                data.rentals.forEach(
+                    rental => {
 
-            return;
-
-        }
-
-
-        owner =
-            await response.json();
-
-
-    } catch (error) {
-
-        console.error(
-            "Erro ao carregar proprietário:",
-            error
-        );
-
-    }
-
-}
-
-
-// ==========================================
-// GALERIA
-// ==========================================
-
-function changeImage(src) {
-
-    if (!src) {
-
-        return;
-
-    }
-
-
-    mainImage.innerHTML = `
-
-        <img
-            src="${src}"
-            alt="${product.title || "Produto"}"
-            loading="lazy"
-        >
-
-    `;
-
-
-    document
-        .querySelectorAll(".thumbnail")
-        .forEach(
-            thumbnail =>
-                thumbnail.classList.remove(
-                    "active"
-                )
-        );
-
-}
-
-
-// ==========================================
-// RENDERIZAR GALERIA
-// ==========================================
-
-function renderGallery() {
-
-    thumbnails.innerHTML = "";
-
-
-    if (
-        Array.isArray(product.images) &&
-        product.images.length > 0
-    ) {
-
-        changeImage(
-            product.images[0]
-        );
-
-
-        product.images.forEach(
-            (image, index) => {
-
-                const button =
-                    document.createElement(
-                        "button"
-                    );
-
-
-                button.type =
-                    "button";
-
-
-                button.className =
-                    `thumbnail ${
-                        index === 0
-                            ? "active"
-                            : ""
-                    }`;
-
-
-                button.innerHTML = `
-
-                    <img
-                        src="${image}"
-                        alt="Imagem ${index + 1}"
-                        loading="lazy"
-                    >
-
-                `;
-
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        changeImage(
-                            image
-                        );
-
-
-                        document
-                            .querySelectorAll(
-                                ".thumbnail"
-                            )
-                            .forEach(
-                                item =>
-                                    item.classList
-                                        .remove(
-                                            "active"
-                                        )
-                            );
-
-
-                        button.classList.add(
-                            "active"
+                        addUnavailableRange(
+                            rental.startDate,
+                            rental.endDate
                         );
 
                     }
                 );
 
+            }
 
-                thumbnails.appendChild(
-                    button
+            console.log(
+                "Datas indisponíveis:",
+                unavailableDates
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao carregar datas indisponíveis:",
+                error
+            );
+
+            unavailableDates = [];
+
+        }
+
+    }
+
+
+    // ==========================================
+    // ADICIONAR INTERVALO BLOQUEADO
+    // ==========================================
+
+    function addUnavailableRange(start, end) {
+
+        const startString =
+            normalizeDate(start);
+
+        const endString =
+            normalizeDate(end);
+
+        if (!startString || !endString) {
+            return;
+        }
+
+        const current =
+            new Date(
+                `${startString}T00:00:00`
+            );
+
+        const endDateObject =
+            new Date(
+                `${endString}T00:00:00`
+            );
+
+        while (current <= endDateObject) {
+
+            const currentString =
+                dateToString(current);
+
+            if (
+                !unavailableDates.includes(
+                    currentString
+                )
+            ) {
+
+                unavailableDates.push(
+                    currentString
                 );
 
             }
-        );
+
+            current.setDate(
+                current.getDate() + 1
+            );
+
+        }
+
+    }
 
 
-    } else {
+    // ==========================================
+    // CARREGAR PROPRIETÁRIO
+    // ==========================================
+
+    async function loadOwner() {
+
+        if (!product.ownerId) {
+            return;
+        }
+
+        try {
+
+            const ownerId =
+                typeof product.ownerId === "object"
+                    ? product.ownerId._id
+                    : product.ownerId;
+
+            if (!ownerId) {
+                return;
+            }
+
+            const response =
+                await fetch(
+                    `${USERS_API}/${ownerId}`
+                );
+
+            if (!response.ok) {
+
+                console.warn(
+                    "Não foi possível carregar proprietário."
+                );
+
+                return;
+
+            }
+
+            owner =
+                await response.json();
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao carregar proprietário:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // GALERIA
+    // ==========================================
+
+    function changeImage(src) {
+
+        if (!src) {
+            return;
+        }
 
         mainImage.innerHTML = `
-
-            <div class="emoji-image">
-                📦
-            </div>
-
-        `;
-
-
-        const button =
-            document.createElement(
-                "button"
-            );
-
-
-        button.type =
-            "button";
-
-
-        button.className =
-            "thumbnail emoji active";
-
-
-        button.textContent =
-            "📦";
-
-
-        thumbnails.appendChild(
-            button
-        );
-
-    }
-
-}
-
-
-// ==========================================
-// PROPRIETÁRIO
-// ==========================================
-
-function renderOwner() {
-
-    if (!owner) {
-
-        ownerAvatar.innerHTML =
-            "👤";
-
-
-        ownerName.textContent =
-            product.ownerName ||
-            "Usuário";
-
-
-        ownerVerification.textContent =
-            "Usuário";
-
-
-        ownerRating.textContent =
-            product.rating || "5.0";
-
-
-        ownerReviews.textContent =
-            product.reviews || "0";
-
-
-        return;
-
-    }
-
-
-    ownerName.textContent =
-        owner.name ||
-        product.ownerName ||
-        "Usuário";
-
-
-    // ======================================
-    // FOTO
-    // ======================================
-
-    if (owner.profileImage) {
-
-        ownerAvatar.innerHTML = `
-
             <img
-                src="${owner.profileImage}"
-                alt="${owner.name || "Proprietário"}"
-                class="owner-profile-image"
+                src="${src}"
+                alt="${product.title || "Produto"}"
+                loading="lazy"
             >
-
         `;
 
-    } else {
-
-        const initials =
-            (owner.name || "U")
-                .split(" ")
-                .map(
-                    word =>
-                        word.charAt(0)
-                )
-                .slice(0, 2)
-                .join("")
-                .toUpperCase();
-
-
-        ownerAvatar.innerHTML = `
-
-            <span class="owner-initials">
-                ${initials}
-            </span>
-
-        `;
-
-    }
-
-
-    // ======================================
-    // VERIFICAÇÃO
-    // ======================================
-
-    if (owner.identityVerified) {
-
-        ownerVerification.textContent =
-            "✓ Identidade verificada";
-
-
-        ownerVerification.className =
-            "owner-verified";
-
-    } else {
-
-        ownerVerification.textContent =
-            "Usuário";
-
-
-        ownerVerification.className = "";
-
-    }
-
-
-    // ======================================
-    // AVALIAÇÃO
-    // ======================================
-
-    ownerRating.textContent =
-        owner.rating ||
-        product.rating ||
-        "5.0";
-
-
-    ownerReviews.textContent =
-        owner.reviews ||
-        product.reviews ||
-        "0";
-
-}
-
-
-// ==========================================
-// RENDERIZAR CALENDÁRIO
-// ==========================================
-
-function renderCalendar() {
-
-    if (!calendarDays) {
-
-        return;
-
-    }
-
-
-    calendarDays.innerHTML = "";
-
-
-    const year =
-        calendarDate.getFullYear();
-
-
-    const month =
-        calendarDate.getMonth();
-
-
-    const firstDay =
-        new Date(
-            year,
-            month,
-            1
-        ).getDay();
-
-
-    const daysInMonth =
-        new Date(
-            year,
-            month + 1,
-            0
-        ).getDate();
-
-
-    if (calendarMonth) {
-
-        calendarMonth.textContent =
-            calendarDate.toLocaleDateString(
-                "pt-BR",
-                {
-                    month: "long",
-                    year: "numeric"
-                }
+        document
+            .querySelectorAll(".thumbnail")
+            .forEach(
+                thumbnail =>
+                    thumbnail.classList.remove(
+                        "active"
+                    )
             );
 
     }
 
 
-    // ======================================
-    // ESPAÇOS
-    // ======================================
+    // ==========================================
+    // RENDERIZAR GALERIA
+    // ==========================================
 
-    for (
-        let i = 0;
-        i < firstDay;
-        i++
-    ) {
+    function renderGallery() {
 
-        const empty =
-            document.createElement(
-                "div"
-            );
-
-
-        empty.className =
-            "calendar-day empty";
-
-
-        calendarDays.appendChild(
-            empty
-        );
-
-    }
-
-
-    // ======================================
-    // HOJE
-    // ======================================
-
-    const today =
-        new Date();
-
-
-    today.setHours(
-        0,
-        0,
-        0,
-        0
-    );
-
-
-    const todayString =
-        dateToString(today);
-
-
-    // ======================================
-    // DIAS
-    // ======================================
-
-    for (
-        let day = 1;
-        day <= daysInMonth;
-        day++
-    ) {
-
-        const date =
-            new Date(
-                year,
-                month,
-                day
-            );
-
-
-        const dateString =
-            dateToString(date);
-
-
-        const button =
-            document.createElement(
-                "button"
-            );
-
-
-        button.type =
-            "button";
-
-
-        button.className =
-            "calendar-day";
-
-
-        button.textContent =
-            day;
-
-
-        // ==================================
-        // HOJE
-        // ==================================
+        thumbnails.innerHTML = "";
 
         if (
-            dateString ===
-            todayString
+            Array.isArray(product.images) &&
+            product.images.length > 0
         ) {
 
-            button.classList.add(
-                "today"
+            changeImage(
+                product.images[0]
             );
 
-        }
+            product.images.forEach(
+                (image, index) => {
 
+                    const button =
+                        document.createElement(
+                            "button"
+                        );
 
-        // ==================================
-        // PASSADO
-        // ==================================
+                    button.type =
+                        "button";
 
-        if (
-            dateString <
-            todayString
-        ) {
+                    button.className =
+                        `thumbnail ${
+                            index === 0
+                                ? "active"
+                                : ""
+                        }`;
 
-            button.disabled =
-                true;
+                    button.innerHTML = `
+                        <img
+                            src="${image}"
+                            alt="Imagem ${index + 1}"
+                            loading="lazy"
+                        >
+                    `;
 
-            button.classList.add(
-                "unavailable"
-            );
+                    button.addEventListener(
+                        "click",
+                        () => {
 
-        }
+                            changeImage(
+                                image
+                            );
 
+                            document
+                                .querySelectorAll(
+                                    ".thumbnail"
+                                )
+                                .forEach(
+                                    item =>
+                                        item.classList
+                                            .remove(
+                                                "active"
+                                            )
+                                );
 
-        // ==================================
-        // ALUGADO
-        // ==================================
+                            button.classList.add(
+                                "active"
+                            );
 
-        if (
-            isUnavailable(
-                dateString
-            )
-        ) {
+                        }
+                    );
 
-            button.disabled =
-                true;
-
-            button.classList.add(
-                "unavailable"
-            );
-
-        }
-
-
-        // ==================================
-        // RETIRADA
-        // ==================================
-
-        if (
-            dateString ===
-            startDate.value
-        ) {
-
-            button.classList.add(
-                "selected",
-                "range-start"
-            );
-
-        }
-
-
-        // ==================================
-        // DEVOLUÇÃO
-        // ==================================
-
-        if (
-            dateString ===
-            endDate.value &&
-            endDate.value !==
-                startDate.value
-        ) {
-
-            button.classList.add(
-                "selected",
-                "range-end"
-            );
-
-        }
-
-
-        // ==================================
-        // INTERVALO
-        // ==================================
-
-        if (
-            startDate.value &&
-            endDate.value &&
-            dateString >
-                startDate.value &&
-            dateString <
-                endDate.value
-        ) {
-
-            button.classList.add(
-                "in-range"
-            );
-
-        }
-
-
-        // ==================================
-        // CLIQUE
-        // ==================================
-
-        if (!button.disabled) {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    selectCalendarDate(
-                        dateString
+                    thumbnails.appendChild(
+                        button
                     );
 
                 }
             );
 
+        } else {
+
+            mainImage.innerHTML = `
+                <div class="emoji-image">
+                    📦
+                </div>
+            `;
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.type =
+                "button";
+
+            button.className =
+                "thumbnail emoji active";
+
+            button.textContent =
+                "📦";
+
+            thumbnails.appendChild(
+                button
+            );
+
         }
-
-
-        calendarDays.appendChild(
-            button
-        );
 
     }
 
-}
+
+    // ==========================================
+    // PROPRIETÁRIO
+    // ==========================================
+
+    function renderOwner() {
+
+        if (!owner) {
+
+            ownerAvatar.innerHTML =
+                "👤";
+
+            ownerName.textContent =
+                product.ownerName ||
+                "Usuário";
+
+            ownerVerification.textContent =
+                "Usuário";
+
+            ownerRating.textContent =
+                product.rating || "5.0";
+
+            ownerReviews.textContent =
+                product.reviews || "0";
+
+            return;
+
+        }
+
+        ownerName.textContent =
+            owner.name ||
+            product.ownerName ||
+            "Usuário";
 
 
-// ==========================================
-// SELECIONAR DATA
-// ==========================================
+        // FOTO
 
-function selectCalendarDate(
-    dateString
-) {
+        if (owner.profileImage) {
 
-    // ======================================
-    // PRIMEIRA DATA
-    // ======================================
+            ownerAvatar.innerHTML = `
+                <img
+                    src="${owner.profileImage}"
+                    alt="${owner.name || "Proprietário"}"
+                    class="owner-profile-image"
+                >
+            `;
 
-    if (
-        selectingStart ||
-        !startDate.value ||
-        (
-            startDate.value &&
-            endDate.value
-        )
-    ) {
+        } else {
 
-        startDate.value =
-            dateString;
+            const initials =
+                (owner.name || "U")
+                    .split(" ")
+                    .map(
+                        word =>
+                            word.charAt(0)
+                    )
+                    .slice(0, 2)
+                    .join("")
+                    .toUpperCase();
 
+            ownerAvatar.innerHTML = `
+                <span class="owner-initials">
+                    ${initials}
+                </span>
+            `;
+
+        }
+
+
+        // VERIFICAÇÃO
+
+        if (owner.identityVerified) {
+
+            ownerVerification.textContent =
+                "✓ Identidade verificada";
+
+            ownerVerification.className =
+                "owner-verified";
+
+        } else {
+
+            ownerVerification.textContent =
+                "Usuário";
+
+            ownerVerification.className =
+                "";
+
+        }
+
+
+        // AVALIAÇÃO
+
+        ownerRating.textContent =
+            owner.rating ||
+            product.rating ||
+            "5.0";
+
+        ownerReviews.textContent =
+            owner.reviews ||
+            product.reviews ||
+            "0";
+
+    }
+
+
+    // ==========================================
+    // RENDERIZAR CALENDÁRIO
+    // ==========================================
+
+    function renderCalendar() {
+
+        if (!calendarDays) {
+            return;
+        }
+
+        calendarDays.innerHTML = "";
+
+        const year =
+            calendarDate.getFullYear();
+
+        const month =
+            calendarDate.getMonth();
+
+        const firstDay =
+            new Date(
+                year,
+                month,
+                1
+            ).getDay();
+
+        const daysInMonth =
+            new Date(
+                year,
+                month + 1,
+                0
+            ).getDate();
+
+
+        if (calendarMonth) {
+
+            calendarMonth.textContent =
+                calendarDate.toLocaleDateString(
+                    "pt-BR",
+                    {
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+
+        }
+
+
+        // ESPAÇOS
+
+        for (
+            let i = 0;
+            i < firstDay;
+            i++
+        ) {
+
+            const empty =
+                document.createElement(
+                    "div"
+                );
+
+            empty.className =
+                "calendar-day empty";
+
+            calendarDays.appendChild(
+                empty
+            );
+
+        }
+
+
+        // HOJE
+
+        const today =
+            new Date();
+
+        today.setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+        const todayString =
+            dateToString(today);
+
+
+        // DIAS
+
+        for (
+            let day = 1;
+            day <= daysInMonth;
+            day++
+        ) {
+
+            const date =
+                new Date(
+                    year,
+                    month,
+                    day
+                );
+
+            const dateString =
+                dateToString(date);
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+            button.type =
+                "button";
+
+            button.className =
+                "calendar-day";
+
+            button.textContent =
+                day;
+
+
+            // HOJE
+
+            if (
+                dateString ===
+                todayString
+            ) {
+
+                button.classList.add(
+                    "today"
+                );
+
+            }
+
+
+            // PASSADO
+
+            if (
+                dateString <
+                todayString
+            ) {
+
+                button.disabled =
+                    true;
+
+                button.classList.add(
+                    "unavailable"
+                );
+
+            }
+
+
+            // ALUGADO
+
+            if (
+                isUnavailable(
+                    dateString
+                )
+            ) {
+
+                button.disabled =
+                    true;
+
+                button.classList.add(
+                    "unavailable"
+                );
+
+            }
+
+
+            // RETIRADA
+
+            if (
+                dateString ===
+                startDate.value
+            ) {
+
+                button.classList.add(
+                    "selected",
+                    "range-start"
+                );
+
+            }
+
+
+            // DEVOLUÇÃO
+
+            if (
+                dateString ===
+                endDate.value &&
+                endDate.value !==
+                    startDate.value
+            ) {
+
+                button.classList.add(
+                    "selected",
+                    "range-end"
+                );
+
+            }
+
+
+            // INTERVALO
+
+            if (
+                startDate.value &&
+                endDate.value &&
+                dateString >
+                    startDate.value &&
+                dateString <
+                    endDate.value
+            ) {
+
+                button.classList.add(
+                    "in-range"
+                );
+
+            }
+
+
+            // CLIQUE
+
+            if (!button.disabled) {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        selectCalendarDate(
+                            dateString
+                        );
+
+                    }
+                );
+
+            }
+
+            calendarDays.appendChild(
+                button
+            );
+
+        }
+
+    }
+
+
+    // ==========================================
+    // SELECIONAR DATA
+    // ==========================================
+
+    function selectCalendarDate(dateString) {
+
+        // PRIMEIRA DATA
+
+        if (
+            selectingStart ||
+            !startDate.value ||
+            (
+                startDate.value &&
+                endDate.value
+            )
+        ) {
+
+            startDate.value =
+                dateString;
+
+            endDate.value =
+                "";
+
+            selectingStart =
+                false;
+
+            selectedStartDisplay.textContent =
+                formatDateBR(
+                    dateString
+                );
+
+            selectedEndDisplay.textContent =
+                "Selecione a devolução";
+
+            renderCalendar();
+
+            updateTotals();
+
+            return;
+
+        }
+
+
+        // DEVOLUÇÃO ANTES DA RETIRADA
+
+        if (
+            dateString <
+            startDate.value
+        ) {
+
+            alert(
+                "A devolução não pode ser anterior à retirada."
+            );
+
+            return;
+
+        }
+
+
+        // VERIFICAR INTERVALO
+
+        if (
+            rangeContainsUnavailable(
+                startDate.value,
+                dateString
+            )
+        ) {
+
+            alert(
+                "Esse período contém dias já alugados. Escolha outro período."
+            );
+
+            return;
+
+        }
+
+
+        // DEFINIR DEVOLUÇÃO
 
         endDate.value =
-            "";
+            dateString;
 
-
-        selectingStart =
-            false;
-
-
-        selectedStartDisplay.textContent =
+        selectedEndDisplay.textContent =
             formatDateBR(
                 dateString
             );
 
+        selectingStart =
+            true;
+
+        renderCalendar();
+
+        updateTotals();
+
+    }
+
+
+    // ==========================================
+    // VERIFICAR INTERVALO
+    // ==========================================
+
+    function rangeContainsUnavailable(
+        start,
+        end
+    ) {
+
+        const startObject =
+            new Date(
+                `${start}T00:00:00`
+            );
+
+        const endObject =
+            new Date(
+                `${end}T00:00:00`
+            );
+
+        const current =
+            new Date(startObject);
+
+        while (
+            current <=
+            endObject
+        ) {
+
+            const currentString =
+                dateToString(
+                    current
+                );
+
+            if (
+                isUnavailable(
+                    currentString
+                )
+            ) {
+
+                return true;
+
+            }
+
+            current.setDate(
+                current.getDate() + 1
+            );
+
+        }
+
+        return false;
+
+    }
+
+
+    // ==========================================
+    // MÊS ANTERIOR
+    // ==========================================
+
+    if (calendarPrev) {
+
+        calendarPrev.addEventListener(
+            "click",
+            () => {
+
+                calendarDate.setMonth(
+                    calendarDate.getMonth() - 1
+                );
+
+                renderCalendar();
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // PRÓXIMO MÊS
+    // ==========================================
+
+    if (calendarNext) {
+
+        calendarNext.addEventListener(
+            "click",
+            () => {
+
+                calendarDate.setMonth(
+                    calendarDate.getMonth() + 1
+                );
+
+                renderCalendar();
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // INICIALIZAR CALENDÁRIO
+    // ==========================================
+
+    function initializeCalendar() {
+
+        startDate.value =
+            "";
+
+        endDate.value =
+            "";
+
+        selectedStartDisplay.textContent =
+            "Selecione uma data";
 
         selectedEndDisplay.textContent =
             "Selecione a devolução";
 
+        selectingStart =
+            true;
+
+        calendarDate =
+            new Date();
+
+        calendarDate.setDate(1);
 
         renderCalendar();
 
+    }
+
+
+    // ==========================================
+    // PREENCHER TELA
+    // ==========================================
+
+    function fillScreen() {
+
+        document.title =
+            `${product.title} | ALUGASE`;
+
+        categoryLabel.textContent =
+            (
+                product.category ||
+                "Produto"
+            ).toUpperCase();
+
+        categoryLink.textContent =
+            product.category ||
+            "Categoria";
+
+        categoryLink.href =
+            `explorar.html?categoria=${encodeURIComponent(
+                product.category || ""
+            )}`;
+
+        breadcrumbTitle.textContent =
+            product.title;
+
+        title.textContent =
+            product.title;
+
+        renderGallery();
+
+        locationText.textContent =
+            `📍 ${product.city || "Não informado"}`;
+
+        description.textContent =
+            product.description ||
+            "Este produto não possui descrição.";
+
+        productRating.textContent =
+            product.rating || "5.0";
+
+        productReviews.textContent =
+            product.reviews || "0";
+
+        price.textContent =
+            `R$ ${formatMoney(
+                product.pricePerDay
+            )}`;
+
+
+        // ENTREGA
+
+        if (product.delivery) {
+
+            deliveryLabel.textContent =
+                `+ R$ ${formatMoney(
+                    product.deliveryPrice
+                )}`;
+
+        } else {
+
+            deliveryLabel.textContent =
+                "Somente retirada";
+
+            const deliveryRadio =
+                document.querySelector(
+                    'input[name="delivery"][value="delivery"]'
+                );
+
+            if (deliveryRadio) {
+
+                deliveryRadio.disabled =
+                    true;
+
+            }
+
+        }
+
+
+        depositTotal.textContent =
+            `R$ ${formatMoney(
+                product.deposit
+            )}`;
+
+        renderOwner();
+
+        initializeCalendar();
 
         updateTotals();
 
-
-        return;
-
     }
 
 
-    // ======================================
-    // DEVOLUÇÃO ANTES DA RETIRADA
-    // ======================================
+    // ==========================================
+    // CALCULAR DIAS
+    // ==========================================
 
-    if (
-        dateString <
-        startDate.value
-    ) {
-
-        alert(
-            "A devolução não pode ser anterior à retirada."
-        );
-
-        return;
-
-    }
-
-
-    // ======================================
-    // VERIFICAR INTERVALO
-    // ======================================
-
-    if (
-        rangeContainsUnavailable(
-            startDate.value,
-            dateString
-        )
-    ) {
-
-        alert(
-            "Esse período contém dias já alugados. Escolha outro período."
-        );
-
-        return;
-
-    }
-
-
-    // ======================================
-    // DEFINIR DEVOLUÇÃO
-    // ======================================
-
-    endDate.value =
-        dateString;
-
-
-    selectedEndDisplay.textContent =
-        formatDateBR(
-            dateString
-        );
-
-
-    selectingStart =
-        true;
-
-
-    renderCalendar();
-
-
-    updateTotals();
-
-}
-
-
-// ==========================================
-// VERIFICAR INTERVALO
-// ==========================================
-
-function rangeContainsUnavailable(
-    start,
-    end
-) {
-
-    const startObject =
-        new Date(
-            `${start}T00:00:00`
-        );
-
-
-    const endObject =
-        new Date(
-            `${end}T00:00:00`
-        );
-
-
-    const current =
-        new Date(
-            startObject
-        );
-
-
-    while (
-        current <=
-        endObject
-    ) {
-
-        const currentString =
-            dateToString(
-                current
-            );
-
+    function getDays() {
 
         if (
-            isUnavailable(
-                currentString
-            )
+            !startDate.value ||
+            !endDate.value
         ) {
 
-            return true;
+            return 0;
 
         }
 
-
-        current.setDate(
-            current.getDate() + 1
-        );
-
-    }
-
-
-    return false;
-
-}
-
-
-// ==========================================
-// MÊS ANTERIOR
-// ==========================================
-
-if (calendarPrev) {
-
-    calendarPrev.addEventListener(
-        "click",
-        () => {
-
-            calendarDate.setMonth(
-                calendarDate.getMonth() - 1
+        const start =
+            new Date(
+                `${startDate.value}T00:00:00`
             );
 
-            renderCalendar();
-
-        }
-    );
-
-}
-
-
-// ==========================================
-// PRÓXIMO MÊS
-// ==========================================
-
-if (calendarNext) {
-
-    calendarNext.addEventListener(
-        "click",
-        () => {
-
-            calendarDate.setMonth(
-                calendarDate.getMonth() + 1
+        const end =
+            new Date(
+                `${endDate.value}T00:00:00`
             );
 
-            renderCalendar();
-
-        }
-    );
-
-}
-
-
-// ==========================================
-// INICIALIZAR CALENDÁRIO
-// ==========================================
-
-function initializeCalendar() {
-
-    startDate.value =
-        "";
-
-    endDate.value =
-        "";
-
-
-    selectedStartDisplay.textContent =
-        "Selecione uma data";
-
-
-    selectedEndDisplay.textContent =
-        "Selecione a devolução";
-
-
-    selectingStart =
-        true;
-
-
-    calendarDate =
-        new Date();
-
-
-    calendarDate.setDate(1);
-
-
-    renderCalendar();
-
-}
-
-
-// ==========================================
-// PREENCHER TELA
-// ==========================================
-
-function fillScreen() {
-
-    document.title =
-        `${product.title} | ALUGASE`;
-
-
-    categoryLabel.textContent =
-        (
-            product.category ||
-            "Produto"
-        ).toUpperCase();
-
-
-    categoryLink.textContent =
-        product.category ||
-        "Categoria";
-
-
-    categoryLink.href =
-        `explorar.html?categoria=${encodeURIComponent(
-            product.category || ""
-        )}`;
-
-
-    breadcrumbTitle.textContent =
-        product.title;
-
-
-    title.textContent =
-        product.title;
-
-
-    renderGallery();
-
-
-    locationText.textContent =
-        `📍 ${product.city || "Não informado"}`;
-
-
-    description.textContent =
-        product.description ||
-        "Este produto não possui descrição.";
-
-
-    productRating.textContent =
-        product.rating || "5.0";
-
-
-    productReviews.textContent =
-        product.reviews || "0";
-
-
-    price.textContent =
-        `R$ ${formatMoney(
-            product.pricePerDay
-        )}`;
-
-
-    if (product.delivery) {
-
-        deliveryLabel.textContent =
-            `+ R$ ${formatMoney(
-                product.deliveryPrice
-            )}`;
-
-    } else {
-
-        deliveryLabel.textContent =
-            "Somente retirada";
-
-        const deliveryRadio =
-            document.querySelector(
-                'input[name="delivery"][value="delivery"]'
+        const difference =
+            Math.ceil(
+                (
+                    end - start
+                ) / 86400000
             );
 
-
-        if (deliveryRadio) {
-
-            deliveryRadio.disabled =
-                true;
-
-        }
-
-    }
-
-
-    depositTotal.textContent =
-        `R$ ${formatMoney(
-            product.deposit
-        )}`;
-
-
-    renderOwner();
-
-
-    initializeCalendar();
-
-
-    updateTotals();
-
-}
-
-
-// ==========================================
-// CALCULAR DIAS
-// ==========================================
-
-function getDays() {
-
-    if (
-        !startDate.value ||
-        !endDate.value
-    ) {
-
-        return 0;
-
-    }
-
-
-    const start =
-        new Date(
-            `${startDate.value}T00:00:00`
-        );
-
-
-    const end =
-        new Date(
-            `${endDate.value}T00:00:00`
-        );
-
-
-    const difference =
-        Math.ceil(
-            (
-                end - start
-            ) / 86400000
-        );
-
-
-    return difference >= 0
-        ? difference + 1
-        : 0;
-
-}
-
-
-// ==========================================
-// ATUALIZAR TOTAIS
-// ==========================================
-
-function updateTotals() {
-
-    if (!product) {
-
-        return;
-
-    }
-
-
-    const days =
-        getDays();
-
-
-    const selectedDelivery =
-        document.querySelector(
-            'input[name="delivery"]:checked'
-        );
-
-
-    const deliverySelected =
-        selectedDelivery &&
-        selectedDelivery.value ===
-            "delivery";
-
-
-    const deliveryValue =
-        deliverySelected &&
-        product.delivery
-            ? Number(
-                product.deliveryPrice || 0
-            )
+        return difference >= 0
+            ? difference + 1
             : 0;
 
-
-    const daily =
-        days *
-        Number(
-            product.pricePerDay || 0
-        );
+    }
 
 
-    const deposit =
-        Number(
-            product.deposit || 0
-        );
+    // ==========================================
+    // ATUALIZAR TOTAIS
+    // ==========================================
 
+    function updateTotals() {
 
-    const total =
-        daily +
-        deliveryValue +
-        deposit;
+        if (!product) {
+            return;
+        }
 
+        const days =
+            getDays();
 
-    dailyTotal.textContent =
-        `R$ ${formatMoney(
-            daily
-        )}`;
-
-
-    deliveryTotal.textContent =
-        `R$ ${formatMoney(
-            deliveryValue
-        )}`;
-
-
-    depositTotal.textContent =
-        `R$ ${formatMoney(
-            deposit
-        )}`;
-
-
-    rentalTotal.textContent =
-        `R$ ${formatMoney(
-            total
-        )}`;
-
-}
-
-
-// ==========================================
-// ENTREGA
-// ==========================================
-
-document
-    .querySelectorAll(
-        'input[name="delivery"]'
-    )
-    .forEach(
-        radio => {
-
-            radio.addEventListener(
-                "change",
-                updateTotals
+        const selectedDelivery =
+            document.querySelector(
+                'input[name="delivery"]:checked'
             );
 
-        }
-    );
-
-
-// ==========================================
-// LOGIN
-// ==========================================
-
-const loginButton =
-    document.querySelector(
-        "#login-button"
-    );
-
-
-if (loginButton) {
-
-    loginButton.addEventListener(
-        "click",
-        () => {
-
-            if (user) {
-
-                window.location.href =
-                    "perfil.html";
-
-            } else {
-
-                window.location.href =
-                    "login.html";
-
-            }
-
-        }
-    );
-
-}
-
-
-// ==========================================
-// ANUNCIAR
-// ==========================================
-
-const announceButton =
-    document.querySelector(
-        "#announce-button"
-    );
-
-
-if (announceButton) {
-
-    announceButton.addEventListener(
-        "click",
-        () => {
-
-            if (!user) {
-
-                window.location.href =
-                    "login.html";
-
-                return;
-
-            }
-
-
-            window.location.href =
-                "novo-anuncio.html";
-
-        }
-    );
-
-}
-
-
-// ==========================================
-// SOLICITAR ALUGUEL
-// ==========================================
-
-if (rentalButton) {
-
-    rentalButton.addEventListener(
-        "click",
-        () => {
-
-            if (!user) {
-
-                window.location.href =
-                    "login.html";
-
-                return;
-
-            }
-
-
-            if (
-                !startDate.value ||
-                !endDate.value
-            ) {
-
-                alert(
-                    "Escolha a data de retirada e a data de devolução."
-                );
-
-                return;
-
-            }
-
-
-            if (
-                endDate.value <
-                startDate.value
-            ) {
-
-                alert(
-                    "A data de devolução não pode ser anterior à retirada."
-                );
-
-                return;
-
-            }
-
-
-            if (
-                rangeContainsUnavailable(
-                    startDate.value,
-                    endDate.value
-                )
-            ) {
-
-                alert(
-                    "O período escolhido possui dias indisponíveis."
-                );
-
-                return;
-
-            }
-
-
-            const selectedDelivery =
-                document.querySelector(
-                    'input[name="delivery"]:checked'
-                );
-
-
-            const delivery =
-                selectedDelivery?.value ===
+        const deliverySelected =
+            selectedDelivery &&
+            selectedDelivery.value ===
                 "delivery";
 
+        const deliveryValue =
+            deliverySelected &&
+            product.delivery
+                ? Number(
+                    product.deliveryPrice || 0
+                )
+                : 0;
 
-            const params =
-                new URLSearchParams({
+        const daily =
+            days *
+            Number(
+                product.pricePerDay || 0
+            );
 
-                    id:
-                        product._id,
+        const deposit =
+            Number(
+                product.deposit || 0
+            );
 
-                    start:
+        const total =
+            daily +
+            deliveryValue +
+            deposit;
+
+        dailyTotal.textContent =
+            `R$ ${formatMoney(
+                daily
+            )}`;
+
+        deliveryTotal.textContent =
+            `R$ ${formatMoney(
+                deliveryValue
+            )}`;
+
+        depositTotal.textContent =
+            `R$ ${formatMoney(
+                deposit
+            )}`;
+
+        rentalTotal.textContent =
+            `R$ ${formatMoney(
+                total
+            )}`;
+
+    }
+
+
+    // ==========================================
+    // ENTREGA
+    // ==========================================
+
+    document
+        .querySelectorAll(
+            'input[name="delivery"]'
+        )
+        .forEach(
+            radio => {
+
+                radio.addEventListener(
+                    "change",
+                    updateTotals
+                );
+
+            }
+        );
+
+
+    // ==========================================
+    // LOGIN
+    // ==========================================
+
+    const loginButton =
+        document.querySelector(
+            "#login-button"
+        );
+
+    if (loginButton) {
+
+        loginButton.addEventListener(
+            "click",
+            () => {
+
+                if (user) {
+
+                    window.location.href =
+                        "perfil.html";
+
+                } else {
+
+                    window.location.href =
+                        "login.html";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // ANUNCIAR
+    // ==========================================
+
+    const announceButton =
+        document.querySelector(
+            "#announce-button"
+        );
+
+    if (announceButton) {
+
+        announceButton.addEventListener(
+            "click",
+            () => {
+
+                if (!user) {
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+                window.location.href =
+                    "novo-anuncio.html";
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // SOLICITAR ALUGUEL
+    // ==========================================
+
+    if (rentalButton) {
+
+        rentalButton.addEventListener(
+            "click",
+            () => {
+
+                if (!user) {
+
+                    window.location.href =
+                        "login.html";
+
+                    return;
+
+                }
+
+
+                if (
+                    !startDate.value ||
+                    !endDate.value
+                ) {
+
+                    alert(
+                        "Escolha a data de retirada e a data de devolução."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    endDate.value <
+                    startDate.value
+                ) {
+
+                    alert(
+                        "A data de devolução não pode ser anterior à retirada."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    rangeContainsUnavailable(
                         startDate.value,
+                        endDate.value
+                    )
+                ) {
 
-                    end:
-                        endDate.value,
+                    alert(
+                        "O período escolhido possui dias indisponíveis."
+                    );
 
-                    delivery:
-                        delivery
-                            ? "delivery"
-                            : "pickup"
+                    return;
 
-                });
-
-
-            window.location.href =
-                `reserva.html?${params.toString()}`;
-
-        }
-    );
-
-}
+                }
 
 
-// ==========================================
-// INICIAR
-// ==========================================
+                const selectedDelivery =
+                    document.querySelector(
+                        'input[name="delivery"]:checked'
+                    );
 
-await loadProduct();
+                const delivery =
+                    selectedDelivery?.value ===
+                    "delivery";
+
+
+                const params =
+                    new URLSearchParams({
+
+                        id:
+                            product._id,
+
+                        start:
+                            startDate.value,
+
+                        end:
+                            endDate.value,
+
+                        delivery:
+                            delivery
+                                ? "delivery"
+                                : "pickup"
+
+                    });
+
+
+                window.location.href =
+                    `reserva.html?${params.toString()}`;
+
+            }
+        );
+
+    }
+
+
+    // ==========================================
+    // INICIAR
+    // ==========================================
+
+    await loadProduct();
 
 });
