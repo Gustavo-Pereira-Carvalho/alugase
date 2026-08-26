@@ -1,351 +1,788 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Novo Anúncio | Alugase</title>
 
-  <link rel="stylesheet" href="./css/global.css">
-  <link rel="stylesheet" href="./css/anuncio.css">
-</head>
-<body>
-
-<header>
-  <nav class="navbar">
-
-    <div class="logo">
-      <a href="index.html">
-        <h2>ALUGASE</h2>
-      </a>
-    </div>
-
-    <div class="nav-buttons">
-      <a href="perfil.html" class="btn-secondary">
-        Meu Perfil
-      </a>
-    </div>
-
-  </nav>
-</header>
-
-
-<main class="ad-page">
-
-  <div class="page-title">
-
-    <h1>Criar novo anúncio</h1>
-
-    <p>
-      Preencha as informações do produto que deseja
-      disponibilizar para aluguel.
-    </p>
-
-  </div>
-
-
-  <form
-    id="new-product-form"
-    class="ad-form"
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
   >
 
+  <title>Novo Anúncio | Alugase</title>
 
-    <!-- ==========================================
-         INFORMAÇÕES
-    =========================================== -->
+  <link
+    rel="stylesheet"
+    href="./css/global.css"
+  >
 
-    <section class="form-section">
+  <link
+    rel="stylesheet"
+    href="./css/anuncio.css"
+  >
 
-      <h2>Informações básicas</h2>
+</head>
 
 
-      <div class="form-group">
+<body>
 
-        <label>
-          Nome do produto
-        </label>
 
-        <input
-          type="text"
-          id="title"
-          required
-        >
+  <!-- ==========================================
+       HEADER
+  =========================================== -->
+
+  <header>
+
+    <nav class="navbar">
+
+      <div class="logo">
+
+        <a href="index.html">
+
+          <h2>
+            ALUGASE
+          </h2>
+
+        </a>
 
       </div>
 
 
-      <div class="grid-2">
+      <div class="nav-buttons">
 
+        <a
+          href="perfil.html"
+          class="btn-secondary"
+        >
+          Meu Perfil
+        </a>
+
+      </div>
+
+    </nav>
+
+  </header>
+
+
+
+  <!-- ==========================================
+       CONTEÚDO
+  =========================================== -->
+
+  <main class="ad-page">
+
+
+    <!-- ========================================
+         TÍTULO
+    ========================================= -->
+
+    <div class="page-title">
+
+      <h1>
+        Criar novo anúncio
+      </h1>
+
+      <p>
+        Preencha as informações do produto que deseja
+        disponibilizar para aluguel.
+      </p>
+
+    </div>
+
+
+
+    <!-- ========================================
+         FORMULÁRIO
+    ========================================= -->
+
+    <form
+      id="new-product-form"
+      class="ad-form"
+    >
+
+
+
+      <!-- ======================================
+           INFORMAÇÕES BÁSICAS
+      ======================================= -->
+
+      <section class="form-section">
+
+        <h2>
+          Informações básicas
+        </h2>
+
+
+        <!-- NOME -->
 
         <div class="form-group">
 
-          <label>
-            Categoria
+          <label for="title">
+            Nome do produto
           </label>
 
-          <select
-            id="category"
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Ex: Câmera profissional"
             required
           >
 
-            <option value="">
-              Selecione
-            </option>
+        </div>
 
-            <option>
-              Eletrônicos
-            </option>
 
-            <option>
-              Ferramentas
-            </option>
 
-            <option>
-              Casa
-            </option>
+        <!-- CATEGORIA + ÍCONE -->
 
-            <option>
-              Veículos
-            </option>
+        <div class="grid-2">
 
-            <option>
-              Eventos
-            </option>
 
-            <option>
-              Serviços
-            </option>
+          <div class="form-group">
 
-          </select>
+            <label for="category">
+              Categoria
+            </label>
+
+            <select
+              id="category"
+              name="category"
+              required
+            >
+
+              <option value="">
+                Selecione uma categoria
+              </option>
+
+              <option value="Eletrônicos">
+                Eletrônicos
+              </option>
+
+              <option value="Ferramentas">
+                Ferramentas
+              </option>
+
+              <option value="Casa">
+                Casa
+              </option>
+
+              <option value="Veículos">
+                Veículos
+              </option>
+
+              <option value="Eventos">
+                Eventos
+              </option>
+
+              <option value="Serviços">
+                Serviços
+              </option>
+
+            </select>
+
+          </div>
+
+
+
+          <div class="form-group">
+
+            <label for="icon">
+              Ícone
+            </label>
+
+            <select
+              id="icon"
+              name="icon"
+            >
+
+              <option value="📦">
+                📦 Padrão
+              </option>
+
+              <option value="📷">
+                📷 Câmera
+              </option>
+
+              <option value="💻">
+                💻 Notebook
+              </option>
+
+              <option value="🔊">
+                🔊 Caixa de som
+              </option>
+
+              <option value="🚲">
+                🚲 Bicicleta
+              </option>
+
+              <option value="🚗">
+                🚗 Carro
+              </option>
+
+              <option value="🔧">
+                🔧 Ferramenta
+              </option>
+
+              <option value="🏠">
+                🏠 Casa
+              </option>
+
+            </select>
+
+          </div>
+
 
         </div>
 
 
+
+        <!-- DESCRIÇÃO -->
+
         <div class="form-group">
 
-          <label>
-            Ícone
+          <label for="description">
+            Descrição
           </label>
 
-          <select id="icon">
-
-            <option value="📦">
-              📦 Padrão
-            </option>
-
-            <option value="📷">
-              📷 Câmera
-            </option>
-
-            <option value="💻">
-              💻 Notebook
-            </option>
-
-            <option value="🔊">
-              🔊 Caixa
-            </option>
-
-            <option value="🚲">
-              🚲 Bicicleta
-            </option>
-
-            <option value="🚗">
-              🚗 Carro
-            </option>
-
-            <option value="🔧">
-              🔧 Ferramenta
-            </option>
-
-            <option value="🏠">
-              🏠 Casa
-            </option>
-
-          </select>
+          <textarea
+            id="description"
+            name="description"
+            rows="5"
+            placeholder="Descreva o produto, estado de conservação, regras de uso etc."
+            required
+          ></textarea>
 
         </div>
 
-      </div>
 
 
-      <div class="form-group">
-
-        <label>
-          Descrição
-        </label>
-
-        <textarea
-          id="description"
-          rows="5"
-          required
-        ></textarea>
-
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Cidade do anúncio
-        </label>
-
-        <input
-          type="text"
-          id="city"
-          required
-        >
-
-        <small id="address-info">
-          O endereço será obtido da sua conta.
-        </small>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==========================================
-         VEÍCULO
-    =========================================== -->
-
-    <section
-      class="form-section vehicle-section"
-      id="vehicle-section"
-    >
-
-      <h2>
-        Documentação do veículo
-      </h2>
-
-
-      <p class="vehicle-info">
-        Esta etapa é obrigatória apenas para
-        anúncios de veículos.
-      </p>
-
-
-      <div class="grid-2">
-
+        <!-- CIDADE -->
 
         <div class="form-group">
 
-          <label>
-            Marca
+          <label for="city">
+            Cidade do anúncio
           </label>
 
           <input
             type="text"
-            id="brand"
-            placeholder="Toyota"
+            id="city"
+            name="city"
+            placeholder="Cidade"
+            required
           >
+
+          <small id="address-info">
+            A cidade será obtida automaticamente do endereço
+            cadastrado na sua conta.
+          </small>
 
         </div>
 
 
-        <div class="form-group">
+      </section>
 
-          <label>
-            Modelo
-          </label>
 
-          <input
-            type="text"
-            id="model"
-            placeholder="Corolla"
-          >
+
+      <!-- ======================================
+           VEÍCULO
+      ======================================= -->
+
+      <section
+        class="form-section vehicle-section"
+        id="vehicle-section"
+      >
+
+        <h2>
+          Documentação do veículo
+        </h2>
+
+
+        <p class="vehicle-info">
+
+          Esta etapa é obrigatória apenas para
+          anúncios de veículos.
+
+        </p>
+
+
+
+        <!-- MARCA + MODELO -->
+
+        <div class="grid-2">
+
+
+          <div class="form-group">
+
+            <label for="brand">
+              Marca
+            </label>
+
+            <input
+              type="text"
+              id="brand"
+              placeholder="Ex: Toyota"
+            >
+
+          </div>
+
+
+
+          <div class="form-group">
+
+            <label for="model">
+              Modelo
+            </label>
+
+            <input
+              type="text"
+              id="model"
+              placeholder="Ex: Corolla"
+            >
+
+          </div>
+
 
         </div>
 
 
+
+        <!-- ANO + COR -->
+
+        <div class="grid-2">
+
+
+          <div class="form-group">
+
+            <label for="year">
+              Ano
+            </label>
+
+            <input
+              type="number"
+              id="year"
+              min="1900"
+              max="2100"
+              placeholder="Ex: 2022"
+            >
+
+          </div>
+
+
+
+          <div class="form-group">
+
+            <label for="color">
+              Cor
+            </label>
+
+            <input
+              type="text"
+              id="color"
+              placeholder="Ex: Prata"
+            >
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- PLACA + RENAVAM -->
+
+        <div class="grid-2">
+
+
+          <div class="form-group">
+
+            <label for="plate">
+              Placa
+            </label>
+
+            <input
+              type="text"
+              id="plate"
+              maxlength="7"
+              placeholder="ABC1D23"
+              autocomplete="off"
+            >
+
+          </div>
+
+
+
+          <div class="form-group">
+
+            <label for="renavam">
+              RENAVAM
+            </label>
+
+            <input
+              type="text"
+              id="renavam"
+              maxlength="11"
+              inputmode="numeric"
+              placeholder="00000000000"
+              autocomplete="off"
+            >
+
+          </div>
+
+
+        </div>
+
+
+
+        <!-- QUILOMETRAGEM -->
+
         <div class="form-group">
 
-          <label>
-            Ano
+          <label for="mileage">
+            Quilometragem
           </label>
 
           <input
             type="number"
-            id="year"
-            placeholder="2022"
+            id="mileage"
+            min="0"
+            placeholder="Ex: 45000"
           >
 
         </div>
 
+
+
+        <!-- CRLV -->
 
         <div class="form-group">
 
-          <label>
-            Cor
+          <label for="crlv">
+            CRLV-e
           </label>
 
-          <input
-            type="text"
-            id="color"
-            placeholder="Prata"
-          >
+
+          <div class="document-upload">
+
+
+            <input
+              type="file"
+              id="crlv"
+              name="crlv"
+              accept=".pdf,image/*"
+              hidden
+            >
+
+
+            <button
+              type="button"
+              class="btn-secondary"
+              id="select-crlv"
+            >
+              Selecionar CRLV
+            </button>
+
+
+            <span id="crlv-name">
+              Nenhum arquivo selecionado
+            </span>
+
+
+          </div>
+
+
+          <small>
+            O CRLV é obrigatório para anúncios de veículos.
+          </small>
 
         </div>
 
 
-        <div class="form-group">
+      </section>
 
-          <label>
-            Placa
-          </label>
 
-          <input
-            type="text"
-            id="plate"
-            placeholder="ABC1D23"
-          >
+
+      <!-- ======================================
+           PREÇO
+      ======================================= -->
+
+      <section class="form-section">
+
+        <h2>
+          Preço e caução
+        </h2>
+
+
+        <div class="grid-2">
+
+
+          <!-- PREÇO -->
+
+          <div class="form-group">
+
+            <label for="price">
+              Preço por dia
+            </label>
+
+            <input
+              type="number"
+              id="price"
+              name="price"
+              min="1"
+              step="0.01"
+              placeholder="0,00"
+              required
+            >
+
+            <small>
+              Valor cobrado por dia de aluguel.
+            </small>
+
+          </div>
+
+
+
+          <!-- CAUÇÃO -->
+
+          <div class="form-group">
+
+            <label for="deposit">
+              Caução
+            </label>
+
+            <input
+              type="number"
+              id="deposit"
+              name="deposit"
+              min="0"
+              step="0.01"
+              placeholder="0,00"
+              required
+            >
+
+            <small>
+              Valor de segurança que poderá ser solicitado
+              ao locatário.
+            </small>
+
+          </div>
+
 
         </div>
 
+      </section>
 
-        <div class="form-group">
 
-          <label>
-            Renavam
-          </label>
+
+      <!-- ======================================
+           ENTREGA
+      ======================================= -->
+
+      <section class="form-section">
+
+        <h2>
+          Entrega
+        </h2>
+
+
+        <!-- RETIRADA -->
+
+        <label class="option">
 
           <input
-            type="text"
-            id="renavam"
-            maxlength="11"
+            type="checkbox"
+            id="pickup"
+            name="pickup"
+            checked
           >
 
-        </div>
+          <span>
+            Retirada no local
+          </span>
 
-      </div>
-
-
-      <div class="form-group">
-
-        <label>
-          Quilometragem
         </label>
 
-        <input
-          type="number"
-          id="mileage"
-          placeholder="45000"
+
+
+        <!-- ENTREGA -->
+
+        <label class="option">
+
+          <input
+            type="checkbox"
+            id="delivery"
+            name="delivery"
+          >
+
+          <span>
+            Entrega disponível
+          </span>
+
+        </label>
+
+
+
+        <!-- ==================================
+             CONFIGURAÇÕES DA ENTREGA
+        =================================== -->
+
+        <div
+          id="delivery-settings"
+          style="display: none;"
         >
 
-      </div>
+
+          <div class="grid-2">
 
 
-      <div class="form-group">
+            <!-- TAXA BASE -->
 
-        <label>
-          CRLV-e
-        </label>
+            <div class="form-group">
+
+              <label for="deliveryBasePrice">
+                Taxa base da entrega
+              </label>
+
+              <input
+                type="number"
+                id="deliveryBasePrice"
+                name="deliveryBasePrice"
+                value="10"
+                min="0"
+                step="0.01"
+                placeholder="0,00"
+              >
+
+              <small>
+                Valor inicial cobrado pela entrega.
+              </small>
+
+            </div>
 
 
-        <div class="document-upload">
+
+            <!-- VALOR POR KM -->
+
+            <div class="form-group">
+
+              <label for="deliveryPricePerKm">
+                Valor por km
+              </label>
+
+              <input
+                type="number"
+                id="deliveryPricePerKm"
+                name="deliveryPricePerKm"
+                value="2"
+                min="0"
+                step="0.01"
+                placeholder="0,00"
+              >
+
+              <small>
+                Valor acrescentado para cada quilômetro.
+              </small>
+
+            </div>
+
+
+          </div>
+
+
+
+          <!-- DISTÂNCIA MÁXIMA -->
+
+          <div class="form-group">
+
+            <label for="deliveryMaxDistance">
+              Distância máxima de entrega
+            </label>
+
+            <input
+              type="number"
+              id="deliveryMaxDistance"
+              name="deliveryMaxDistance"
+              value="30"
+              min="0"
+              step="0.1"
+              placeholder="Ex: 30"
+            >
+
+            <small>
+              Informe 0 para não limitar a distância.
+            </small>
+
+          </div>
+
+
+
+          <!-- EXEMPLO -->
+
+          <div class="delivery-preview">
+
+            <strong>
+              Como será calculado:
+            </strong>
+
+            <p>
+              Taxa base + distância × valor por km
+            </p>
+
+            <p id="delivery-example">
+              Exemplo: R$ 10,00 +
+              (10 km × R$ 2,00)
+              = R$ 30,00
+            </p>
+
+          </div>
+
+
+        </div>
+
+
+      </section>
+
+
+
+      <!-- ======================================
+           FOTOS
+      ======================================= -->
+
+      <section class="form-section">
+
+        <h2>
+          Fotos
+        </h2>
+
+
+        <div
+          class="upload-area"
+          id="upload-area"
+        >
+
+
+          <div>
+            📷
+          </div>
+
+
+          <p>
+            Selecione imagens do produto
+          </p>
+
+
+          <small>
+            Você pode selecionar várias imagens.
+          </small>
+
 
           <input
             type="file"
-            id="crlv"
-            accept=".pdf,image/*"
+            id="images"
+            name="images"
+            multiple
+            accept="image/*"
             hidden
           >
 
@@ -353,155 +790,85 @@
           <button
             type="button"
             class="btn-secondary"
-            id="select-crlv"
+            id="select-images"
           >
-            Selecionar CRLV
+            Selecionar imagens
           </button>
 
 
-          <span id="crlv-name">
-            Nenhum arquivo selecionado
-          </span>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==========================================
-         PREÇO
-    =========================================== -->
-
-    <section class="form-section">
-
-      <h2>
-        Preço e caução
-      </h2>
-
-
-      <div class="grid-2">
-
-
-        <div class="form-group">
-
-          <label>
-            Preço por dia
-          </label>
-
-          <input
-            type="number"
-            id="price"
-            min="1"
-            step="0.01"
-            required
-          >
-
         </div>
 
 
-        <div class="form-group">
 
-          <label>
-            Caução
-          </label>
+        <!-- PREVIEW -->
 
-          <input
-            type="number"
-            id="deposit"
-            min="0"
-            step="0.01"
-            required
-          >
-
-        </div>
-
-      </div>
-
-    </section>
+        <div
+          class="preview-grid"
+          id="preview-grid"
+        ></div>
 
 
-    <!-- ==========================================
-         ENTREGA
-    =========================================== -->
-
-    <section class="form-section">
-
-      <h2>
-        Entrega
-      </h2>
+      </section>
 
 
-      <label class="option">
 
-        <input
-          type="checkbox"
-          id="pickup"
-          checked
-        >
+      <!-- ======================================
+           RESUMO
+      ======================================= -->
 
-        Retirada no local
+      <section class="form-section">
 
-      </label>
-
-
-      <label class="option">
-
-        <input
-          type="checkbox"
-          id="delivery"
-        >
-
-        Entrega disponível
-
-      </label>
+        <h2>
+          Resumo
+        </h2>
 
 
-      <div id="delivery-settings">
+        <div class="summary">
 
 
-        <div class="grid-2">
+          <!-- PREÇO -->
 
+          <div>
 
-          <div class="form-group">
+            <span>
+              Preço
+            </span>
 
-            <label>
-              Taxa base da entrega
-            </label>
-
-            <input
-              type="number"
-              id="deliveryBasePrice"
-              value="10"
-              min="0"
-              step="0.01"
-            >
-
-            <small>
-              Valor inicial cobrado pela entrega.
-            </small>
+            <strong id="sum-price">
+              R$ 0,00
+            </strong>
 
           </div>
 
 
-          <div class="form-group">
 
-            <label>
-              Valor por km
-            </label>
+          <!-- CAUÇÃO -->
 
-            <input
-              type="number"
-              id="deliveryPricePerKm"
-              value="2"
-              min="0"
-              step="0.01"
-            >
+          <div>
 
-            <small>
-              Valor acrescentado para cada quilômetro.
-            </small>
+            <span>
+              Caução
+            </span>
+
+            <strong id="sum-deposit">
+              R$ 0,00
+            </strong>
+
+          </div>
+
+
+
+          <!-- ENTREGA -->
+
+          <div>
+
+            <span>
+              Entrega
+            </span>
+
+            <strong id="sum-delivery">
+              Não disponível
+            </strong>
 
           </div>
 
@@ -509,175 +876,36 @@
         </div>
 
 
-        <div class="form-group">
-
-          <label>
-            Distância máxima de entrega
-          </label>
-
-          <input
-            type="number"
-            id="deliveryMaxDistance"
-            value="30"
-            min="0"
-            step="0.1"
-          >
-
-          <small>
-            Informe 0 para não limitar a distância.
-          </small>
-
-        </div>
+      </section>
 
 
-        <div class="delivery-preview">
 
-          <strong>
-            Como será calculado:
-          </strong>
+      <!-- ======================================
+           PUBLICAR
+      ======================================= -->
 
-          <p>
-            Taxa base + distância × valor por km
-          </p>
-
-          <p id="delivery-example">
-            Exemplo: R$ 10 + (10 km × R$ 2)
-            = R$ 30
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ==========================================
-         FOTOS
-    =========================================== -->
-
-    <section class="form-section">
-
-      <h2>
-        Fotos
-      </h2>
-
-
-      <div
-        class="upload-area"
-        id="upload-area"
+      <button
+        class="btn-primary submit-btn"
+        type="submit"
       >
-
-        <div>
-          📷
-        </div>
+        Publicar anúncio
+      </button>
 
 
-        <p>
-          Selecione imagens do produto
-        </p>
+    </form>
 
 
-        <input
-          type="file"
-          id="images"
-          multiple
-          accept="image/*"
-          hidden
-        >
+  </main>
 
 
-        <button
-          type="button"
-          class="btn-secondary"
-          id="select-images"
-        >
-          Selecionar imagens
-        </button>
 
-      </div>
+  <!-- ==========================================
+       JAVASCRIPT
+  =========================================== -->
 
+  <script src="./js/anuncio.js"></script>
 
-      <div
-        class="preview-grid"
-        id="preview-grid"
-      ></div>
-
-    </section>
-
-
-    <!-- ==========================================
-         RESUMO
-    =========================================== -->
-
-    <section class="form-section">
-
-      <h2>
-        Resumo
-      </h2>
-
-
-      <div class="summary">
-
-
-        <div>
-
-          <span>
-            Preço
-          </span>
-
-          <strong id="sum-price">
-            R$ 0
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Caução
-          </span>
-
-          <strong id="sum-deposit">
-            R$ 0
-          </strong>
-
-        </div>
-
-
-        <div>
-
-          <span>
-            Entrega
-          </span>
-
-          <strong id="sum-delivery">
-            Não disponível
-          </strong>
-
-        </div>
-
-
-      </div>
-
-    </section>
-
-
-    <button
-      class="btn-primary submit-btn"
-      type="submit"
-    >
-      Publicar anúncio
-    </button>
-
-
-  </form>
-
-</main>
-
-
-<script src="./js/anuncio.js"></script>
 
 </body>
+
 </html>
