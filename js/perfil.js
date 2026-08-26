@@ -1103,27 +1103,45 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 
-    // ==========================================
-    // RG
-    // ==========================================
+ // ==========================================
+// RG
+// ==========================================
 
-    if (rg) {
+if (rg) {
 
-        rg.addEventListener(
-            "input",
-            () => {
+    rg.addEventListener(
+        "input",
+        () => {
 
-                let value =
-                    rg.value
-                        .replace(
-                            /\D/g,
-                            ""
-                        )
-                        .slice(
-                            0,
-                            9
-                        );
+            let value =
+                rg.value
+                    .toUpperCase()
+                    .replace(/[^0-9X]/g, "")
+                    .slice(0, 9);
 
+
+            // Impede X no meio do RG
+            // O X só pode ser o último caractere
+            const xIndex =
+                value.indexOf("X");
+
+            if (xIndex !== -1) {
+
+                value =
+                    value.slice(0, xIndex)
+                    + "X";
+
+            }
+
+
+            // ======================================
+            // MÁSCARA
+            // 00.000.000-X
+            // ======================================
+
+            if (
+                value.length > 2
+            ) {
 
                 value =
                     value.replace(
@@ -1131,6 +1149,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                         "$1.$2"
                     );
 
+            }
+
+
+            if (
+                value.length > 6
+            ) {
 
                 value =
                     value.replace(
@@ -1138,23 +1162,29 @@ document.addEventListener("DOMContentLoaded", async () => {
                         "$1.$2.$3"
                     );
 
+            }
+
+
+            if (
+                value.length > 10
+            ) {
 
                 value =
                     value.replace(
-                        /^(\d{2})\.(\d{3})\.(\d{3})(\d)/,
+                        /^(\d{2})\.(\d{3})\.(\d{3})([0-9X])/,
                         "$1.$2.$3-$4"
                     );
 
-
-                rg.value =
-                    value;
-
             }
-        );
-
-    }
 
 
+            rg.value =
+                value;
+
+        }
+    );
+
+}
     // ==========================================
     // CEP
     // ==========================================
