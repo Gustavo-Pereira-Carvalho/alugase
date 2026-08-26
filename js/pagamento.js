@@ -2,385 +2,237 @@
 // ALUGASE — PAGAMENTO
 // ==========================================
 
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
 
-    const API =
-        "https://alugase-api.onrender.com/api";
+        // ======================================
+        // API
+        // ======================================
 
-
-    // ==========================================
-    // ELEMENTOS
-    // ==========================================
-
-    const loading =
-        document.querySelector("#loading");
-
-    const checkout =
-        document.querySelector("#checkout");
-
-    const errorState =
-        document.querySelector("#error-state");
-
-    const errorMessage =
-        document.querySelector("#error-message");
+        const API =
+            "https://alugase-api.onrender.com/api";
 
 
-    const productSummary =
-        document.querySelector("#product-summary");
+        // ======================================
+        // ELEMENTOS
+        // ======================================
 
-    const rentTotal =
-        document.querySelector("#rent-total");
+        const loading =
+            document.querySelector(
+                "#loading"
+            );
 
-    const deliveryPrice =
-        document.querySelector("#delivery-price");
+        const checkout =
+            document.querySelector(
+                "#checkout"
+            );
 
-    const deposit =
-        document.querySelector("#deposit");
+        const errorState =
+            document.querySelector(
+                "#error-state"
+            );
 
-    const total =
-        document.querySelector("#total");
-
-    const startDate =
-        document.querySelector("#start-date");
-
-    const endDate =
-        document.querySelector("#end-date");
-
-    const days =
-        document.querySelector("#days");
-
-
-    const paymentBrick =
-        document.querySelector(
-            "#paymentBrick_container"
-        );
-
-    const paymentResult =
-        document.querySelector(
-            "#payment-result"
-        );
-
-
-    // ==========================================
-    // USUÁRIO
-    // ==========================================
-
-    const user =
-        JSON.parse(
-            localStorage.getItem(
-                "alugase_user"
-            )
-        );
-
-
-    if (!user) {
-
-        location.href =
-            "login.html";
-
-        return;
-
-    }
-
-
-    // ==========================================
-    // RENTAL ID
-    // ==========================================
-
-    const rentalId =
-        new URLSearchParams(
-            location.search
-        ).get("id");
-
-
-    if (!rentalId) {
-
-        showError(
-            "Aluguel não informado."
-        );
-
-        return;
-
-    }
-
-
-    // ==========================================
-    // DINHEIRO
-    // ==========================================
-
-    function money(value) {
-
-        return Number(
-            value || 0
-        ).toLocaleString(
-            "pt-BR",
-            {
-                style: "currency",
-                currency: "BRL"
-            }
-        );
-
-    }
-
-
-    // ==========================================
-    // DATA
-    // ==========================================
-
-    function formatDate(date) {
-
-        if (!date) {
-
-            return "-";
-
-        }
-
-
-        return new Date(
-            date
-        ).toLocaleDateString(
-            "pt-BR"
-        );
-
-    }
-
-
-    // ==========================================
-    // ESCAPAR HTML
-    // ==========================================
-
-    function escapeHtml(text) {
-
-        const div =
-            document.createElement(
-                "div"
+        const errorMessage =
+            document.querySelector(
+                "#error-message"
             );
 
 
-        div.textContent =
-            text || "";
+        const productSummary =
+            document.querySelector(
+                "#product-summary"
+            );
+
+        const rentTotal =
+            document.querySelector(
+                "#rent-total"
+            );
+
+        const deliveryPrice =
+            document.querySelector(
+                "#delivery-price"
+            );
+
+        const deposit =
+            document.querySelector(
+                "#deposit"
+            );
+
+        const total =
+            document.querySelector(
+                "#total"
+            );
+
+        const startDate =
+            document.querySelector(
+                "#start-date"
+            );
+
+        const endDate =
+            document.querySelector(
+                "#end-date"
+            );
+
+        const days =
+            document.querySelector(
+                "#days"
+            );
 
 
-        return div.innerHTML;
+        const paymentBrick =
+            document.querySelector(
+                "#paymentBrick_container"
+            );
 
-    }
-
-
-    // ==========================================
-    // ERRO
-    // ==========================================
-
-    function showError(message) {
-
-        if (loading) {
-
-            loading.style.display =
-                "none";
-
-        }
+        const paymentResult =
+            document.querySelector(
+                "#payment-result"
+            );
 
 
-        if (checkout) {
+        // ======================================
+        // USUÁRIO
+        // ======================================
 
-            checkout.style.display =
-                "none";
+        let user = null;
 
-        }
-
-
-        if (errorState) {
-
-            errorState.style.display =
-                "block";
-
-        }
-
-
-        if (errorMessage) {
-
-            errorMessage.textContent =
-                message;
-
-        }
-
-    }
-
-
-    // ==========================================
-    // CARREGAR CHECKOUT
-    // ==========================================
-
-    async function loadCheckout() {
 
         try {
 
-            const response =
-                await fetch(
-                    `${API}/payments/checkout/${rentalId}`
+            user =
+                JSON.parse(
+                    localStorage.getItem(
+                        "alugase_user"
+                    )
                 );
 
+        } catch (error) {
 
-            const data =
-                await response.json();
-
-
-            console.log(
-                "📥 Checkout:",
-                data
+            console.error(
+                "Erro ao ler usuário:",
+                error
             );
 
+            user = null;
 
-            if (!response.ok) {
+        }
 
-                throw new Error(
-                    data.error ||
-                    "Erro ao carregar checkout."
+
+        if (!user) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+
+        }
+
+
+        // ======================================
+        // RENTAL ID
+        // ======================================
+
+        const rentalId =
+            new URLSearchParams(
+                window.location.search
+            ).get("id");
+
+
+        if (!rentalId) {
+
+            showError(
+                "Aluguel não informado."
+            );
+
+            return;
+
+        }
+
+
+        // ======================================
+        // FORMATAR DINHEIRO
+        // ======================================
+
+        function money(value) {
+
+            return Number(
+                value || 0
+            ).toLocaleString(
+                "pt-BR",
+                {
+                    style:
+                        "currency",
+
+                    currency:
+                        "BRL"
+                }
+            );
+
+        }
+
+
+        // ======================================
+        // FORMATAR DATA
+        // ======================================
+
+        function formatDate(date) {
+
+            if (!date) {
+
+                return "-";
+
+            }
+
+
+            const parsed =
+                new Date(date);
+
+
+            if (
+                Number.isNaN(
+                    parsed.getTime()
+                )
+            ) {
+
+                return "-";
+
+            }
+
+
+            return parsed.toLocaleDateString(
+                "pt-BR"
+            );
+
+        }
+
+
+        // ======================================
+        // ESCAPAR HTML
+        // ======================================
+
+        function escapeHtml(text) {
+
+            const div =
+                document.createElement(
+                    "div"
                 );
 
-            }
+
+            div.textContent =
+                text || "";
 
 
-            const rental =
-                data.rental;
+            return div.innerHTML;
+
+        }
 
 
-            const product =
-                data.product;
+        // ======================================
+        // MOSTRAR ERRO
+        // ======================================
 
-
-            // ======================================
-            // PRODUTO
-            // ======================================
-
-            if (productSummary) {
-
-                productSummary.innerHTML = `
-
-                    ${
-                        product?.image
-
-                            ? `
-                                <img
-                                    src="${product.image}"
-                                    alt="${escapeHtml(
-                                        product.title
-                                    )}"
-                                >
-                            `
-
-                            : `
-                                <div class="product-placeholder">
-                                    📦
-                                </div>
-                            `
-                    }
-
-                    <div class="product-summary-info">
-
-                        <h3>
-                            ${escapeHtml(
-                                product?.title ||
-                                "Produto"
-                            )}
-                        </h3>
-
-                        <p>
-                            📍 ${escapeHtml(
-                                product?.city ||
-                                "Local não informado"
-                            )}
-                        </p>
-
-                    </div>
-
-                `;
-
-            }
-
-
-            // ======================================
-            // VALORES
-            // ======================================
-
-            if (rentTotal) {
-
-                rentTotal.textContent =
-                    money(
-                        rental.rentTotal
-                    );
-
-            }
-
-
-            if (deliveryPrice) {
-
-                deliveryPrice.textContent =
-                    money(
-                        rental.deliveryPrice
-                    );
-
-            }
-
-
-            if (deposit) {
-
-                deposit.textContent =
-                    money(
-                        rental.deposit
-                    );
-
-            }
-
-
-            if (total) {
-
-                total.textContent =
-                    money(
-                        rental.total
-                    );
-
-            }
-
-
-            // ======================================
-            // DATAS
-            // ======================================
-
-            if (startDate) {
-
-                startDate.textContent =
-                    formatDate(
-                        rental.startDate
-                    );
-
-            }
-
-
-            if (endDate) {
-
-                endDate.textContent =
-                    formatDate(
-                        rental.endDate
-                    );
-
-            }
-
-
-            if (days) {
-
-                days.textContent =
-                    `${rental.days} dia${
-                        Number(rental.days) > 1
-                            ? "s"
-                            : ""
-                    }`;
-
-            }
-
-
-            // ======================================
-            // MOSTRAR CHECKOUT
-            // ======================================
+        function showError(message) {
 
             if (loading) {
 
@@ -393,98 +245,363 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (checkout) {
 
                 checkout.style.display =
+                    "none";
+
+            }
+
+
+            if (errorState) {
+
+                errorState.style.display =
                     "block";
 
             }
 
 
-            // ======================================
-            // PAYMENT BRICK
-            // ======================================
+            if (errorMessage) {
 
-            await renderBrick(
-                data.publicKey,
-                rental,
-                data.renter
-            );
+                errorMessage.textContent =
+                    message ||
+                    "Ocorreu um erro.";
 
-        } catch (err) {
-
-            console.error(
-                "❌ ERRO AO CARREGAR CHECKOUT:",
-                err
-            );
-
-
-            showError(
-                err.message ||
-                "Não foi possível carregar o pagamento."
-            );
-
-        }
-
-    }
-
-
-    // ==========================================
-    // RENDERIZAR PAYMENT BRICK
-    // ==========================================
-
-    async function renderBrick(
-        publicKey,
-        rental,
-        renter
-    ) {
-
-        if (!publicKey) {
-
-            showError(
-                "Chave pública do Mercado Pago não configurada."
-            );
-
-            return;
+            }
 
         }
 
 
-        if (!window.MercadoPago) {
+        // ======================================
+        // CARREGAR CHECKOUT
+        // ======================================
 
-            showError(
-                "Mercado Pago não foi carregado."
-            );
+        async function loadCheckout() {
 
-            return;
+            try {
 
-        }
-
-
-        const mp =
-            new MercadoPago(
-                publicKey
-            );
+                console.log(
+                    "🔄 Carregando checkout..."
+                );
 
 
-        const bricks =
-            mp.bricks();
+                const response =
+                    await fetch(
+                        `${API}/payments/checkout/${rentalId}`
+                    );
 
 
-        await bricks.create(
-            "payment",
-            "paymentBrick_container",
-            {
+                let data;
+
+
+                try {
+
+                    data =
+                        await response.json();
+
+                } catch (jsonError) {
+
+                    throw new Error(
+                        "O servidor retornou uma resposta inválida."
+                    );
+
+                }
+
+
+                console.log(
+                    "📥 Checkout:",
+                    data
+                );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Não foi possível carregar o checkout."
+                    );
+
+                }
+
+
+                const rental =
+                    data.rental;
+
+                const product =
+                    data.product;
+
+
+                if (!rental) {
+
+                    throw new Error(
+                        "Dados do aluguel não encontrados."
+                    );
+
+                }
+
+
+                if (!product) {
+
+                    throw new Error(
+                        "Dados do produto não encontrados."
+                    );
+
+                }
+
 
                 // ==================================
-                // INICIALIZAÇÃO
+                // PRODUTO
                 // ==================================
+
+                if (productSummary) {
+
+                    productSummary.innerHTML = `
+
+                        ${
+                            product?.image
+
+                                ? `
+
+                                    <img
+                                        src="${escapeHtml(
+                                            product.image
+                                        )}"
+                                        alt="${escapeHtml(
+                                            product.title
+                                        )}"
+                                    >
+
+                                `
+
+                                : `
+
+                                    <div class="product-placeholder">
+                                        📦
+                                    </div>
+
+                                `
+                        }
+
+                        <div class="product-summary-info">
+
+                            <h3>
+                                ${escapeHtml(
+                                    product.title
+                                )}
+                            </h3>
+
+                            <p>
+                                📍 ${escapeHtml(
+                                    product.city
+                                )}
+                            </p>
+
+                        </div>
+
+                    `;
+
+                }
+
+
+                // ==================================
+                // VALORES
+                // ==================================
+
+                if (rentTotal) {
+
+                    rentTotal.textContent =
+                        money(
+                            rental.rentTotal
+                        );
+
+                }
+
+
+                if (deliveryPrice) {
+
+                    deliveryPrice.textContent =
+                        money(
+                            rental.deliveryPrice
+                        );
+
+                }
+
+
+                if (deposit) {
+
+                    deposit.textContent =
+                        money(
+                            rental.deposit
+                        );
+
+                }
+
+
+                if (total) {
+
+                    total.textContent =
+                        money(
+                            rental.total
+                        );
+
+                }
+
+
+                // ==================================
+                // DATAS
+                // ==================================
+
+                if (startDate) {
+
+                    startDate.textContent =
+                        formatDate(
+                            rental.startDate
+                        );
+
+                }
+
+
+                if (endDate) {
+
+                    endDate.textContent =
+                        formatDate(
+                            rental.endDate
+                        );
+
+                }
+
+
+                if (days) {
+
+                    const rentalDays =
+                        Number(
+                            rental.days || 0
+                        );
+
+
+                    days.textContent =
+                        `${rentalDays} dia${
+                            rentalDays !== 1
+                                ? "s"
+                                : ""
+                        }`;
+
+                }
+
+
+                // ==================================
+                // MOSTRAR CHECKOUT
+                // ==================================
+
+                if (loading) {
+
+                    loading.style.display =
+                        "none";
+
+                }
+
+
+                if (checkout) {
+
+                    checkout.style.display =
+                        "block";
+
+                }
+
+
+                // ==================================
+                // RENDERIZAR MERCADO PAGO
+                // ==================================
+
+                await renderBrick(
+                    data.publicKey,
+                    rental,
+                    data.renter
+                );
+
+
+            } catch (err) {
+
+                console.error(
+                    "❌ ERRO AO CARREGAR CHECKOUT:",
+                    err
+                );
+
+
+                showError(
+                    err.message ||
+                    "Não foi possível carregar o pagamento."
+                );
+
+            }
+
+        }
+
+
+        // ======================================
+        // RENDERIZAR PAYMENT BRICK
+        // ======================================
+
+        async function renderBrick(
+            publicKey,
+            rental,
+            renter
+        ) {
+
+            if (!publicKey) {
+
+                throw new Error(
+                    "Chave pública do Mercado Pago não configurada."
+                );
+
+            }
+
+
+            if (!rental?.id) {
+
+                throw new Error(
+                    "ID do aluguel não encontrado."
+                );
+
+            }
+
+
+            if (
+                typeof MercadoPago !==
+                "function"
+            ) {
+
+                throw new Error(
+                    "Biblioteca do Mercado Pago não carregada."
+                );
+
+            }
+
+
+            console.log(
+                "💳 Inicializando Mercado Pago Brick..."
+            );
+
+
+            const mp =
+                new MercadoPago(
+                    publicKey
+                );
+
+
+            const bricks =
+                mp.bricks();
+
+
+            // ==================================
+            // CONFIGURAÇÃO
+            // ==================================
+
+            const settings = {
 
                 initialization: {
 
                     amount:
-                        Math.round(
-                            Number(
-                                rental.total
-                            ) * 100
-                        ) / 100,
+                        Number(
+                            rental.total
+                        ),
 
                     payer: {
 
@@ -497,10 +614,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 },
 
-
-                // ==================================
-                // CUSTOMIZAÇÃO
-                // ==================================
 
                 customization: {
 
@@ -540,24 +653,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 },
 
 
-                // ==================================
-                // CALLBACKS
-                // ==================================
-
                 callbacks: {
+
+                    // ==============================
+                    // READY
+                    // ==============================
 
                     onReady: () => {
 
                         console.log(
-                            "✅ Payment Brick carregado."
+                            "✅ Mercado Pago Brick carregado."
                         );
 
                     },
 
 
-                    // ==================================
+                    // ==============================
                     // SUBMIT
-                    // ==================================
+                    // ==============================
 
                     onSubmit: ({
                         formData
@@ -576,11 +689,29 @@ document.addEventListener("DOMContentLoaded", async () => {
                                     );
 
                                     console.log(
-                                        "💳 FORM DATA DO MERCADO PAGO"
+                                        "💳 ENVIANDO PAGAMENTO"
                                     );
 
                                     console.log(
-                                        formData
+                                        "Rental:",
+                                        rental.id
+                                    );
+
+                                    console.log(
+                                        "Método:",
+                                        formData?.payment_method_id
+                                    );
+
+                                    console.log(
+                                        "Token:",
+                                        formData?.token
+                                            ? "RECEBIDO"
+                                            : "NÃO RECEBIDO"
+                                    );
+
+                                    console.log(
+                                        "Issuer recebido pelo Brick:",
+                                        formData?.issuer_id || "NÃO INFORMADO"
                                     );
 
                                     console.log(
@@ -589,139 +720,72 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                                     // ==================================
-                                    // DADOS DO PAGADOR
+                                    // VALIDAR DADOS DO BRICK
                                     // ==================================
 
-                                    const payerData =
-                                        formData?.payer ||
-                                        {};
+                                    if (
+                                        !formData?.token
+                                    ) {
+
+                                        throw new Error(
+                                            "Token do cartão não recebido."
+                                        );
+
+                                    }
 
 
-                                    const payerEmail =
-                                        payerData.email ||
-                                        renter?.email ||
-                                        user?.email ||
-                                        "";
+                                    if (
+                                        !formData?.payment_method_id
+                                    ) {
+
+                                        throw new Error(
+                                            "Método de pagamento não recebido."
+                                        );
+
+                                    }
 
 
                                     // ==================================
                                     // IDENTIFICAÇÃO
                                     // ==================================
 
-                                    let identification =
-                                        null;
-
-
-                                    if (
-                                        payerData?.identification
-                                    ) {
-
-                                        identification = {
-
-                                            type:
-                                                payerData
-                                                    .identification
-                                                    .type,
-
-                                            number:
-                                                String(
-                                                    payerData
-                                                        .identification
-                                                        .number ||
-                                                    ""
-                                                ).replace(
-                                                    /\D/g,
-                                                    ""
-                                                )
-
-                                        };
-
-                                    }
-
-
-                                    // ==================================
-                                    // ISSUER
-                                    // ==================================
-
-                                    let issuerId =
-                                        formData?.issuer_id;
-
-
-                                    if (
-                                        issuerId !==
-                                            undefined &&
-                                        issuerId !==
-                                            null &&
-                                        issuerId !==
-                                            ""
-                                    ) {
-
-                                        issuerId =
-                                            Number(
-                                                issuerId
-                                            );
-
-
-                                        if (
-                                            !Number.isInteger(
-                                                issuerId
-                                            ) ||
-                                            issuerId <= 0
-                                        ) {
-
-                                            issuerId =
-                                                null;
-
-                                        }
-
-                                    } else {
-
-                                        issuerId =
-                                            null;
-
-                                    }
-
-
-                                    // ==================================
-                                    // PARCELAS
-                                    // ==================================
-
-                                    const installments =
-                                        Number(
-                                            formData?.installments
-                                        ) > 0
-
-                                            ? Number(
-                                                formData.installments
-                                            )
-
-                                            : 1;
+                                    const payer =
+                                        formData.payer || {};
 
 
                                     // ==================================
                                     // PAYLOAD
                                     // ==================================
+                                    //
+                                    // NÃO ALTERAMOS O TOKEN.
+                                    //
+                                    // NÃO FORÇAMOS issuer_id.
+                                    //
+                                    // O BACKEND calcula o valor real
+                                    // usando rental.total.
+                                    //
+                                    // ==================================
 
                                     const payload = {
 
                                         rentalId:
-                                            rental.id ||
-                                            rental._id ||
-                                            rentalId,
+                                            String(
+                                                rental.id
+                                            ),
 
                                         token:
-                                            formData?.token,
+                                            formData.token,
 
                                         payment_method_id:
-                                            formData?.payment_method_id,
-
-                                        installments:
-                                            installments,
+                                            formData.payment_method_id,
 
                                         payer: {
 
                                             email:
-                                                payerEmail
+                                                payer.email ||
+                                                renter?.email ||
+                                                user?.email ||
+                                                ""
 
                                         }
 
@@ -729,101 +793,44 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                                     // ==================================
-                                    // IDENTIFICAÇÃO
+                                    // IDENTIFICAÇÃO DO PAGADOR
                                     // ==================================
 
                                     if (
-                                        identification &&
-                                        identification.number
+                                        payer.identification &&
+                                        payer.identification.type &&
+                                        payer.identification.number
                                     ) {
 
-                                        payload.payer.identification =
-                                            identification;
+                                        payload.payer.identification = {
 
-                                    }
+                                            type:
+                                                payer.identification.type,
 
+                                            number:
+                                                String(
+                                                    payer.identification.number
+                                                )
 
-                                    // ==================================
-                                    // ISSUER
-                                    // ==================================
-
-                                    if (
-                                        issuerId
-                                    ) {
-
-                                        payload.issuer_id =
-                                            issuerId;
+                                        };
 
                                     }
 
 
                                     console.log(
-                                        "📤 ENVIANDO AO BACKEND:"
+                                        "📤 Payload enviado ao backend:",
+                                        {
+                                            ...payload,
+                                            token:
+                                                payload.token
+                                                    ? "RECEBIDO"
+                                                    : "NÃO RECEBIDO"
+                                        }
                                     );
 
 
-                                    console.log({
-
-                                        ...payload,
-
-                                        token:
-                                            payload.token
-                                                ? "***"
-                                                : null
-
-                                    });
-
-
                                     // ==================================
-                                    // VALIDAÇÕES
-                                    // ==================================
-
-                                    if (
-                                        !payload.rentalId
-                                    ) {
-
-                                        throw new Error(
-                                            "Aluguel não informado."
-                                        );
-
-                                    }
-
-
-                                    if (
-                                        !payload.token
-                                    ) {
-
-                                        throw new Error(
-                                            "Token do cartão não foi gerado pelo Mercado Pago."
-                                        );
-
-                                    }
-
-
-                                    if (
-                                        !payload.payment_method_id
-                                    ) {
-
-                                        throw new Error(
-                                            "Método de pagamento não informado."
-                                        );
-
-                                    }
-
-
-                                    if (
-                                        !payload.payer.email
-                                    ) {
-
-                                        throw new Error(
-                                            "E-mail do pagador não informado."
-                                        );
-
-                                    }
-
-
-                                    // ==================================
-                                    // REQUEST
+                                    // FETCH
                                     // ==================================
 
                                     const response =
@@ -862,14 +869,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                                         result =
                                             await response.json();
 
-                                    } catch {
+                                    } catch (
+                                        jsonError
+                                    ) {
 
-                                        result = {
-
-                                            error:
-                                                "O servidor retornou uma resposta inválida."
-
-                                        };
+                                        throw new Error(
+                                            "O servidor retornou uma resposta inválida."
+                                        );
 
                                     }
 
@@ -880,54 +886,55 @@ document.addEventListener("DOMContentLoaded", async () => {
                                     );
 
 
-                                    // ==================================
-                                    // ERRO
-                                    // ==================================
+                                    if (!response.ok) {
 
-                                    if (
-                                        !response.ok
-                                    ) {
-
-                                        const errorText =
+                                        let message =
                                             result.error ||
-                                            result.message ||
                                             "Erro ao processar pagamento.";
 
 
-                                        console.error(
-                                            "❌ ERRO AO PROCESSAR PAGAMENTO:",
-                                            errorText
-                                        );
+                                        // ==============================
+                                        // ERRO 10111
+                                        // ==============================
 
-
-                                        // Mostra informações
-                                        // adicionais do Mercado Pago
                                         if (
-                                            result.code
+                                            result.code ===
+                                            10111 ||
+                                            (
+                                                typeof message ===
+                                                "string" &&
+                                                message.includes(
+                                                    "invalid issuer"
+                                                )
+                                            )
                                         ) {
 
-                                            console.error(
-                                                "Código MP:",
-                                                result.code
-                                            );
+                                            message =
+                                                "O Mercado Pago recusou o emissor deste cartão. Tente novamente.";
 
                                         }
 
 
+                                        // ==============================
+                                        // FORCED ISSUER
+                                        // ==============================
+
                                         if (
-                                            result.cause
+                                            typeof message ===
+                                            "string" &&
+                                            message.includes(
+                                                "forced_issuer"
+                                            )
                                         ) {
 
-                                            console.error(
-                                                "Detalhes MP:",
-                                                result.cause
-                                            );
+                                            message =
+                                                "O Mercado Pago identificou um emissor de cartão inválido. Tente novamente.";
 
                                         }
 
 
                                         throw new Error(
-                                            errorText
+                                            message
                                         );
 
                                     }
@@ -937,26 +944,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                                     // PAGAMENTO
                                     // ==================================
 
-                                    if (
-                                        !result.payment
-                                    ) {
+                                    const payment =
+                                        result.payment;
+
+
+                                    if (!payment) {
 
                                         throw new Error(
-                                            "O backend não retornou os dados do pagamento."
+                                            "O servidor não retornou os dados do pagamento."
                                         );
 
                                     }
 
 
-                                    const status =
-                                        result
-                                            .payment
-                                            .status;
-
-
                                     console.log(
-                                        "💳 STATUS:",
-                                        status
+                                        "💳 Pagamento:",
+                                        payment
                                     );
 
 
@@ -965,7 +968,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                     // ==================================
 
                                     if (
-                                        status ===
+                                        payment.status ===
                                         "approved"
                                     ) {
 
@@ -977,18 +980,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                                         );
 
-                                    } else {
+                                    }
 
-                                        // ==================================
-                                        // PENDENTE / ANÁLISE
-                                        // ==================================
+
+                                    // ==================================
+                                    // EM ANÁLISE
+                                    // ==================================
+
+                                    else {
 
                                         showResult(
 
                                             "Pagamento em análise",
 
                                             getMessage(
-                                                status
+                                                payment.status
                                             )
 
                                         );
@@ -997,6 +1003,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                                     resolve();
+
 
                                 } catch (err) {
 
@@ -1022,14 +1029,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                     },
 
 
-                    // ==================================
+                    // ==============================
                     // ERRO DO BRICK
-                    // ==================================
+                    // ==============================
 
-                    onError: (err) => {
+                    onError: (
+                        err
+                    ) => {
 
                         console.error(
-                            "❌ ERRO DO PAYMENT BRICK:",
+                            "❌ ERRO DO MERCADO PAGO BRICK:",
                             err
                         );
 
@@ -1037,125 +1046,131 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 }
 
+            };
+
+
+            await bricks.create(
+                "payment",
+                "paymentBrick_container",
+                settings
+            );
+
+        }
+
+
+        // ======================================
+        // MENSAGEM DE STATUS
+        // ======================================
+
+        function getMessage(status) {
+
+            switch (status) {
+
+                case "pending":
+
+                    return (
+                        "Pagamento pendente."
+                    );
+
+
+                case "in_process":
+
+                    return (
+                        "Pagamento em análise."
+                    );
+
+
+                case "rejected":
+
+                    return (
+                        "Pagamento recusado."
+                    );
+
+
+                case "cancelled":
+
+                    return (
+                        "Pagamento cancelado."
+                    );
+
+
+                case "refunded":
+
+                    return (
+                        "Pagamento estornado."
+                    );
+
+
+                default:
+
+                    return (
+                        "Pagamento processado."
+                    );
+
             }
-        );
+
+        }
+
+
+        // ======================================
+        // MOSTRAR RESULTADO
+        // ======================================
+
+        function showResult(
+            title,
+            message
+        ) {
+
+            if (paymentBrick) {
+
+                paymentBrick.style.display =
+                    "none";
+
+            }
+
+
+            if (paymentResult) {
+
+                paymentResult.style.display =
+                    "block";
+
+            }
+
+
+            const resultTitle =
+                document.querySelector(
+                    "#result-title"
+                );
+
+            const resultMessage =
+                document.querySelector(
+                    "#result-message"
+                );
+
+
+            if (resultTitle) {
+
+                resultTitle.textContent =
+                    title;
+
+            }
+
+
+            if (resultMessage) {
+
+                resultMessage.textContent =
+                    message;
+
+            }
+
+        }
+
+
+        // ======================================
+        // INICIAR
+        // ======================================
+
+        await loadCheckout();
 
     }
-
-
-    // ==========================================
-    // MENSAGENS
-    // ==========================================
-
-    function getMessage(status) {
-
-        switch (status) {
-
-            case "pending":
-
-                return (
-                    "Pagamento pendente."
-                );
-
-
-            case "in_process":
-
-                return (
-                    "Pagamento em análise."
-                );
-
-
-            case "rejected":
-
-                return (
-                    "Pagamento recusado."
-                );
-
-
-            case "cancelled":
-
-                return (
-                    "Pagamento cancelado."
-                );
-
-
-            case "refunded":
-
-                return (
-                    "Pagamento estornado."
-                );
-
-
-            default:
-
-                return (
-                    `Pagamento processado com status: ${status || "desconhecido"}.`
-                );
-
-        }
-
-    }
-
-
-    // ==========================================
-    // RESULTADO
-    // ==========================================
-
-    function showResult(
-        title,
-        message
-    ) {
-
-        if (paymentBrick) {
-
-            paymentBrick.style.display =
-                "none";
-
-        }
-
-
-        if (paymentResult) {
-
-            paymentResult.style.display =
-                "block";
-
-        }
-
-
-        const resultTitle =
-            document.querySelector(
-                "#result-title"
-            );
-
-
-        const resultMessage =
-            document.querySelector(
-                "#result-message"
-            );
-
-
-        if (resultTitle) {
-
-            resultTitle.textContent =
-                title;
-
-        }
-
-
-        if (resultMessage) {
-
-            resultMessage.textContent =
-                message;
-
-        }
-
-    }
-
-
-    // ==========================================
-    // INICIAR
-    // ==========================================
-
-    await loadCheckout();
-
-});
+);
