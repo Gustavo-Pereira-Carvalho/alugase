@@ -31,6 +31,7 @@
     <nav class="navbar">
 
         <!-- LOGO -->
+
         <div class="logo">
 
             <a href="index.html">
@@ -46,7 +47,9 @@
 
         </div>
 
+
         <!-- MENU -->
+
         <ul class="nav-links">
 
             <li>
@@ -69,7 +72,9 @@
 
         </ul>
 
+
         <!-- BOTÕES -->
+
         <div class="nav-buttons">
 
             <button
@@ -94,9 +99,14 @@
 
 </header>
 
+
 <main class="product-page">
 
-    <!-- BREADCRUMB -->
+
+    <!-- ==========================================
+         BREADCRUMB
+    =========================================== -->
+
     <div class="breadcrumb">
 
         <a href="index.html">
@@ -120,10 +130,18 @@
 
     </div>
 
-    <!-- PRODUTO -->
+
+    <!-- ==========================================
+         PRODUTO
+    =========================================== -->
+
     <section class="product-details">
 
-        <!-- GALERIA -->
+
+        <!-- ======================================
+             GALERIA
+        ======================================= -->
+
         <div class="product-gallery">
 
             <div
@@ -137,6 +155,7 @@
 
             </div>
 
+
             <div
                 class="product-thumbnails"
                 id="product-thumbnails"
@@ -144,16 +163,29 @@
 
         </div>
 
-        <!-- INFORMAÇÕES -->
+
+        <!-- ======================================
+             INFORMAÇÕES
+        ======================================= -->
+
         <div class="product-info">
+
+
+            <!-- CATEGORIA -->
 
             <span class="product-category">
                 CATEGORIA
             </span>
 
+
+            <!-- TÍTULO -->
+
             <h1 id="product-title">
                 Carregando...
             </h1>
+
+
+            <!-- AVALIAÇÃO -->
 
             <div class="product-rating">
 
@@ -179,6 +211,9 @@
 
             </div>
 
+
+            <!-- LOCALIZAÇÃO -->
+
             <p
                 class="product-location"
                 id="product-location"
@@ -186,7 +221,11 @@
                 📍 Cidade
             </p>
 
-            <!-- DESCRIÇÃO -->
+
+            <!-- ==================================
+                 DESCRIÇÃO
+            =================================== -->
+
             <div class="product-description">
 
                 <h2>
@@ -199,7 +238,11 @@
 
             </div>
 
-            <!-- PREÇO -->
+
+            <!-- ==================================
+                 PREÇO
+            =================================== -->
+
             <div class="pricing">
 
                 <span>
@@ -216,15 +259,26 @@
 
             </div>
 
-            <!-- ALUGUEL -->
+
+            <!-- ==================================
+                 ALUGUEL
+            =================================== -->
+
             <div class="rental-box">
 
                 <h2>
                     Escolha o período
                 </h2>
 
-                <!-- CALENDÁRIO -->
+
+                <!-- ==================================
+                     CALENDÁRIO
+                ================================== -->
+
                 <div class="custom-calendar-wrapper">
+
+
+                    <!-- DATAS SELECIONADAS -->
 
                     <div class="calendar-selection">
 
@@ -240,9 +294,11 @@
 
                         </div>
 
+
                         <div class="date-arrow">
                             →
                         </div>
+
 
                         <div class="selected-date-box">
 
@@ -257,6 +313,9 @@
                         </div>
 
                     </div>
+
+
+                    <!-- CALENDÁRIO -->
 
                     <div class="calendar">
 
@@ -286,6 +345,7 @@
 
                         </div>
 
+
                         <div class="calendar-weekdays">
 
                             <span>Dom</span>
@@ -298,10 +358,12 @@
 
                         </div>
 
+
                         <div
                             class="calendar-days"
                             id="calendar-days"
                         ></div>
+
 
                         <div class="calendar-legend">
 
@@ -333,6 +395,7 @@
 
                     </div>
 
+
                     <input
                         type="hidden"
                         id="start-date"
@@ -345,14 +408,20 @@
 
                 </div>
 
-                <!-- ENTREGA -->
+
+                <!-- ==================================
+                     ENTREGA
+                =================================== -->
+
                 <div class="delivery-options">
 
                     <h3>
                         Como deseja receber?
                     </h3>
 
+
                     <!-- RETIRADA -->
+
                     <label class="delivery-option">
 
                         <input
@@ -372,7 +441,9 @@
 
                     </label>
 
+
                     <!-- ENTREGA -->
+
                     <label
                         class="delivery-option"
                         id="delivery-option-label"
@@ -394,15 +465,29 @@
 
                     </label>
 
-                    <p
+
+                    <!-- STATUS DO CÁLCULO -->
+
+                    <div
                         id="delivery-info"
                         class="delivery-info"
-                    ></p>
+                        aria-live="polite"
+                    >
+                        O valor da entrega será calculado automaticamente
+                        pela distância entre os endereços.
+                    </div>
 
                 </div>
 
-                <!-- RESUMO -->
+
+                <!-- ==================================
+                     RESUMO
+                =================================== -->
+
                 <div class="rental-summary">
+
+
+                    <!-- DIÁRIAS -->
 
                     <div>
 
@@ -416,6 +501,9 @@
 
                     </div>
 
+
+                    <!-- ENTREGA -->
+
                     <div>
 
                         <span>
@@ -428,6 +516,9 @@
 
                     </div>
 
+
+                    <!-- CAUÇÃO -->
+
                     <div>
 
                         <span>
@@ -439,6 +530,9 @@
                         </strong>
 
                     </div>
+
+
+                    <!-- TOTAL -->
 
                     <div class="summary-total">
 
@@ -454,7 +548,11 @@
 
                 </div>
 
-                <!-- BOTÃO -->
+
+                <!-- ==================================
+                     BOTÃO
+                =================================== -->
+
                 <button
                     id="rental-button"
                     class="btn-primary rental-button"
@@ -469,14 +567,22 @@
 
     </section>
 
-    <!-- PROPRIETÁRIO -->
+
+    <!-- ==========================================
+         PROPRIETÁRIO
+    =========================================== -->
+
     <section class="owner-section">
 
         <h2>
             Sobre o proprietário
         </h2>
 
+
         <div class="owner-card">
+
+
+            <!-- AVATAR -->
 
             <div
                 class="owner-avatar"
@@ -484,6 +590,9 @@
             >
                 👤
             </div>
+
+
+            <!-- INFORMAÇÕES -->
 
             <div class="owner-info">
 
@@ -526,6 +635,7 @@
     </section>
 
 </main>
+
 
 <script src="./js/produto.js"></script>
 
