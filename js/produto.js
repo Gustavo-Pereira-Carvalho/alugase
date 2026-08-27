@@ -8,19 +8,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     // API
     // ======================================
 
-    const API = "https://alugase-api.onrender.com/api";
+    const API =
+        "https://alugase-api.onrender.com/api";
 
-    const PRODUCTS_API = `${API}/products`;
-    const USERS_API = `${API}/users`;
-    const RENTALS_API = `${API}/rentals`;
+    const PRODUCTS_API =
+        `${API}/products`;
+
+    const USERS_API =
+        `${API}/users`;
+
+    const RENTALS_API =
+        `${API}/rentals`;
 
 
     // ======================================
-    // CONFIGURAÇÃO DA ENTREGA ALUGASE
+    // CONFIGURAÇÃO DA ENTREGA
     // ======================================
 
-    // Tarifa definida pelo próprio Alugase.
+    // Tarifa definida pelo ALUGASE.
     // NÃO vem do anúncio.
+    // NÃO é informada pelo cliente.
+
     const DELIVERY_PRICE_PER_KM = 2;
 
 
@@ -44,6 +52,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const token =
         localStorage.getItem("token");
+
+    let currentUser = user;
 
 
     // ======================================
@@ -258,8 +268,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let owner = null;
 
-    let currentUser = user;
-
     let calendarDate =
         new Date();
 
@@ -267,11 +275,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let unavailableDates = [];
 
+
     let deliveryCalculation = {
+
         distance: 0,
+
         value: 0,
+
         valid: false,
+
         reason: "not-calculated"
+
     };
 
 
@@ -328,7 +342,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ======================================
-    // DATE → STRING
+    // DATA → STRING
     // ======================================
 
     function dateToString(date) {
@@ -436,14 +450,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             await Promise.all([
+
                 loadOwner(),
+
                 loadUnavailableDates(),
+
                 loadCurrentUser()
+
             ]);
 
 
             fillScreen();
-
 
         } catch (error) {
 
@@ -463,7 +480,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ======================================
-    // CARREGAR USUÁRIO LOGADO
+    // USUÁRIO LOGADO
     // ======================================
 
     async function loadCurrentUser() {
@@ -480,8 +497,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     `${USERS_API}/me`,
                     {
                         headers: {
+
                             Authorization:
                                 `Bearer ${token}`
+
                         }
                     }
                 );
@@ -503,7 +522,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     currentUser
                 )
             );
-
 
         } catch (error) {
 
@@ -562,7 +580,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
             }
 
-
         } catch (error) {
 
             console.error(
@@ -576,7 +593,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ======================================
-    // ADICIONAR INTERVALO
+    // ADICIONAR INTERVALO BLOQUEADO
     // ======================================
 
     function addUnavailableRange(
@@ -605,7 +622,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 `${startString}T00:00:00`
             );
 
-
         const endDateObject =
             new Date(
                 `${endString}T00:00:00`
@@ -618,7 +634,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
 
             const currentString =
-                dateToString(current);
+                dateToString(
+                    current
+                );
 
 
             if (
@@ -681,7 +699,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             owner =
                 await response.json();
 
-
         } catch (error) {
 
             console.error(
@@ -693,10 +710,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ======================================
-    // EXTRAIR LOCALIZAÇÃO
+    // EXTRAIR COORDENADAS
     // ======================================
 
-    function getLocationCoordinates(source) {
+    function getLocationCoordinates(
+        source
+    ) {
 
         if (!source) {
 
@@ -704,8 +723,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // Formato:
-        // { lat: -23..., lng: -46... }
+        // { lat, lng }
 
         if (
             Number.isFinite(
@@ -717,14 +735,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
 
             return {
-                lat: Number(source.lat),
-                lng: Number(source.lng)
+
+                lat:
+                    Number(source.lat),
+
+                lng:
+                    Number(source.lng)
+
             };
         }
 
 
-        // Formato:
-        // { latitude: ..., longitude: ... }
+        // { latitude, longitude }
 
         if (
             Number.isFinite(
@@ -736,17 +758,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
 
             return {
-                lat: Number(source.latitude),
-                lng: Number(source.longitude)
+
+                lat:
+                    Number(source.latitude),
+
+                lng:
+                    Number(source.longitude)
+
             };
         }
 
 
-        // Formato GeoJSON:
-        // {
-        //   type: "Point",
-        //   coordinates: [lng, lat]
-        // }
+        // GeoJSON
 
         if (
             Array.isArray(
@@ -772,8 +795,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             ) {
 
                 return {
+
                     lat,
                     lng
+
                 };
             }
         }
@@ -866,7 +891,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ======================================
-    // DISTÂNCIA ENTRE DOIS PONTOS
+    // DISTÂNCIA — HAVERSINE
     // ======================================
 
     function calculateDistanceKm(
@@ -944,7 +969,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ======================================
-    // CALCULAR ENTREGA
+    // CALCULAR ENTREGA AUTOMATICAMENTE
     // ======================================
 
     function calculateDelivery() {
@@ -952,10 +977,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!product) {
 
             return {
+
                 distance: 0,
+
                 value: 0,
+
                 valid: false,
+
                 reason: "product"
+
             };
         }
 
@@ -968,10 +998,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!deliveryEnabled) {
 
             return {
+
                 distance: 0,
+
                 value: 0,
+
                 valid: false,
+
                 reason: "disabled"
+
             };
         }
 
@@ -987,10 +1022,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!ownerLocation) {
 
             return {
+
                 distance: 0,
+
                 value: 0,
+
                 valid: false,
+
                 reason: "owner-location"
+
             };
         }
 
@@ -998,10 +1038,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!renterLocation) {
 
             return {
+
                 distance: 0,
+
                 value: 0,
+
                 valid: false,
+
                 reason: "renter-location"
+
             };
         }
 
@@ -1020,24 +1065,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
 
             return {
+
                 distance: 0,
+
                 value: 0,
+
                 valid: false,
+
                 reason: "distance"
+
             };
         }
 
 
         const value =
-            distance *
-            DELIVERY_PRICE_PER_KM;
+            Math.round(
+                (
+                    distance *
+                    DELIVERY_PRICE_PER_KM
+                ) * 100
+            ) / 100;
 
 
         return {
+
             distance,
+
             value,
+
             valid: true,
+
             reason: "ok"
+
         };
     }
 
@@ -1048,12 +1107,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function updateDeliveryUI() {
 
-        const configEnabled =
+        const enabled =
             product?.delivery === true ||
             product?.delivery === "true";
 
 
-        if (!configEnabled) {
+        if (!enabled) {
 
             if (deliveryRadio) {
 
@@ -1094,17 +1153,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         const deliverySelected =
-            selected?.value === "delivery";
+            selected?.value ===
+            "delivery";
 
 
         if (!deliverySelected) {
 
-            deliveryLabel.textContent =
-                "Calcular";
+            if (deliveryLabel) {
+
+                deliveryLabel.textContent =
+                    "Calcular";
+            }
 
 
-            deliveryInfo.textContent =
-                "O valor será calculado automaticamente pela distância entre os endereços.";
+            if (deliveryInfo) {
+
+                deliveryInfo.textContent =
+                    "O valor será calculado automaticamente pela distância entre os endereços.";
+            }
 
 
             return;
@@ -1386,15 +1452,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        if (depositTotal) {
-
-            depositTotal.textContent =
-                `R$ ${formatMoney(
-                    product.deposit
-                )}`;
-        }
-
-
         renderOwner();
 
         initializeCalendar();
@@ -1468,7 +1525,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        thumbnails.innerHTML = "";
+        thumbnails.innerHTML =
+            "";
 
 
         const images =
@@ -1492,7 +1550,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             images.forEach(
-                (image, index) => {
+                (
+                    image,
+                    index
+                ) => {
 
                     const button =
                         document.createElement(
@@ -1537,9 +1598,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     thumbnails.appendChild(
                         button
                     );
+
                 }
             );
-
 
         } else {
 
@@ -1699,12 +1760,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        calendarDays.innerHTML = "";
+        calendarDays.innerHTML =
+            "";
 
 
         const year =
             calendarDate.getFullYear();
-
 
         const month =
             calendarDate.getMonth();
@@ -1896,7 +1957,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
-            if (!button.disabled) {
+            if (
+                !button.disabled
+            ) {
 
                 button.addEventListener(
                     "click",
@@ -2213,6 +2276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                 renderCalendar();
+
             }
         );
     }
@@ -2234,13 +2298,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
                 renderCalendar();
+
             }
         );
     }
 
 
     // ======================================
-    // ENTREGA — RADIO
+    // ENTREGA
     // ======================================
 
     document
@@ -2530,17 +2595,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
 
 
+                // IMPORTANTE:
+                //
                 // NÃO enviamos:
                 //
                 // deliveryDistance
                 // deliveryPrice
                 //
-                // Esses valores não são
-                // fornecidos pelo cliente.
-                //
-                // O backend deve calcular
-                // novamente pela localização
-                // do proprietário e do locatário.
+                // O backend calcula tudo novamente
+                // usando as coordenadas reais.
 
 
                 // ==================================
@@ -2549,6 +2612,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 window.location.href =
                     `reserva.html?${params.toString()}`;
+
             }
         );
     }
