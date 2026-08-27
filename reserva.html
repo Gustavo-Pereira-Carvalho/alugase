@@ -45,7 +45,6 @@
 
         </div>
 
-
         <div class="nav-buttons">
 
             <a
@@ -88,7 +87,9 @@
         <section class="reservation-form">
 
 
-            <!-- PRODUTO -->
+            <!-- ==================================
+                 PRODUTO
+            =================================== -->
 
             <div class="product-card">
 
@@ -100,7 +101,7 @@
                 </div>
 
 
-                <div>
+                <div class="product-main-info">
 
                     <span
                         class="category"
@@ -119,7 +120,43 @@
                         📍 Carregando...
                     </p>
 
+
+                    <div class="product-rating">
+
+                        <span>
+                            ⭐
+                            <strong id="product-rating">
+                                5.0
+                            </strong>
+                        </span>
+
+                        <span>
+                            <strong id="product-reviews">
+                                0
+                            </strong>
+                            avaliações
+                        </span>
+
+                    </div>
+
                 </div>
+
+            </div>
+
+
+            <!-- ==================================
+                 DESCRIÇÃO
+            =================================== -->
+
+            <div class="card product-description-card">
+
+                <h3>
+                    Sobre este produto
+                </h3>
+
+                <p id="product-description">
+                    Carregando descrição...
+                </p>
 
             </div>
 
@@ -189,13 +226,14 @@
                                 type="button"
                                 id="calendar-prev"
                                 class="calendar-nav"
+                                aria-label="Mês anterior"
                             >
                                 ‹
                             </button>
 
 
                             <strong id="calendar-month">
-                                Agosto 2026
+                                Carregando...
                             </strong>
 
 
@@ -203,6 +241,7 @@
                                 type="button"
                                 id="calendar-next"
                                 class="calendar-nav"
+                                aria-label="Próximo mês"
                             >
                                 ›
                             </button>
@@ -251,8 +290,6 @@
                     </div>
 
 
-                    <!-- CAMPOS OCULTOS -->
-
                     <input
                         type="hidden"
                         id="start-date"
@@ -288,11 +325,10 @@
                         checked
                     >
 
-
                     <div>
 
                         <strong>
-                            Retirar com o proprietário
+                            📍 Retirar com o proprietário
                         </strong>
 
                         <p>
@@ -304,7 +340,10 @@
                 </label>
 
 
-                <label class="option">
+                <label
+                    class="option"
+                    id="delivery-option"
+                >
 
                     <input
                         type="radio"
@@ -312,20 +351,27 @@
                         value="delivery"
                     >
 
-
                     <div>
 
                         <strong>
-                            Entrega pelo proprietário
+                            🚚 Entrega pelo proprietário
                         </strong>
 
                         <p id="delivery-text">
-                            + R$ 0,00
+                            Calculando automaticamente...
                         </p>
 
                     </div>
 
                 </label>
+
+
+                <div
+                    class="delivery-info"
+                    id="delivery-info"
+                >
+                    O valor será calculado automaticamente pela distância entre os endereços.
+                </div>
 
             </div>
 
@@ -383,7 +429,7 @@
                 </span>
 
                 <strong id="days">
-                    1
+                    0
                 </strong>
 
             </div>
@@ -412,6 +458,20 @@
                     R$ 0,00
                 </strong>
 
+            </div>
+
+
+            <div
+                class="delivery-distance-summary"
+                id="delivery-distance-summary"
+            >
+                <span>
+                    Distância da entrega
+                </span>
+
+                <strong id="delivery-distance">
+                    —
+                </strong>
             </div>
 
 
@@ -445,6 +505,7 @@
 
 
             <button
+                type="button"
                 class="btn-primary confirm-btn"
                 id="confirm-reservation"
             >
@@ -463,6 +524,65 @@
         </aside>
 
     </div>
+
+
+    <!-- ======================================
+         PROPRIETÁRIO
+    ======================================= -->
+
+    <section class="owner-section">
+
+        <h2>
+            Sobre o proprietário
+        </h2>
+
+
+        <div class="owner-card">
+
+
+            <div
+                class="owner-avatar"
+                id="owner-avatar"
+            >
+                👤
+            </div>
+
+
+            <div class="owner-info">
+
+                <h3 id="owner-name">
+                    Proprietário
+                </h3>
+
+
+                <p id="owner-verification">
+                    Usuário
+                </p>
+
+
+                <div class="owner-extra">
+
+                    <span>
+                        ⭐
+                        <strong id="owner-rating">
+                            5.0
+                        </strong>
+                    </span>
+
+                    <span>
+                        <strong id="owner-reviews">
+                            0
+                        </strong>
+                        avaliações
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
 
 </main>
 
