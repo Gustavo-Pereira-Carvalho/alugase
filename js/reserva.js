@@ -13,18 +13,58 @@ document.addEventListener(
         const API =
             "https://alugase-api.onrender.com/api";
 
+        const PRODUCTS_API =
+            `${API}/products`;
+
+        const USERS_API =
+            `${API}/users`;
+
+        const RENTALS_API =
+            `${API}/rentals`;
+
 
         // ==========================================
-        // USUÁRIO
+        // CONFIGURAÇÃO DA ENTREGA
         // ==========================================
 
-        const user =
-            JSON.parse(
-                localStorage.getItem("alugase_user")
-            );
+        // O valor NÃO vem do anúncio.
+        // O sistema cobra R$ 2,00 por km.
+
+        const DELIVERY_PRICE_PER_KM =
+            2.00;
 
 
-        if (!user) {
+        // ==========================================
+        // TOKEN
+        // ==========================================
+
+        const token =
+            localStorage.getItem("token");
+
+
+        // ==========================================
+        // USUÁRIO LOCAL
+        // ==========================================
+
+        let storedUser = null;
+
+        try {
+
+            storedUser =
+                JSON.parse(
+                    localStorage.getItem(
+                        "alugase_user"
+                    )
+                );
+
+        } catch {
+
+            storedUser = null;
+
+        }
+
+
+        if (!token || !storedUser) {
 
             alert(
                 "Faça login para continuar."
@@ -67,7 +107,7 @@ document.addEventListener(
         if (!productId) {
 
             window.location.href =
-                "index.html";
+                "explorar.html";
 
             return;
 
@@ -99,6 +139,24 @@ document.addEventListener(
         const productCity =
             document.querySelector(
                 "#product-city"
+            );
+
+
+        const productDescription =
+            document.querySelector(
+                "#product-description"
+            );
+
+
+        const productRating =
+            document.querySelector(
+                "#product-rating"
+            );
+
+
+        const productReviews =
+            document.querySelector(
+                "#product-reviews"
             );
 
 
@@ -150,9 +208,39 @@ document.addEventListener(
             );
 
 
+        const deliveryOption =
+            document.querySelector(
+                'input[name="delivery"][value="delivery"]'
+            );
+
+
+        const pickupOption =
+            document.querySelector(
+                'input[name="delivery"][value="pickup"]'
+            );
+
+
         const deliveryText =
             document.querySelector(
                 "#delivery-text"
+            );
+
+
+        const deliveryInfo =
+            document.querySelector(
+                "#delivery-info"
+            );
+
+
+        const deliveryDistanceSummary =
+            document.querySelector(
+                "#delivery-distance-summary"
+            );
+
+
+        const deliveryDistanceElement =
+            document.querySelector(
+                "#delivery-distance"
             );
 
 
@@ -211,10 +299,49 @@ document.addEventListener(
 
 
         // ==========================================
+        // PROPRIETÁRIO
+        // ==========================================
+
+        const ownerAvatar =
+            document.querySelector(
+                "#owner-avatar"
+            );
+
+
+        const ownerName =
+            document.querySelector(
+                "#owner-name"
+            );
+
+
+        const ownerVerification =
+            document.querySelector(
+                "#owner-verification"
+            );
+
+
+        const ownerRating =
+            document.querySelector(
+                "#owner-rating"
+            );
+
+
+        const ownerReviews =
+            document.querySelector(
+                "#owner-reviews"
+            );
+
+
+        // ==========================================
         // VARIÁVEIS
         // ==========================================
 
         let product = null;
+
+        let owner = null;
+
+        let currentUser =
+            storedUser;
 
         let calendarDate =
             new Date();
@@ -225,6 +352,19 @@ document.addEventListener(
         let unavailableDates =
             [];
 
+        let deliveryCalculation = {
+
+            distance: 0,
+
+            value: 0,
+
+            valid: false,
+
+            reason:
+                "not-calculated"
+
+        };
+
 
         // ==========================================
         // DINHEIRO
@@ -232,14 +372,21 @@ document.addEventListener(
 
         function formatMoney(value) {
 
-            return Number(value || 0)
-                .toLocaleString(
-                    "pt-BR",
-                    {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
-                    }
-                );
+            const number =
+                Number(value);
+
+
+            return (
+                Number.isFinite(number)
+                    ? number
+                    : 0
+            ).toLocaleString(
+                "pt-BR",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            );
 
         }
 
@@ -281,9 +428,7 @@ document.addEventListener(
         // DATA → BR
         // ==========================================
 
-        function formatDateBR(
-            dateString
-        ) {
+        function formatDateBR(dateString) {
 
             if (!dateString) {
 
@@ -292,12 +437,24 @@ document.addEventListener(
             }
 
 
+            const parts =
+                dateString.split("-");
+
+
+            if (
+                parts.length !== 3
+            ) {
+
+                return "Data inválida";
+
+            }
+
+
             const [
                 year,
                 month,
                 day
-            ] =
-                dateString.split("-");
+            ] = parts;
 
 
             return `${day}/${month}/${year}`;
@@ -306,7 +463,84 @@ document.addEventListener(
 
 
         // ==========================================
-        // ADICIONAR PERÍODO À LISTA
+        // NORMALIZAR DATA
+        // ==========================================
+
+        function normalizeDate(date) {
+
+            if (!date) {
+
+                return null;
+
+            }
+
+
+            let value;
+
+
+            if (
+                typeof date === "string" &&
+                /^\d{4}-\d{2}-\d{2}$/.test(
+                    date
+                )
+            ) {
+
+                value =
+                    new Date(
+                        `${date}T00:00:00`
+                    );
+
+            } else {
+
+                value =
+                    new Date(date);
+
+            }
+
+
+            if (
+                Number.isNaN(
+                    value.getTime()
+                )
+            ) {
+
+                return null;
+
+            }
+
+
+            value.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+            return dateToString(
+                value
+            );
+
+        }
+
+
+        // ==========================================
+        // DATA INDISPONÍVEL
+        // ==========================================
+
+        function isUnavailable(
+            dateString
+        ) {
+
+            return unavailableDates.includes(
+                dateString
+            );
+
+        }
+
+
+        // ==========================================
+        // ADICIONAR PERÍODO
         // ==========================================
 
         function addDateRange(
@@ -369,22 +603,7 @@ document.addEventListener(
 
 
         // ==========================================
-        // VERIFICAR INDISPONÍVEL
-        // ==========================================
-
-        function isUnavailable(
-            dateString
-        ) {
-
-            return unavailableDates.includes(
-                dateString
-            );
-
-        }
-
-
-        // ==========================================
-        // BUSCAR DATAS ALUGADAS
+        // BUSCAR DATAS OCUPADAS
         // ==========================================
 
         async function loadUnavailableDates() {
@@ -393,7 +612,7 @@ document.addEventListener(
 
                 const response =
                     await fetch(
-                        `${API}/rentals/product/${productId}/unavailable`
+                        `${RENTALS_API}/product/${productId}/unavailable`
                     );
 
 
@@ -410,8 +629,7 @@ document.addEventListener(
                     await response.json();
 
 
-                unavailableDates =
-                    [];
+                unavailableDates = [];
 
 
                 const rentals =
@@ -425,70 +643,31 @@ document.addEventListener(
                 rentals.forEach(
                     rental => {
 
-                        if (
-                            !rental.startDate ||
-                            !rental.endDate
-                        ) {
-
-                            return;
-
-                        }
-
-
-                        // ==================================
-                        // CONVERTER DATA DO MONGODB
-                        // ==================================
-
                         const start =
-                            new Date(
+                            normalizeDate(
                                 rental.startDate
                             );
 
 
                         const end =
-                            new Date(
+                            normalizeDate(
                                 rental.endDate
                             );
 
 
                         if (
-                            Number.isNaN(
-                                start.getTime()
-                            ) ||
-                            Number.isNaN(
-                                end.getTime()
-                            )
+                            start &&
+                            end
                         ) {
 
-                            return;
-
-                        }
-
-
-                        const startString =
-                            dateToString(
-                                start
-                            );
-
-
-                        const endString =
-                            dateToString(
+                            addDateRange(
+                                start,
                                 end
                             );
 
-
-                        addDateRange(
-                            startString,
-                            endString
-                        );
+                        }
 
                     }
-                );
-
-
-                console.log(
-                    "Datas indisponíveis:",
-                    unavailableDates
                 );
 
 
@@ -499,8 +678,7 @@ document.addEventListener(
                     error
                 );
 
-                unavailableDates =
-                    [];
+                unavailableDates = [];
 
             }
 
@@ -508,7 +686,7 @@ document.addEventListener(
 
 
         // ==========================================
-        // INTERVALO CONTÉM INDISPONÍVEL
+        // INTERVALO INDISPONÍVEL
         // ==========================================
 
         function rangeContainsUnavailable(
@@ -542,15 +720,11 @@ document.addEventListener(
                 current <= finish
             ) {
 
-                const currentString =
-                    dateToString(
-                        current
-                    );
-
-
                 if (
                     isUnavailable(
-                        currentString
+                        dateToString(
+                            current
+                        )
                     )
                 ) {
 
@@ -572,6 +746,763 @@ document.addEventListener(
 
 
         // ==========================================
+        // BUSCAR USUÁRIO ATUALIZADO
+        // ==========================================
+
+        async function loadCurrentUser() {
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${USERS_API}/me`,
+                        {
+                            headers: {
+                                Authorization:
+                                    `Bearer ${token}`
+                            }
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    console.warn(
+                        "Não foi possível atualizar o usuário."
+                    );
+
+                    return;
+
+                }
+
+
+                currentUser =
+                    await response.json();
+
+
+                localStorage.setItem(
+                    "alugase_user",
+                    JSON.stringify(
+                        currentUser
+                    )
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Erro ao carregar usuário:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // ==========================================
+        // BUSCAR PROPRIETÁRIO
+        // ==========================================
+
+        async function loadOwner() {
+
+            if (
+                !product?.ownerId
+            ) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const ownerId =
+                    typeof product.ownerId ===
+                    "object"
+
+                        ? product.ownerId._id
+
+                        : product.ownerId;
+
+
+                if (!ownerId) {
+
+                    return;
+
+                }
+
+
+                const response =
+                    await fetch(
+                        `${USERS_API}/${ownerId}`
+                    );
+
+
+                if (!response.ok) {
+
+                    return;
+
+                }
+
+
+                owner =
+                    await response.json();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Erro ao carregar proprietário:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // ==========================================
+        // EXTRAIR COORDENADAS
+        // ==========================================
+
+        function getCoordinates(
+            source
+        ) {
+
+            if (!source) {
+
+                return null;
+
+            }
+
+
+            const lat =
+                Number(
+                    source.lat ??
+                    source.latitude
+                );
+
+
+            const lng =
+                Number(
+                    source.lng ??
+                    source.longitude
+                );
+
+
+            if (
+                Number.isFinite(lat) &&
+                Number.isFinite(lng) &&
+                lat >= -90 &&
+                lat <= 90 &&
+                lng >= -180 &&
+                lng <= 180
+            ) {
+
+                return {
+
+                    lat,
+
+                    lng
+
+                };
+
+            }
+
+
+            // GeoJSON
+
+            if (
+                Array.isArray(
+                    source.coordinates
+                ) &&
+                source.coordinates.length >= 2
+            ) {
+
+                const geoLng =
+                    Number(
+                        source.coordinates[0]
+                    );
+
+
+                const geoLat =
+                    Number(
+                        source.coordinates[1]
+                    );
+
+
+                if (
+                    Number.isFinite(
+                        geoLat
+                    ) &&
+                    Number.isFinite(
+                        geoLng
+                    )
+                ) {
+
+                    return {
+
+                        lat: geoLat,
+
+                        lng: geoLng
+
+                    };
+
+                }
+
+            }
+
+
+            return null;
+
+        }
+
+
+        // ==========================================
+        // LOCALIZAÇÃO DO PROPRIETÁRIO
+        // ==========================================
+
+        function getOwnerLocation() {
+
+            const locations = [
+
+                product?.ownerLocation,
+
+                owner?.location,
+
+                owner?.ownerLocation,
+
+                owner?.address?.location
+
+            ];
+
+
+            for (
+                const location
+                of locations
+            ) {
+
+                const coordinates =
+                    getCoordinates(
+                        location
+                    );
+
+
+                if (coordinates) {
+
+                    return coordinates;
+
+                }
+
+            }
+
+
+            return null;
+
+        }
+
+
+        // ==========================================
+        // LOCALIZAÇÃO DO CLIENTE
+        // ==========================================
+
+        function getRenterLocation() {
+
+            const locations = [
+
+                currentUser?.location,
+
+                currentUser?.userLocation,
+
+                currentUser?.address?.location,
+
+                currentUser?.renterLocation
+
+            ];
+
+
+            for (
+                const location
+                of locations
+            ) {
+
+                const coordinates =
+                    getCoordinates(
+                        location
+                    );
+
+
+                if (coordinates) {
+
+                    return coordinates;
+
+                }
+
+            }
+
+
+            return null;
+
+        }
+
+
+        // ==========================================
+        // HAVERSINE
+        // ==========================================
+
+        function calculateDistanceKm(
+            pointA,
+            pointB
+        ) {
+
+            if (
+                !pointA ||
+                !pointB
+            ) {
+
+                return null;
+
+            }
+
+
+            const earthRadiusKm =
+                6371;
+
+
+            const toRadians =
+                degrees =>
+                    degrees *
+                    Math.PI /
+                    180;
+
+
+            const lat1 =
+                toRadians(
+                    pointA.lat
+                );
+
+
+            const lat2 =
+                toRadians(
+                    pointB.lat
+                );
+
+
+            const deltaLat =
+                toRadians(
+                    pointB.lat -
+                    pointA.lat
+                );
+
+
+            const deltaLng =
+                toRadians(
+                    pointB.lng -
+                    pointA.lng
+                );
+
+
+            const a =
+                Math.sin(
+                    deltaLat / 2
+                ) ** 2
+
+                +
+
+                Math.cos(lat1) *
+                Math.cos(lat2) *
+                Math.sin(
+                    deltaLng / 2
+                ) ** 2;
+
+
+            const c =
+                2 *
+                Math.atan2(
+                    Math.sqrt(a),
+                    Math.sqrt(1 - a)
+                );
+
+
+            return (
+                earthRadiusKm *
+                c
+            );
+
+        }
+
+
+        // ==========================================
+        // CALCULAR ENTREGA
+        // ==========================================
+
+        function calculateDelivery() {
+
+            if (!product) {
+
+                return {
+
+                    distance: 0,
+
+                    value: 0,
+
+                    valid: false,
+
+                    reason:
+                        "product"
+
+                };
+
+            }
+
+
+            const enabled =
+                product.delivery === true ||
+                product.delivery === "true";
+
+
+            if (!enabled) {
+
+                return {
+
+                    distance: 0,
+
+                    value: 0,
+
+                    valid: false,
+
+                    reason:
+                        "disabled"
+
+                };
+
+            }
+
+
+            const ownerLocation =
+                getOwnerLocation();
+
+
+            const renterLocation =
+                getRenterLocation();
+
+
+            if (!ownerLocation) {
+
+                return {
+
+                    distance: 0,
+
+                    value: 0,
+
+                    valid: false,
+
+                    reason:
+                        "owner-location"
+
+                };
+
+            }
+
+
+            if (!renterLocation) {
+
+                return {
+
+                    distance: 0,
+
+                    value: 0,
+
+                    valid: false,
+
+                    reason:
+                        "renter-location"
+
+                };
+
+            }
+
+
+            const distance =
+                calculateDistanceKm(
+                    ownerLocation,
+                    renterLocation
+                );
+
+
+            if (
+                !Number.isFinite(
+                    distance
+                )
+            ) {
+
+                return {
+
+                    distance: 0,
+
+                    value: 0,
+
+                    valid: false,
+
+                    reason:
+                        "distance"
+
+                };
+
+            }
+
+
+            const value =
+                Math.round(
+                    (
+                        distance *
+                        DELIVERY_PRICE_PER_KM
+                    ) * 100
+                ) / 100;
+
+
+            return {
+
+                distance,
+
+                value,
+
+                valid: true,
+
+                reason:
+                    "ok"
+
+            };
+
+        }
+
+
+        // ==========================================
+        // ATUALIZAR UI DA ENTREGA
+        // ==========================================
+
+        function updateDeliveryUI() {
+
+            if (!product) {
+
+                return;
+
+            }
+
+
+            const enabled =
+                product.delivery === true ||
+                product.delivery === "true";
+
+
+            if (!enabled) {
+
+                if (deliveryOption) {
+
+                    deliveryOption.disabled =
+                        true;
+
+                }
+
+
+                if (deliveryText) {
+
+                    deliveryText.textContent =
+                        "Somente retirada";
+
+                }
+
+
+                if (deliveryInfo) {
+
+                    deliveryInfo.textContent =
+                        "Este produto não possui opção de entrega.";
+
+                }
+
+
+                if (
+                    deliveryDistanceSummary
+                ) {
+
+                    deliveryDistanceSummary.style.display =
+                        "none";
+
+                }
+
+
+                if (pickupOption) {
+
+                    pickupOption.checked =
+                        true;
+
+                }
+
+
+                return;
+
+            }
+
+
+            if (deliveryOption) {
+
+                deliveryOption.disabled =
+                    false;
+
+            }
+
+
+            const selected =
+                document.querySelector(
+                    'input[name="delivery"]:checked'
+                );
+
+
+            const deliverySelected =
+                selected?.value ===
+                "delivery";
+
+
+            if (!deliverySelected) {
+
+                if (deliveryText) {
+
+                    deliveryText.textContent =
+                        "Calcular automaticamente";
+
+                }
+
+
+                if (deliveryInfo) {
+
+                    deliveryInfo.textContent =
+                        "O valor será calculado automaticamente pela distância entre os endereços.";
+
+                }
+
+
+                if (
+                    deliveryDistanceSummary
+                ) {
+
+                    deliveryDistanceSummary.style.display =
+                        "none";
+
+                }
+
+
+                return;
+
+            }
+
+
+            deliveryCalculation =
+                calculateDelivery();
+
+
+            if (
+                deliveryCalculation.reason ===
+                "owner-location"
+            ) {
+
+                deliveryText.textContent =
+                    "Indisponível";
+
+
+                deliveryInfo.textContent =
+                    "Não foi possível localizar o endereço do proprietário.";
+
+
+                return;
+
+            }
+
+
+            if (
+                deliveryCalculation.reason ===
+                "renter-location"
+            ) {
+
+                deliveryText.textContent =
+                    "Endereço necessário";
+
+
+                deliveryInfo.textContent =
+                    "Cadastre seu endereço no perfil para calcular a entrega.";
+
+
+                return;
+
+            }
+
+
+            if (
+                deliveryCalculation.reason ===
+                "distance"
+            ) {
+
+                deliveryText.textContent =
+                    "Erro no cálculo";
+
+
+                deliveryInfo.textContent =
+                    "Não foi possível calcular a distância.";
+
+
+                return;
+
+            }
+
+
+            if (
+                deliveryCalculation.valid
+            ) {
+
+                const distance =
+                    deliveryCalculation.distance;
+
+
+                const value =
+                    deliveryCalculation.value;
+
+
+                deliveryText.textContent =
+                    `+ R$ ${formatMoney(value)}`;
+
+
+                deliveryInfo.textContent =
+                    `Entrega calculada automaticamente: ${distance.toFixed(1)} km × R$ 2,00/km.`;
+
+
+                if (
+                    deliveryDistanceSummary
+                ) {
+
+                    deliveryDistanceSummary.style.display =
+                        "flex";
+
+                }
+
+
+                if (
+                    deliveryDistanceElement
+                ) {
+
+                    deliveryDistanceElement.textContent =
+                        `${distance.toFixed(1)} km`;
+
+                }
+
+
+                return;
+
+            }
+
+        }
+
+
+        // ==========================================
         // CARREGAR PRODUTO
         // ==========================================
 
@@ -581,7 +1512,7 @@ document.addEventListener(
 
                 const response =
                     await fetch(
-                        `${API}/products/${productId}`
+                        `${PRODUCTS_API}/${productId}`
                     );
 
 
@@ -598,18 +1529,22 @@ document.addEventListener(
                     await response.json();
 
 
+                await Promise.all([
+
+                    loadOwner(),
+
+                    loadUnavailableDates(),
+
+                    loadCurrentUser()
+
+                ]);
+
+
                 fillProduct();
-
-
-                // ==================================
-                // PRIMEIRO CARREGA DATAS OCUPADAS
-                // ==================================
-
-                await loadUnavailableDates();
-
 
                 initializeDates();
 
+                updateDeliveryUI();
 
                 calculate();
 
@@ -617,7 +1552,7 @@ document.addEventListener(
             } catch (error) {
 
                 console.error(
-                    "Erro ao carregar produto:",
+                    "Erro ao carregar reserva:",
                     error
                 );
 
@@ -667,8 +1602,35 @@ document.addEventListener(
                 productCity.textContent =
                     `📍 ${
                         product.city ||
-                        "Não informado"
+                        "Localização não informada"
                     }`;
+
+            }
+
+
+            if (productDescription) {
+
+                productDescription.textContent =
+                    product.description ||
+                    "Este produto não possui descrição.";
+
+            }
+
+
+            if (productRating) {
+
+                productRating.textContent =
+                    product.rating ||
+                    "5.0";
+
+            }
+
+
+            if (productReviews) {
+
+                productReviews.textContent =
+                    product.reviews ||
+                    "0";
 
             }
 
@@ -683,6 +1645,9 @@ document.addEventListener(
 
             if (productImage) {
 
+                let image = null;
+
+
                 if (
                     Array.isArray(
                         product.images
@@ -690,33 +1655,34 @@ document.addEventListener(
                     product.images.length > 0
                 ) {
 
-                    productImage.innerHTML = `
+                    image =
+                        product.images[0];
 
-                        <img
-                            src="${product.images[0]}"
-                            alt="${product.title || "Produto"}"
-                        >
-
-                    `;
-
-                }
-
-                else if (
+                } else if (
                     product.image
                 ) {
 
+                    image =
+                        product.image;
+
+                }
+
+
+                if (image) {
+
                     productImage.innerHTML = `
 
                         <img
-                            src="${product.image}"
-                            alt="${product.title || "Produto"}"
+                            src="${escapeHTML(image)}"
+                            alt="${escapeHTML(
+                                product.title ||
+                                "Produto"
+                            )}"
                         >
 
                     `;
 
-                }
-
-                else {
+                } else {
 
                     productImage.textContent =
                         "📦";
@@ -741,63 +1707,6 @@ document.addEventListener(
 
 
             // ======================================
-            // ENTREGA
-            // ======================================
-
-            const deliveryOption =
-                document.querySelector(
-                    'input[name="delivery"][value="delivery"]'
-                );
-
-
-            if (product.delivery) {
-
-                if (deliveryText) {
-
-                    deliveryText.textContent =
-                        `+ R$ ${formatMoney(
-                            product.deliveryPrice
-                        )}`;
-
-                }
-
-            }
-
-            else {
-
-                if (deliveryText) {
-
-                    deliveryText.textContent =
-                        "Somente retirada";
-
-                }
-
-
-                if (deliveryOption) {
-
-                    deliveryOption.disabled =
-                        true;
-
-                }
-
-
-                const pickup =
-                    document.querySelector(
-                        'input[name="delivery"][value="pickup"]'
-                    );
-
-
-                if (pickup) {
-
-                    pickup.checked =
-                        true;
-
-                }
-
-            }
-
-
-            // ======================================
             // VOLTAR
             // ======================================
 
@@ -810,11 +1719,130 @@ document.addEventListener(
 
             }
 
+
+            renderOwner();
+
         }
 
 
         // ==========================================
-        // INICIALIZAR DATAS
+        // PROPRIETÁRIO
+        // ==========================================
+
+        function renderOwner() {
+
+            if (!owner) {
+
+                if (ownerName) {
+
+                    ownerName.textContent =
+                        "Proprietário";
+
+                }
+
+                return;
+
+            }
+
+
+            const name =
+                owner.name ||
+                owner.fullName ||
+                "Proprietário";
+
+
+            if (ownerName) {
+
+                ownerName.textContent =
+                    name;
+
+            }
+
+
+            if (ownerRating) {
+
+                ownerRating.textContent =
+                    owner.rating ||
+                    "5.0";
+
+            }
+
+
+            if (ownerReviews) {
+
+                ownerReviews.textContent =
+                    owner.reviews ||
+                    owner.reviewCount ||
+                    "0";
+
+            }
+
+
+            if (ownerVerification) {
+
+                const verified =
+                    owner.identityVerified ===
+                    true;
+
+
+                ownerVerification.textContent =
+                    verified
+                        ? "✓ Usuário verificado"
+                        : "Usuário";
+
+                ownerVerification.className =
+                    verified
+                        ? "owner-verified"
+                        : "";
+
+            }
+
+
+            if (ownerAvatar) {
+
+                const image =
+                    owner.profileImage ||
+                    owner.profileImageUrl ||
+                    owner.avatar;
+
+
+                if (image) {
+
+                    ownerAvatar.innerHTML = `
+
+                        <img
+                            src="${escapeHTML(image)}"
+                            alt="${escapeHTML(name)}"
+                            class="owner-profile-image"
+                        >
+
+                    `;
+
+                } else {
+
+                    const initials =
+                        getInitials(
+                            name
+                        );
+
+
+                    ownerAvatar.innerHTML = `
+
+                        <span class="owner-initials">
+                            ${escapeHTML(initials)}
+                        </span>
+
+                    `;
+
+                }
+
+            }
+
+        }
+
+
+        // ==========================================
+        // INICIA DATAS
         // ==========================================
 
         function initializeDates() {
@@ -832,7 +1860,9 @@ document.addEventListener(
             let start =
                 selectedStart &&
                 selectedStart >= todayString &&
-                !isUnavailable(selectedStart)
+                !isUnavailable(
+                    selectedStart
+                )
                     ? selectedStart
                     : todayString;
 
@@ -856,47 +1886,25 @@ document.addEventListener(
                 end;
 
 
-            // ======================================
-            // ENTREGA
-            // ======================================
-
-            const deliveryPickup =
-                document.querySelector(
-                    'input[name="delivery"][value="pickup"]'
-                );
-
-
-            const deliveryDelivery =
-                document.querySelector(
-                    'input[name="delivery"][value="delivery"]'
-                );
-
-
             if (
                 selectedDelivery ===
                 "delivery" &&
-                product.delivery &&
-                deliveryDelivery
+                product.delivery === true &&
+                deliveryOption
             ) {
 
-                deliveryDelivery.checked =
+                deliveryOption.checked =
+                    true;
+
+            } else if (
+                pickupOption
+            ) {
+
+                pickupOption.checked =
                     true;
 
             }
 
-            else if (
-                deliveryPickup
-            ) {
-
-                deliveryPickup.checked =
-                    true;
-
-            }
-
-
-            // ======================================
-            // EXIBIÇÃO
-            // ======================================
 
             if (selectedStartDisplay) {
 
@@ -988,10 +1996,6 @@ document.addEventListener(
             }
 
 
-            // ======================================
-            // ESPAÇOS
-            // ======================================
-
             for (
                 let i = 0;
                 i < firstDay;
@@ -1020,10 +2024,6 @@ document.addEventListener(
                     new Date()
                 );
 
-
-            // ======================================
-            // DIAS
-            // ======================================
 
             for (
                 let day = 1;
@@ -1063,10 +2063,6 @@ document.addEventListener(
                     day;
 
 
-                // ==================================
-                // HOJE
-                // ==================================
-
                 if (
                     dateString ===
                     today
@@ -1079,18 +2075,12 @@ document.addEventListener(
                 }
 
 
-                // ==================================
-                // PASSADO
-                // ==================================
-
                 if (
-                    dateString <
-                    today
+                    dateString < today
                 ) {
 
                     button.disabled =
                         true;
-
 
                     button.classList.add(
                         "unavailable"
@@ -1098,10 +2088,6 @@ document.addEventListener(
 
                 }
 
-
-                // ==================================
-                // ALUGADO
-                // ==================================
 
                 if (
                     isUnavailable(
@@ -1112,17 +2098,12 @@ document.addEventListener(
                     button.disabled =
                         true;
 
-
                     button.classList.add(
                         "unavailable"
                     );
 
                 }
 
-
-                // ==================================
-                // RETIRADA
-                // ==================================
 
                 if (
                     dateString ===
@@ -1136,10 +2117,6 @@ document.addEventListener(
 
                 }
 
-
-                // ==================================
-                // DEVOLUÇÃO
-                // ==================================
 
                 if (
                     dateString ===
@@ -1155,10 +2132,6 @@ document.addEventListener(
 
                 }
 
-
-                // ==================================
-                // INTERVALO
-                // ==================================
 
                 if (
                     startDate.value &&
@@ -1176,13 +2149,7 @@ document.addEventListener(
                 }
 
 
-                // ==================================
-                // CLIQUE
-                // ==================================
-
-                if (
-                    !button.disabled
-                ) {
+                if (!button.disabled) {
 
                     button.addEventListener(
                         "click",
@@ -1215,10 +2182,6 @@ document.addEventListener(
             dateString
         ) {
 
-            // ======================================
-            // NÃO PERMITIR ALUGADO
-            // ======================================
-
             if (
                 isUnavailable(
                     dateString
@@ -1233,10 +2196,6 @@ document.addEventListener(
 
             }
 
-
-            // ======================================
-            // NOVA RETIRADA
-            // ======================================
 
             if (
                 selectingStart ||
@@ -1255,22 +2214,14 @@ document.addEventListener(
                     "";
 
 
-                if (selectedStartDisplay) {
-
-                    selectedStartDisplay.textContent =
-                        formatDateBR(
-                            dateString
-                        );
-
-                }
+                selectedStartDisplay.textContent =
+                    formatDateBR(
+                        dateString
+                    );
 
 
-                if (selectedEndDisplay) {
-
-                    selectedEndDisplay.textContent =
-                        "Selecione a devolução";
-
-                }
+                selectedEndDisplay.textContent =
+                    "Selecione a devolução";
 
 
                 selectingStart =
@@ -1279,18 +2230,12 @@ document.addEventListener(
 
                 renderCalendar();
 
-
                 calculate();
-
 
                 return;
 
             }
 
-
-            // ======================================
-            // DEVOLUÇÃO ANTES
-            // ======================================
 
             if (
                 dateString <
@@ -1305,10 +2250,6 @@ document.addEventListener(
 
             }
 
-
-            // ======================================
-            // PERÍODO INDISPONÍVEL
-            // ======================================
 
             if (
                 rangeContainsUnavailable(
@@ -1326,22 +2267,14 @@ document.addEventListener(
             }
 
 
-            // ======================================
-            // DEFINIR DEVOLUÇÃO
-            // ======================================
-
             endDate.value =
                 dateString;
 
 
-            if (selectedEndDisplay) {
-
-                selectedEndDisplay.textContent =
-                    formatDateBR(
-                        dateString
-                    );
-
-            }
+            selectedEndDisplay.textContent =
+                formatDateBR(
+                    dateString
+                );
 
 
             selectingStart =
@@ -1349,7 +2282,6 @@ document.addEventListener(
 
 
             renderCalendar();
-
 
             calculate();
 
@@ -1360,50 +2292,72 @@ document.addEventListener(
         // MÊS ANTERIOR
         // ==========================================
 
-        if (calendarPrev) {
+        calendarPrev?.addEventListener(
+            "click",
+            () => {
 
-            calendarPrev.addEventListener(
-                "click",
-                () => {
+                const current =
+                    new Date();
 
-                    calendarDate.setMonth(
-                        calendarDate.getMonth() - 1
+                current.setDate(1);
+
+
+                const previous =
+                    new Date(
+                        calendarDate
                     );
 
 
-                    renderCalendar();
+                previous.setMonth(
+                    previous.getMonth() - 1
+                );
+
+
+                if (
+                    previous <
+                    new Date(
+                        current.getFullYear(),
+                        current.getMonth(),
+                        1
+                    )
+                ) {
+
+                    return;
 
                 }
-            );
 
-        }
+
+                calendarDate =
+                    previous;
+
+
+                renderCalendar();
+
+            }
+        );
 
 
         // ==========================================
         // PRÓXIMO MÊS
         // ==========================================
 
-        if (calendarNext) {
+        calendarNext?.addEventListener(
+            "click",
+            () => {
 
-            calendarNext.addEventListener(
-                "click",
-                () => {
-
-                    calendarDate.setMonth(
-                        calendarDate.getMonth() + 1
-                    );
+                calendarDate.setMonth(
+                    calendarDate.getMonth() + 1
+                );
 
 
-                    renderCalendar();
+                renderCalendar();
 
-                }
-            );
-
-        }
+            }
+        );
 
 
         // ==========================================
-        // CALCULAR DIAS
+        // DIAS
         // ==========================================
 
         function getDays() {
@@ -1431,10 +2385,12 @@ document.addEventListener(
 
 
             const difference =
-                Math.ceil(
+                Math.round(
                     (
-                        end - start
-                    ) / 86400000
+                        end -
+                        start
+                    ) /
+                    86400000
                 );
 
 
@@ -1454,11 +2410,17 @@ document.addEventListener(
             if (!product) {
 
                 return {
+
                     days: 0,
+
                     rent: 0,
+
                     delivery: 0,
+
                     deposit: 0,
+
                     total: 0
+
                 };
 
             }
@@ -1468,37 +2430,64 @@ document.addEventListener(
                 getDays();
 
 
-            const deliverySelected =
+            const selected =
                 document.querySelector(
                     'input[name="delivery"]:checked'
                 );
 
 
-            const useDelivery =
-                deliverySelected &&
-                deliverySelected.value ===
+            const wantsDelivery =
+                selected?.value ===
                 "delivery";
+
+
+            let deliveryValue =
+                0;
+
+
+            if (wantsDelivery) {
+
+                deliveryCalculation =
+                    calculateDelivery();
+
+
+                if (
+                    deliveryCalculation.valid
+                ) {
+
+                    deliveryValue =
+                        deliveryCalculation.value;
+
+                }
+
+            } else {
+
+                deliveryCalculation = {
+
+                    distance: 0,
+
+                    value: 0,
+
+                    valid: false,
+
+                    reason:
+                        "pickup"
+
+                };
+
+            }
 
 
             const pricePerDay =
                 Number(
-                    product.pricePerDay || 0
-                );
-
-
-            const delivery =
-                useDelivery &&
-                product.delivery
-                    ? Number(
-                        product.deliveryPrice || 0
-                    )
-                    : 0;
+                    product.pricePerDay
+                ) || 0;
 
 
             const deposit =
                 Number(
-                    product.deposit || 0
-                );
+                    product.deposit
+                ) || 0;
 
 
             const rent =
@@ -1508,14 +2497,14 @@ document.addEventListener(
 
             const total =
                 rent +
-                delivery +
+                deliveryValue +
                 deposit;
 
 
             if (daysElement) {
 
                 daysElement.textContent =
-                    days || 0;
+                    days;
 
             }
 
@@ -1534,7 +2523,7 @@ document.addEventListener(
 
                 deliveryTotal.textContent =
                     `R$ ${formatMoney(
-                        delivery
+                        deliveryValue
                     )}`;
 
             }
@@ -1560,13 +2549,17 @@ document.addEventListener(
             }
 
 
+            updateDeliveryUI();
+
+
             return {
 
                 days,
 
                 rent,
 
-                delivery,
+                delivery:
+                    deliveryValue,
 
                 deposit,
 
@@ -1578,7 +2571,7 @@ document.addEventListener(
 
 
         // ==========================================
-        // ENTREGA
+        // ENTREGA CHANGE
         // ==========================================
 
         document
@@ -1590,7 +2583,11 @@ document.addEventListener(
 
                     radio.addEventListener(
                         "change",
-                        calculate
+                        () => {
+
+                            calculate();
+
+                        }
                     );
 
                 }
@@ -1601,16 +2598,93 @@ document.addEventListener(
         // CONFIRMAR RESERVA
         // ==========================================
 
-        if (confirmButton) {
+        confirmButton?.addEventListener(
+            "click",
+            async () => {
 
-            confirmButton.addEventListener(
-                "click",
-                async () => {
+                if (!product) {
 
-                    if (!product) {
+                    alert(
+                        "Produto ainda não carregado."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    !startDate.value ||
+                    !endDate.value
+                ) {
+
+                    alert(
+                        "Escolha a data de retirada e a data de devolução."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    endDate.value <
+                    startDate.value
+                ) {
+
+                    alert(
+                        "A devolução não pode ser anterior à retirada."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    rangeContainsUnavailable(
+                        startDate.value,
+                        endDate.value
+                    )
+                ) {
+
+                    alert(
+                        "O período escolhido possui dias indisponíveis."
+                    );
+
+                    return;
+
+                }
+
+
+                const selected =
+                    document.querySelector(
+                        'input[name="delivery"]:checked'
+                    );
+
+
+                const wantsDelivery =
+                    selected?.value ===
+                    "delivery";
+
+
+                // ==================================
+                // VALIDAR ENTREGA
+                // ==================================
+
+                if (wantsDelivery) {
+
+                    const result =
+                        calculateDelivery();
+
+
+                    if (
+                        result.reason ===
+                        "disabled"
+                    ) {
 
                         alert(
-                            "Produto ainda não carregado."
+                            "Este produto não possui opção de entrega."
                         );
 
                         return;
@@ -1619,12 +2693,12 @@ document.addEventListener(
 
 
                     if (
-                        !startDate.value ||
-                        !endDate.value
+                        result.reason ===
+                        "owner-location"
                     ) {
 
                         alert(
-                            "Escolha a retirada e a devolução."
+                            "Não foi possível localizar o endereço do proprietário para calcular a entrega."
                         );
 
                         return;
@@ -1633,12 +2707,12 @@ document.addEventListener(
 
 
                     if (
-                        endDate.value <
-                        startDate.value
+                        result.reason ===
+                        "renter-location"
                     ) {
 
                         alert(
-                            "A devolução não pode ser anterior à retirada."
+                            "Cadastre seu endereço no perfil para utilizar a entrega."
                         );
 
                         return;
@@ -1647,186 +2721,220 @@ document.addEventListener(
 
 
                     if (
-                        rangeContainsUnavailable(
-                            startDate.value,
-                            endDate.value
-                        )
+                        !result.valid
                     ) {
 
                         alert(
-                            "O período escolhido possui dias indisponíveis."
+                            "Não foi possível calcular o valor da entrega."
                         );
 
                         return;
 
                     }
 
-
-                    const values =
-                        calculate();
+                }
 
 
-                    confirmButton.disabled =
-                        true;
+                const values =
+                    calculate();
 
 
-                    confirmButton.textContent =
-                        "Enviando...";
+                const renterId =
+                    currentUser?._id ||
+                    currentUser?.id ||
+                    storedUser?._id ||
+                    storedUser?.id;
 
 
-                    try {
+                if (!renterId) {
 
-                        // ==================================
-                        // CRIAR ALUGUEL
-                        // ==================================
+                    alert(
+                        "Não foi possível identificar o usuário."
+                    );
 
-                        const rentalResponse =
-                            await fetch(
-                                `${API}/rentals`,
-                                {
+                    return;
 
-                                    method:
-                                        "POST",
-
-                                    headers: {
-                                        "Content-Type":
-                                            "application/json"
-                                    },
-
-                                    body:
-                                        JSON.stringify({
-
-                                            productId:
-                                                product._id,
-
-                                            renterId:
-                                                user._id ||
-                                                user.id,
-
-                                            startDate:
-                                                startDate.value,
-
-                                            endDate:
-                                                endDate.value,
-
-                                            delivery:
-                                                values.delivery > 0,
-
-                                            notes:
-                                                notes
-                                                    ? notes.value.trim()
-                                                    : ""
-
-                                        })
-
-                                }
-                            );
+                }
 
 
-                        const rentalData =
-                            await rentalResponse.json();
+                confirmButton.disabled =
+                    true;
 
 
-                        if (
-                            !rentalResponse.ok
-                        ) {
-
-                            throw new Error(
-                                rentalData.error ||
-                                "Não foi possível criar a solicitação."
-                            );
-
-                        }
+                confirmButton.textContent =
+                    "Enviando...";
 
 
-                        // ==================================
-                        // CORREÇÃO IMPORTANTE
-                        // ==================================
-                        //
-                        // A API retorna:
-                        //
-                        // {
-                        //   message,
-                        //   rental,
-                        //   notification
-                        // }
-                        //
-                        // Então precisamos pegar:
-                        // rentalData.rental
-                        //
+                try {
 
-                        const rental =
-                            rentalData.rental;
+                    // ==================================
+                    // CRIAR ALUGUEL
+                    // ==================================
 
+                    const rentalResponse =
+                        await fetch(
+                            `${RENTALS_API}`,
+                            {
 
-                        if (
-                            !rental ||
-                            !rental._id
-                        ) {
+                                method:
+                                    "POST",
 
-                            throw new Error(
-                                "O aluguel foi criado, mas a API não retornou o ID."
-                            );
+                                headers: {
 
-                        }
+                                    "Content-Type":
+                                        "application/json",
 
+                                    Authorization:
+                                        `Bearer ${token}`
 
-                        // ==================================
-                        // CRIAR CHAT
-                        // ==================================
+                                },
 
-                        const ownerId =
-                            typeof product.ownerId ===
-                            "object"
-                                ? product.ownerId._id
-                                : product.ownerId;
+                                body:
+                                    JSON.stringify({
 
+                                        productId:
+                                            product._id,
 
-                        const chatResponse =
-                            await fetch(
-                                `${API}/chats`,
-                                {
+                                        renterId:
+                                            renterId,
 
-                                    method:
-                                        "POST",
+                                        startDate:
+                                            startDate.value,
 
-                                    headers: {
-                                        "Content-Type":
-                                            "application/json"
-                                    },
+                                        endDate:
+                                            endDate.value,
 
-                                    body:
-                                        JSON.stringify({
+                                        delivery:
+                                            wantsDelivery,
 
-                                            rentalId:
-                                                rental._id,
+                                        notes:
+                                            notes
+                                                ? notes.value.trim()
+                                                : ""
 
-                                            productId:
-                                                product._id,
+                                    })
 
-                                            ownerId:
-                                                ownerId,
-
-                                            renterId:
-                                                user._id ||
-                                                user.id,
-
-                                            productTitle:
-                                                product.title
-
-                                        })
-
-                                }
-                            );
+                            }
+                        );
 
 
-                        const chatData =
-                            await chatResponse.json();
+                    const rentalData =
+                        await rentalResponse.json();
 
 
-                        if (
-                            !chatResponse.ok
-                        ) {
+                    if (
+                        !rentalResponse.ok
+                    ) {
+
+                        throw new Error(
+                            rentalData.error ||
+                            "Não foi possível criar a solicitação."
+                        );
+
+                    }
+
+
+                    const rental =
+                        rentalData.rental;
+
+
+                    if (
+                        !rental ||
+                        !rental._id
+                    ) {
+
+                        throw new Error(
+                            "O aluguel foi criado, mas a API não retornou o ID."
+                        );
+
+                    }
+
+
+                    // ==================================
+                    // PROPRIETÁRIO
+                    // ==================================
+
+                    const ownerId =
+                        typeof product.ownerId ===
+                        "object"
+
+                            ? product.ownerId._id
+
+                            : product.ownerId;
+
+
+                    // ==================================
+                    // CRIAR CHAT
+                    // ==================================
+
+                    if (ownerId) {
+
+                        try {
+
+                            const chatResponse =
+                                await fetch(
+                                    `${API}/chats`,
+                                    {
+
+                                        method:
+                                            "POST",
+
+                                        headers: {
+
+                                            "Content-Type":
+                                                "application/json",
+
+                                            Authorization:
+                                                `Bearer ${token}`
+
+                                        },
+
+                                        body:
+                                            JSON.stringify({
+
+                                                rentalId:
+                                                    rental._id,
+
+                                                productId:
+                                                    product._id,
+
+                                                ownerId:
+                                                    ownerId,
+
+                                                renterId:
+                                                    renterId,
+
+                                                productTitle:
+                                                    product.title
+
+                                            })
+
+                                    }
+                                );
+
+
+                            const chatData =
+                                await chatResponse.json();
+
+
+                            if (
+                                chatResponse.ok &&
+                                chatData._id
+                            ) {
+
+                                alert(
+                                    "Solicitação enviada com sucesso!"
+                                );
+
+
+                                window.location.href =
+                                    `chat.html?chat=${chatData._id}`;
+
+
+                                return;
+
+                            }
+
 
                             console.warn(
                                 "Aluguel criado, mas o chat não foi criado.",
@@ -1834,53 +2942,122 @@ document.addEventListener(
                             );
 
 
-                            alert(
-                                "Solicitação enviada com sucesso!"
+                        } catch (chatError) {
+
+                            console.warn(
+                                "Erro ao criar chat:",
+                                chatError
                             );
-
-
-                            window.location.href =
-                                "solicitacoes.html";
-
-                            return;
 
                         }
 
-
-                        alert(
-                            "Solicitação enviada com sucesso!"
-                        );
-
-
-                        window.location.href =
-                            `chat.html?chat=${chatData._id}`;
-
-
-                    } catch (error) {
-
-                        console.error(
-                            "Erro ao confirmar reserva:",
-                            error
-                        );
-
-
-                        alert(
-                            error.message ||
-                            "Ocorreu um erro ao enviar a solicitação."
-                        );
-
-
-                        confirmButton.disabled =
-                            false;
-
-
-                        confirmButton.textContent =
-                            "Confirmar solicitação";
-
                     }
 
+
+                    alert(
+                        "Solicitação enviada com sucesso!"
+                    );
+
+
+                    window.location.href =
+                        "solicitacoes.html";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Erro ao confirmar reserva:",
+                        error
+                    );
+
+
+                    alert(
+                        error.message ||
+                        "Ocorreu um erro ao enviar a solicitação."
+                    );
+
+
+                    confirmButton.disabled =
+                        false;
+
+
+                    confirmButton.textContent =
+                        "Confirmar solicitação";
+
                 }
-            );
+
+            }
+        );
+
+
+        // ==========================================
+        // ESCAPAR HTML
+        // ==========================================
+
+        function escapeHTML(value) {
+
+            return String(
+                value ?? ""
+            )
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        // ==========================================
+        // INICIAIS
+        // ==========================================
+
+        function getInitials(name) {
+
+            const parts =
+                String(name || "")
+                    .trim()
+                    .split(/\s+/)
+                    .filter(Boolean);
+
+
+            if (!parts.length) {
+
+                return "U";
+
+            }
+
+
+            if (parts.length === 1) {
+
+                return parts[0]
+                    .substring(0, 2)
+                    .toUpperCase();
+
+            }
+
+
+            return (
+                parts[0][0] +
+                parts[
+                    parts.length - 1
+                ][0]
+            ).toUpperCase();
 
         }
 
