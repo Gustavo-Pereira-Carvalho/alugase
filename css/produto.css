@@ -459,6 +459,355 @@
 
 
 /* =========================================================
+   ENTREGA
+========================================================= */
+
+.delivery-options {
+
+    border-top: 1px solid #eee;
+
+    padding-top: 18px;
+
+}
+
+
+.delivery-options h3 {
+
+    margin: 0 0 10px;
+
+}
+
+
+.delivery-option {
+
+    display: grid;
+
+    grid-template-columns:
+        auto
+        minmax(0, 1fr)
+        auto;
+
+    gap: 10px;
+
+    align-items: center;
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    margin-top: 10px;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color .2s ease,
+        background .2s ease;
+
+}
+
+
+.delivery-option:hover {
+
+    border-color: #16a34a;
+
+    background: #f9fffb;
+
+}
+
+
+.delivery-option input {
+
+    accent-color: #16a34a;
+
+}
+
+
+.delivery-option strong {
+
+    white-space: nowrap;
+
+}
+
+
+/* =========================================================
+   INFORMAÇÕES DA ENTREGA
+========================================================= */
+
+.delivery-info {
+
+    margin-top: 10px;
+
+    padding: 10px 12px;
+
+    border-radius: 10px;
+
+    background: #f8faf9;
+
+    color: #6b7280;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   RESUMO
+========================================================= */
+
+.rental-summary {
+
+    margin-top: 18px;
+
+    border-top: 1px solid #eee;
+
+    padding-top: 18px;
+
+}
+
+
+.rental-summary > div {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.rental-summary span {
+
+    color: #4b5563;
+
+}
+
+
+.rental-summary strong {
+
+    white-space: nowrap;
+
+}
+
+
+.summary-total {
+
+    border-top: 1px solid #eee;
+
+    padding-top: 14px;
+
+    margin-top: 14px;
+
+    font-size: 18px;
+
+}
+
+
+.summary-total span {
+
+    color: #111827;
+
+    font-weight: 600;
+
+}
+
+
+.summary-total strong {
+
+    color: #166534;
+
+    font-size: 24px;
+
+}
+
+
+/* =========================================================
+   BOTÃO
+========================================================= */
+
+.rental-button {
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 14px;
+
+}
+
+
+/* =========================================================
+   PROPRIETÁRIO
+========================================================= */
+
+.owner-section {
+
+    margin-top: 70px;
+
+}
+
+
+.owner-section h2 {
+
+    margin-bottom: 20px;
+
+}
+
+
+.owner-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    width: 100%;
+
+    padding: 22px;
+
+    background: #f9fafb;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 16px;
+
+    box-sizing: border-box;
+
+}
+
+
+/* =========================================================
+   FOTO DO PROPRIETÁRIO
+========================================================= */
+
+.owner-avatar {
+
+    width: 70px;
+
+    height: 70px;
+
+    min-width: 70px;
+
+    border-radius: 50%;
+
+    background: #dcfce7;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    font-size: 28px;
+
+}
+
+
+.owner-profile-image {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+}
+
+
+.owner-initials {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #dcfce7;
+
+    color: #166534;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================================
+   INFORMAÇÕES DO PROPRIETÁRIO
+========================================================= */
+
+.owner-info {
+
+    min-width: 0;
+
+}
+
+
+.owner-info h3 {
+
+    margin: 0 0 5px;
+
+    overflow-wrap: anywhere;
+
+}
+
+
+.owner-info p {
+
+    margin: 0;
+
+    color: #6b7280;
+
+}
+
+
+.owner-verified {
+
+    color: #16a34a !important;
+
+    font-weight: 600;
+
+}
+
+
+.owner-extra {
+
+    display: flex;
+
+    gap: 15px;
+
+    margin-top: 8px;
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
    CALENDÁRIO
 ========================================================= */
 
@@ -904,344 +1253,6 @@
 
 
 /* =========================================================
-   ENTREGA
-========================================================= */
-
-.delivery-options {
-
-    border-top: 1px solid #eee;
-
-    padding-top: 18px;
-
-}
-
-
-.delivery-options h3 {
-
-    margin: 0 0 10px;
-
-}
-
-
-.delivery-option {
-
-    display: grid;
-
-    grid-template-columns:
-        auto
-        minmax(0, 1fr)
-        auto;
-
-    gap: 10px;
-
-    align-items: center;
-
-    width: 100%;
-
-    padding: 12px;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 10px;
-
-    margin-top: 10px;
-
-    cursor: pointer;
-
-    box-sizing: border-box;
-
-    transition:
-        border-color .2s ease,
-        background .2s ease;
-
-}
-
-
-.delivery-option:hover {
-
-    border-color: #16a34a;
-
-    background: #f9fffb;
-
-}
-
-
-.delivery-option input {
-
-    accent-color: #16a34a;
-
-}
-
-
-.delivery-option input:disabled {
-
-    cursor: not-allowed;
-
-}
-
-
-.delivery-option strong {
-
-    white-space: nowrap;
-
-}
-
-
-.delivery-info {
-
-    margin: 10px 2px 0;
-
-    color: #6b7280;
-
-    font-size: 13px;
-
-    line-height: 1.5;
-
-}
-
-
-/* =========================================================
-   RESUMO
-========================================================= */
-
-.rental-summary {
-
-    margin-top: 18px;
-
-    border-top: 1px solid #eee;
-
-    padding-top: 18px;
-
-}
-
-
-.rental-summary > div {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 15px;
-
-    margin-bottom: 10px;
-
-}
-
-
-.rental-summary span {
-
-    color: #4b5563;
-
-}
-
-
-.rental-summary strong {
-
-    white-space: nowrap;
-
-}
-
-
-.summary-total {
-
-    border-top: 1px solid #eee;
-
-    padding-top: 14px;
-
-    margin-top: 14px;
-
-    font-size: 18px;
-
-}
-
-
-.summary-total span {
-
-    color: #111827;
-
-    font-weight: 600;
-
-}
-
-
-.summary-total strong {
-
-    color: #166534;
-
-    font-size: 24px;
-
-}
-
-
-/* =========================================================
-   BOTÃO
-========================================================= */
-
-.rental-button {
-
-    width: 100%;
-
-    margin-top: 20px;
-
-    padding: 14px;
-
-}
-
-
-/* =========================================================
-   PROPRIETÁRIO
-========================================================= */
-
-.owner-section {
-
-    margin-top: 70px;
-
-}
-
-
-.owner-section h2 {
-
-    margin-bottom: 20px;
-
-}
-
-
-.owner-card {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 16px;
-
-    width: 100%;
-
-    padding: 22px;
-
-    background: #f9fafb;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 16px;
-
-    box-sizing: border-box;
-
-}
-
-
-.owner-avatar {
-
-    width: 70px;
-
-    height: 70px;
-
-    min-width: 70px;
-
-    border-radius: 50%;
-
-    background: #dcfce7;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    overflow: hidden;
-
-    font-size: 28px;
-
-}
-
-
-.owner-profile-image {
-
-    width: 100%;
-
-    height: 100%;
-
-    display: block;
-
-    object-fit: cover;
-
-}
-
-
-.owner-initials {
-
-    width: 100%;
-
-    height: 100%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background: #dcfce7;
-
-    color: #166534;
-
-    font-size: 22px;
-
-    font-weight: 700;
-
-}
-
-
-.owner-info {
-
-    min-width: 0;
-
-}
-
-
-.owner-info h3 {
-
-    margin: 0 0 5px;
-
-    overflow-wrap: anywhere;
-
-}
-
-
-.owner-info p {
-
-    margin: 0;
-
-    color: #6b7280;
-
-}
-
-
-.owner-verified {
-
-    color: #16a34a !important;
-
-    font-weight: 600;
-
-}
-
-
-.owner-extra {
-
-    display: flex;
-
-    gap: 15px;
-
-    margin-top: 8px;
-
-    color: #6b7280;
-
-    font-size: 14px;
-
-}
-
-
-/* =========================================================
    TABLET
 ========================================================= */
 
@@ -1427,6 +1438,13 @@
     }
 
 
+    .delivery-info {
+
+        font-size: 12px;
+
+    }
+
+
     .summary-total {
 
         font-size: 17px;
@@ -1457,9 +1475,7 @@
 
     .calendar-selection {
 
-        grid-template-columns:
-            1fr
-            1fr;
+        grid-template-columns: 1fr 1fr;
 
         gap: 8px;
 
