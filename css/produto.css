@@ -46,6 +46,9 @@
 
     text-decoration: none;
 
+    transition:
+        color .2s ease;
+
 }
 
 
@@ -110,7 +113,7 @@
 
     background: #f6faf7;
 
-    border: 1px solid var(--border);
+    border: 1px solid var(--border, #e5e7eb);
 
     border-radius: 22px;
 
@@ -138,7 +141,17 @@
 }
 
 
-.emoji-image {
+.image-placeholder {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 100%;
+
+    height: 100%;
 
     font-size: 110px;
 
@@ -229,6 +242,20 @@
 .thumbnail:hover {
 
     transform: translateY(-2px);
+
+}
+
+
+.thumbnail:disabled {
+
+    cursor: default;
+
+}
+
+
+.thumbnail:disabled:hover {
+
+    transform: none;
 
 }
 
@@ -382,6 +409,8 @@
 
     overflow-wrap: anywhere;
 
+    white-space: pre-line;
+
 }
 
 
@@ -459,679 +488,6 @@
 
 
 /* =========================================================
-   DATAS
-========================================================= */
-
-.date-fields {
-
-    display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr)
-        minmax(0, 1fr);
-
-    gap: 12px;
-
-    margin: 18px 0;
-
-}
-
-
-.date-field {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 6px;
-
-}
-
-
-.date-field label {
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-}
-
-
-.date-field input {
-
-    width: 100%;
-
-    padding: 12px;
-
-    border: 1px solid #d1d5db;
-
-    border-radius: 10px;
-
-    background: #fff;
-
-    font-family: inherit;
-
-    font-size: 14px;
-
-    box-sizing: border-box;
-
-}
-
-
-.date-field input:focus {
-
-    outline: none;
-
-    border-color: #16a34a;
-
-    box-shadow:
-        0 0 0 3px
-        rgba(22,163,74,.12);
-
-}
-
-
-/* =========================================================
-   ENTREGA
-========================================================= */
-
-.delivery-options {
-
-    border-top: 1px solid #eee;
-
-    padding-top: 18px;
-
-}
-
-
-.delivery-options h3 {
-
-    margin: 0 0 10px;
-
-}
-
-
-.delivery-option {
-
-    display: grid;
-
-    grid-template-columns:
-        auto
-        minmax(0, 1fr)
-        auto;
-
-    gap: 10px;
-
-    align-items: center;
-
-    width: 100%;
-
-    padding: 12px;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 10px;
-
-    margin-top: 10px;
-
-    cursor: pointer;
-
-    box-sizing: border-box;
-
-    transition:
-        border-color .2s ease,
-        background .2s ease;
-
-}
-
-
-.delivery-option:hover {
-
-    border-color: #16a34a;
-
-    background: #f9fffb;
-
-}
-
-
-.delivery-option input {
-
-    accent-color: #16a34a;
-
-}
-
-
-.delivery-option strong {
-
-    white-space: nowrap;
-
-}
-
-
-/* =========================================================
-   RESUMO
-========================================================= */
-
-.rental-summary {
-
-    margin-top: 18px;
-
-    border-top: 1px solid #eee;
-
-    padding-top: 18px;
-
-}
-
-
-.rental-summary > div {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 15px;
-
-    margin-bottom: 10px;
-
-}
-
-
-.rental-summary span {
-
-    color: #4b5563;
-
-}
-
-
-.rental-summary strong {
-
-    white-space: nowrap;
-
-}
-
-
-.summary-total {
-
-    border-top: 1px solid #eee;
-
-    padding-top: 14px;
-
-    margin-top: 14px;
-
-    font-size: 18px;
-
-}
-
-
-.summary-total span {
-
-    color: #111827;
-
-    font-weight: 600;
-
-}
-
-
-.summary-total strong {
-
-    color: #166534;
-
-    font-size: 24px;
-
-}
-
-
-/* =========================================================
-   BOTÃO
-========================================================= */
-
-.rental-button {
-
-    width: 100%;
-
-    margin-top: 20px;
-
-    padding: 14px;
-
-}
-
-
-/* =========================================================
-   PROPRIETÁRIO
-========================================================= */
-
-.owner-section {
-
-    margin-top: 70px;
-
-}
-
-
-.owner-section h2 {
-
-    margin-bottom: 20px;
-
-}
-
-
-.owner-card {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 16px;
-
-    width: 100%;
-
-    padding: 22px;
-
-    background: #f9fafb;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 16px;
-
-    box-sizing: border-box;
-
-}
-
-
-/* =========================================================
-   FOTO DO PROPRIETÁRIO
-========================================================= */
-
-.owner-avatar {
-
-    width: 70px;
-
-    height: 70px;
-
-    min-width: 70px;
-
-    border-radius: 50%;
-
-    background: #dcfce7;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    overflow: hidden;
-
-    font-size: 28px;
-
-}
-
-
-/*
-   A FOTO VEM DO CLOUDINARY
-*/
-
-.owner-profile-image {
-
-    width: 100%;
-
-    height: 100%;
-
-    display: block;
-
-    object-fit: cover;
-
-}
-
-
-/* Quando não existe foto */
-
-.owner-initials {
-
-    width: 100%;
-
-    height: 100%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background: #dcfce7;
-
-    color: #166534;
-
-    font-size: 22px;
-
-    font-weight: 700;
-
-}
-
-
-/* =========================================================
-   INFORMAÇÕES DO PROPRIETÁRIO
-========================================================= */
-
-.owner-info {
-
-    min-width: 0;
-
-}
-
-
-.owner-info h3 {
-
-    margin: 0 0 5px;
-
-    overflow-wrap: anywhere;
-
-}
-
-
-.owner-info p {
-
-    margin: 0;
-
-    color: #6b7280;
-
-}
-
-
-.owner-verified {
-
-    color: #16a34a !important;
-
-    font-weight: 600;
-
-}
-
-
-.owner-extra {
-
-    display: flex;
-
-    gap: 15px;
-
-    margin-top: 8px;
-
-    color: #6b7280;
-
-    font-size: 14px;
-
-}
-
-
-/* =========================================================
-   TABLET
-========================================================= */
-
-@media (max-width: 950px) {
-
-    .product-details {
-
-        grid-template-columns: 1fr;
-
-        gap: 32px;
-
-    }
-
-
-    .product-gallery {
-
-        position: static;
-
-    }
-
-
-    .main-product-image {
-
-        max-height: 500px;
-
-    }
-
-}
-
-
-/* =========================================================
-   CELULAR
-========================================================= */
-
-@media (max-width: 600px) {
-
-    html,
-    body {
-
-        max-width: 100%;
-
-        overflow-x: hidden;
-
-    }
-
-
-    .product-page {
-
-        width: 100%;
-
-        padding:
-            18px
-            14px
-            50px;
-
-    }
-
-
-    .breadcrumb {
-
-        margin-bottom: 20px;
-
-        font-size: 13px;
-
-        gap: 6px;
-
-    }
-
-
-    .product-details {
-
-        display: flex;
-
-        flex-direction: column;
-
-        gap: 30px;
-
-    }
-
-
-    .product-gallery {
-
-        width: 100%;
-
-    }
-
-
-    .main-product-image {
-
-        max-height: 330px;
-
-        border-radius: 18px;
-
-    }
-
-
-    .emoji-image {
-
-        font-size: 80px;
-
-    }
-
-
-    .thumbnail {
-
-        width: 68px;
-
-        height: 68px;
-
-        min-width: 68px;
-
-    }
-
-
-    .product-info h1 {
-
-        font-size: 30px;
-
-        line-height: 1.15;
-
-        margin: 12px 0;
-
-    }
-
-
-    .product-description {
-
-        padding: 20px 0;
-
-    }
-
-
-    .product-description h2 {
-
-        font-size: 20px;
-
-    }
-
-
-    .product-description p {
-
-        font-size: 15px;
-
-        line-height: 1.6;
-
-    }
-
-
-    .pricing {
-
-        margin: 20px 0;
-
-    }
-
-
-    .pricing strong {
-
-        font-size: 30px;
-
-    }
-
-
-    .rental-box {
-
-        padding: 18px;
-
-        border-radius: 16px;
-
-    }
-
-
-    .rental-box h2 {
-
-        font-size: 21px;
-
-    }
-
-
-    .date-fields {
-
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .delivery-option {
-
-        padding: 11px;
-
-    }
-
-
-    .summary-total {
-
-        font-size: 17px;
-
-    }
-
-
-    .summary-total strong {
-
-        font-size: 22px;
-
-    }
-
-
-    .owner-section {
-
-        margin-top: 45px;
-
-    }
-
-
-    .owner-card {
-
-        padding: 20px;
-
-    }
-
-}
-
-
-/* =========================================================
-   CELULARES PEQUENOS
-========================================================= */
-
-@media (max-width: 380px) {
-
-    .product-page {
-
-        padding-left: 10px;
-
-        padding-right: 10px;
-
-    }
-
-
-    .main-product-image {
-
-        max-height: 300px;
-
-    }
-
-
-    .rental-box {
-
-        padding: 15px;
-
-    }
-
-
-    .product-info h1 {
-
-        font-size: 27px;
-
-    }
-
-
-    .pricing strong {
-
-        font-size: 27px;
-
-    }
-
-}
-
-
-/* =========================================================
    CALENDÁRIO CUSTOMIZADO
 ========================================================= */
 
@@ -1180,6 +536,8 @@
 
     border-radius: 12px;
 
+    min-width: 0;
+
 }
 
 
@@ -1199,6 +557,8 @@
     font-size: 14px;
 
     color: #166534;
+
+    overflow-wrap: anywhere;
 
 }
 
@@ -1245,6 +605,8 @@
 
     justify-content: space-between;
 
+    gap: 10px;
+
     margin-bottom: 18px;
 
 }
@@ -1258,6 +620,8 @@
 
     text-transform: capitalize;
 
+    text-align: center;
+
 }
 
 
@@ -1266,6 +630,8 @@
     width: 36px;
 
     height: 36px;
+
+    min-width: 36px;
 
     border: none;
 
@@ -1290,7 +656,8 @@
     transition:
         background .2s ease,
         color .2s ease,
-        transform .2s ease;
+        transform .2s ease,
+        opacity .2s ease;
 
 }
 
@@ -1309,6 +676,26 @@
 .calendar-nav:active {
 
     transform: scale(.95);
+
+}
+
+
+.calendar-nav:disabled {
+
+    opacity: .4;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+}
+
+
+.calendar-nav:disabled:hover {
+
+    background: #f3f4f6;
+
+    color: #374151;
 
 }
 
@@ -1405,8 +792,15 @@
 }
 
 
+.calendar-day:disabled {
+
+    cursor: not-allowed;
+
+}
+
+
 /* =========================================================
-   DIAS DE OUTRO MÊS
+   DIAS VAZIOS
 ========================================================= */
 
 .calendar-day.empty {
@@ -1435,7 +829,7 @@
 
 
 /* =========================================================
-   DATA DE RETIRADA / DEVOLUÇÃO
+   DATA SELECIONADA
 ========================================================= */
 
 .calendar-day.selected {
@@ -1625,14 +1019,636 @@
 
 
 /* =========================================================
-   MOBILE
+   ENTREGA
+========================================================= */
+
+.delivery-options {
+
+    border-top: 1px solid #eee;
+
+    padding-top: 18px;
+
+}
+
+
+.delivery-options h3 {
+
+    margin: 0 0 10px;
+
+}
+
+
+.delivery-option {
+
+    display: grid;
+
+    grid-template-columns:
+        auto
+        minmax(0, 1fr)
+        auto;
+
+    gap: 10px;
+
+    align-items: center;
+
+    width: 100%;
+
+    padding: 12px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    margin-top: 10px;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        border-color .2s ease,
+        background .2s ease;
+
+}
+
+
+.delivery-option:hover {
+
+    border-color: #16a34a;
+
+    background: #f9fffb;
+
+}
+
+
+.delivery-option input {
+
+    accent-color: #16a34a;
+
+}
+
+
+.delivery-option input:disabled {
+
+    cursor: not-allowed;
+
+}
+
+
+.delivery-option strong {
+
+    white-space: nowrap;
+
+}
+
+
+.delivery-distance-box {
+
+    display: none;
+
+    margin-top: 12px;
+
+    padding: 14px;
+
+    background: #f9fafb;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+}
+
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+}
+
+
+.form-group label {
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    color: #374151;
+
+}
+
+
+.distance-input {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+}
+
+
+.distance-input input {
+
+    width: 100%;
+
+    min-width: 0;
+
+    padding: 11px 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 10px;
+
+    background: #fff;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    box-sizing: border-box;
+
+}
+
+
+.distance-input input:focus {
+
+    outline: none;
+
+    border-color: #16a34a;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(22, 163, 74, .12);
+
+}
+
+
+.distance-input span {
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+}
+
+
+.form-group small {
+
+    color: #6b7280;
+
+    font-size: 12px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   RESUMO
+========================================================= */
+
+.rental-summary {
+
+    margin-top: 18px;
+
+    border-top: 1px solid #eee;
+
+    padding-top: 18px;
+
+}
+
+
+.rental-summary > div {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 10px;
+
+}
+
+
+.rental-summary span {
+
+    color: #4b5563;
+
+}
+
+
+.rental-summary strong {
+
+    white-space: nowrap;
+
+}
+
+
+.summary-total {
+
+    border-top: 1px solid #eee;
+
+    padding-top: 14px;
+
+    margin-top: 14px;
+
+    font-size: 18px;
+
+}
+
+
+.summary-total span {
+
+    color: #111827;
+
+    font-weight: 600;
+
+}
+
+
+.summary-total strong {
+
+    color: #166534;
+
+    font-size: 24px;
+
+}
+
+
+/* =========================================================
+   BOTÃO
+========================================================= */
+
+.rental-button {
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 14px;
+
+}
+
+
+/* =========================================================
+   PROPRIETÁRIO
+========================================================= */
+
+.owner-section {
+
+    margin-top: 70px;
+
+}
+
+
+.owner-section h2 {
+
+    margin-bottom: 20px;
+
+}
+
+
+.owner-card {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    width: 100%;
+
+    padding: 22px;
+
+    background: #f9fafb;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 16px;
+
+    box-sizing: border-box;
+
+}
+
+
+/* =========================================================
+   FOTO DO PROPRIETÁRIO
+========================================================= */
+
+.owner-avatar {
+
+    width: 70px;
+
+    height: 70px;
+
+    min-width: 70px;
+
+    border-radius: 50%;
+
+    background: #dcfce7;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    font-size: 28px;
+
+}
+
+
+/* =========================================================
+   FOTO CLOUDINARY
+========================================================= */
+
+.owner-profile-image {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+}
+
+
+/* =========================================================
+   INICIAIS
+========================================================= */
+
+.owner-initials {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #dcfce7;
+
+    color: #166534;
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+}
+
+
+/* =========================================================
+   INFORMAÇÕES DO PROPRIETÁRIO
+========================================================= */
+
+.owner-info {
+
+    min-width: 0;
+
+}
+
+
+.owner-info h3 {
+
+    margin: 0 0 5px;
+
+    overflow-wrap: anywhere;
+
+}
+
+
+.owner-info p {
+
+    margin: 0;
+
+    color: #6b7280;
+
+}
+
+
+.owner-verified {
+
+    color: #16a34a !important;
+
+    font-weight: 600;
+
+}
+
+
+.owner-extra {
+
+    display: flex;
+
+    gap: 15px;
+
+    margin-top: 8px;
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 950px) {
+
+    .product-details {
+
+        grid-template-columns: 1fr;
+
+        gap: 32px;
+
+    }
+
+
+    .product-gallery {
+
+        position: static;
+
+    }
+
+
+    .main-product-image {
+
+        max-height: 500px;
+
+    }
+
+}
+
+
+/* =========================================================
+   CELULAR
 ========================================================= */
 
 @media (max-width: 600px) {
 
+    html,
+    body {
+
+        max-width: 100%;
+
+        overflow-x: hidden;
+
+    }
+
+
+    .product-page {
+
+        width: 100%;
+
+        padding:
+            18px
+            14px
+            50px;
+
+    }
+
+
+    .breadcrumb {
+
+        margin-bottom: 20px;
+
+        font-size: 13px;
+
+        gap: 6px;
+
+    }
+
+
+    .product-details {
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 30px;
+
+    }
+
+
+    .product-gallery {
+
+        width: 100%;
+
+    }
+
+
+    .main-product-image {
+
+        max-height: 330px;
+
+        border-radius: 18px;
+
+    }
+
+
+    .image-placeholder {
+
+        font-size: 80px;
+
+    }
+
+
+    .thumbnail {
+
+        width: 68px;
+
+        height: 68px;
+
+        min-width: 68px;
+
+    }
+
+
+    .product-info h1 {
+
+        font-size: 30px;
+
+        line-height: 1.15;
+
+        margin: 12px 0;
+
+    }
+
+
+    .product-description {
+
+        padding: 20px 0;
+
+    }
+
+
+    .product-description h2 {
+
+        font-size: 20px;
+
+    }
+
+
+    .product-description p {
+
+        font-size: 15px;
+
+        line-height: 1.6;
+
+    }
+
+
+    .pricing {
+
+        margin: 20px 0;
+
+    }
+
+
+    .pricing strong {
+
+        font-size: 30px;
+
+    }
+
+
+    .rental-box {
+
+        padding: 18px;
+
+        border-radius: 16px;
+
+    }
+
+
+    .rental-box h2 {
+
+        font-size: 21px;
+
+    }
+
+
     .calendar-selection {
 
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns:
+            1fr
+            1fr;
 
         gap: 8px;
 
@@ -1695,6 +1711,107 @@
     .calendar-legend {
 
         gap: 10px;
+
+    }
+
+
+    .delivery-option {
+
+        padding: 11px;
+
+    }
+
+
+    .summary-total {
+
+        font-size: 17px;
+
+    }
+
+
+    .summary-total strong {
+
+        font-size: 22px;
+
+    }
+
+
+    .owner-section {
+
+        margin-top: 45px;
+
+    }
+
+
+    .owner-card {
+
+        padding: 20px;
+
+    }
+
+}
+
+
+/* =========================================================
+   CELULARES PEQUENOS
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .product-page {
+
+        padding-left: 10px;
+
+        padding-right: 10px;
+
+    }
+
+
+    .main-product-image {
+
+        max-height: 300px;
+
+    }
+
+
+    .rental-box {
+
+        padding: 15px;
+
+    }
+
+
+    .product-info h1 {
+
+        font-size: 27px;
+
+    }
+
+
+    .pricing strong {
+
+        font-size: 27px;
+
+    }
+
+
+    .calendar {
+
+        padding: 10px;
+
+    }
+
+
+    .calendar-days {
+
+        gap: 2px;
+
+    }
+
+
+    .calendar-day {
+
+        font-size: 11px;
 
     }
 
