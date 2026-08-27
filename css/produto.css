@@ -46,9 +46,6 @@
 
     text-decoration: none;
 
-    transition:
-        color .2s ease;
-
 }
 
 
@@ -113,7 +110,7 @@
 
     background: #f6faf7;
 
-    border: 1px solid var(--border, #e5e7eb);
+    border: 1px solid var(--border);
 
     border-radius: 22px;
 
@@ -141,17 +138,7 @@
 }
 
 
-.image-placeholder {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    width: 100%;
-
-    height: 100%;
+.emoji-image {
 
     font-size: 110px;
 
@@ -242,20 +229,6 @@
 .thumbnail:hover {
 
     transform: translateY(-2px);
-
-}
-
-
-.thumbnail:disabled {
-
-    cursor: default;
-
-}
-
-
-.thumbnail:disabled:hover {
-
-    transform: none;
 
 }
 
@@ -409,8 +382,6 @@
 
     overflow-wrap: anywhere;
 
-    white-space: pre-line;
-
 }
 
 
@@ -488,7 +459,7 @@
 
 
 /* =========================================================
-   CALENDÁRIO CUSTOMIZADO
+   CALENDÁRIO
 ========================================================= */
 
 .custom-calendar-wrapper {
@@ -497,10 +468,6 @@
 
 }
 
-
-/* =========================================================
-   DATAS SELECIONADAS
-========================================================= */
 
 .calendar-selection {
 
@@ -536,8 +503,6 @@
 
     border-radius: 12px;
 
-    min-width: 0;
-
 }
 
 
@@ -558,8 +523,6 @@
 
     color: #166534;
 
-    overflow-wrap: anywhere;
-
 }
 
 
@@ -571,10 +534,6 @@
 
 }
 
-
-/* =========================================================
-   CALENDÁRIO
-========================================================= */
 
 .calendar {
 
@@ -593,10 +552,6 @@
 }
 
 
-/* =========================================================
-   CABEÇALHO
-========================================================= */
-
 .calendar-header {
 
     display: flex;
@@ -604,8 +559,6 @@
     align-items: center;
 
     justify-content: space-between;
-
-    gap: 10px;
 
     margin-bottom: 18px;
 
@@ -620,8 +573,6 @@
 
     text-transform: capitalize;
 
-    text-align: center;
-
 }
 
 
@@ -630,8 +581,6 @@
     width: 36px;
 
     height: 36px;
-
-    min-width: 36px;
 
     border: none;
 
@@ -656,8 +605,7 @@
     transition:
         background .2s ease,
         color .2s ease,
-        transform .2s ease,
-        opacity .2s ease;
+        transform .2s ease;
 
 }
 
@@ -679,30 +627,6 @@
 
 }
 
-
-.calendar-nav:disabled {
-
-    opacity: .4;
-
-    cursor: not-allowed;
-
-    transform: none;
-
-}
-
-
-.calendar-nav:disabled:hover {
-
-    background: #f3f4f6;
-
-    color: #374151;
-
-}
-
-
-/* =========================================================
-   DIAS DA SEMANA
-========================================================= */
 
 .calendar-weekdays {
 
@@ -732,10 +656,6 @@
 
 }
 
-
-/* =========================================================
-   DIAS
-========================================================= */
 
 .calendar-days {
 
@@ -792,17 +712,6 @@
 }
 
 
-.calendar-day:disabled {
-
-    cursor: not-allowed;
-
-}
-
-
-/* =========================================================
-   DIAS VAZIOS
-========================================================= */
-
 .calendar-day.empty {
 
     pointer-events: none;
@@ -811,10 +720,6 @@
 
 }
 
-
-/* =========================================================
-   HOJE
-========================================================= */
 
 .calendar-day.today {
 
@@ -827,10 +732,6 @@
 
 }
 
-
-/* =========================================================
-   DATA SELECIONADA
-========================================================= */
 
 .calendar-day.selected {
 
@@ -851,10 +752,6 @@
 
 }
 
-
-/* =========================================================
-   INTERVALO
-========================================================= */
 
 .calendar-day.in-range {
 
@@ -889,10 +786,6 @@
 }
 
 
-/* =========================================================
-   DIAS ALUGADOS
-========================================================= */
-
 .calendar-day.unavailable {
 
     background: #fee2e2;
@@ -919,10 +812,6 @@
 }
 
 
-/* =========================================================
-   INDICADOR DE DIA ALUGADO
-========================================================= */
-
 .calendar-day.unavailable::after {
 
     content: "";
@@ -945,10 +834,6 @@
 
 }
 
-
-/* =========================================================
-   LEGENDA
-========================================================= */
 
 .calendar-legend {
 
@@ -1102,106 +987,13 @@
 }
 
 
-.delivery-distance-box {
+.delivery-info {
 
-    display: none;
-
-    margin-top: 12px;
-
-    padding: 14px;
-
-    background: #f9fafb;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 12px;
-
-}
-
-
-.form-group {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 7px;
-
-}
-
-
-.form-group label {
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    color: #374151;
-
-}
-
-
-.distance-input {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-}
-
-
-.distance-input input {
-
-    width: 100%;
-
-    min-width: 0;
-
-    padding: 11px 12px;
-
-    border: 1px solid #d1d5db;
-
-    border-radius: 10px;
-
-    background: #fff;
-
-    font-family: inherit;
-
-    font-size: 14px;
-
-    box-sizing: border-box;
-
-}
-
-
-.distance-input input:focus {
-
-    outline: none;
-
-    border-color: #16a34a;
-
-    box-shadow:
-        0 0 0 3px
-        rgba(22, 163, 74, .12);
-
-}
-
-
-.distance-input span {
+    margin: 10px 2px 0;
 
     color: #6b7280;
 
-    font-size: 14px;
-
-}
-
-
-.form-group small {
-
-    color: #6b7280;
-
-    font-size: 12px;
+    font-size: 13px;
 
     line-height: 1.5;
 
@@ -1339,10 +1131,6 @@
 }
 
 
-/* =========================================================
-   FOTO DO PROPRIETÁRIO
-========================================================= */
-
 .owner-avatar {
 
     width: 70px;
@@ -1368,10 +1156,6 @@
 }
 
 
-/* =========================================================
-   FOTO CLOUDINARY
-========================================================= */
-
 .owner-profile-image {
 
     width: 100%;
@@ -1384,10 +1168,6 @@
 
 }
 
-
-/* =========================================================
-   INICIAIS
-========================================================= */
 
 .owner-initials {
 
@@ -1411,10 +1191,6 @@
 
 }
 
-
-/* =========================================================
-   INFORMAÇÕES DO PROPRIETÁRIO
-========================================================= */
 
 .owner-info {
 
@@ -1562,7 +1338,7 @@
     }
 
 
-    .image-placeholder {
+    .emoji-image {
 
         font-size: 80px;
 
@@ -1644,6 +1420,41 @@
     }
 
 
+    .delivery-option {
+
+        padding: 11px;
+
+    }
+
+
+    .summary-total {
+
+        font-size: 17px;
+
+    }
+
+
+    .summary-total strong {
+
+        font-size: 22px;
+
+    }
+
+
+    .owner-section {
+
+        margin-top: 45px;
+
+    }
+
+
+    .owner-card {
+
+        padding: 20px;
+
+    }
+
+
     .calendar-selection {
 
         grid-template-columns:
@@ -1714,41 +1525,6 @@
 
     }
 
-
-    .delivery-option {
-
-        padding: 11px;
-
-    }
-
-
-    .summary-total {
-
-        font-size: 17px;
-
-    }
-
-
-    .summary-total strong {
-
-        font-size: 22px;
-
-    }
-
-
-    .owner-section {
-
-        margin-top: 45px;
-
-    }
-
-
-    .owner-card {
-
-        padding: 20px;
-
-    }
-
 }
 
 
@@ -1791,27 +1567,6 @@
     .pricing strong {
 
         font-size: 27px;
-
-    }
-
-
-    .calendar {
-
-        padding: 10px;
-
-    }
-
-
-    .calendar-days {
-
-        gap: 2px;
-
-    }
-
-
-    .calendar-day {
-
-        font-size: 11px;
 
     }
 
