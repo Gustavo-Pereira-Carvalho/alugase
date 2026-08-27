@@ -16,6 +16,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ======================================
+    // CONFIGURAÇÃO DA ENTREGA ALUGASE
+    // ======================================
+
+    // Tarifa definida pelo próprio Alugase.
+    // NÃO vem do anúncio.
+    const DELIVERY_PRICE_PER_KM = 2;
+
+
+    // ======================================
     // USUÁRIO
     // ======================================
 
@@ -249,11 +258,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let owner = null;
 
-    let calendarDate = new Date();
+    let currentUser = user;
+
+    let calendarDate =
+        new Date();
 
     let selectingStart = true;
 
     let unavailableDates = [];
+
+    let deliveryCalculation = {
+        distance: 0,
+        value: 0,
+        valid: false,
+        reason: "not-calculated"
+    };
 
 
     // ======================================
@@ -349,13 +368,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             /^\d{4}-\d{2}-\d{2}$/.test(date)
         ) {
 
-            d = new Date(
-                `${date}T00:00:00`
-            );
+            d =
+                new Date(
+                    `${date}T00:00:00`
+                );
 
         } else {
 
-            d = new Date(date);
+            d =
+                new Date(date);
         }
 
         if (
@@ -413,12 +434,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             product =
                 await response.json();
 
+
             await Promise.all([
                 loadOwner(),
-                loadUnavailableDates()
+                loadUnavailableDates(),
+                loadCurrentUser()
             ]);
 
+
             fillScreen();
+
 
         } catch (error) {
 
@@ -438,6 +463,59 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     // ======================================
+    // CARREGAR USUÁRIO LOGADO
+    // ======================================
+
+    async function loadCurrentUser() {
+
+        if (!token) {
+
+            return;
+        }
+
+        try {
+
+            const response =
+                await fetch(
+                    `${USERS_API}/me`,
+                    {
+                        headers: {
+                            Authorization:
+                                `Bearer ${token}`
+                        }
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                return;
+            }
+
+
+            currentUser =
+                await response.json();
+
+
+            localStorage.setItem(
+                "alugase_user",
+                JSON.stringify(
+                    currentUser
+                )
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Erro ao carregar usuário:",
+                error
+            );
+        }
+    }
+
+
+    // ======================================
     // DATAS INDISPONÍVEIS
     // ======================================
 
@@ -450,6 +528,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     `${RENTALS_API}/product/${productId}/unavailable`
                 );
 
+
             if (!response.ok) {
 
                 throw new Error(
@@ -457,10 +536,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
             }
 
+
             const data =
                 await response.json();
 
+
             unavailableDates = [];
+
 
             if (
                 Array.isArray(
@@ -479,6 +561,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                 );
             }
+
 
         } catch (error) {
 
@@ -507,6 +590,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const endString =
             normalizeDate(end);
 
+
         if (
             !startString ||
             !endString
@@ -515,22 +599,27 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+
         const current =
             new Date(
                 `${startString}T00:00:00`
             );
+
 
         const endDateObject =
             new Date(
                 `${endString}T00:00:00`
             );
 
+
         while (
-            current <= endDateObject
+            current <=
+            endDateObject
         ) {
 
             const currentString =
                 dateToString(current);
+
 
             if (
                 !unavailableDates.includes(
@@ -542,6 +631,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     currentString
                 );
             }
+
 
             current.setDate(
                 current.getDate() + 1
@@ -561,6 +651,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+
         try {
 
             const ownerId =
@@ -568,23 +659,28 @@ document.addEventListener("DOMContentLoaded", async () => {
                     ? product.ownerId._id
                     : product.ownerId;
 
+
             if (!ownerId) {
 
                 return;
             }
+
 
             const response =
                 await fetch(
                     `${USERS_API}/${ownerId}`
                 );
 
+
             if (!response.ok) {
 
                 return;
             }
 
+
             owner =
                 await response.json();
+
 
         } catch (error) {
 
@@ -593,6 +689,717 @@ document.addEventListener("DOMContentLoaded", async () => {
                 error
             );
         }
+    }
+
+
+    // ======================================
+    // EXTRAIR LOCALIZAÇÃO
+    // ======================================
+
+    function getLocationCoordinates(source) {
+
+        if (!source) {
+
+            return null;
+        }
+
+
+        // Formato:
+        // { lat: -23..., lng: -46... }
+
+        if (
+            Number.isFinite(
+                Number(source.lat)
+            ) &&
+            Number.isFinite(
+                Number(source.lng)
+            )
+        ) {
+
+            return {
+                lat: Number(source.lat),
+                lng: Number(source.lng)
+            };
+        }
+
+
+        // Formato:
+        // { latitude: ..., longitude: ... }
+
+        if (
+            Number.isFinite(
+                Number(source.latitude)
+            ) &&
+            Number.isFinite(
+                Number(source.longitude)
+            )
+        ) {
+
+            return {
+                lat: Number(source.latitude),
+                lng: Number(source.longitude)
+            };
+        }
+
+
+        // Formato GeoJSON:
+        // {
+        //   type: "Point",
+        //   coordinates: [lng, lat]
+        // }
+
+        if (
+            Array.isArray(
+                source.coordinates
+            ) &&
+            source.coordinates.length >= 2
+        ) {
+
+            const lng =
+                Number(
+                    source.coordinates[0]
+                );
+
+            const lat =
+                Number(
+                    source.coordinates[1]
+                );
+
+
+            if (
+                Number.isFinite(lat) &&
+                Number.isFinite(lng)
+            ) {
+
+                return {
+                    lat,
+                    lng
+                };
+            }
+        }
+
+
+        return null;
+    }
+
+
+    // ======================================
+    // LOCALIZAÇÃO DO PROPRIETÁRIO
+    // ======================================
+
+    function getOwnerLocation() {
+
+        const possibleLocations = [
+
+            product?.ownerLocation,
+
+            owner?.location,
+
+            owner?.ownerLocation,
+
+            owner?.address?.location
+
+        ];
+
+
+        for (
+            const location
+            of possibleLocations
+        ) {
+
+            const coordinates =
+                getLocationCoordinates(
+                    location
+                );
+
+
+            if (coordinates) {
+
+                return coordinates;
+            }
+        }
+
+
+        return null;
+    }
+
+
+    // ======================================
+    // LOCALIZAÇÃO DO CLIENTE
+    // ======================================
+
+    function getRenterLocation() {
+
+        const possibleLocations = [
+
+            currentUser?.location,
+
+            currentUser?.userLocation,
+
+            currentUser?.address?.location,
+
+            currentUser?.renterLocation
+
+        ];
+
+
+        for (
+            const location
+            of possibleLocations
+        ) {
+
+            const coordinates =
+                getLocationCoordinates(
+                    location
+                );
+
+
+            if (coordinates) {
+
+                return coordinates;
+            }
+        }
+
+
+        return null;
+    }
+
+
+    // ======================================
+    // DISTÂNCIA ENTRE DOIS PONTOS
+    // ======================================
+
+    function calculateDistanceKm(
+        pointA,
+        pointB
+    ) {
+
+        if (
+            !pointA ||
+            !pointB
+        ) {
+
+            return null;
+        }
+
+
+        const earthRadiusKm =
+            6371;
+
+
+        const lat1 =
+            pointA.lat *
+            Math.PI /
+            180;
+
+        const lat2 =
+            pointB.lat *
+            Math.PI /
+            180;
+
+
+        const deltaLat =
+            (
+                pointB.lat -
+                pointA.lat
+            ) *
+            Math.PI /
+            180;
+
+
+        const deltaLng =
+            (
+                pointB.lng -
+                pointA.lng
+            ) *
+            Math.PI /
+            180;
+
+
+        const a =
+            Math.sin(
+                deltaLat / 2
+            ) ** 2
+            +
+            Math.cos(lat1) *
+            Math.cos(lat2) *
+            Math.sin(
+                deltaLng / 2
+            ) ** 2;
+
+
+        const c =
+            2 *
+            Math.atan2(
+                Math.sqrt(a),
+                Math.sqrt(1 - a)
+            );
+
+
+        return (
+            earthRadiusKm *
+            c
+        );
+    }
+
+
+    // ======================================
+    // CALCULAR ENTREGA
+    // ======================================
+
+    function calculateDelivery() {
+
+        if (!product) {
+
+            return {
+                distance: 0,
+                value: 0,
+                valid: false,
+                reason: "product"
+            };
+        }
+
+
+        const deliveryEnabled =
+            product.delivery === true ||
+            product.delivery === "true";
+
+
+        if (!deliveryEnabled) {
+
+            return {
+                distance: 0,
+                value: 0,
+                valid: false,
+                reason: "disabled"
+            };
+        }
+
+
+        const ownerLocation =
+            getOwnerLocation();
+
+
+        const renterLocation =
+            getRenterLocation();
+
+
+        if (!ownerLocation) {
+
+            return {
+                distance: 0,
+                value: 0,
+                valid: false,
+                reason: "owner-location"
+            };
+        }
+
+
+        if (!renterLocation) {
+
+            return {
+                distance: 0,
+                value: 0,
+                valid: false,
+                reason: "renter-location"
+            };
+        }
+
+
+        const distance =
+            calculateDistanceKm(
+                ownerLocation,
+                renterLocation
+            );
+
+
+        if (
+            !Number.isFinite(
+                distance
+            )
+        ) {
+
+            return {
+                distance: 0,
+                value: 0,
+                valid: false,
+                reason: "distance"
+            };
+        }
+
+
+        const value =
+            distance *
+            DELIVERY_PRICE_PER_KM;
+
+
+        return {
+            distance,
+            value,
+            valid: true,
+            reason: "ok"
+        };
+    }
+
+
+    // ======================================
+    // ATUALIZAR ENTREGA
+    // ======================================
+
+    function updateDeliveryUI() {
+
+        const configEnabled =
+            product?.delivery === true ||
+            product?.delivery === "true";
+
+
+        if (!configEnabled) {
+
+            if (deliveryRadio) {
+
+                deliveryRadio.disabled =
+                    true;
+            }
+
+
+            if (deliveryLabel) {
+
+                deliveryLabel.textContent =
+                    "Somente retirada";
+            }
+
+
+            if (deliveryInfo) {
+
+                deliveryInfo.textContent =
+                    "Este produto está disponível somente para retirada.";
+            }
+
+
+            return;
+        }
+
+
+        if (deliveryRadio) {
+
+            deliveryRadio.disabled =
+                false;
+        }
+
+
+        const selected =
+            document.querySelector(
+                'input[name="delivery"]:checked'
+            );
+
+
+        const deliverySelected =
+            selected?.value === "delivery";
+
+
+        if (!deliverySelected) {
+
+            deliveryLabel.textContent =
+                "Calcular";
+
+
+            deliveryInfo.textContent =
+                "O valor será calculado automaticamente pela distância entre os endereços.";
+
+
+            return;
+        }
+
+
+        deliveryCalculation =
+            calculateDelivery();
+
+
+        if (
+            deliveryCalculation.reason ===
+            "owner-location"
+        ) {
+
+            deliveryLabel.textContent =
+                "Indisponível";
+
+
+            deliveryInfo.textContent =
+                "Não foi possível localizar o endereço do proprietário.";
+
+            return;
+        }
+
+
+        if (
+            deliveryCalculation.reason ===
+            "renter-location"
+        ) {
+
+            deliveryLabel.textContent =
+                "Endereço necessário";
+
+
+            deliveryInfo.textContent =
+                "Cadastre seu endereço no perfil para calcular a entrega.";
+
+            return;
+        }
+
+
+        if (
+            deliveryCalculation.reason ===
+            "distance"
+        ) {
+
+            deliveryLabel.textContent =
+                "Erro no cálculo";
+
+
+            deliveryInfo.textContent =
+                "Não foi possível calcular a distância.";
+
+            return;
+        }
+
+
+        if (
+            deliveryCalculation.valid
+        ) {
+
+            deliveryLabel.textContent =
+                `+ R$ ${formatMoney(
+                    deliveryCalculation.value
+                )}`;
+
+
+            deliveryInfo.textContent =
+                `Entrega calculada automaticamente: ${deliveryCalculation.distance.toFixed(1)} km.`;
+
+            return;
+        }
+
+
+        deliveryLabel.textContent =
+            "Calcular";
+    }
+
+
+    // ======================================
+    // ATUALIZAR TOTAIS
+    // ======================================
+
+    function updateTotals() {
+
+        if (!product) {
+
+            return;
+        }
+
+
+        const days =
+            getDays();
+
+
+        const selectedDelivery =
+            document.querySelector(
+                'input[name="delivery"]:checked'
+            );
+
+
+        const deliverySelected =
+            selectedDelivery?.value ===
+            "delivery";
+
+
+        let deliveryValue = 0;
+
+
+        if (deliverySelected) {
+
+            deliveryCalculation =
+                calculateDelivery();
+
+
+            if (
+                deliveryCalculation.valid
+            ) {
+
+                deliveryValue =
+                    deliveryCalculation.value;
+            }
+        }
+
+
+        const daily =
+            days *
+            Number(
+                product.pricePerDay || 0
+            );
+
+
+        const deposit =
+            Number(
+                product.deposit || 0
+            );
+
+
+        const total =
+            daily +
+            deliveryValue +
+            deposit;
+
+
+        if (dailyTotal) {
+
+            dailyTotal.textContent =
+                `R$ ${formatMoney(
+                    daily
+                )}`;
+        }
+
+
+        if (deliveryTotal) {
+
+            deliveryTotal.textContent =
+                `R$ ${formatMoney(
+                    deliveryValue
+                )}`;
+        }
+
+
+        if (depositTotal) {
+
+            depositTotal.textContent =
+                `R$ ${formatMoney(
+                    deposit
+                )}`;
+        }
+
+
+        if (rentalTotal) {
+
+            rentalTotal.textContent =
+                `R$ ${formatMoney(
+                    total
+                )}`;
+        }
+
+
+        updateDeliveryUI();
+    }
+
+
+    // ======================================
+    // PREENCHER TELA
+    // ======================================
+
+    function fillScreen() {
+
+        document.title =
+            `${product.title || "Produto"} | ALUGASE`;
+
+
+        if (categoryLabel) {
+
+            categoryLabel.textContent =
+                (
+                    product.category ||
+                    "Produto"
+                ).toUpperCase();
+        }
+
+
+        if (categoryLink) {
+
+            categoryLink.textContent =
+                product.category ||
+                "Categoria";
+
+
+            categoryLink.href =
+                `explorar.html?categoria=${encodeURIComponent(
+                    product.category || ""
+                )}`;
+        }
+
+
+        if (breadcrumbTitle) {
+
+            breadcrumbTitle.textContent =
+                product.title ||
+                "Produto";
+        }
+
+
+        if (title) {
+
+            title.textContent =
+                product.title ||
+                "Produto";
+        }
+
+
+        renderGallery();
+
+
+        if (locationText) {
+
+            locationText.textContent =
+                `📍 ${
+                    product.city ||
+                    "Não informado"
+                }`;
+        }
+
+
+        if (description) {
+
+            description.textContent =
+                product.description ||
+                "Este produto não possui descrição.";
+        }
+
+
+        if (productRating) {
+
+            productRating.textContent =
+                product.rating ||
+                "5.0";
+        }
+
+
+        if (productReviews) {
+
+            productReviews.textContent =
+                product.reviews ||
+                "0";
+        }
+
+
+        if (price) {
+
+            price.textContent =
+                `R$ ${formatMoney(
+                    product.pricePerDay
+                )}`;
+        }
+
+
+        if (depositTotal) {
+
+            depositTotal.textContent =
+                `R$ ${formatMoney(
+                    product.deposit
+                )}`;
+        }
+
+
+        renderOwner();
+
+        initializeCalendar();
+
+        updateTotals();
     }
 
 
@@ -613,6 +1420,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+
         mainImage.innerHTML = `
             <img
                 src="${src}"
@@ -620,8 +1428,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             >
         `;
 
+
         document
-            .querySelectorAll(".thumbnail")
+            .querySelectorAll(
+                ".thumbnail"
+            )
             .forEach(
                 thumbnail => {
 
@@ -631,6 +1442,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 }
             );
+
 
         if (activeButton) {
 
@@ -655,7 +1467,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+
         thumbnails.innerHTML = "";
+
 
         const images =
             Array.isArray(
@@ -664,7 +1478,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ? product.images.filter(Boolean)
                 : [];
 
-        if (images.length > 0) {
+
+        if (
+            images.length > 0
+        ) {
 
             mainImage.innerHTML = `
                 <img
@@ -672,6 +1489,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     alt="${product.title || "Produto"}"
                 >
             `;
+
 
             images.forEach(
                 (image, index) => {
@@ -681,8 +1499,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                             "button"
                         );
 
+
                     button.type =
                         "button";
+
 
                     button.className =
                         `thumbnail ${
@@ -691,6 +1511,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 : ""
                         }`;
 
+
                     button.innerHTML = `
                         <img
                             src="${image}"
@@ -698,6 +1519,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             loading="lazy"
                         >
                     `;
+
 
                     button.addEventListener(
                         "click",
@@ -711,12 +1533,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                         }
                     );
 
+
                     thumbnails.appendChild(
                         button
                     );
-
                 }
             );
+
 
         } else {
 
@@ -726,19 +1549,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 </div>
             `;
 
+
             const button =
                 document.createElement(
                     "button"
                 );
 
+
             button.type =
                 "button";
+
 
             button.className =
                 "thumbnail emoji active";
 
+
             button.textContent =
                 "📦";
+
 
             thumbnails.appendChild(
                 button
@@ -758,23 +1586,29 @@ document.addEventListener("DOMContentLoaded", async () => {
             ownerAvatar.innerHTML =
                 "👤";
 
+
             ownerName.textContent =
                 product.ownerName ||
                 "Usuário";
 
+
             ownerVerification.textContent =
                 "Usuário";
+
 
             ownerRating.textContent =
                 product.rating ||
                 "5.0";
 
+
             ownerReviews.textContent =
                 product.reviews ||
                 "0";
 
+
             return;
         }
+
 
         ownerName.textContent =
             owner.name ||
@@ -809,6 +1643,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     .join("")
                     .toUpperCase();
 
+
             ownerAvatar.innerHTML = `
                 <span class="owner-initials">
                     ${initials || "U"}
@@ -817,10 +1652,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        if (owner.identityVerified) {
+        if (
+            owner.identityVerified
+        ) {
 
             ownerVerification.textContent =
                 "✓ Identidade verificada";
+
 
             ownerVerification.className =
                 "owner-verified";
@@ -829,6 +1667,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             ownerVerification.textContent =
                 "Usuário";
+
 
             ownerVerification.className =
                 "";
@@ -839,6 +1678,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             owner.rating ||
             product.rating ||
             "5.0";
+
 
         ownerReviews.textContent =
             owner.reviews ||
@@ -858,14 +1698,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        calendarDays.innerHTML =
-            "";
+
+        calendarDays.innerHTML = "";
+
 
         const year =
             calendarDate.getFullYear();
 
+
         const month =
             calendarDate.getMonth();
+
 
         const firstDay =
             new Date(
@@ -873,6 +1716,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 month,
                 1
             ).getDay();
+
 
         const daysInMonth =
             new Date(
@@ -906,8 +1750,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "div"
                 );
 
+
             empty.className =
                 "calendar-day empty";
+
 
             calendarDays.appendChild(
                 empty
@@ -918,12 +1764,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         const today =
             new Date();
 
+
         today.setHours(
             0,
             0,
             0,
             0
         );
+
 
         const todayString =
             dateToString(today);
@@ -942,19 +1790,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                     day
                 );
 
+
             const dateString =
                 dateToString(date);
+
 
             const button =
                 document.createElement(
                     "button"
                 );
 
+
             button.type =
                 "button";
 
+
             button.className =
                 "calendar-day";
+
 
             button.textContent =
                 day;
@@ -972,11 +1825,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
             if (
-                dateString < todayString
+                dateString <
+                todayString
             ) {
 
                 button.disabled =
                     true;
+
 
                 button.classList.add(
                     "unavailable"
@@ -992,6 +1847,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 button.disabled =
                     true;
+
 
                 button.classList.add(
                     "unavailable"
@@ -1089,22 +1945,28 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
 
+
             startDate.value =
                 dateString;
+
 
             endDate.value =
                 "";
 
+
             selectingStart =
                 false;
+
 
             selectedStartDisplay.textContent =
                 formatDateBR(
                     dateString
                 );
 
+
             selectedEndDisplay.textContent =
                 "Selecione a devolução";
+
 
             renderCalendar();
 
@@ -1145,13 +2007,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         endDate.value =
             dateString;
 
+
         selectedEndDisplay.textContent =
             formatDateBR(
                 dateString
             );
 
+
         selectingStart =
             true;
+
 
         renderCalendar();
 
@@ -1173,22 +2038,29 @@ document.addEventListener("DOMContentLoaded", async () => {
                 `${start}T00:00:00`
             );
 
+
         const endObject =
             new Date(
                 `${end}T00:00:00`
             );
 
+
         const current =
-            new Date(startObject);
+            new Date(
+                startObject
+            );
+
 
         while (
-            current <= endObject
+            current <=
+            endObject
         ) {
 
             const currentString =
                 dateToString(
                     current
                 );
+
 
             if (
                 isUnavailable(
@@ -1199,10 +2071,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return true;
             }
 
+
             current.setDate(
                 current.getDate() + 1
             );
         }
+
 
         return false;
     }
@@ -1222,15 +2096,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             return 0;
         }
 
+
         const start =
             new Date(
                 `${startDate.value}T00:00:00`
             );
 
+
         const end =
             new Date(
                 `${endDate.value}T00:00:00`
             );
+
 
         const difference =
             Math.round(
@@ -1239,444 +2116,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ) / 86400000
             );
 
+
         return difference >= 0
             ? difference + 1
             : 0;
-    }
-
-
-    // ======================================
-    // CONFIGURAÇÃO DA ENTREGA
-    // ======================================
-
-    function getDeliveryConfig() {
-
-        if (!product) {
-
-            return {
-                enabled: false,
-                price: 0
-            };
-        }
-
-        const enabled =
-            product.delivery === true ||
-            product.delivery === "true";
-
-
-        let price =
-            Number(
-                product.deliveryBasePrice
-            );
-
-
-        if (
-            !Number.isFinite(price)
-        ) {
-
-            price =
-                Number(
-                    product.deliveryPrice
-                );
-        }
-
-
-        if (
-            !Number.isFinite(price)
-        ) {
-
-            price = 0;
-        }
-
-
-        return {
-            enabled,
-            price
-        };
-    }
-
-
-    // ======================================
-    // CALCULAR ENTREGA
-    // ======================================
-
-    function calculateDelivery() {
-
-        const config =
-            getDeliveryConfig();
-
-
-        if (!config.enabled) {
-
-            return {
-                value: 0,
-                valid: false,
-                reason: "disabled"
-            };
-        }
-
-
-        return {
-            value: config.price,
-            valid: true,
-            reason: "ok"
-        };
-    }
-
-
-    // ======================================
-    // ATUALIZAR ENTREGA
-    // ======================================
-
-    function updateDeliveryUI() {
-
-        const config =
-            getDeliveryConfig();
-
-
-        if (!config.enabled) {
-
-            if (deliveryRadio) {
-
-                deliveryRadio.disabled =
-                    true;
-
-                deliveryRadio.checked =
-                    false;
-            }
-
-
-            if (deliveryLabel) {
-
-                deliveryLabel.textContent =
-                    "Indisponível";
-            }
-
-
-            if (deliveryInfo) {
-
-                deliveryInfo.textContent =
-                    "Este produto está disponível somente para retirada.";
-            }
-
-            return;
-        }
-
-
-        if (deliveryRadio) {
-
-            deliveryRadio.disabled =
-                false;
-        }
-
-
-        const selected =
-            document.querySelector(
-                'input[name="delivery"]:checked'
-            );
-
-
-        const deliverySelected =
-            selected?.value ===
-            "delivery";
-
-
-        if (!deliverySelected) {
-
-            if (deliveryLabel) {
-
-                deliveryLabel.textContent =
-                    "Disponível";
-            }
-
-            if (deliveryInfo) {
-
-                deliveryInfo.textContent =
-                    "";
-            }
-
-            return;
-        }
-
-
-        const result =
-            calculateDelivery();
-
-
-        if (
-            result.valid
-        ) {
-
-            if (deliveryLabel) {
-
-                deliveryLabel.textContent =
-                    `+ R$ ${formatMoney(
-                        result.value
-                    )}`;
-            }
-
-
-            if (deliveryInfo) {
-
-                deliveryInfo.textContent =
-                    "Valor da entrega definido pelo proprietário.";
-            }
-
-        } else {
-
-            if (deliveryLabel) {
-
-                deliveryLabel.textContent =
-                    "Indisponível";
-            }
-        }
-    }
-
-
-    // ======================================
-    // ATUALIZAR TOTAIS
-    // ======================================
-
-    function updateTotals() {
-
-        if (!product) {
-
-            return;
-        }
-
-
-        const days =
-            getDays();
-
-
-        const selectedDelivery =
-            document.querySelector(
-                'input[name="delivery"]:checked'
-            );
-
-
-        const deliverySelected =
-            selectedDelivery?.value ===
-            "delivery";
-
-
-        let deliveryValue =
-            0;
-
-
-        if (deliverySelected) {
-
-            const result =
-                calculateDelivery();
-
-            if (result.valid) {
-
-                deliveryValue =
-                    result.value;
-            }
-        }
-
-
-        const daily =
-            days *
-            Number(
-                product.pricePerDay || 0
-            );
-
-
-        const deposit =
-            Number(
-                product.deposit || 0
-            );
-
-
-        const total =
-            daily +
-            deliveryValue +
-            deposit;
-
-
-        if (dailyTotal) {
-
-            dailyTotal.textContent =
-                `R$ ${formatMoney(
-                    daily
-                )}`;
-        }
-
-
-        if (deliveryTotal) {
-
-            deliveryTotal.textContent =
-                `R$ ${formatMoney(
-                    deliveryValue
-                )}`;
-        }
-
-
-        if (depositTotal) {
-
-            depositTotal.textContent =
-                `R$ ${formatMoney(
-                    deposit
-                )}`;
-        }
-
-
-        if (rentalTotal) {
-
-            rentalTotal.textContent =
-                `R$ ${formatMoney(
-                    total
-                )}`;
-        }
-
-
-        updateDeliveryUI();
-    }
-
-
-    // ======================================
-    // PREENCHER TELA
-    // ======================================
-
-    function fillScreen() {
-
-        document.title =
-            `${product.title || "Produto"} | ALUGASE`;
-
-
-        if (categoryLabel) {
-
-            categoryLabel.textContent =
-                (
-                    product.category ||
-                    "Produto"
-                ).toUpperCase();
-        }
-
-
-        if (categoryLink) {
-
-            categoryLink.textContent =
-                product.category ||
-                "Categoria";
-
-            categoryLink.href =
-                `explorar.html?categoria=${encodeURIComponent(
-                    product.category || ""
-                )}`;
-        }
-
-
-        if (breadcrumbTitle) {
-
-            breadcrumbTitle.textContent =
-                product.title ||
-                "Produto";
-        }
-
-
-        if (title) {
-
-            title.textContent =
-                product.title ||
-                "Produto";
-        }
-
-
-        renderGallery();
-
-
-        if (locationText) {
-
-            locationText.textContent =
-                `📍 ${
-                    product.city ||
-                    "Não informado"
-                }`;
-        }
-
-
-        if (description) {
-
-            description.textContent =
-                product.description ||
-                "Este produto não possui descrição.";
-        }
-
-
-        if (productRating) {
-
-            productRating.textContent =
-                product.rating ||
-                "5.0";
-        }
-
-
-        if (productReviews) {
-
-            productReviews.textContent =
-                product.reviews ||
-                "0";
-        }
-
-
-        if (price) {
-
-            price.textContent =
-                `R$ ${formatMoney(
-                    product.pricePerDay
-                )}`;
-        }
-
-
-        const config =
-            getDeliveryConfig();
-
-
-        if (deliveryRadio) {
-
-            deliveryRadio.disabled =
-                !config.enabled;
-
-            if (!config.enabled) {
-
-                deliveryRadio.checked =
-                    false;
-            }
-        }
-
-
-        if (deliveryInfo) {
-
-            if (config.enabled) {
-
-                deliveryInfo.textContent =
-                    "Entrega disponível para este produto.";
-
-            } else {
-
-                deliveryInfo.textContent =
-                    "Este produto está disponível somente para retirada.";
-            }
-        }
-
-
-        if (depositTotal) {
-
-            depositTotal.textContent =
-                `R$ ${formatMoney(
-                    product.deposit
-                )}`;
-        }
-
-
-        renderOwner();
-
-        initializeCalendar();
-
-        updateTotals();
     }
 
 
@@ -1686,42 +2129,33 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function initializeCalendar() {
 
-        if (startDate) {
+        startDate.value =
+            "";
 
-            startDate.value =
-                "";
-        }
-
-        if (endDate) {
-
-            endDate.value =
-                "";
-        }
+        endDate.value =
+            "";
 
 
-        if (selectedStartDisplay) {
-
-            selectedStartDisplay.textContent =
-                "Selecione uma data";
-        }
+        selectedStartDisplay.textContent =
+            "Selecione uma data";
 
 
-        if (selectedEndDisplay) {
-
-            selectedEndDisplay.textContent =
-                "Selecione a devolução";
-        }
+        selectedEndDisplay.textContent =
+            "Selecione a devolução";
 
 
         selectingStart =
             true;
 
+
         calendarDate =
             new Date();
+
 
         calendarDate.setDate(
             1
         );
+
 
         renderCalendar();
     }
@@ -1740,6 +2174,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const currentMonth =
                     new Date();
 
+
                 currentMonth.setDate(
                     1
                 );
@@ -1749,6 +2184,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     new Date(
                         calendarDate
                     );
+
 
                 previous.setMonth(
                     previous.getMonth() - 1
@@ -1775,6 +2211,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 calendarDate =
                     previous;
 
+
                 renderCalendar();
             }
         );
@@ -1794,6 +2231,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 calendarDate.setMonth(
                     calendarDate.getMonth() + 1
                 );
+
 
                 renderCalendar();
             }
@@ -1819,6 +2257,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         updateDeliveryUI();
 
                         updateTotals();
+
                     }
                 );
 
@@ -1846,6 +2285,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     localStorage.getItem(
                         "alugase_user"
                     );
+
 
                 const currentToken =
                     localStorage.getItem(
@@ -1998,17 +2438,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                     "delivery";
 
 
-                let deliveryValue =
-                    0;
-
-
                 if (delivery) {
 
-                    const config =
-                        getDeliveryConfig();
+                    const result =
+                        calculateDelivery();
 
 
-                    if (!config.enabled) {
+                    if (
+                        result.reason ===
+                        "disabled"
+                    ) {
 
                         alert(
                             "Este produto não possui entrega disponível."
@@ -2018,11 +2457,35 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
 
 
-                    const result =
-                        calculateDelivery();
+                    if (
+                        result.reason ===
+                        "owner-location"
+                    ) {
+
+                        alert(
+                            "Não foi possível localizar o endereço do proprietário para calcular a entrega."
+                        );
+
+                        return;
+                    }
 
 
-                    if (!result.valid) {
+                    if (
+                        result.reason ===
+                        "renter-location"
+                    ) {
+
+                        alert(
+                            "Cadastre seu endereço no perfil para utilizar a entrega."
+                        );
+
+                        return;
+                    }
+
+
+                    if (
+                        !result.valid
+                    ) {
 
                         alert(
                             "Não foi possível calcular o valor da entrega."
@@ -2030,10 +2493,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                         return;
                     }
-
-
-                    deliveryValue =
-                        result.value;
                 }
 
 
@@ -2071,15 +2530,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 );
 
 
-                if (delivery) {
-
-                    params.set(
-                        "deliveryPrice",
-                        String(
-                            deliveryValue
-                        )
-                    );
-                }
+                // NÃO enviamos:
+                //
+                // deliveryDistance
+                // deliveryPrice
+                //
+                // Esses valores não são
+                // fornecidos pelo cliente.
+                //
+                // O backend deve calcular
+                // novamente pela localização
+                // do proprietário e do locatário.
 
 
                 // ==================================
