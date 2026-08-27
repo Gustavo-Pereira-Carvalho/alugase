@@ -35,10 +35,7 @@
 
     font-size: 14px;
 
-    max-width: 100%;
-
 }
-
 
 .breadcrumb a {
 
@@ -47,7 +44,6 @@
     text-decoration: none;
 
 }
-
 
 .breadcrumb a:hover {
 
@@ -71,8 +67,6 @@
     gap: 50px;
 
     align-items: start;
-
-    width: 100%;
 
 }
 
@@ -124,7 +118,6 @@
 
 }
 
-
 .main-product-image img {
 
     display: block;
@@ -136,7 +129,6 @@
     object-fit: contain;
 
 }
-
 
 .emoji-image {
 
@@ -167,24 +159,13 @@
 
     overflow-x: auto;
 
-    box-sizing: border-box;
-
 }
-
 
 .product-thumbnails::-webkit-scrollbar {
 
     height: 6px;
 
 }
-
-
-.product-thumbnails::-webkit-scrollbar-track {
-
-    background: transparent;
-
-}
-
 
 .product-thumbnails::-webkit-scrollbar-thumb {
 
@@ -193,7 +174,6 @@
     border-radius: 20px;
 
 }
-
 
 .thumbnail {
 
@@ -225,33 +205,29 @@
 
 }
 
-
 .thumbnail:hover {
 
     transform: translateY(-2px);
 
 }
 
-
 .thumbnail img {
-
-    display: block;
 
     width: 100%;
 
     height: 100%;
 
+    display: block;
+
     object-fit: cover;
 
 }
-
 
 .thumbnail.active {
 
     border-color: #16a34a;
 
 }
-
 
 .thumbnail.emoji {
 
@@ -280,7 +256,6 @@
 
 }
 
-
 .product-category {
 
     display: inline-block;
@@ -298,7 +273,6 @@
     font-weight: 700;
 
 }
-
 
 .product-info h1 {
 
@@ -329,7 +303,6 @@
 
 }
 
-
 .product-rating span {
 
     color: #6b7280;
@@ -338,7 +311,7 @@
 
 
 /* =========================================================
-   LOCAL
+   LOCALIZAÇÃO
 ========================================================= */
 
 .product-location {
@@ -364,13 +337,11 @@
 
 }
 
-
 .product-description h2 {
 
     margin: 0 0 10px;
 
 }
-
 
 .product-description p {
 
@@ -403,13 +374,11 @@
 
 }
 
-
 .pricing span {
 
     color: #6b7280;
 
 }
-
 
 .pricing strong {
 
@@ -418,7 +387,6 @@
     color: #166534;
 
 }
-
 
 .pricing small {
 
@@ -450,10 +418,412 @@
 
 }
 
-
 .rental-box h2 {
 
     margin-top: 0;
+
+}
+
+
+/* =========================================================
+   CALENDÁRIO
+========================================================= */
+
+.custom-calendar-wrapper {
+
+    margin: 18px 0 22px;
+
+}
+
+.calendar-selection {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        auto
+        minmax(0, 1fr);
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+
+}
+
+.selected-date-box {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    padding: 12px 14px;
+
+    background: #f8faf9;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+}
+
+.selected-date-box span {
+
+    font-size: 12px;
+
+    color: #6b7280;
+
+    font-weight: 600;
+
+}
+
+.selected-date-box strong {
+
+    font-size: 14px;
+
+    color: #166534;
+
+}
+
+.date-arrow {
+
+    color: #9ca3af;
+
+    font-size: 18px;
+
+}
+
+.calendar {
+
+    width: 100%;
+
+    background: #fff;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 16px;
+
+    padding: 16px;
+
+    box-sizing: border-box;
+
+}
+
+.calendar-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+
+}
+
+.calendar-header strong {
+
+    font-size: 16px;
+
+    color: #111827;
+
+    text-transform: capitalize;
+
+}
+
+.calendar-nav {
+
+    width: 36px;
+
+    height: 36px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    font-size: 25px;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    transition:
+        background .2s ease,
+        color .2s ease,
+        transform .2s ease;
+
+}
+
+.calendar-nav:hover {
+
+    background: #dcfce7;
+
+    color: #166534;
+
+    transform: scale(1.05);
+
+}
+
+.calendar-nav:active {
+
+    transform: scale(.95);
+
+}
+
+.calendar-weekdays {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 4px;
+
+    margin-bottom: 6px;
+
+}
+
+.calendar-weekdays span {
+
+    text-align: center;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    color: #9ca3af;
+
+    padding: 5px 0;
+
+}
+
+.calendar-days {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    gap: 5px;
+
+}
+
+.calendar-day {
+
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 1 / 1;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: #374151;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+        background .15s ease,
+        color .15s ease,
+        transform .15s ease;
+
+}
+
+.calendar-day:hover {
+
+    background: #f0fdf4;
+
+    color: #166534;
+
+    transform: translateY(-1px);
+
+}
+
+.calendar-day.empty {
+
+    pointer-events: none;
+
+}
+
+.calendar-day.today {
+
+    box-shadow:
+        inset 0 0 0 2px #16a34a;
+
+    color: #166534;
+
+    font-weight: 700;
+
+}
+
+.calendar-day.selected {
+
+    background: #16a34a;
+
+    color: #fff;
+
+    font-weight: 700;
+
+}
+
+.calendar-day.selected:hover {
+
+    background: #15803d;
+
+    color: #fff;
+
+}
+
+.calendar-day.in-range {
+
+    background: #dcfce7;
+
+    color: #166534;
+
+    border-radius: 5px;
+
+}
+
+.calendar-day.range-start {
+
+    border-radius:
+        10px 5px 5px 10px;
+
+}
+
+.calendar-day.range-end {
+
+    border-radius:
+        5px 10px 10px 5px;
+
+}
+
+.calendar-day.unavailable {
+
+    background: #fee2e2;
+
+    color: #dc2626;
+
+    cursor: not-allowed;
+
+    text-decoration: line-through;
+
+    font-weight: 600;
+
+}
+
+.calendar-day.unavailable:hover {
+
+    background: #fee2e2;
+
+    color: #dc2626;
+
+    transform: none;
+
+}
+
+.calendar-day.unavailable::after {
+
+    content: "";
+
+    position: absolute;
+
+    bottom: 5px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 4px;
+
+    height: 4px;
+
+    border-radius: 50%;
+
+    background: #dc2626;
+
+}
+
+.calendar-legend {
+
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 14px;
+
+    margin-top: 16px;
+
+    padding-top: 14px;
+
+    border-top: 1px solid #f0f0f0;
+
+}
+
+.calendar-legend span {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    font-size: 11px;
+
+    color: #6b7280;
+
+}
+
+.legend-dot {
+
+    width: 8px;
+
+    height: 8px;
+
+    border-radius: 50%;
+
+    display: inline-block;
+
+}
+
+.legend-dot.available {
+
+    background: #d1d5db;
+
+}
+
+.legend-dot.selected {
+
+    background: #16a34a;
+
+}
+
+.legend-dot.unavailable {
+
+    background: #dc2626;
 
 }
 
@@ -470,13 +840,11 @@
 
 }
 
-
 .delivery-options h3 {
 
     margin: 0 0 10px;
 
 }
-
 
 .delivery-option {
 
@@ -511,7 +879,6 @@
 
 }
 
-
 .delivery-option:hover {
 
     border-color: #16a34a;
@@ -520,13 +887,11 @@
 
 }
 
-
 .delivery-option input {
 
     accent-color: #16a34a;
 
 }
-
 
 .delivery-option strong {
 
@@ -536,7 +901,7 @@
 
 
 /* =========================================================
-   INFORMAÇÕES DA ENTREGA
+   INFORMAÇÃO AUTOMÁTICA DA ENTREGA
 ========================================================= */
 
 .delivery-info {
@@ -572,7 +937,6 @@
 
 }
 
-
 .rental-summary > div {
 
     display: flex;
@@ -587,20 +951,17 @@
 
 }
 
-
 .rental-summary span {
 
     color: #4b5563;
 
 }
 
-
 .rental-summary strong {
 
     white-space: nowrap;
 
 }
-
 
 .summary-total {
 
@@ -614,7 +975,6 @@
 
 }
 
-
 .summary-total span {
 
     color: #111827;
@@ -622,7 +982,6 @@
     font-weight: 600;
 
 }
-
 
 .summary-total strong {
 
@@ -658,13 +1017,11 @@
 
 }
 
-
 .owner-section h2 {
 
     margin-bottom: 20px;
 
 }
-
 
 .owner-card {
 
@@ -687,11 +1044,6 @@
     box-sizing: border-box;
 
 }
-
-
-/* =========================================================
-   FOTO DO PROPRIETÁRIO
-========================================================= */
 
 .owner-avatar {
 
@@ -717,7 +1069,6 @@
 
 }
 
-
 .owner-profile-image {
 
     width: 100%;
@@ -729,7 +1080,6 @@
     object-fit: cover;
 
 }
-
 
 .owner-initials {
 
@@ -753,17 +1103,11 @@
 
 }
 
-
-/* =========================================================
-   INFORMAÇÕES DO PROPRIETÁRIO
-========================================================= */
-
 .owner-info {
 
     min-width: 0;
 
 }
-
 
 .owner-info h3 {
 
@@ -773,7 +1117,6 @@
 
 }
 
-
 .owner-info p {
 
     margin: 0;
@@ -782,7 +1125,6 @@
 
 }
 
-
 .owner-verified {
 
     color: #16a34a !important;
@@ -790,7 +1132,6 @@
     font-weight: 600;
 
 }
-
 
 .owner-extra {
 
@@ -803,451 +1144,6 @@
     color: #6b7280;
 
     font-size: 14px;
-
-}
-
-
-/* =========================================================
-   CALENDÁRIO
-========================================================= */
-
-.custom-calendar-wrapper {
-
-    margin: 18px 0 22px;
-
-}
-
-
-.calendar-selection {
-
-    display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr)
-        auto
-        minmax(0, 1fr);
-
-    align-items: center;
-
-    gap: 10px;
-
-    margin-bottom: 16px;
-
-}
-
-
-.selected-date-box {
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 5px;
-
-    padding: 12px 14px;
-
-    background: #f8faf9;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 12px;
-
-}
-
-
-.selected-date-box span {
-
-    font-size: 12px;
-
-    color: #6b7280;
-
-    font-weight: 600;
-
-}
-
-
-.selected-date-box strong {
-
-    font-size: 14px;
-
-    color: #166534;
-
-}
-
-
-.date-arrow {
-
-    color: #9ca3af;
-
-    font-size: 18px;
-
-}
-
-
-.calendar {
-
-    width: 100%;
-
-    background: #fff;
-
-    border: 1px solid #e5e7eb;
-
-    border-radius: 16px;
-
-    padding: 16px;
-
-    box-sizing: border-box;
-
-}
-
-
-.calendar-header {
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    margin-bottom: 18px;
-
-}
-
-
-.calendar-header strong {
-
-    font-size: 16px;
-
-    color: #111827;
-
-    text-transform: capitalize;
-
-}
-
-
-.calendar-nav {
-
-    width: 36px;
-
-    height: 36px;
-
-    border: none;
-
-    border-radius: 10px;
-
-    background: #f3f4f6;
-
-    color: #374151;
-
-    font-size: 25px;
-
-    line-height: 1;
-
-    cursor: pointer;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    transition:
-        background .2s ease,
-        color .2s ease,
-        transform .2s ease;
-
-}
-
-
-.calendar-nav:hover {
-
-    background: #dcfce7;
-
-    color: #166534;
-
-    transform: scale(1.05);
-
-}
-
-
-.calendar-nav:active {
-
-    transform: scale(.95);
-
-}
-
-
-.calendar-weekdays {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(7, 1fr);
-
-    gap: 4px;
-
-    margin-bottom: 6px;
-
-}
-
-
-.calendar-weekdays span {
-
-    text-align: center;
-
-    font-size: 11px;
-
-    font-weight: 700;
-
-    color: #9ca3af;
-
-    padding: 5px 0;
-
-}
-
-
-.calendar-days {
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(7, 1fr);
-
-    gap: 5px;
-
-}
-
-
-.calendar-day {
-
-    position: relative;
-
-    width: 100%;
-
-    aspect-ratio: 1 / 1;
-
-    border: none;
-
-    border-radius: 10px;
-
-    background: transparent;
-
-    color: #374151;
-
-    font-family: inherit;
-
-    font-size: 13px;
-
-    font-weight: 500;
-
-    cursor: pointer;
-
-    transition:
-        background .15s ease,
-        color .15s ease,
-        transform .15s ease;
-
-}
-
-
-.calendar-day:hover {
-
-    background: #f0fdf4;
-
-    color: #166534;
-
-    transform: translateY(-1px);
-
-}
-
-
-.calendar-day.empty {
-
-    pointer-events: none;
-
-    cursor: default;
-
-}
-
-
-.calendar-day.today {
-
-    box-shadow:
-        inset 0 0 0 2px #16a34a;
-
-    color: #166534;
-
-    font-weight: 700;
-
-}
-
-
-.calendar-day.selected {
-
-    background: #16a34a;
-
-    color: #fff;
-
-    font-weight: 700;
-
-}
-
-
-.calendar-day.selected:hover {
-
-    background: #15803d;
-
-    color: #fff;
-
-}
-
-
-.calendar-day.in-range {
-
-    background: #dcfce7;
-
-    color: #166534;
-
-    border-radius: 5px;
-
-}
-
-
-.calendar-day.range-start {
-
-    border-radius:
-        10px
-        5px
-        5px
-        10px;
-
-}
-
-
-.calendar-day.range-end {
-
-    border-radius:
-        5px
-        10px
-        10px
-        5px;
-
-}
-
-
-.calendar-day.unavailable {
-
-    background: #fee2e2;
-
-    color: #dc2626;
-
-    cursor: not-allowed;
-
-    text-decoration: line-through;
-
-    font-weight: 600;
-
-}
-
-
-.calendar-day.unavailable:hover {
-
-    background: #fee2e2;
-
-    color: #dc2626;
-
-    transform: none;
-
-}
-
-
-.calendar-day.unavailable::after {
-
-    content: "";
-
-    position: absolute;
-
-    bottom: 5px;
-
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    width: 4px;
-
-    height: 4px;
-
-    border-radius: 50%;
-
-    background: #dc2626;
-
-}
-
-
-.calendar-legend {
-
-    display: flex;
-
-    align-items: center;
-
-    flex-wrap: wrap;
-
-    gap: 14px;
-
-    margin-top: 16px;
-
-    padding-top: 14px;
-
-    border-top: 1px solid #f0f0f0;
-
-}
-
-
-.calendar-legend span {
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    font-size: 11px;
-
-    color: #6b7280;
-
-}
-
-
-.legend-dot {
-
-    width: 8px;
-
-    height: 8px;
-
-    border-radius: 50%;
-
-    display: inline-block;
-
-}
-
-
-.legend-dot.available {
-
-    background: #d1d5db;
-
-}
-
-
-.legend-dot.selected {
-
-    background: #16a34a;
-
-}
-
-
-.legend-dot.unavailable {
-
-    background: #dc2626;
 
 }
 
@@ -1266,13 +1162,11 @@
 
     }
 
-
     .product-gallery {
 
         position: static;
 
     }
-
 
     .main-product-image {
 
@@ -1298,7 +1192,6 @@
 
     }
 
-
     .product-page {
 
         width: 100%;
@@ -1310,7 +1203,6 @@
 
     }
 
-
     .breadcrumb {
 
         margin-bottom: 20px;
@@ -1320,7 +1212,6 @@
         gap: 6px;
 
     }
-
 
     .product-details {
 
@@ -1332,13 +1223,11 @@
 
     }
 
-
     .product-gallery {
 
         width: 100%;
 
     }
-
 
     .main-product-image {
 
@@ -1348,13 +1237,11 @@
 
     }
 
-
     .emoji-image {
 
         font-size: 80px;
 
     }
-
 
     .thumbnail {
 
@@ -1366,7 +1253,6 @@
 
     }
 
-
     .product-info h1 {
 
         font-size: 30px;
@@ -1377,20 +1263,17 @@
 
     }
 
-
     .product-description {
 
         padding: 20px 0;
 
     }
 
-
     .product-description h2 {
 
         font-size: 20px;
 
     }
-
 
     .product-description p {
 
@@ -1400,20 +1283,17 @@
 
     }
 
-
     .pricing {
 
         margin: 20px 0;
 
     }
 
-
     .pricing strong {
 
         font-size: 30px;
 
     }
-
 
     .rental-box {
 
@@ -1423,13 +1303,11 @@
 
     }
 
-
     .rental-box h2 {
 
         font-size: 21px;
 
     }
-
 
     .delivery-option {
 
@@ -1437,13 +1315,11 @@
 
     }
 
-
     .delivery-info {
 
         font-size: 12px;
 
     }
-
 
     .summary-total {
 
@@ -1451,13 +1327,11 @@
 
     }
 
-
     .summary-total strong {
 
         font-size: 22px;
 
     }
-
 
     .owner-section {
 
@@ -1465,13 +1339,11 @@
 
     }
 
-
     .owner-card {
 
         padding: 20px;
 
     }
-
 
     .calendar-selection {
 
@@ -1481,13 +1353,11 @@
 
     }
 
-
     .date-arrow {
 
         display: none;
 
     }
-
 
     .selected-date-box {
 
@@ -1495,13 +1365,11 @@
 
     }
 
-
     .selected-date-box strong {
 
         font-size: 13px;
 
     }
-
 
     .calendar {
 
@@ -1511,13 +1379,11 @@
 
     }
 
-
     .calendar-days {
 
         gap: 3px;
 
     }
-
 
     .calendar-day {
 
@@ -1527,13 +1393,11 @@
 
     }
 
-
     .calendar-weekdays span {
 
         font-size: 10px;
 
     }
-
 
     .calendar-legend {
 
@@ -1558,13 +1422,11 @@
 
     }
 
-
     .main-product-image {
 
         max-height: 300px;
 
     }
-
 
     .rental-box {
 
@@ -1572,13 +1434,11 @@
 
     }
 
-
     .product-info h1 {
 
         font-size: 27px;
 
     }
-
 
     .pricing strong {
 
