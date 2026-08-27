@@ -22,27 +22,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     let user = null;
 
     try {
+
         user = JSON.parse(
             localStorage.getItem("alugase_user")
         );
+
     } catch {
+
         user = null;
+
     }
 
-    const token = localStorage.getItem("token");
+    const token =
+        localStorage.getItem("token");
 
 
     // ======================================
     // PRODUTO
     // ======================================
 
-    const productId = new URLSearchParams(
-        window.location.search
-    ).get("id");
+    const productId =
+        new URLSearchParams(
+            window.location.search
+        ).get("id");
 
 
     if (!productId) {
-        window.location.href = "explorar.html";
+
+        window.location.href =
+            "explorar.html";
+
         return;
     }
 
@@ -93,13 +102,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector("#delivery-label");
 
     const deliveryDistanceBox =
-        document.querySelector("#delivery-distance-box");
+        document.querySelector(
+            "#delivery-distance-box"
+        );
 
     const deliveryDistance =
-        document.querySelector("#delivery-distance");
+        document.querySelector(
+            "#delivery-distance"
+        );
 
     const deliveryDistanceInfo =
-        document.querySelector("#delivery-distance-info");
+        document.querySelector(
+            "#delivery-distance-info"
+        );
 
     const deliveryRadio =
         document.querySelector(
@@ -118,7 +133,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector("#owner-name");
 
     const ownerVerification =
-        document.querySelector("#owner-verification");
+        document.querySelector(
+            "#owner-verification"
+        );
 
     const ownerRating =
         document.querySelector("#owner-rating");
@@ -150,10 +167,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector("#calendar-next");
 
     const selectedStartDisplay =
-        document.querySelector("#selected-start-display");
+        document.querySelector(
+            "#selected-start-display"
+        );
 
     const selectedEndDisplay =
-        document.querySelector("#selected-end-display");
+        document.querySelector(
+            "#selected-end-display"
+        );
 
 
     // ======================================
@@ -181,9 +202,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ======================================
 
     let product = null;
+
     let owner = null;
 
-    let calendarDate = new Date();
+    let calendarDate =
+        new Date();
 
     let selectingStart = true;
 
@@ -196,7 +219,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function formatMoney(value) {
 
-        const number = Number(value);
+        const number =
+            Number(value);
 
         return (
             Number.isFinite(number)
@@ -222,13 +246,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             return "Selecione uma data";
         }
 
-        const parts = dateString.split("-");
+        const parts =
+            dateString.split("-");
 
         if (parts.length !== 3) {
             return "Data inválida";
         }
 
-        const [year, month, day] = parts;
+        const [
+            year,
+            month,
+            day
+        ] = parts;
 
         return `${day}/${month}/${year}`;
     }
@@ -240,15 +269,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function dateToString(date) {
 
-        const year = date.getFullYear();
+        const year =
+            date.getFullYear();
 
-        const month = String(
-            date.getMonth() + 1
-        ).padStart(2, "0");
+        const month =
+            String(
+                date.getMonth() + 1
+            ).padStart(2, "0");
 
-        const day = String(
-            date.getDate()
-        ).padStart(2, "0");
+        const day =
+            String(
+                date.getDate()
+            ).padStart(2, "0");
 
         return `${year}-${month}-${day}`;
     }
@@ -271,7 +303,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             /^\d{4}-\d{2}-\d{2}$/.test(date)
         ) {
 
-            d = new Date(`${date}T00:00:00`);
+            d = new Date(
+                `${date}T00:00:00`
+            );
 
         } else {
 
@@ -279,11 +313,21 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         }
 
-        if (Number.isNaN(d.getTime())) {
+        if (
+            Number.isNaN(
+                d.getTime()
+            )
+        ) {
+
             return null;
         }
 
-        d.setHours(0, 0, 0, 0);
+        d.setHours(
+            0,
+            0,
+            0,
+            0
+        );
 
         return dateToString(d);
     }
@@ -293,7 +337,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // DATA INDISPONÍVEL
     // ======================================
 
-    function isUnavailable(dateString) {
+    function isUnavailable(
+        dateString
+    ) {
 
         return unavailableDates.includes(
             dateString
@@ -309,22 +355,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
 
-            const response = await fetch(
-                `${PRODUCTS_API}/${productId}`
-            );
+            const response =
+                await fetch(
+                    `${PRODUCTS_API}/${encodeURIComponent(productId)}`
+                );
 
             if (!response.ok) {
+
                 throw new Error(
                     "Produto não encontrado."
                 );
             }
 
-            product = await response.json();
+            product =
+                await response.json();
+
 
             await Promise.all([
                 loadOwner(),
                 loadUnavailableDates()
             ]);
+
 
             fillScreen();
 
@@ -353,30 +404,40 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
 
-            const response = await fetch(
-                `${RENTALS_API}/product/${productId}/unavailable`
-            );
+            const response =
+                await fetch(
+                    `${RENTALS_API}/product/${encodeURIComponent(productId)}/unavailable`
+                );
 
             if (!response.ok) {
+
                 throw new Error(
                     "Erro ao buscar datas."
                 );
             }
 
-            const data = await response.json();
+            const data =
+                await response.json();
 
             unavailableDates = [];
 
-            if (Array.isArray(data.rentals)) {
 
-                data.rentals.forEach(rental => {
+            if (
+                Array.isArray(
+                    data.rentals
+                )
+            ) {
 
-                    addUnavailableRange(
-                        rental.startDate,
-                        rental.endDate
-                    );
+                data.rentals.forEach(
+                    rental => {
 
-                });
+                        addUnavailableRange(
+                            rental.startDate,
+                            rental.endDate
+                        );
+
+                    }
+                );
             }
 
         } catch (error) {
@@ -395,7 +456,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ADICIONAR INTERVALO
     // ======================================
 
-    function addUnavailableRange(start, end) {
+    function addUnavailableRange(
+        start,
+        end
+    ) {
 
         const startString =
             normalizeDate(start);
@@ -403,20 +467,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         const endString =
             normalizeDate(end);
 
-        if (!startString || !endString) {
+
+        if (
+            !startString ||
+            !endString
+        ) {
+
             return;
         }
 
+
         const current =
-            new Date(`${startString}T00:00:00`);
+            new Date(
+                `${startString}T00:00:00`
+            );
 
         const endDateObject =
-            new Date(`${endString}T00:00:00`);
+            new Date(
+                `${endString}T00:00:00`
+            );
 
-        while (current <= endDateObject) {
+
+        while (
+            current <= endDateObject
+        ) {
 
             const currentString =
                 dateToString(current);
+
 
             if (
                 !unavailableDates.includes(
@@ -428,6 +506,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     currentString
                 );
             }
+
 
             current.setDate(
                 current.getDate() + 1
@@ -446,26 +525,33 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+
         try {
 
             const ownerId =
                 typeof product.ownerId === "object"
-                    ? product.ownerId._id
+                    ? product.ownerId?._id
                     : product.ownerId;
+
 
             if (!ownerId) {
                 return;
             }
 
-            const response = await fetch(
-                `${USERS_API}/${ownerId}`
-            );
+
+            const response =
+                await fetch(
+                    `${USERS_API}/${encodeURIComponent(ownerId)}`
+                );
+
 
             if (!response.ok) {
                 return;
             }
 
-            owner = await response.json();
+
+            owner =
+                await response.json();
 
         } catch (error) {
 
@@ -481,27 +567,76 @@ document.addEventListener("DOMContentLoaded", async () => {
     // GALERIA
     // ======================================
 
-    function changeImage(src, activeButton = null) {
+    function changeImage(
+        src,
+        activeButton = null
+    ) {
 
-        if (!src || !mainImage) {
+        if (
+            !src ||
+            !mainImage
+        ) {
+
             return;
         }
 
-        mainImage.innerHTML = `
-            <img
-                src="${src}"
-                alt="${product?.title || "Produto"}"
-            >
-        `;
+
+        mainImage.innerHTML = "";
+
+
+        const image =
+            document.createElement("img");
+
+        image.src = src;
+
+        image.alt =
+            product?.title ||
+            "Produto";
+
+        image.loading = "eager";
+
+        image.onerror = () => {
+
+            mainImage.innerHTML = "";
+
+            const placeholder =
+                document.createElement("div");
+
+            placeholder.className =
+                "image-placeholder";
+
+            placeholder.textContent =
+                "📦";
+
+            mainImage.appendChild(
+                placeholder
+            );
+        };
+
+
+        mainImage.appendChild(image);
+
 
         document
-            .querySelectorAll(".thumbnail")
-            .forEach(thumbnail => {
-                thumbnail.classList.remove("active");
-            });
+            .querySelectorAll(
+                ".thumbnail"
+            )
+            .forEach(
+                thumbnail => {
+
+                    thumbnail.classList.remove(
+                        "active"
+                    );
+
+                }
+            );
+
 
         if (activeButton) {
-            activeButton.classList.add("active");
+
+            activeButton.classList.add(
+                "active"
+            );
         }
     }
 
@@ -512,77 +647,135 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function renderGallery() {
 
-        if (!mainImage || !thumbnails) {
+        if (
+            !mainImage ||
+            !thumbnails
+        ) {
+
             return;
         }
 
+
         thumbnails.innerHTML = "";
 
+
         const images =
-            Array.isArray(product.images)
-                ? product.images.filter(Boolean)
+            Array.isArray(product?.images)
+                ? product.images.filter(
+                    image =>
+                        typeof image === "string" &&
+                        image.trim() !== ""
+                )
                 : [];
+
 
         if (images.length > 0) {
 
-            mainImage.innerHTML = `
-                <img
-                    src="${images[0]}"
-                    alt="${product.title || "Produto"}"
-                >
-            `;
+            changeImage(
+                images[0]
+            );
 
-            images.forEach((image, index) => {
 
-                const button =
-                    document.createElement("button");
+            images.forEach(
+                (image, index) => {
 
-                button.type = "button";
+                    const button =
+                        document.createElement(
+                            "button"
+                        );
 
-                button.className =
-                    `thumbnail ${
-                        index === 0 ? "active" : ""
-                    }`;
+                    button.type = "button";
 
-                button.innerHTML = `
-                    <img
-                        src="${image}"
-                        alt="Imagem ${index + 1}"
-                        loading="lazy"
-                    >
-                `;
+                    button.className =
+                        "thumbnail";
 
-                button.addEventListener(
-                    "click",
-                    () => {
-                        changeImage(
-                            image,
-                            button
+                    if (index === 0) {
+
+                        button.classList.add(
+                            "active"
                         );
                     }
-                );
 
-                thumbnails.appendChild(button);
-            });
+
+                    const thumbnailImage =
+                        document.createElement(
+                            "img"
+                        );
+
+                    thumbnailImage.src =
+                        image;
+
+                    thumbnailImage.alt =
+                        `Imagem ${index + 1}`;
+
+                    thumbnailImage.loading =
+                        "lazy";
+
+
+                    button.appendChild(
+                        thumbnailImage
+                    );
+
+
+                    button.addEventListener(
+                        "click",
+                        () => {
+
+                            changeImage(
+                                image,
+                                button
+                            );
+
+                        }
+                    );
+
+
+                    thumbnails.appendChild(
+                        button
+                    );
+
+                }
+            );
 
         } else {
 
-            mainImage.innerHTML = `
-                <div class="emoji-image">
-                    📦
-                </div>
-            `;
+            mainImage.innerHTML = "";
+
+            const placeholder =
+                document.createElement(
+                    "div"
+                );
+
+            placeholder.className =
+                "image-placeholder";
+
+            placeholder.textContent =
+                "📦";
+
+            mainImage.appendChild(
+                placeholder
+            );
+
 
             const button =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
 
             button.type = "button";
+
             button.className =
                 "thumbnail emoji active";
 
-            button.textContent = "📦";
+            button.textContent =
+                "📦";
 
-            thumbnails.appendChild(button);
+            button.disabled = true;
+
+
+            thumbnails.appendChild(
+                button
+            );
         }
     }
 
@@ -595,60 +788,109 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (!owner) {
 
-            ownerAvatar.innerHTML = "👤";
+            ownerAvatar.textContent =
+                "👤";
 
             ownerName.textContent =
-                product.ownerName ||
+                product?.ownerName ||
                 "Usuário";
 
             ownerVerification.textContent =
                 "Usuário";
 
+            ownerVerification.className = "";
+
             ownerRating.textContent =
-                product.rating || "5.0";
+                product?.rating ||
+                "5.0";
 
             ownerReviews.textContent =
-                product.reviews || "0";
+                product?.reviews ||
+                "0";
 
             return;
         }
 
+
         ownerName.textContent =
             owner.name ||
-            product.ownerName ||
+            product?.ownerName ||
             "Usuário";
+
+
+        ownerAvatar.innerHTML = "";
 
 
         if (owner.profileImage) {
 
-            ownerAvatar.innerHTML = `
-                <img
-                    src="${owner.profileImage}"
-                    alt="${owner.name || "Proprietário"}"
-                    class="owner-profile-image"
-                >
-            `;
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+            image.src =
+                owner.profileImage;
+
+            image.alt =
+                owner.name ||
+                "Proprietário";
+
+            image.className =
+                "owner-profile-image";
+
+            image.onerror = () => {
+
+                renderOwnerInitials();
+
+            };
+
+
+            ownerAvatar.appendChild(
+                image
+            );
 
         } else {
 
+            renderOwnerInitials();
+
+        }
+
+
+        function renderOwnerInitials() {
+
             const initials =
                 (
-                    owner.name || "U"
+                    owner.name ||
+                    "U"
                 )
                     .trim()
                     .split(/\s+/)
-                    .map(word =>
-                        word.charAt(0)
+                    .map(
+                        word =>
+                            word.charAt(0)
                     )
                     .slice(0, 2)
                     .join("")
                     .toUpperCase();
 
-            ownerAvatar.innerHTML = `
-                <span class="owner-initials">
-                    ${initials || "U"}
-                </span>
-            `;
+
+            const span =
+                document.createElement(
+                    "span"
+                );
+
+            span.className =
+                "owner-initials";
+
+            span.textContent =
+                initials || "U";
+
+
+            ownerAvatar.innerHTML = "";
+
+            ownerAvatar.appendChild(
+                span
+            );
         }
 
 
@@ -666,17 +908,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 "Usuário";
 
             ownerVerification.className = "";
+
         }
 
 
         ownerRating.textContent =
-            owner.rating ||
-            product.rating ||
+            owner.rating ??
+            product?.rating ??
             "5.0";
 
+
         ownerReviews.textContent =
-            owner.reviews ||
-            product.reviews ||
+            owner.reviews ??
+            product?.reviews ??
             "0";
     }
 
@@ -691,7 +935,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+
         calendarDays.innerHTML = "";
+
 
         const year =
             calendarDate.getFullYear();
@@ -699,12 +945,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         const month =
             calendarDate.getMonth();
 
+
         const firstDay =
             new Date(
                 year,
                 month,
                 1
             ).getDay();
+
 
         const daysInMonth =
             new Date(
@@ -727,7 +975,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // ESPAÇOS
+        // ==================================
+        // ESPAÇOS ANTES DO PRIMEIRO DIA
+        // ==================================
 
         for (
             let i = 0;
@@ -736,18 +986,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
 
             const empty =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
             empty.className =
                 "calendar-day empty";
 
-            calendarDays.appendChild(empty);
+            calendarDays.appendChild(
+                empty
+            );
         }
 
 
+        // ==================================
         // HOJE
+        // ==================================
 
-        const today = new Date();
+        const today =
+            new Date();
 
         today.setHours(
             0,
@@ -756,11 +1013,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             0
         );
 
+
         const todayString =
             dateToString(today);
 
 
+        // ==================================
         // DIAS
+        // ==================================
 
         for (
             let day = 1;
@@ -775,21 +1035,29 @@ document.addEventListener("DOMContentLoaded", async () => {
                     day
                 );
 
+
             const dateString =
                 dateToString(date);
 
+
             const button =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
+
 
             button.type = "button";
 
             button.className =
                 "calendar-day";
 
-            button.textContent = day;
+            button.textContent =
+                day;
 
 
+            // ==================================
             // HOJE
+            // ==================================
 
             if (
                 dateString === todayString
@@ -801,7 +1069,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
+            // ==================================
             // PASSADO
+            // ==================================
 
             if (
                 dateString < todayString
@@ -815,10 +1085,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
+            // ==================================
             // ALUGADO
+            // ==================================
 
             if (
-                isUnavailable(dateString)
+                isUnavailable(
+                    dateString
+                )
             ) {
 
                 button.disabled = true;
@@ -829,10 +1103,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
+            // ==================================
             // RETIRADA
+            // ==================================
 
             if (
-                dateString === startDate.value
+                dateString ===
+                startDate.value
             ) {
 
                 button.classList.add(
@@ -842,11 +1119,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
+            // ==================================
             // DEVOLUÇÃO
+            // ==================================
 
             if (
-                dateString === endDate.value &&
-                endDate.value !== startDate.value
+                dateString ===
+                endDate.value &&
+                endDate.value !==
+                startDate.value
             ) {
 
                 button.classList.add(
@@ -856,13 +1137,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
+            // ==================================
             // INTERVALO
+            // ==================================
 
             if (
                 startDate.value &&
                 endDate.value &&
-                dateString > startDate.value &&
-                dateString < endDate.value
+                dateString >
+                    startDate.value &&
+                dateString <
+                    endDate.value
             ) {
 
                 button.classList.add(
@@ -871,21 +1156,64 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
 
+            // ==================================
+            // EVENTO
+            // ==================================
+
             if (!button.disabled) {
 
                 button.addEventListener(
                     "click",
                     () => {
+
                         selectCalendarDate(
                             dateString
                         );
+
                     }
                 );
             }
 
 
-            calendarDays.appendChild(button);
+            calendarDays.appendChild(
+                button
+            );
         }
+
+
+        updateCalendarNavigation();
+    }
+
+
+    // ======================================
+    // NAVEGAÇÃO DO CALENDÁRIO
+    // ======================================
+
+    function updateCalendarNavigation() {
+
+        if (!calendarPrev) {
+            return;
+        }
+
+
+        const now =
+            new Date();
+
+        now.setDate(1);
+        now.setHours(0, 0, 0, 0);
+
+
+        const displayedMonth =
+            new Date(
+                calendarDate.getFullYear(),
+                calendarDate.getMonth(),
+                1
+            );
+
+
+        calendarPrev.disabled =
+            displayedMonth <= now;
+
     }
 
 
@@ -893,24 +1221,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     // SELECIONAR DATA
     // ======================================
 
-    function selectCalendarDate(dateString) {
+    function selectCalendarDate(
+        dateString
+    ) {
 
-        // Começar nova seleção
+        // ==================================
+        // DATA INDISPONÍVEL
+        // ==================================
+
+        if (
+            isUnavailable(dateString)
+        ) {
+
+            alert(
+                "Essa data já está alugada."
+            );
+
+            return;
+        }
+
+
+        // ==================================
+        // NOVA RETIRADA
+        // ==================================
 
         if (
             selectingStart ||
             !startDate.value ||
             endDate.value
         ) {
-
-            if (isUnavailable(dateString)) {
-
-                alert(
-                    "Essa data já está alugada."
-                );
-
-                return;
-            }
 
             startDate.value =
                 dateString;
@@ -919,11 +1258,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             selectingStart = false;
 
+
             selectedStartDisplay.textContent =
-                formatDateBR(dateString);
+                formatDateBR(
+                    dateString
+                );
+
 
             selectedEndDisplay.textContent =
                 "Selecione a devolução";
+
 
             renderCalendar();
 
@@ -933,10 +1277,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // Devolução anterior
+        // ==================================
+        // DEVOLUÇÃO ANTERIOR
+        // ==================================
 
         if (
-            dateString < startDate.value
+            dateString <
+            startDate.value
         ) {
 
             alert(
@@ -947,7 +1294,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // Verificar período
+        // ==================================
+        // MESMA DATA
+        // ==================================
+
+        if (
+            dateString ===
+            startDate.value
+        ) {
+
+            alert(
+                "A devolução deve ser posterior à retirada."
+            );
+
+            return;
+        }
+
+
+        // ==================================
+        // VERIFICAR PERÍODO
+        // ==================================
 
         if (
             rangeContainsUnavailable(
@@ -964,15 +1330,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        // Selecionar devolução
+        // ==================================
+        // SELECIONAR DEVOLUÇÃO
+        // ==================================
 
         endDate.value =
             dateString;
 
+
         selectedEndDisplay.textContent =
-            formatDateBR(dateString);
+            formatDateBR(
+                dateString
+            );
+
 
         selectingStart = true;
+
 
         renderCalendar();
 
@@ -989,6 +1362,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         end
     ) {
 
+        if (
+            !start ||
+            !end
+        ) {
+
+            return false;
+        }
+
+
         const startObject =
             new Date(
                 `${start}T00:00:00`
@@ -999,13 +1381,33 @@ document.addEventListener("DOMContentLoaded", async () => {
                 `${end}T00:00:00`
             );
 
-        const current =
-            new Date(startObject);
 
-        while (current <= endObject) {
+        if (
+            Number.isNaN(
+                startObject.getTime()
+            ) ||
+            Number.isNaN(
+                endObject.getTime()
+            )
+        ) {
+
+            return true;
+        }
+
+
+        const current =
+            new Date(
+                startObject
+            );
+
+
+        while (
+            current <= endObject
+        ) {
 
             const currentString =
                 dateToString(current);
+
 
             if (
                 isUnavailable(
@@ -1016,10 +1418,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return true;
             }
 
+
             current.setDate(
                 current.getDate() + 1
             );
         }
+
 
         return false;
     }
@@ -1039,6 +1443,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return 0;
         }
 
+
         const start =
             new Date(
                 `${startDate.value}T00:00:00`
@@ -1049,12 +1454,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                 `${endDate.value}T00:00:00`
             );
 
+
         const difference =
             Math.round(
                 (
                     end - start
                 ) / 86400000
             );
+
+
+        /*
+         * Mantém o comportamento atual:
+         * retirada + devolução contam como
+         * período de aluguel inclusivo.
+         */
 
         return difference >= 0
             ? difference + 1
@@ -1078,6 +1491,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
         }
 
+
         const enabled =
             product.delivery === true ||
             product.delivery === "true";
@@ -1088,10 +1502,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 product.deliveryBasePrice
             );
 
+
         let perKm =
             Number(
                 product.deliveryPricePerKm
             );
+
 
         let maxDistance =
             Number(
@@ -1099,7 +1515,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
 
 
-        // Compatibilidade
+        // ==================================
+        // COMPATIBILIDADE
+        // ==================================
 
         if (
             !Number.isFinite(base)
@@ -1111,12 +1529,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                 ) || 0;
         }
 
+
         if (
             !Number.isFinite(perKm)
         ) {
 
             perKm = 0;
         }
+
 
         if (
             !Number.isFinite(maxDistance)
@@ -1128,9 +1548,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         return {
             enabled,
-            base,
-            perKm,
-            maxDistance
+            base: Math.max(0, base),
+            perKm: Math.max(0, perKm),
+            maxDistance: Math.max(
+                0,
+                maxDistance
+            )
         };
     }
 
@@ -1143,6 +1566,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const config =
             getDeliveryConfig();
+
 
         if (!config.enabled) {
 
@@ -1168,8 +1592,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
+        const normalizedDistance =
+            rawDistance.replace(
+                ",",
+                "."
+            );
+
+
         const distance =
-            Number(rawDistance);
+            Number(
+                normalizedDistance
+            );
 
 
         if (
@@ -1187,7 +1620,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (
             config.maxDistance > 0 &&
-            distance > config.maxDistance
+            distance >
+                config.maxDistance
         ) {
 
             return {
@@ -1224,28 +1658,45 @@ document.addEventListener("DOMContentLoaded", async () => {
             getDeliveryConfig();
 
 
+        // ==================================
+        // SEM ENTREGA
+        // ==================================
+
         if (!config.enabled) {
 
             if (deliveryRadio) {
-                deliveryRadio.disabled = true;
+
+                deliveryRadio.disabled =
+                    true;
             }
 
+
             if (deliveryDistanceBox) {
+
                 deliveryDistanceBox.style.display =
                     "none";
             }
 
+
             if (deliveryLabel) {
+
                 deliveryLabel.textContent =
                     "Somente retirada";
             }
+
 
             return;
         }
 
 
+        // ==================================
+        // COM ENTREGA
+        // ==================================
+
         if (deliveryRadio) {
-            deliveryRadio.disabled = false;
+
+            deliveryRadio.disabled =
+                false;
         }
 
 
@@ -1256,7 +1707,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         const deliverySelected =
-            selected?.value === "delivery";
+            selected?.value ===
+            "delivery";
 
 
         if (deliveryDistanceBox) {
@@ -1281,7 +1733,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             calculateDelivery();
 
 
-        if (result.reason === "missing") {
+        if (
+            result.reason ===
+            "missing"
+        ) {
 
             deliveryLabel.textContent =
                 "Informe a distância";
@@ -1290,7 +1745,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        if (result.reason === "invalid") {
+        if (
+            result.reason ===
+            "invalid"
+        ) {
 
             deliveryLabel.textContent =
                 "Distância inválida";
@@ -1299,7 +1757,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
-        if (result.reason === "distance") {
+        if (
+            result.reason ===
+            "distance"
+        ) {
 
             deliveryLabel.textContent =
                 "Fora da área";
@@ -1357,24 +1818,44 @@ document.addEventListener("DOMContentLoaded", async () => {
             const result =
                 calculateDelivery();
 
+
             if (result.valid) {
+
                 deliveryValue =
                     result.value;
             }
         }
 
 
-        const daily =
-            days *
+        const pricePerDay =
             Number(
                 product.pricePerDay || 0
             );
 
 
-        const deposit =
+        const daily =
+            days *
+            (
+                Number.isFinite(
+                    pricePerDay
+                )
+                    ? pricePerDay
+                    : 0
+            );
+
+
+        const depositValue =
             Number(
                 product.deposit || 0
             );
+
+
+        const deposit =
+            Number.isFinite(
+                depositValue
+            )
+                ? depositValue
+                : 0;
 
 
         const total =
@@ -1386,7 +1867,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (dailyTotal) {
 
             dailyTotal.textContent =
-                `R$ ${formatMoney(daily)}`;
+                `R$ ${formatMoney(
+                    daily
+                )}`;
         }
 
 
@@ -1427,9 +1910,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function fillScreen() {
 
+        if (!product) {
+            return;
+        }
+
+
         document.title =
             `${product.title || "Produto"} | ALUGASE`;
 
+
+        // ==================================
+        // CATEGORIA
+        // ==================================
 
         if (categoryLabel) {
 
@@ -1447,12 +1939,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 product.category ||
                 "Categoria";
 
+
             categoryLink.href =
                 `explorar.html?categoria=${encodeURIComponent(
                     product.category || ""
                 )}`;
         }
 
+
+        // ==================================
+        // BREADCRUMB
+        // ==================================
 
         if (breadcrumbTitle) {
 
@@ -1462,6 +1959,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
+        // ==================================
+        // TÍTULO
+        // ==================================
+
         if (title) {
 
             title.textContent =
@@ -1470,18 +1971,33 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
+        // ==================================
+        // GALERIA
+        // ==================================
+
         renderGallery();
 
 
+        // ==================================
+        // LOCALIZAÇÃO
+        // ==================================
+
         if (locationText) {
 
+            const city =
+                product.city ||
+                product.location ||
+                "Não informado";
+
+
             locationText.textContent =
-                `📍 ${
-                    product.city ||
-                    "Não informado"
-                }`;
+                `📍 ${city}`;
         }
 
+
+        // ==================================
+        // DESCRIÇÃO
+        // ==================================
 
         if (description) {
 
@@ -1491,19 +2007,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
+        // ==================================
+        // AVALIAÇÃO
+        // ==================================
+
         if (productRating) {
 
             productRating.textContent =
-                product.rating || "5.0";
+                product.rating ??
+                "5.0";
         }
 
 
         if (productReviews) {
 
             productReviews.textContent =
-                product.reviews || "0";
+                product.reviews ??
+                "0";
         }
 
+
+        // ==================================
+        // PREÇO
+        // ==================================
 
         if (price) {
 
@@ -1525,8 +2051,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!config.enabled) {
 
             if (deliveryRadio) {
-                deliveryRadio.disabled = true;
+
+                deliveryRadio.disabled =
+                    true;
             }
+
 
             if (deliveryLabel) {
 
@@ -1537,13 +2066,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
 
             if (deliveryRadio) {
-                deliveryRadio.disabled = false;
+
+                deliveryRadio.disabled =
+                    false;
             }
 
 
             if (deliveryDistanceInfo) {
 
-                if (config.maxDistance > 0) {
+                if (
+                    config.maxDistance > 0
+                ) {
 
                     deliveryDistanceInfo.textContent =
                         `Distância máxima: ${formatMoney(
@@ -1559,6 +2092,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
+        // ==================================
+        // CAUÇÃO
+        // ==================================
+
         if (depositTotal) {
 
             depositTotal.textContent =
@@ -1568,9 +2105,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
 
+        // ==================================
+        // PROPRIETÁRIO
+        // ==================================
+
         renderOwner();
 
+
+        // ==================================
+        // CALENDÁRIO
+        // ==================================
+
         initializeCalendar();
+
+
+        // ==================================
+        // TOTAIS
+        // ==================================
 
         updateTotals();
     }
@@ -1585,6 +2136,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (startDate) {
             startDate.value = "";
         }
+
 
         if (endDate) {
             endDate.value = "";
@@ -1607,9 +2159,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         selectingStart = true;
 
-        calendarDate = new Date();
+
+        calendarDate =
+            new Date();
+
 
         calendarDate.setDate(1);
+
 
         renderCalendar();
     }
@@ -1625,10 +2181,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             "click",
             () => {
 
-                const currentMonth =
-                    new Date();
+                if (
+                    calendarPrev.disabled
+                ) {
 
-                currentMonth.setDate(1);
+                    return;
+                }
 
 
                 const previous =
@@ -1636,21 +2194,29 @@ document.addEventListener("DOMContentLoaded", async () => {
                         calendarDate
                     );
 
+
                 previous.setMonth(
                     previous.getMonth() - 1
                 );
 
 
-                // Não permite navegar antes
-                // do mês atual
+                const currentMonth =
+                    new Date();
+
+
+                currentMonth.setDate(1);
+
+                currentMonth.setHours(
+                    0,
+                    0,
+                    0,
+                    0
+                );
+
 
                 if (
                     previous <
-                    new Date(
-                        currentMonth.getFullYear(),
-                        currentMonth.getMonth(),
-                        1
-                    )
+                    currentMonth
                 ) {
 
                     return;
@@ -1659,6 +2225,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 calendarDate =
                     previous;
+
 
                 renderCalendar();
             }
@@ -1680,6 +2247,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     calendarDate.getMonth() + 1
                 );
 
+
                 renderCalendar();
             }
         );
@@ -1694,18 +2262,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         .querySelectorAll(
             'input[name="delivery"]'
         )
-        .forEach(radio => {
+        .forEach(
+            radio => {
 
-            radio.addEventListener(
-                "change",
-                () => {
+                radio.addEventListener(
+                    "change",
+                    () => {
 
-                    updateDeliveryUI();
+                        updateDeliveryUI();
 
-                    updateTotals();
-                }
-            );
-        });
+                        updateTotals();
+
+                    }
+                );
+
+            }
+        );
 
 
     // ======================================
@@ -1721,6 +2293,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 updateDeliveryUI();
 
                 updateTotals();
+
             }
         );
     }
@@ -1746,6 +2319,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     localStorage.getItem(
                         "alugase_user"
                     );
+
 
                 const currentToken =
                     localStorage.getItem(
@@ -1819,7 +2393,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             "click",
             () => {
 
+                // ==================================
                 // LOGIN
+                // ==================================
 
                 const currentToken =
                     localStorage.getItem(
@@ -1836,7 +2412,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
 
+                // ==================================
+                // PRODUTO
+                // ==================================
+
+                if (!product?._id) {
+
+                    alert(
+                        "Não foi possível identificar o produto."
+                    );
+
+                    return;
+                }
+
+
+                // ==================================
                 // DATAS
+                // ==================================
 
                 if (
                     !startDate.value ||
@@ -1851,22 +2443,26 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
 
+                // ==================================
                 // ORDEM
+                // ==================================
 
                 if (
-                    endDate.value <
+                    endDate.value <=
                     startDate.value
                 ) {
 
                     alert(
-                        "A data de devolução não pode ser anterior à retirada."
+                        "A data de devolução deve ser posterior à retirada."
                     );
 
                     return;
                 }
 
 
+                // ==================================
                 // DISPONIBILIDADE
+                // ==================================
 
                 if (
                     rangeContainsUnavailable(
@@ -2032,6 +2628,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     `reserva.html?${params.toString()}`;
             }
         );
+    }
 
 
     // ======================================
