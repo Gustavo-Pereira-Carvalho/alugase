@@ -24,7 +24,6 @@
 
 </head>
 
-
 <body>
 
 <header>
@@ -103,7 +102,6 @@
 
 <main class="product-page">
 
-
     <!-- ==========================================
          BREADCRUMB
     =========================================== -->
@@ -150,7 +148,7 @@
                 id="main-image"
             >
 
-                <span>
+                <span class="image-placeholder">
                     📦
                 </span>
 
@@ -191,13 +189,10 @@
             <div class="product-rating">
 
                 <strong>
-
                     ⭐
-
                     <span id="product-rating">
                         5.0
                     </span>
-
                 </strong>
 
                 <span>
@@ -274,7 +269,7 @@
 
                 <!-- ==================================
                      CALENDÁRIO
-                =================================== -->
+                ================================== -->
 
                 <div class="custom-calendar-wrapper">
 
@@ -283,16 +278,13 @@
 
                     <div class="calendar-selection">
 
-
                         <div class="selected-date-box">
 
                             <span>
                                 Retirada
                             </span>
 
-                            <strong
-                                id="selected-start-display"
-                            >
+                            <strong id="selected-start-display">
                                 Selecione uma data
                             </strong>
 
@@ -310,9 +302,7 @@
                                 Devolução
                             </span>
 
-                            <strong
-                                id="selected-end-display"
-                            >
+                            <strong id="selected-end-display">
                                 Selecione a devolução
                             </strong>
 
@@ -361,33 +351,13 @@
 
                         <div class="calendar-weekdays">
 
-                            <span>
-                                Dom
-                            </span>
-
-                            <span>
-                                Seg
-                            </span>
-
-                            <span>
-                                Ter
-                            </span>
-
-                            <span>
-                                Qua
-                            </span>
-
-                            <span>
-                                Qui
-                            </span>
-
-                            <span>
-                                Sex
-                            </span>
-
-                            <span>
-                                Sáb
-                            </span>
+                            <span>Dom</span>
+                            <span>Seg</span>
+                            <span>Ter</span>
+                            <span>Qua</span>
+                            <span>Qui</span>
+                            <span>Sex</span>
+                            <span>Sáb</span>
 
                         </div>
 
@@ -406,9 +376,7 @@
 
                             <span>
 
-                                <i
-                                    class="legend-dot available"
-                                ></i>
+                                <i class="legend-dot available"></i>
 
                                 Disponível
 
@@ -417,9 +385,7 @@
 
                             <span>
 
-                                <i
-                                    class="legend-dot selected"
-                                ></i>
+                                <i class="legend-dot selected"></i>
 
                                 Selecionado
 
@@ -428,9 +394,7 @@
 
                             <span>
 
-                                <i
-                                    class="legend-dot unavailable"
-                                ></i>
+                                <i class="legend-dot unavailable"></i>
 
                                 Alugado
 
@@ -517,7 +481,7 @@
 
                     <div
                         id="delivery-distance-box"
-                        style="display:none;"
+                        class="delivery-distance-box"
                     >
 
                         <div class="form-group">
@@ -526,14 +490,7 @@
                                 Distância da entrega
                             </label>
 
-
-                            <div
-                                style="
-                                    display:flex;
-                                    align-items:center;
-                                    gap:8px;
-                                "
-                            >
+                            <div class="distance-input">
 
                                 <input
                                     type="number"
@@ -549,7 +506,6 @@
                                 </span>
 
                             </div>
-
 
                             <small id="delivery-distance-info">
                                 Informe a distância para calcular o valor da entrega.
@@ -682,14 +638,12 @@
                     Proprietário
                 </h3>
 
-
                 <p id="owner-verification">
                     Usuário
                 </p>
 
 
                 <div class="owner-extra">
-
 
                     <span>
 
