@@ -31,7 +31,6 @@
     <nav class="navbar">
 
         <!-- LOGO -->
-
         <div class="logo">
 
             <a href="index.html">
@@ -47,9 +46,7 @@
 
         </div>
 
-
         <!-- MENU -->
-
         <ul class="nav-links">
 
             <li>
@@ -72,9 +69,7 @@
 
         </ul>
 
-
         <!-- BOTÕES -->
-
         <div class="nav-buttons">
 
             <button
@@ -99,13 +94,9 @@
 
 </header>
 
-
 <main class="product-page">
 
-    <!-- ==========================================
-         BREADCRUMB
-    =========================================== -->
-
+    <!-- BREADCRUMB -->
     <div class="breadcrumb">
 
         <a href="index.html">
@@ -129,18 +120,10 @@
 
     </div>
 
-
-    <!-- ==========================================
-         PRODUTO
-    =========================================== -->
-
+    <!-- PRODUTO -->
     <section class="product-details">
 
-
-        <!-- ======================================
-             GALERIA
-        ======================================= -->
-
+        <!-- GALERIA -->
         <div class="product-gallery">
 
             <div
@@ -148,12 +131,11 @@
                 id="main-image"
             >
 
-                <span class="image-placeholder">
+                <span>
                     📦
                 </span>
 
             </div>
-
 
             <div
                 class="product-thumbnails"
@@ -162,37 +144,27 @@
 
         </div>
 
-
-        <!-- ======================================
-             INFORMAÇÕES
-        ======================================= -->
-
+        <!-- INFORMAÇÕES -->
         <div class="product-info">
-
-
-            <!-- CATEGORIA -->
 
             <span class="product-category">
                 CATEGORIA
             </span>
 
-
-            <!-- TÍTULO -->
-
             <h1 id="product-title">
                 Carregando...
             </h1>
 
-
-            <!-- AVALIAÇÃO -->
-
             <div class="product-rating">
 
                 <strong>
+
                     ⭐
+
                     <span id="product-rating">
                         5.0
                     </span>
+
                 </strong>
 
                 <span>
@@ -207,9 +179,6 @@
 
             </div>
 
-
-            <!-- LOCALIZAÇÃO -->
-
             <p
                 class="product-location"
                 id="product-location"
@@ -217,11 +186,7 @@
                 📍 Cidade
             </p>
 
-
-            <!-- ==================================
-                 DESCRIÇÃO
-            =================================== -->
-
+            <!-- DESCRIÇÃO -->
             <div class="product-description">
 
                 <h2>
@@ -234,11 +199,7 @@
 
             </div>
 
-
-            <!-- ==================================
-                 PREÇO
-            =================================== -->
-
+            <!-- PREÇO -->
             <div class="pricing">
 
                 <span>
@@ -255,26 +216,15 @@
 
             </div>
 
-
-            <!-- ==================================
-                 ALUGUEL
-            =================================== -->
-
+            <!-- ALUGUEL -->
             <div class="rental-box">
 
                 <h2>
                     Escolha o período
                 </h2>
 
-
-                <!-- ==================================
-                     CALENDÁRIO
-                ================================== -->
-
+                <!-- CALENDÁRIO -->
                 <div class="custom-calendar-wrapper">
-
-
-                    <!-- DATAS SELECIONADAS -->
 
                     <div class="calendar-selection">
 
@@ -290,11 +240,9 @@
 
                         </div>
 
-
                         <div class="date-arrow">
                             →
                         </div>
-
 
                         <div class="selected-date-box">
 
@@ -310,13 +258,7 @@
 
                     </div>
 
-
-                    <!-- CALENDÁRIO -->
-
                     <div class="calendar">
-
-
-                        <!-- CABEÇALHO -->
 
                         <div class="calendar-header">
 
@@ -329,11 +271,9 @@
                                 ‹
                             </button>
 
-
                             <strong id="calendar-month">
                                 Carregando...
                             </strong>
-
 
                             <button
                                 type="button"
@@ -345,9 +285,6 @@
                             </button>
 
                         </div>
-
-
-                        <!-- DIAS DA SEMANA -->
 
                         <div class="calendar-weekdays">
 
@@ -361,16 +298,10 @@
 
                         </div>
 
-
-                        <!-- DIAS -->
-
                         <div
                             class="calendar-days"
                             id="calendar-days"
                         ></div>
-
-
-                        <!-- LEGENDA -->
 
                         <div class="calendar-legend">
 
@@ -382,7 +313,6 @@
 
                             </span>
 
-
                             <span>
 
                                 <i class="legend-dot selected"></i>
@@ -390,7 +320,6 @@
                                 Selecionado
 
                             </span>
-
 
                             <span>
 
@@ -404,9 +333,6 @@
 
                     </div>
 
-
-                    <!-- VALORES INTERNOS -->
-
                     <input
                         type="hidden"
                         id="start-date"
@@ -419,20 +345,14 @@
 
                 </div>
 
-
-                <!-- ==================================
-                     ENTREGA
-                =================================== -->
-
+                <!-- ENTREGA -->
                 <div class="delivery-options">
 
                     <h3>
                         Como deseja receber?
                     </h3>
 
-
                     <!-- RETIRADA -->
-
                     <label class="delivery-option">
 
                         <input
@@ -452,9 +372,7 @@
 
                     </label>
 
-
                     <!-- ENTREGA -->
-
                     <label
                         class="delivery-option"
                         id="delivery-option-label"
@@ -476,56 +394,15 @@
 
                     </label>
 
-
-                    <!-- DISTÂNCIA -->
-
-                    <div
-                        id="delivery-distance-box"
-                        class="delivery-distance-box"
-                    >
-
-                        <div class="form-group">
-
-                            <label for="delivery-distance">
-                                Distância da entrega
-                            </label>
-
-                            <div class="distance-input">
-
-                                <input
-                                    type="number"
-                                    id="delivery-distance"
-                                    min="0"
-                                    step="0.1"
-                                    placeholder="Ex.: 8"
-                                    inputmode="decimal"
-                                >
-
-                                <span>
-                                    km
-                                </span>
-
-                            </div>
-
-                            <small id="delivery-distance-info">
-                                Informe a distância para calcular o valor da entrega.
-                            </small>
-
-                        </div>
-
-                    </div>
+                    <p
+                        id="delivery-info"
+                        class="delivery-info"
+                    ></p>
 
                 </div>
 
-
-                <!-- ==================================
-                     RESUMO
-                =================================== -->
-
+                <!-- RESUMO -->
                 <div class="rental-summary">
-
-
-                    <!-- DIÁRIAS -->
 
                     <div>
 
@@ -539,9 +416,6 @@
 
                     </div>
 
-
-                    <!-- ENTREGA -->
-
                     <div>
 
                         <span>
@@ -554,9 +428,6 @@
 
                     </div>
 
-
-                    <!-- CAUÇÃO -->
-
                     <div>
 
                         <span>
@@ -568,9 +439,6 @@
                         </strong>
 
                     </div>
-
-
-                    <!-- TOTAL -->
 
                     <div class="summary-total">
 
@@ -586,11 +454,7 @@
 
                 </div>
 
-
-                <!-- ==================================
-                     BOTÃO
-                =================================== -->
-
+                <!-- BOTÃO -->
                 <button
                     id="rental-button"
                     class="btn-primary rental-button"
@@ -605,22 +469,14 @@
 
     </section>
 
-
-    <!-- ==========================================
-         PROPRIETÁRIO
-    =========================================== -->
-
+    <!-- PROPRIETÁRIO -->
     <section class="owner-section">
 
         <h2>
             Sobre o proprietário
         </h2>
 
-
         <div class="owner-card">
-
-
-            <!-- AVATAR -->
 
             <div
                 class="owner-avatar"
@@ -628,9 +484,6 @@
             >
                 👤
             </div>
-
-
-            <!-- INFORMAÇÕES -->
 
             <div class="owner-info">
 
@@ -641,7 +494,6 @@
                 <p id="owner-verification">
                     Usuário
                 </p>
-
 
                 <div class="owner-extra">
 
@@ -654,7 +506,6 @@
                         </strong>
 
                     </span>
-
 
                     <span>
 
@@ -675,11 +526,6 @@
     </section>
 
 </main>
-
-
-<!-- ==========================================
-     JAVASCRIPT
-=========================================== -->
 
 <script src="./js/produto.js"></script>
 
